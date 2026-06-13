@@ -2,7 +2,7 @@ Sultan = Technical Office Mgr, Aseer Museum. Strategic thinker — designs own c
 §
 Documents must be source-verifiable. Never assert exclusions without a project doc reference. Omit or flag TBC rather than infer. English-only.
 §
-English-only. Odoo: project 219 (Aseer) on Samaya. Main tasks = packages (00-NN serial), subtasks = deliverables. ALL tasks must have date_assign + date_deadline. Progress is 0.0-1.0 scale. Kanban shows only packages (parent_id=False filter). Always nest under correct parent. Update registers/trackers automatically without asking.
+English-only for output (Arabic OK for direction). Odoo proj 219 on Samaya. Tasks MUST have date_assign+date_deadline. Progress 0.0-1.0. Kanban filter parent_id=False. Use user_ids [(4, uid)]. Always nest under correct parent. Update registers without asking.
 §
 Excel: formulas, number formatting (never "SAR" text), navy/white/yellow, openpyxl.
 §
@@ -10,4 +10,4 @@ Never ask permission. Baseline first, reality later. Verify scope before adding 
 §
 Verify schedule phase/scope before judging duration. Design-phase ≠ full project. Arabic for direction, English for formal output.
 §
-GanttPRO login email: mohamedsultanabbas@gmail.com. Hands me credentials for web app logins.
+GitHub: github.com/sultandroid — shared memory repo. Runs 8 AI agents (Hermes, Claude Code, Codex, Kimi, Pi, Gemini, OpenClaw, Kilo). Verifies Odoo writes by re-querying after updates.

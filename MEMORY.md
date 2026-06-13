@@ -8,6 +8,4 @@ Submittal registers: spec-first, Excel from spec. 50/90/100/IFC stages. Appendix
 §
 Aseer team: Sultan Issa (ID 151, PM), Mohamed Samir (ID 564, Procurement), Hesham (ID 163, Site/Docs), Ahmed Salah (ID 162, Project Coord), Ali (ID 160, Technical Office), Adel Darwish (ID 7, PM). CG contacts: Hossam Mabrouk (hmabrouk@cg.com.sa), Mohammad Elbaz (melbaz@cg.com.sa). Baseline NTP 01-Dec-25, contract complete 07-Sep-26.
 §
-Schedule audit: always check phase before assessing duration. File ending at design gate (IFC) = design-phase-only, not full project. Look for "DESIGN PHASES" in name, activity prefixes (PE/AS/EN/PR vs CN/IN/TC/HD). Check contract completion before flagging unrealistic timelines. OneDrive-locked PDFs ([Errno 11]): don't retry — use pre-existing EXTRACT_*.md in Docs/07_Reports/07.5 Audit Report/ instead.
-§
-Mohamed Elshaikh (ID 157) = Project Planner, not general project team.
+Shared memory repo: github.com/sultandroid/hermes-memory — cron sync every 2h via memory_github_sync.sh. User verifies work was actually done in Odoo after updates. Prefers one-task-at-a-time with action prompts.
