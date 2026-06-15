@@ -1,13 +1,7 @@
-Sultan = Technical Office Mgr, Aseer Museum. Strategic thinker — designs own contractual mechanisms (Direct-to-IFC per ER §2.4, dual-track schedule). Protects Samaya: EOT triggers, WITHOUT PREJUDICE, SI-007 position. Anticipates CG reactions; builds fallback clauses. Informs NRS but doesn't seek approval on contractor-scope decisions. Fixes errors immediately. His team: Mohamed Samir, Hani Alghamdi, Hesham, Ahmed Salah, Ali.
+Technical Office Mgr, Aseer Museum at Samaya. Strategic thinker — own contractual mechanisms, protects Samaya, anticipates CG. Team: Mohamed Samir, Hani, Hesham, Ahmed Salah, Ali. Expects thorough proposal reviews with ✅/❌ verdict vs ER/SOW/DMP before go/no-go. Wants full email thread first. Corrects scope assumptions immediately. Precise on scope splits: BIM=Radiance (Dr. Waleed), MEP design=AD Engineering, MEP contractor does shop dwgs+install.
 §
-Source-verify all docs. English-only. Risk registers: use REAL risks from PROJECT_MEMORY.md & project notes only — never generic templates.
-§
-English-only for output (Arabic OK for direction). Odoo proj 219 on Samaya. Tasks MUST have date_assign+date_deadline. Progress 0.0-1.0. Kanban filter parent_id=False. Use user_ids [(4, uid)]. Always nest under correct parent. Update registers without asking.
-§
-Excel: formulas, number formatting (never "SAR" text), navy/white/yellow, openpyxl.
+Costing scope: Sister Companies = stores+coffee+VC only — exclude museums. Equipment/ops separated from construction for independent invoicing. Follow existing submittal files. Costing files: bilingual AR/EN headers, category classification, item type column, reallocation notes source+target, factory cost, supervision 10% on full total, formula-based. Dates=Rateeb.
 §
 Never ask permission — execute. Contract baseline first, reality second. Cross-check activities vs SOW/ER before adding. Formal letters as DOCX with Samaya branding (red accent, bilingual RTL).
 §
-Verify schedule phase/scope before judging duration. Design-phase ≠ full project. Arabic for direction, English for formal output.
-§
-User prefers Google Gemini (AI Studio) as the primary model provider and provided an API key for configuration.
+Requires ALL prompts rewritten/structured before execution — Codex Order Rewriter role. Always restate, clarify, and structure the task in a formatted spec before proceeding.
