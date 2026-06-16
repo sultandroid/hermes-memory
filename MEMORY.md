@@ -1,8 +1,12 @@
-Aseer team: Sultan Issa (ID 151, PM), Mohamed Samir (ID 564, Procurement), Hesham (ID 163, Site/Docs), Ahmed Salah (ID 162, Project Coord), Ali (ID 160, Technical Office), Adel Darwish (ID 7, PM). CG: Hossam Mabrouk (hmabrouk@cg.com.sa), Mohammad Elbaz (melbaz@cg.com.sa). AD Engineering: Osama Abdel Shafi Moustafa (osama@adeng.com.sa, main), Info@adeng.com.sa, supervision@adeng.com.sa. Domain: adeng.com.sa. NTP 01-Dec-25, contract complete 07-Sep-26.
+CG contacts: Hossam Mabrouk (hmabrouk@cg.com.sa), Maged Zamzam (mzamzam@cg.com.sa — Senior Architect & QC Core Team, handles drawing reviews), Mohammad Elbaz (melbaz@cg.com.sa). AD Engineering: Osama Abdel Shafi Moustafa (osama@adeng.com.sa). NRS (design consultant): Jim Richards (jim.r@nissenrichardsstudio.com).
+
+Email drafts to NRS must be informal/collaborative, not formal/approval tone. Always show full draft from beginning.
+
+3D dress code (Saudi national dress) is not blocking at DD stage — defer to final visualisation. When NRS lacks MEP coordination inputs, direct them to use approved tender/Stage 3 drawings as base for RCPs.
 §
 For Samaya DOCX generation, load samaya-docx-template skill first (it has SamayaDoc class with correct navy #1E293B, Calibri 11pt, A4 margins 2.5/2.0cm, proper header/footer). Using wrong styling gets corrected.
 §
-Project separation is strict: Moqtana/Tqanny ≠ Aseer/Samaya. Never cross-reference. User gives free-form task direction — don't prompt with multiple-choice, let them say what they want.
+Project separation is strict: Moqtana/Tqanny ≠ Aseer/Samaya. Moqtana = part of RAR Holding / Ritver Paints & Coatings (founded 1950s Italy-JV, paints/coatings/chemicals manufacturer, GCC/EU/Africa/America). Never cross-reference with Aseer/Samaya. User gives free-form task direction — don't prompt with multiple-choice, let them say what they want.
 §
 KSA weekend is Friday-Saturday. Never set deadlines on Friday (day off). When user says "before next Monday" and today is Monday, deadline is Thursday (end of work week).
 §

@@ -1,7 +1,9 @@
-Technical Office Mgr, Aseer Museum. Strategic, protective of Samaya. English output. Formal business: plain black Calibri 11pt, no colors. KSA weekend Fri-Sat. Odoo deadlines aggressive per baseline (2-5 days). Stage: materials/BOQ items→Proc39, mfg/install→659, design→36, handover→479. Decompose prompts into separate tasks. MAIN→SUB only, no stage packages. Kanban sorted by sequence. BOQ items in Odoo must have full descriptions matching the BOQ (qty, unit, scope).
+Plan bodies use role titles. Sign-off/Revision tables need real names (prepared-by=user, reviewer/approver=team). Eng. prefix for all engineer names. CG comment text preserved verbatim. Close Excel before openpyxl. Delete Excel rows in reverse order.
 §
-Always track time spent on Odoo tasks using session time. Log duration to task timesheet (account.analytic.line) via XML-RPC after completing work: date, hours, description of work done. Close Excel before openpyxl writes.
+Odoo: aggressive deadlines (2-5d per baseline). BOQ→Proc39, mfg/install→659, design→36. MAIN→SUB, Kanban sorted. English only. HTML emails: Calibri 11pt, gray borders, no plain text, no brand colors. Project separation strict: Moqtana/Tqanny ≠ Aseer/Samaya.
 §
-English-only for Odoo output — project names, task lists, status reports must be in English. When Arabic names appear in search results, translate/romanize for display.
+Name format: Always use "Eng." prefix for engineers (e.g. "Eng. Waris Sultan" not just "Waris"). Apply to all personnel names in project documents.
 §
-Expects HTML emails with proper tables and professional formatting (Calibri, black text, gray borders) — plain text rejected. Never use Samaya brand colors (navy/red) in internal emails.
+User: Mohamed Sultan, Tech Office Manager, Samaya — Aseer Museum. Prefers concise delivery. Frustrated by formatting loss in Excel, subagent file corruption, page overflow. Real names in sign-off tables, not roles. Eng. prefix. Session time → Odoo. Eng. Waris Sultan (PD). QA/QC vacant — Samir on behalf. Hani Alghamdi = Procurement.
+§
+Email style: informal/collaborative for CG review forwarding. Split separate CG topics into distinct emails. Flag Samaya-in-house items clearly. Pre-empt "already submitted" pushback in forwarded requests. Always draft complete email in one go, not patch-style.
