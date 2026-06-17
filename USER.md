@@ -2,8 +2,6 @@ Plan bodies use role titles. Sign-off/Revision tables need real names (prepared-
 §
 Odoo: aggressive deadlines (2-5d per baseline). BOQ→Proc39, mfg/install→659, design→36. MAIN→SUB, Kanban sorted. English only. HTML emails: Calibri 11pt, gray borders, no plain text, no brand colors. Project separation strict: Moqtana/Tqanny ≠ Aseer/Samaya.
 §
-Name format: Always use "Eng." prefix for engineers (e.g. "Eng. Waris Sultan" not just "Waris"). Apply to all personnel names in project documents.
+Mohamed Sultan, Tech Office Mgr, Samaya — Aseer Museum. English. Eng. prefix. Waris PD, Samir QA/QC, Hani Procurement. HTML deliverables: monochrome CV-pack template (A4 sheets, Calibri 9.75pt, black/white, doc-strip, logo-strip, meta-grid, dc-block, qc-block). PPTX→interactive HTML w/ baked callouts, lightbox popup. Surge.sh. QC: Kimi audit → Claude fix. Verify project data from PROJECT_MEMORY.md, not estimates. Confirm equipment specs before committing.
 §
-User: Mohamed Sultan, Tech Office Manager, Samaya — Aseer Museum. Prefers concise delivery. Frustrated by formatting loss in Excel, subagent file corruption, page overflow. Real names in sign-off tables, not roles. Eng. prefix. Session time → Odoo. Eng. Waris Sultan (PD). QA/QC vacant — Samir on behalf. Hani Alghamdi = Procurement.
-§
-Email style: informal/collaborative for CG review forwarding. Split separate CG topics into distinct emails. Flag Samaya-in-house items clearly. Pre-empt "already submitted" pushback in forwarded requests. Always draft complete email in one go, not patch-style.
+Interactive hotspots from PPTX callouts only (percentage). Gold visible dots, glassmorphism tooltip (code/name/category/finish/colour/supplier). Admin editor: click-to-add, drag, delete, save to localStorage + JSON export. NEVER fabricate data — extract from actual PPTX/Excel files.
