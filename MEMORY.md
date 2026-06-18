@@ -17,4 +17,4 @@ Print PDF Samaya style: dark header #1A1D23, white Samaya logo, gold accent line
 §
 Shared memory repo: github.com/sultandroid/hermes-memory — cron sync every 2h via memory_github_sync.sh. User verifies work was actually done in Odoo after updates. Prefers one-task-at-a-time with action prompts.
 §
-ASER Jun18: Interactive Specialist Prequal ACCEPTED (Sent 1:37PM). Subcon19 cleared for engagement. Comprehensive Scenography Drawings pkg submitted (Sent 11:55AM, NRS design). P01927 (المصنع) = factory operational expenses (separate entity, NOT Moqtana). Moqtana is manual-only — NO email connection.
+ASER Jun18: Interactive Specialist Prequal ACCEPTED (Sent 1:37PM). Subcon19 cleared for engagement. Comprehensive Scenography Drawings pkg submitted (Sent 11:55AM, NRS design). P01927 (المصنع) = Samaya factory operating expenses (factory managed by user, separate from BIM Unit & Moqtana). Moqtana = manual-only, no email.
