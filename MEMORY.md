@@ -14,3 +14,7 @@ Use git for version control — initialize repo with `git init`, commit after ev
 CG handling: email text status > PDF text. When CG contradicts own approved docs, reference doc number+date. CG reviewers (Mansour, Maged, Elbaz, Hossam) don't always coordinate — cross-check. Prefer sample approval before rendering to avoid double work. Check Riba 4 Remarks for past CG instructions.
 §
 Print PDF Samaya style: dark header #1A1D23, white Samaya logo, gold accent line, gold page labels, footer "Prepared by Samaya Technical Office", A4 landscape. Hotspot pins on print need object-fit:cover (not contain) in fixed-height container to prevent pin drift.
+§
+Shared memory repo: github.com/sultandroid/hermes-memory — cron sync every 2h via memory_github_sync.sh. User verifies work was actually done in Odoo after updates. Prefers one-task-at-a-time with action prompts.
+§
+ASER Jun18: Interactive Specialist Prequal ACCEPTED (Sent 1:37PM). Subcon19 cleared for engagement. Comprehensive Scenography Drawings pkg submitted (Sent 11:55AM, NRS design). P01927 (المصنع) = factory operational expenses under Moqtana Odoo, not BIM Unit.
