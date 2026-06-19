@@ -4,6 +4,8 @@ CG response process: (1) check email thread for NRS replies first, (2) cross-ref
 §
 Plan-first: discuss approach before coding. Use git init/commit/push. Sub-agent audits (Claude/Codex/pi/Kimi) before complex changes.
 §
-After every work session update Odoo task (desc, progress, state, timesheet). Must ask Telegram approval first with project/task/changes summary before executing.
+Odoo update: append to description only, never replace. Need Telegram approval first with summary. Log timesheet.
 §
 Visual/presentation: info cards must show ALL data fields. Buttons should be bold with icons. Print: A4 landscape, 3 pages (full-width clean photo, annotated pins, legend). Mobile: stacked vertical layout (image above info), page-scroll not touch-drag. Text needs strong shadow over dynamic bg.
+§
+All Odoo output must be in English — translate/romanize Arabic task names when displaying in tables. No Arabic text in output.
