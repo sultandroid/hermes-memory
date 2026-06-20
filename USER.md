@@ -1,4 +1,4 @@
-Mohamed Sultan (Eng.), Tech Office Mgr, Samaya Investment. Consultative; no Surge/public deploy without explicit ask. Never modify original Excel. Client-facing language only in covers/headers — no PMBOK/RBS. Audits from Samaya contractor side.
+Mohamed Sultan (Eng.), Tech Office Mgr, Samaya Investment. Consultative but terse/direct; expects autonomous polish without much back-and-forth. No Surge/public deploy without explicit ask. Never modify original Excel. Client-facing language only — no PMBOK/RBS/source attribution in body. Audits from Samaya contractor side.
 §
 CG response process: (1) check email thread for NRS replies first, (2) cross-ref approved scope submittals (ZD-0031 shot layout) for self-contradictions, (3) check schedule JSON data for finish disputes, (4) "sample first, render once", (5) one CG reply + forward to NRS. WhatsApp images may need alpha-channel OCR. Register Log (.xlsb) tracks doc statuses.
 §

@@ -2,12 +2,12 @@ Aseer Museum team (SMP Rev03): PD Eng. Waris Sultan (Exhibitions, 13-Jun), BIM M
 §
 Aseer finishes suppliers: Ceramiche Piemme, Concept Tiles, Domus, Tarkett, Asona, Knauf, Kvadrat, Clay-works, Corian, Hi Macs, Smile Plastics, Valchromat, Viroc, ARPA, GF Smith. Source: Pre-Appointment Exhibition Schedules.
 §
-Viz app at github.com/sultandroid/aseer-museum-viz, live at samaya-factory.com/aseer/. Source: OneDrive/Kimi_Agent_Interactive.../app/. Shot layout per MOC-MUS-ASE-1A0-ZD-0031 Rev.01 (CG-approved 19-May-2026). Showcase info cards: compact, no size/dimension fields — only Type, ID, Exhibit, functional display fields (Glass Sides, AR, Lighting, Climate). Configured via SCHEDULE_FIELD_GROUPS in Gallery.tsx.
+Plan documents vs appointments boundary: Our scope = plan document content only (org charts, RACI, matrices, specialist roles, histograms). Hiring/appointing individuals (QA/QC Mgr, T&C Mgr etc.) is PD/HR's job — we leave vacancies as "TBC" / "PD action pending" in plans, not our gap to close.
 §
 Appendix B = authoritative specialist packages. BIM Mgr: weekly online coord + monthly visits + on-site support: Eng. Ali A. Mostafa. No PMBOK/WBS. Only Riyadh/Abha. "Pending submission" = on board.
 §
 CG handling: email > PDF. "Pending submission" = on board, keep name. No "pending MoC"/"Overseas"/"Code C"/"on-site". No PMBOK/WBS/RBS. Materials from schedules not generic. Only Riyadh/Abha. Appendix B authoritative for specialist packages. CG site instruction = include with remark. Check Register Log (xlsb) for doc status. Keep KPR + plans in sync.
 §
-Print PDF Samaya style: dark header #1A1D23, gold accent line, gold labels, footer. Use A3 landscape if A4 can't fit images without cropping. `object-fit: contain` on both clean & annotated views for pin alignment.
-§
 Deploy: scp -P 65002 dist/{index.html,assets/*.{js,css}} to hostinger build/aseer/. Build with `node build.mjs` (npm run build hangs on OneDrive JSON). Strip ALL `crossorigin` from dist/index.html (both script AND link tags) before deploy — Hostinger has no CORS headers, module scripts silently fail with empty error msgs.
+§
+Sheet numbering: ID treated as architectural sub-discipline — use AR code for all interior design/fit-out/exhibition drawings. No separate ID code. BEP Table 30 codes mandatory. 3-digit sequential numbering. Type system 0-6 (US NCS). Confirmed with Tech Office Mgr.
