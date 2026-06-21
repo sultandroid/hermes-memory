@@ -1,15 +1,11 @@
-Aseer Museum SMP Rev03: PD Eng. Waris Sultan (Exhibitions), BIM Mgr Dr. Waleed Salah, QA/QC Mgr vacant, HSSE Mgr Eng. Mohamed Ahmed, Tech Office Mgr Sultan Issa, Proj Eng. Ahmed Salah, Arch BIM Lead Eng. Ali A. Mostafa (Samaya TO Riyadh), Procurement Hani Alghamdi, Doc Controller Hesham Abdelhamid.
+Aseer Museum: PD Waris (m.waris@samayainvest.com). BIM Mgr Dr. Waleed Salah, Arch BIM Lead Ali A. Mostafa (Samaya TO Riyadh). CG: email > PDF, "Pending submission"=on board. Appendix B authoritative. Sheet: ID=AR code, BEP Table-30, 3-digit, type 0-6. DD by PACKAGE TYPE per SOW §6.22. Review periods: PMC 14CD, CG 14WD, conflict §9.3. WD=Sat-Thu.
 §
 Plan documents vs appointments boundary: Our scope = plan document content only (org charts, RACI, matrices, specialist roles, histograms). Hiring/appointing individuals (QA/QC Mgr, T&C Mgr etc.) is PD/HR's job — we leave vacancies as "TBC" / "PD action pending" in plans, not our gap to close.
-§
-Appendix B = authoritative specialist packages. BIM Mgr: weekly online coord + monthly visits + on-site support: Eng. Ali A. Mostafa. No PMBOK/WBS. Only Riyadh/Abha. "Pending submission" = on board.
-§
-CG handling: email > PDF. "Pending submission" = on board, keep name. No "pending MoC"/"Overseas"/"Code C"/"on-site". No PMBOK/WBS/RBS. Materials from schedules not generic. Only Riyadh/Abha. Appendix B authoritative for specialist packages. CG site instruction = include with remark. Check Register Log (xlsb) for doc status. Keep KPR + plans in sync.
 §
 Sheet numbering: ID treated as architectural sub-discipline — use AR code for all interior design/fit-out/exhibition drawings. No separate ID code. BEP Table 30 codes mandatory. 3-digit sequential numbering. Type system 0-6 (US NCS). Confirmed with Tech Office Mgr.
 §
 PD is Muhammad Waris Sultan Khan (m.waris@samayainvest.com), not Adel Darwish. Adel is Projects Director support role.
 §
-CG Elbaz mistakes: (1) "by floor" contradicts SOW §6.22 (by pkg type); (2) bypasses PL-0018 Items 19-20; (3) mixes unlike deliverables. Review periods: PMC 14CD (ER §2.4.A), CG 14WD (PL-0027 §7.1), Conflict Rule §9.3 most stringent applies. WD=Sat-Thu.
+CG doc rules: cite only ER/SOW/DMP as refs — no PD/internal sources. No invented tiers. Names: only KPR-approved. Unapproved subs removed. Acoustic scope merged. Tiers per DMP: T1=6 Mgmt, T2=Design Specialists, T3=Support+Authority. No status commentary on TBC/Vacant roles. EXCEPTION: firm-assigned roles get factual status (e.g. "Rawasen — pending approved"). Page balance: compact CSS first (reduce font/padding) before splitting. Electrical Eng. labeled correctly (on site, not HO).
 §
-DD per SOW §6.22 by PACKAGE TYPE (NOT by floor). DD-21 Models & Replicas = Specialist Contractor (not NRS). DD-22 Object Mount = MoC. DD-14 Showcases = Glasbau Hahn/NRS.
+Jalal & Jamal (Odoo 166) and Maalim Al-Haramein (Odoo 176) are Jabal Omer retail projects. J&J has 14 hierarchical packages (proper structure). Maalim has 90 flat tasks — needs restructuring into packages (Makkah Models, Madinah Models, Display/Furniture, Fit-out, AV). Both have AV items not yet in Odoo — J&J AV by Rawasen contractor, Maalim has no AV tasks. Project ID 309 = "Jalal & Jamal - Jabal Omer and Zam Zam" (BIM + fiberglass). Design doc dated 21/6/2026 shows J&J = 6-hall "Names of Allah" exhibition. User prefers plan-first: present approach before executing Odoo changes.
