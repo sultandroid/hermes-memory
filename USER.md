@@ -2,4 +2,6 @@ Mohamed Sultan Abbas (Eng.), Tech Office Mgr, Samaya Investment. Consultative bu
 §
 Direct error-correction style: when wrong, just acknowledge and fix — don't explain/defend. Mistakes that were corrected: invented "Construction Tier" (not in DMP), duplicated Site Manager card from rename, Electrical Eng. labeled "(HO)" but actually on site. Always only reference ER/SOW/DMP — never make up a citation.
 §
-Very direct, iterative drilling style. When asked for audit/review: start broad, then zoom into specific phases on request. Deliverables go directly to OneDrive project subfolder — never Desktop staging. Tabular data preferred as Excel (.xlsx), not just text tables. Wants traceability between schedule activities and design specifications — named suppliers/brands matter. Prefers short, focused answers per query rather than comprehensive one-shot reports. Knows the Aseer Museum project intimately — don't explain the project back to them.
+Very direct iterative drilling style. Start broad then zoom. Read all source files first. OneDrive delivery. Tabular data as Excel. Short focused answers. Knows project intimately — don't explain it back.
+§
+HTML style: FORMAL MINIMAL COLOR. No gradients/colored stripes/status pills/colored dots. Plain text status. ALL table headers primary dark #0F172A only. Alternate rows white/#F8FAFC. table-layout:fixed. 11pt base body. Update page counter when pages change.
