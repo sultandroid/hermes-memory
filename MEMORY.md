@@ -1,13 +1,13 @@
-Aseer: PD M.Waris (m.waris@samayainvest.com), NOT Adel Darwish. Adel is Projects Director support role. QC Mgr: Abd Elmohaymen Medhat. QA/QC Mgr: same person.
-§
-Sheet numbering: ID treated as architectural sub-discipline — use AR code for all interior design/fit-out/exhibition drawings. No separate ID code. BEP Table 30 codes mandatory. 3-digit sequential numbering. Type system 0-6 (US NCS). Confirmed with Tech Office Mgr.
+Aseer Museum: PD M.Waris Khan, Adel = Projects support. QC: Abd Elmohaymen. Sheet IDs use AR code (no ID). CG docs cite only ER/SOW/DMP. Design Risk Register at 06/...xlsx. CV pack: Doc Control blank, QC approved by Waris.
 §
 CG doc rules: cite only ER/SOW/DMP — no PD/internal sources. No invented tiers. KPR-approved names only. Tiers per DMP. No status commentary on TBC/Vacant roles (no 'pending submission', 'in progress', 'Code C'). Firm-assigned roles get factual status (e.g. 'Rawasen — pending approved'). Page balance: compact CSS first. Compact redesign: compress table padding 1-2px, font 0.35-0.4rem, single-row ribbons for cards, group roles into tier rows, 2-col layout. Electrical Eng. labeled on site, not HO.
 §
-Design Risk Register: 06_Design_Risk_Register/Aseer_Museum_Design_Risk_Register.xlsx. Columns B-K (B=Risk ID, C=Category, D=Description, E=Consequences, F=P, G=I, H=PxI, I=Owner, K=Mitigation). New entries match existing formatting: purple fill #F3E5F5, thin borders, wrap text, bold risk ID in col B. Last entry row 79 (COM-CM-004). New: CO-X-003 (light box/acoustic baffle gap between NRS S2, Museum Studio S3 visuals, ZNA — no detail coverage), CO-X-004 (BF/LGF/GF/FF numbering overrides 1000 sequence).
-§
 CV pack workflow: Document Control block — empty Doc No./Rev/Date/Status (for DOC to fill), only Distribution pre-filled. QC Approved by = PD Muhammad Waris Sultan Khan, never Adel Darwish.
 §
-Odoo PO tracker: live via JSON-RPC. Exclude: receipt=full, draft/cancel state, invoice=invoiced, posted bill with payment=paid. Check account.move for real payment. receipt_status: bool False=Not Recorded, str 'pending'=Not Received. buyer_id field blocked. Factory projects: 244,302,315. Exclude Mada Aljezera & Saba Najad vendors.
+Odoo PO tracker: live via JSON-RPC on Samaya. Exclude: receipt=full, draft/cancel, invoice=invoiced. receipt_status: bool False=Not Recorded, str 'pending'=Not Received. Factory projects IDs: 244,302,315.
 §
-Always delegate heavy data extraction to sub-agents (delegate_task with terminal/file toolsets) rather than using execute_code or inline Python for large Excel/PDF reads. Mentioned explicitly: "all alwayes delegate to labors."
+Mohamed Zain — start date 15/6/2026. HR/project team hire.
+§
+Pricing methodology: never accept BoQ prices at face value — always verify origin-country market prices (EUR for EU goods, USD FOB for Chinese, US street for American) before applying logistics markup. BoQ prices are often consultant list prices × exchange rate with zero shipping/customs/distributor margin.
+§
+Register Log doc convention: MOC-MUS-ASE-1X0-YY-NNNN (current) and MOC-Asser-SIC (older). Verified refs: Master Programme = MOC-ASEER-GN-DS-006, HSE Plan = MOC-ASEER-SIC-1K0-PL-0010, DMP = MOC-MUS-ASE-1K0-PL-0029, BEP = MOC-ASEER-SIC-1K0-PL-0015, Comm Plan = PL-0018, PQP = 0Q0-PL-0011.
