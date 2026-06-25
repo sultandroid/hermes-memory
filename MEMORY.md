@@ -6,7 +6,7 @@ CV pack workflow: Document Control block — empty Doc No./Rev/Date/Status (for 
 §
 Samaya Odoo PO cashout: state=purchase/done, exclude full-received <1K SAR. Paid: P00893,P00744,P01154,P01331,P01289,P01227,P01222,P01023,P00908,P01587. Outside Odoo: P01094. Supplier 1224=Saba Najad bank Mada Aljezera — vendor accounts Samaya owes, not cash.
 §
-Aseer Museum doc refs: Master Programme=MOC-ASEER-GN-DS-006, HSE Plan=MOC-ASEER-SIC-1K0-PL-0010, DMP=MOC-MUS-ASE-1K0-PL-0029, BEP=MOC-ASEER-SIC-1K0-PL-0015, Comm Plan=PL-0018, PQP=0Q0-PL-0011. Register Log: MOC-MUS-ASE-1X0-YY-NNNN (current) or MOC-Asser-SIC (older).
+Aseer Museum doc refs: Master Prog=MOC-ASEER-GN-DS-006, HSE=PL-0010, DMP=PL-0029, BEP=PL-0015, Comm Plan=PL-0018, PQP=0Q0-PL-0011. Register Log: MOC-MUS-ASE-1X0-YY-NNNN. RFI/TQ workflow: Tech Office drafts, DC assigns ref at issue. Response deadlines via Aconex DS form, not doc body. Distribution = MoC·CG·PMC·Samaya. Add WITHOUT PREJUDICE on scope-boundary RFIs. Rev A PDFs in folder may be unsent — verify.
 §
 RCRC Exhibition: Odoo 324. Designer BMA (borismicka.com). BoQ base $8.18M. AV: LED P1.2-P2.6, Epson, QSC, Crestron. Files in _PRICING_DOCS/. codex 0.128.0, kimi 1.47.0. Fugu (`codex-fugu`) Sakana AI model — rate-limited, best for structured audits. Samaya official logo: `_Style-Guides/samaya-rfi-style-guide/assets/samaya.png` (1885x621, not Docs/Branding).
 §
