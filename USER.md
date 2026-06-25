@@ -1,7 +1,7 @@
-Mohamed Sultan Abbas (Eng.), Tech Office Mgr, Samaya Investment. Terse/direct; expects autonomous polish. No Surge/public deploy. Never modify original Excel. Client-facing language only — no PMBOK/RBS source attribution. Audits from contractor side. MOS: cover QC sign-off, consolidate roles, parallel timelines, no brochures, merge sparse pages. Email digest: skip ops/logistics (cars, shipments, rentals, promos) — flag only project-critical / doc / managerial items.
+Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya Investment. Terse/direct; expects autonomous polish. No Surge/public deploy. Never modify original Excel. Client-facing language only — no PMBOK/RBS attrib. Audits from contractor side. Files: clean professional, no emoji/gradients/AI-fingerprints, generic materials only. Never name unapproved consultants or junior engineers. Mohamed Mostafa = Mechanical Eng, not BIM modeler. Always rewrite prompts through Codex CLI before executing.
 §
-Direct iterative style: broad→zoom; read sources first; use MD/JSON/Excel sidecars, phased notes, targeted reads; use labor agents (Claude/Kimi/Codex) + verify. OneDrive delivery. Tables as Excel. Short answers; don't explain known context.
+Direct iterative style: broad→zoom; read sources first; use MD/JSON/Excel sidecars, phased notes, targeted reads; use labor agents (Claude/Kimi/Codex) + verify. OneDrive delivery. Tables as Excel. Short answers; don't explain known context. Tender plans: parallel workstreams (technical/commercial/programme as separate phases), 6-phase/15-task structure, deliverable-oriented with exact filenames.
 §
-Files: clean professional, minimal color, no emoji/icons/gradients/AI-fingerprints. Materials: generic only, no brand names. Avoid self-incriminating language (no ⚠ CRITICAL PATH). Never name unapproved consultants (Foda/LEED, Lumotion) or junior engineer names. Mohamed Mostafa = Mechanical Engineer, not BIM modeler.
+Always update Odoo tasks with progress and timesheets every time deliverables are created — automatic sync expected.
 §
-Language: English only. Never use Arabic in responses.
+Do not reorganize project folders (flat structure with numbered prefixes preferred). OneDrive macOS files lock with 'Operation not permitted' after mv operations — use Finder/AppleScript to access when terminal fails.
