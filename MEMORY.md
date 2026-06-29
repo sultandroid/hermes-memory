@@ -1,19 +1,13 @@
-Aseer Museum: PD M.Waris Khan. MEP scope: power to specialist systems only. Namaa FLS: P01167 (SAR70k safety), P01449 (SAR23k survey). Not full FLS design.
+Samaya logo: bilingual PNG from _Style-Guides/logos archives/samaya-logo-trans.png. Never SVG approximations.
 §
-RCRC proposal work: never blanket regex section tags — corrupts structure. Verify tag balance after edits. White pages = part dividers needing dark styling.
+RCRC doc at ~/Documents/RCRC-Exhibition/. Build: python3 scripts/assemble.py → dist/index.html. Pages in pages/ (01-*.html). Base template + CSS in base.html. Samaya Doc Engine v1.0: kpi-grid, chart-card, strip, eng-table, snapshot. Charts: formal palette (navy #0F172A, deep blue #1E40AF, dark amber #92400E, dark teal #065F46) — NO shiny colors (#0284C7, #F59E0B, #10B981). Process flowcharts need dashed feedback lines (#991B1B). No prices in technical proposals. Content flows after titles — no flex gaps. Bilingual AR/EN. Header/footer framework (doc-no/rev/status + page auto-num). Delegate design tasks to sub-agents. Source data: OneDrive tender folder. Section template: header, h2-row (bar + title + chip), content, footer (Tech Office + RESTRICTED + auto page num).
 §
-OneDrive macOS: Never write files directly to OneDrive path (CloudStorage or Group Containers) — both produce corrupt/placeholder files. Stage to /tmp, then AppleScript `duplicate src to dest with replacing` via Finder. Verify with `xxd -l 8` (must start PK\x03\x04).
+Team assignments (from CONTACTS.md): Sultan=DD technical only. Samir=site/proc. Hani+purchasing. Hesham=doc control. Ahmed Salah=coordination/mfg. Never assign Sultan to procurement/site work.
 §
-SAMAYADOC: use SamayaDoc class, never hand-craft styles. add_h2(num,text). add_table(rows,headers). AppleScript copy to OneDrive.
+Rules (from RULES.md): baseline first, source-verifiable. Entity isolation: Samaya vs Moqtana/Tqanny never mix. Excel: navy #1E293B openpyxl. Schedule: PE/AS/EN/PR=design CN/IN/TC/HD=construction.
 §
-Samaya logo: use bilingual PNG from _Style-Guides/logos archives/samaya-logo-trans.png (lowercase "samaya", red "a"). Never SVG text approximations. Use `<img>` with PNG, not inline SVG.
+Odoo Samaya: URL=samayainv.odoo.com DB=peerless-tech-samaya-18-0-18447146 login sultan@samayainvest.com key in ~/.config/samaya/odoo.env. PO defaults USD set currency_id=150. user_ids=m2m. Progress=0.0-1.0. SSL bypass.
 §
-Proposal rules (RCRC): never reference self-created docs (SOW, ER) — use external standards only. No team member names in field reports, no photo quantities. Monochrome icons for formal docs; diverse TOC icons. Workflow descriptions prefer SVG charts. GitHub for version control. Remove exclusionary language (".33.1 Photographic Register section can be removed.
+Register format: 9-col ref/desc/disc/50/90/100/IFC/subpkg/rm. HARD RULE: No icons/emoji (▲✅🟡⏳⚠️ etc). Plaintext only. Stage markers=blank or --, never icons. Scripts=_scripts. Validate from 24_Subcontractors/{Contractor}/ actual data. Design scope=NRS->Arch. FFE=loose furniture procurement only (BOQ 004). Graphics+Model Maker=no dates (client RFI). Interactives start 15/07. Exhibition_FitOut deleted. QA/handover=consolidated register.
 §
-Odoo timesheets: unit_amount is in MINUTES (60=1hr, 120=2hrs). Descriptions: plain text only, no emoji/icons.
-§
-Project work: work directly in ~/Documents/{project-name}/ not /tmp (user explicitly corrected this).
-§
-Register column cleanup: exact header match only ("SOW §", "ER §", "ER §b"). NEVER substring-match "SOW" or "ER" — deletes "Submittal / Deliverable (per SOW)" description column.
-§
-Register building: preserve source file's organization hierarchy (level-based vs type-based). Stage columns (50%, 90%, 100%, IFC) hold planned dates, staggered by floor with 7-day review buffers.
+OneDrive macOS: `cp` works for HTML/text under ~300KB. ZIP/PDF/binary: /tmp + Finder duplicate (PK header mangled otherwise).

@@ -1,9 +1,7 @@
 Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Works on museum/exhibition fit-out tenders (RCRC Exhibition, Aseer Museum) and Moqtana Odoo 18 projects (Darin, Shobra, Al Bay'ah, Al-Raka, Tabuk, Al Faw, Said Alshohadaa, Antara, Urwa Palace). Bilingual AR/EN. Brand-conscious: insists on official Samaya PNG logo (lowercase 'samaya' red 'a') — rejects text approximations.
 §
-Provides structured bug-reports with severity rankings (🔴🟠🟡🟢) and evidence citations. Expects ALL listed issues to be fixed, not a subset. Prefers precise page/section numbering integrity. When reporting issues, match his format: severity table with evidence column.
+Python3 over Node.js for builds (Node fs times out on macOS). Delegates design/redesign to expert labor (Claude Code, Codex CLI) — orchestrates, doesn't DIY. Process big tasks autonomously when told "sleep". Work in ~/Documents/ not /tmp. No flex gaps — content flows naturally after title.
 §
-Strongly prefers project files in ~/Documents/ — never /tmp or shared temp directories. Expressed frustration when work was staged in /tmp instead of Documents.
+Detail-oriented: catches data gaps in tables immediately. Expects formal correspondence to include SMP Tier IDs and contract refs for auditability. Values precision in NRS-vs-SAMAYA scope mapping. Source data grouping preserved in output. No icons/emoji/AI fingerprints. Expects correction follow-through on ALL listed issues.
 §
-Values simplicity and reliability in build pipelines. Python3 scripts preferred (Node's fs.readFileSync times out on large files on this macOS). "It just works" principle over complex automation.
-§
-Detail-oriented — catches missing data immediately. Expects source data organization preserved faithfully in output (if source groups by level, output must too). Pragmatic about column use: stage columns should hold planned dates when sheets already separate work by stage.
+Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Works on museum/exhibition fit-out proposals. Title = Technical Office Manager, not Design Manager. Bilingual AR/EN.
