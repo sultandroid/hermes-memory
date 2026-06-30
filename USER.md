@@ -1,7 +1,15 @@
-Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Works on museum/exhibition fit-out tenders (RCRC Exhibition, Aseer Museum) and Moqtana Odoo 18 projects (Darin, Shobra, Al Bay'ah, Al-Raka, Tabuk, Al Faw, Said Alshohadaa, Antara, Urwa Palace). Bilingual AR/EN. Brand-conscious: insists on official Samaya PNG logo (lowercase 'samaya' red 'a') — rejects text approximations.
+Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Bilingual AR/EN (Arabic primary). Museum exhibition fit-out proposals/tenders (RCRC Exhibition, Aseer Museum).
+
+CRITICAL RULES:
+- NO prices/ monetary values ANYWHERE in technical proposals — no $ or SAR or cost numbers
+- NO AI symbols/emoji/icons: ✅❌⚠️⭐§™ Bootstrap icons or any icon fonts
+- Formal muted palette ONLY: #0F172A, #1E40AF, #065F46, #92400E, #4338CA, #475569 — never shiny
+- Content flows directly after title — block layout, NO flex/display:flex gaps
+- Every page: framework header (doc-no/rev/status/section) + footer (Technical Office/RESTRICTED/data-page-current/total)
+- Tables: table-layout:fixed + explicit column widths
+- Tables never dismissed without replacement
+- Charts: 680px viewBox, unified arrow defs, formal colors, no overflow
+- No placeholder text like "المهندس / …………………."
+- Expects agent to FIX problems, not describe them — frustrated by describing instead of doing
 §
-Python3 over Node.js for builds (Node fs times out on macOS). Delegates design/redesign to expert labor (Claude Code, Codex CLI) — orchestrates, doesn't DIY. Process big tasks autonomously when told "sleep". Work in ~/Documents/ not /tmp. No flex gaps — content flows naturally after title.
-§
-Detail-oriented: catches data gaps in tables immediately. Expects formal correspondence to include SMP Tier IDs and contract refs for auditability. Values precision in NRS-vs-SAMAYA scope mapping. Source data grouping preserved in output. No icons/emoji/AI fingerprints. Expects correction follow-through on ALL listed issues.
-§
-Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Works on museum/exhibition fit-out proposals. Title = Technical Office Manager, not Design Manager. Bilingual AR/EN.
+User expects EXACT source document names in registers — never generalize or summarize drawing names from LOD/BOQ documents. If source says "Basement Floor Power System Layout", use that verbatim, not "Power system layout — per floor".
