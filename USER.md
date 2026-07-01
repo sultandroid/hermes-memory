@@ -1,15 +1,7 @@
-Eng. Mohamed Sultan Abbas (Mohamed Essa), Tech Office Mgr, Samaya Investment. Bilingual AR/EN (Arabic primary). Museum exhibition fit-out proposals/tenders (RCRC Exhibition, Aseer Museum).
-
-CRITICAL RULES:
-- NO prices/ monetary values ANYWHERE in technical proposals — no $ or SAR or cost numbers
-- NO AI symbols/emoji/icons: ✅❌⚠️⭐§™ Bootstrap icons or any icon fonts
-- Formal muted palette ONLY: #0F172A, #1E40AF, #065F46, #92400E, #4338CA, #475569 — never shiny
-- Content flows directly after title — block layout, NO flex/display:flex gaps
-- Every page: framework header (doc-no/rev/status/section) + footer (Technical Office/RESTRICTED/data-page-current/total)
-- Tables: table-layout:fixed + explicit column widths
-- Tables never dismissed without replacement
-- Charts: 680px viewBox, unified arrow defs, formal colors, no overflow
-- No placeholder text like "المهندس / …………………."
-- Expects agent to FIX problems, not describe them — frustrated by describing instead of doing
+Eng. Mohamed Sultan Abbas (Essa), Tech Office Mgr, Samaya Inv. Bilingual AR/EN. Museum fit-out (Aseer, RCRC). No prices/monetary values. No AI emoji/icons. Formal muted palette. Content block layout. Expects fix-not-describe. Material submittal pages need 5-logos bar (MoC,PMC,CG,NRS,Samaya) = CV template. Approval blocks need spacious sig lines (14px+, 1.5px border) for stamp+date. Rejects @media-print-only — wants full A4 redesign for print-ready. Exact source names. Always English.
 §
-User expects EXACT source document names in registers — never generalize or summarize drawing names from LOD/BOQ documents. If source says "Basement Floor Power System Layout", use that verbatim, not "Power system layout — per floor".
+Expects me to read documents thoroughly end-to-end, not skim. Will test my thoroughness ('did you read all the contract?'). Makes payment/approval decisions based on strict contractual terms, not goodwill or pressure. Wants source documents opened on his machine to verify himself.
+§
+AI/LLM: cloud-only, 4-6 proposers, DeepSeek, speed-sensitive (streaming + speculative + heuristic), hands-on, fix-not-describe.
+§
+Audit engineer/client messages vs source docs (BOD/SOW/contract) before editing deliverables. Verdict, not edits. Wait for confirmation.
