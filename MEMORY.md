@@ -1,11 +1,3 @@
-MacBook Pro M4 Pro, 48GB RAM. Brew + Docker installed.
+Aseer project root: ~/Documents/Asher_Regional_Museum_Document_Control/. Subfolders: 01_Logs_Registers, 02_RFIs/NCRs, 02_CG_Responses, 04_Submittals/{General/CVs, MEP, Mechanical, Architecture/{DD_Drawings, Materials}, Lighting, Showcase}, 06_PDFs/Backup_Reports, 09_Correspondence/{Invoices, Proposals, Contracts}. Doc code routing: 1A0=Arch, 1E0=Elec, 1M0=Mech, 1K0=Gen, MEP=MEP. CG: A=Approved, B=Approved w/Comments, C=Revise&Resubmit.
 §
-Cloud-only AI. Rejected local LLMs — uninstalled ollama, mlx, mlx-c; deleted ~/.ollama, ~/moa.
-§
-Cost-conscious + quality-driven. Wants 4-6 proposers (pushed back on 3). DeepSeek required. Speed-sensitive — wants streaming, speculative kickoff, heuristic routing.
-§
-OpenRouter as cloud gateway (single key, multi-provider). Hermes `ollama` MoA profile active. OpenRouter key NOT in env/keychain/rc as of 2026-07-01 — must be provided manually.
-§
-~/moa-cloud/ ready: 4 simple + 6 complex props (qwen-72b/7b, gemini-flash, llama-8b, deepseek-chat/coder), agg qwen-72b, router gemini-flash. Has heuristic gate, speculative kickoff, streaming agg, per-tier max_tokens. Untested.
-§
-Hands-on executor. Runs commands, checks env, expects working CLI not theory. Fix-not-describe.
+This week (Jun25-Jul1): 67 Aseer emails, 75 attachments routed. Key: NCR-0011 landscape (3-day response due Jul3), MEP scope comments need meeting w/AD Engineering, ZNA lighting contract draft pending review, DD stamped drawings via WeTransfer pending download, Submittal13 showcase cases extracted.
