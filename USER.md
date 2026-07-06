@@ -2,7 +2,7 @@ Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer Museum. CG=consultant,
 §
 Cloud-only LLM user. ollama-cloud provider. Models: deepseek-v4-flash, deepseek-v4-pro, ministral-3:8b, gemma3:12b. Trusts agent autonomy, approves ops quickly. Values direct action.
 §
-Arabic: simple common words, short sentences, RTL. No AI-sounding language.
+Strategic negotiator — keeps extra obligations on subs as leverage. Flags high down payments in design contracts. Prefers milestone payments tied to DMP gates (50%/90%/100%/IFC), not concept/schematic. Direct and decisive.
 §
 Contractually cautious: 'acknowledge receipt' ≠ acceptance. 'Without prejudice' language. Never start work without VO. Uses late CG changes as leverage.
 §

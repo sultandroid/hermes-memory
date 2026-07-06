@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-05 07:01:43
+Generated: 2026-07-06 07:01:20
 
 ---
 
@@ -18,8 +18,6 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 User prefers concise, direct responses with actionable tables. Always verify what’s missing before proceeding. Active model: ministral-3:3b (Ollama Cloud). Models: deepseek-v4-flash, deepseek-v4-pro, gemma3:12b. Cost/speed prioritized for efficiency.
 OneDrive BIM path is the primary location for project files: ~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/. The Document Control folder (~/Documents/Asher_Regional_Museum_Document_Control/) is a working copy only. Always use OneDrive BIM path as the primary destination for new files.
-Doc rules: No §/AI phrases. Plain English. Never rewrite quotes. CG: 329 objects, 17 sheets, 236 unassigned.
-Always session_search before re-analyzing a topic — user corrected me for not remembering prior concrete core testing conclusion.
 Contractually cautious: 'acknowledge receipt' ≠ acceptance. 'Without prejudice' language. Never start work without VO. Uses late CG changes as leverage.
 - Always confirm completion specifically: report what was done, what changed, and any issues; do not close with a vague "ok done".
 - If the user provides a secret for setup, handle the credential plumbing but never echo the secret in chat or memory; verify with a non-secret status check.
@@ -36,11 +34,14 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
+Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
+Always use the full research-enabled pipeline:
 
 ## Active Projects
 
 Aseer root: ~/Documents/Asher_Regional_Museum_Document_Control/. Doc codes: 1A0=Arch, 1E0=Elec, 1M0=Mech, 1K0=Gen. CG codes: A=Approved, B=Approved w/Comments, C=Revise&Resubmit.
 OneDrive BIM path is the primary location for project files: ~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/. The Document Control folder (~/Documents/Asher_Regional_Museum_Document_Control/) is a working copy only. Always use OneDrive BIM path as the primary destination for new files.
+CG issued 4 arch comments on submission plan (scenography, furniture, accessibility, evacuation). NRS: scenography in Stage 4 pack, furniture by Samaya, accessibility defined by Stage 3, life safety outside NRS scope. Ali Abdelrahman sent updated plan, recommends sending CG comments to NRS first.
 Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer Museum. CG=consultant, NRS=Nissen Richards, GBH=Glasbau Hahn. Fix-not-describe. Formal construction English. OneDrive BIM path.
 Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, with recurring museum and exhibition tasks around Aseer Museum and RCRC proposal material. He usually gives terse, outcome-first requests and prefers agents to inspect the real target quickly instead of narrating possibilities. For Samaya delivery work, the current durable default is that the OneDrive BIM path is the primary destination, while the local Document Control folder is only a working copy.
 - Keep responses concise and direct; for Samaya construction-facing work, prefer formal English, action tables when useful, consolidated-email style summaries, and avoid prices, emoji, and decorative icons.
@@ -58,7 +59,6 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
  task_group: samaya_aseer_hermes
 keywords: Aseer, Graphics_Submittal_Register, RFI_Register.xlsx, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, NOUS_BASE_URL, nous auth, oauth_device_code, read-only audit, path drift
 task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Subcontractors/03_Graphics_Contractor
-task_group: Aseer Museum / Samaya Technical Office / subcontractor audit
 
 ## Key People
 
@@ -109,11 +109,12 @@ scope: Read-only audit memory for the Aseer graphics contractor package plus pre
 ## Contracts & Documents
 
 Aseer root: ~/Documents/Asher_Regional_Museum_Document_Control/. Doc codes: 1A0=Arch, 1E0=Elec, 1M0=Mech, 1K0=Gen. CG codes: A=Approved, B=Approved w/Comments, C=Revise&Resubmit.
-Doc rules: No §/AI phrases. Plain English. Never rewrite quotes. CG: 329 objects, 17 sheets, 236 unassigned.
-SOW: reference only contract docs (ER, SOW, NRS spec, design reports). Vendor proposals → RFP compliance matrix only.
-Before making claims about contract scope, research SOW/ER/NRS docs directly — user said 'dont ask me you check the contract docs.'
 AV DD submission 05-Jul-2026: 8 NRS-stamped dwgs (BF/LGF/GF/1F), schedules, calcs, diagrams, rack layouts, control reqs, audit. 10 submitted, 22 pending. No 2F/RF in scope. AV Designer=Rawasin. Codes: MOC-ASE-AV-TAV-{floor}-DDD-xxxx. Stage 4: no Design Basis Report needed.
+CG (Mohammad Elbaz) sent Ministry-approved object schedule 2026-06-10. 329 objects, 17 sheets. Only G8/G11/G12 have showcase assignments (80 objects). 236 unassigned. NRS pushback: G3 won't fit, G4/G6 contradictory, Lobby 3 too small (RFI A2742), G12 rock 190kg. Jim requested: definitive list, curator meeting, additional fees. Files at BIM: 02_Submittals/01_Shop Drawings/1.01 Showcase Shop Drawings/2026-07-01_CG_Object_Schedule/
+CG issued 4 arch comments on submission plan (scenography, furniture, accessibility, evacuation). NRS: scenography in Stage 4 pack, furniture by Samaya, accessibility defined by Stage 3, life safety outside NRS scope. Ali Abdelrahman sent updated plan, recommends sending CG comments to NRS first.
+Hesham submitted time extension request (MOC-MUS-ASE-LT-0027) to CG 2026-07-05. Adel replied to Jim re NRS invoice — client advance payment not yet released. Hossam returned structural 50% DD as Code C.
 Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer Museum. CG=consultant, NRS=Nissen Richards, GBH=Glasbau Hahn. Fix-not-describe. Formal construction English. OneDrive BIM path.
+Strategic negotiator — keeps extra obligations on subs as leverage. Flags high down payments in design contracts. Prefers milestone payments tied to DMP gates (50%/90%/100%/IFC), not concept/schematic. Direct and decisive.
 Contractually cautious: 'acknowledge receipt' ≠ acceptance. 'Without prejudice' language. Never start work without VO. Uses late CG changes as leverage.
 Communication: sends draft to PM + NRS first for alignment before sending to CG. Keeps Jim as ally. Separates blocking issues from technical clarifications. Avoids logic questions to CG.
 Stage 4 (Technical Design) submittals = drawings, schedules, calculations, diagrams, rack elevations. No Design Basis Report or concept-stage philosophy docs. CG reviews technical content, not design narrative. Match submittal completeness analysis to project stage.
@@ -137,7 +138,6 @@ task_group: Aseer Museum / Samaya Technical Office / subcontractor audit
 scope: Read-only audit memory for the Aseer graphics contractor package plus preflight guidance for Hermes Nous credential work in `/Users/mohamedessa`; use this when inspecting the live subcontractor folder or when confirming how Hermes expects Nous auth to be wired.
 - Aseer, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, Graphics_Submittal_Register.xlsx, RFI_Register.xlsx, path drift, read-only audit, content freeze, scope clarifications
 - The live graphics package path is `Subcontractors/03_Graphics_Contractor`, but many internal docs still say `Subcontractors/08_Graphics_Contractor` and `Sub-08`; treat that as metadata drift, not the live folder path [Task 1]
-- The audited folder was healthy and substantial: `610` files, `57` dirs, about `521 MB`, with major areas for schedule/BOQ, reference drawings, specifications, RFIs, approvals, material submittals, purchasing, email extraction, and manager dashboards [Task 1]
 
 ## Locations
 
