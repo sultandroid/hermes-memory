@@ -34,8 +34,8 @@ Use XML-RPC to `account.analytic.line`:
 ```python
 models.execute_kw(db, uid, pw, 'account.analytic.line', 'create', [{
     'task_id': TASK_ID,
-    'project_id': PROJECT_ID,  # 219=Aseer, 324=RCRC
-    'unit_amount': HOURS,       # in hours (decimal)
+    'project_id': PROJECT_ID,
+    'unit_amount': 120,       # MINUTES, not hours (120 = 2h)
     'name': 'Description of work',
     'date': 'YYYY-MM-DD',
 }])

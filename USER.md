@@ -1,7 +1,9 @@
-Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer + Zamzam. English only. Corrects: Oddy scope (showcase/display only, not general construction), BIM coordination is Samaya not sub scope. DOCX: close before edit, reopen after. SVG charts preferred over tables/VML, full-width. Use DMP gates + RACI in tables. Days not calendar dates in programmes. No site survey phase when shell exists — design starts D0. Rejects AI fingerprints & symbols in docs. Pan Acoustics blue for SDE-branded docs. Fix-not-describe. OneDrive BIM path.
+Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer + Zamzam. English only. DOCX: close before edit, reopen after. SVG charts > tables/VML. DMP gates + RACI in tables. Days not calendar dates. No site survey when shell exists. Rejects AI fingerprints & symbols. Fix-not-describe. OneDrive BIM path.
 §
-Cloud-only LLM user. ollama-cloud provider. Models: deepseek-v4-flash, deepseek-v4-pro, ministral-3:8b, gemma3:12b. Trusts agent autonomy, approves ops quickly. Values direct action.
+Cloud-only LLM user. ollama-cloud provider (34 models). Trusts agent autonomy, approves ops quickly. Values direct action.
 §
-Strategic negotiator: 'acknowledge receipt' ≠ acceptance, 'without prejudice', never start work without VO. Sends draft to PM+NRS first before CG. Avoids logic questions to CG. Keeps Jim as ally.
+Strategic negotiator: 'acknowledge receipt' ≠ acceptance, 'without prejudice', never start work without VO. Sends draft to PM+NRS first before CG. Avoids logic questions to CG.
 §
-Rejects unverified price estimates — mark costs TBC. Prefers incremental file patches over full regeneration. Wants methodology flowcharts in reports. Delegates to other AI agents. Maps work to Odoo tasks. Odoo descriptions: HTML format, no icons/emoji/AI language. Timesheet unit_amount in hours.
+Rejects unverified costs — mark TBC. Prefers incremental file patches over full regen. Wants flowcharts in reports. Delegates to AI agents. Odoo: human paragraphs with <p> tags, no bullets/icons/AI language. Timesheet unit_amount in minutes. Always set progress + check stage.
+§
+Wants model routing by task type — announce which model I'm using so they can override. Model-routing skill created at autonomous-ai-agents/model-routing.
