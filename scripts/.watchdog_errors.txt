@@ -1,0 +1,57 @@
+     1|[2026-06-07 15:42] BIM Watchdog Scan Error Summary
+     2|============================================
+     3|Project: El-Ghamama Gift Shop(2)
+     4|Error: Drawing register and Submittal register are OneDrive cloud stubs — not synced locally
+     5|Paths:
+     6|  Drawing_Register: .../El-Ghamama Gift Shop(2)/Docs/09_Registers/Drawing_Register.xlsx
+     7|  Submittal_Register: .../El-Ghamama Gift Shop(2)/Docs/09_Registers/Submittal_Register.xlsx
+     8|
+     9|Files detected but unregistered due to stub registers (cumulative: 25):
+    10|  (Previous scans)
+    11|  1. .../General Arrangment/Cad/General Arrangment-01-General Arrangement - Sheet - A101 - General Layout.dwg
+    12|  2. .../General Arrangment/Cad/General Arrangment-01-General Arrangement - Sheet - A102 - General Section.dwg
+    13|  3. .../General Arrangment/Cad/GHCCRetail02-proposal04-WhatsAppImage2023-05-06at15.15.23-3547784-1068578.jpg
+    14|  4. .../General Arrangment/Cad/General Arrangment-01-General Arrangement - Sheet - A101 - General Layout.pcp
+    15|  5. .../General Arrangment/Cad/General Arrangment-01-General Arrangement - Sheet - A102 - General Section.pcp
+    16|  (2026-06-07 15:42)
+    17|  6. .../Furntiure/Rev-02/Fabrication/Display Furnitures - (Al-Ghamama Retail 2).pdf
+    18|  7. .../Furntiure/Rev-02/Fabrication/Display Furnitures - (Al-Ghamama Retail 2).dwg
+    19|  (2026-06-10 10:27)
+    20|  8. .../Design Files/furniture/FU-10.0012.rfa
+    21|  (2026-06-11 15:13)
+    22|  9. .../Design Files/furniture/FU-10.0013.rfa
+    23|  (2026-06-12 17:11)
+    24|  10. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1303.dwg
+    25|  11. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1100.dwg
+    26|  12. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9004.dwg
+    27|  13. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1300.dwg
+    28|  14. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9006.dwg
+    29|  15. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1103.dwg
+    30|  16. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9003.dwg
+    31|
+    32|Project: Hera' Ghar
+    33|Error: Drawing register and Submittal register are OneDrive cloud stubs — not synced locally
+    34|Paths:
+    35|  Drawing_Register: .../Hera' Ghar/Docs/09_Registers/Drawing_Register.xlsx
+    36|  Submittal_Register: .../Hera' Ghar/Docs/09_Registers/Submittal_Register.xlsx
+    37|
+    38|Files detected but unregistered due to stub registers (cumulative: 7):
+    39|  (2026-06-12 17:11)
+    40|  1. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1303.dwg
+    41|  2. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1100.dwg
+    42|  3. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9004.dwg
+    43|  4. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1300.dwg
+    44|  5. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9006.dwg
+    45|  6. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-1103.dwg
+    46|  7. .../Design Files/CAD-20251009T063400Z-1-001/CAD/06-A-9003.dwg
+    47|
+    48|Project: Masjid Alnoor
+    49|Error: Drawing register is OneDrive cloud stub — not synced locally
+    50|Path:
+    51|  Drawing_Register: .../Masjid Alnoor/Docs/09_Registers/Drawing_Register.xlsx
+    52|
+    53|Files detected but unregistered due to stub registers (cumulative: 1):
+    54|  (2026-06-12 17:11)
+    55|  1. (files detected — open OneDrive to sync register)
+    56|
+    57|Impact: Files detected but cannot be added to registers. Fix: Open OneDrive and ensure these Excel files are fully synced.

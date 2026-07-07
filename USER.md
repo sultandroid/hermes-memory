@@ -1,13 +1,7 @@
-Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer Museum. CG=consultant, NRS=Nissen Richards, GBH=Glasbau Hahn. Fix-not-describe. Formal construction English. OneDrive BIM path.
+Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer + Zamzam. English only. Corrects: Oddy scope (showcase/display only, not general construction), BIM coordination is Samaya not sub scope. DOCX: close before edit, reopen after. SVG charts preferred over tables/VML, full-width. Use DMP gates + RACI in tables. Days not calendar dates in programmes. No site survey phase when shell exists — design starts D0. Rejects AI fingerprints & symbols in docs. Pan Acoustics blue for SDE-branded docs. Fix-not-describe. OneDrive BIM path.
 §
 Cloud-only LLM user. ollama-cloud provider. Models: deepseek-v4-flash, deepseek-v4-pro, ministral-3:8b, gemma3:12b. Trusts agent autonomy, approves ops quickly. Values direct action.
 §
-Strategic negotiator — keeps extra obligations on subs as leverage. Flags high down payments in design contracts. Prefers milestone payments tied to DMP gates (50%/90%/100%/IFC), not concept/schematic. Direct and decisive.
+Strategic negotiator: 'acknowledge receipt' ≠ acceptance, 'without prejudice', never start work without VO. Sends draft to PM+NRS first before CG. Avoids logic questions to CG. Keeps Jim as ally.
 §
-Contractually cautious: 'acknowledge receipt' ≠ acceptance. 'Without prejudice' language. Never start work without VO. Uses late CG changes as leverage.
-§
-Communication: sends draft to PM + NRS first for alignment before sending to CG. Keeps Jim as ally. Separates blocking issues from technical clarifications. Avoids logic questions to CG.
-§
-Stale session detail — removed to consolidate.
-§
-Stage 4 (Technical Design) submittals = drawings, schedules, calculations, diagrams, rack elevations. No Design Basis Report or concept-stage philosophy docs. CG reviews technical content, not design narrative. Match submittal completeness analysis to project stage.
+Rejects unverified price estimates — mark costs TBC. Prefers incremental file patches over full regeneration. Wants methodology flowcharts in reports. Delegates to other AI agents. Maps work to Odoo tasks. Odoo descriptions: HTML format, no icons/emoji/AI language. Timesheet unit_amount in hours.

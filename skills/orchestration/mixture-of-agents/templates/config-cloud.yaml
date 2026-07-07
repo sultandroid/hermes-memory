@@ -1,0 +1,41 @@
+# Cloud MoA config — OpenRouter by default
+# Override model IDs for Groq/OpenAI/Together as needed.
+roles:
+  router:
+    model: google/gemini-flash-1.5
+    system: |
+      Classify query complexity. Reply ONLY one word: simple or complex.
+      simple: greetings, definitions, single-step lookups, short factual Qs.
+      complex: multi-step reasoning, code, analysis, planning, ambiguity, long context.
+  aggregator:
+    model: qwen/qwen-2.5-72b-instruct
+    system: |
+      You are a synthesizer. You receive multiple independent responses to the same question.
+      Merge them into ONE final answer. Keep what is correct, drop redundancy, resolve conflicts
+      by preferring the most specific/factual version. Keep tone concise. No preamble.
+  proposers_simple:
+    - model: qwen/qwen-2.5-7b-instruct
+      system: "You are a concise assistant. Answer the user's question directly. No preamble."
+    - model: meta-llama/llama-3.1-8b-instruct
+      system: "You are a factual assistant. Answer precisely. No preamble."
+    - model: google/gemini-flash-1.5
+      system: "You are a helpful assistant. Give a clear short answer. No preamble."
+  proposers_complex:
+    - model: qwen/qwen-2.5-72b-instruct
+      system: |
+        You are a proposer. Analyze the question carefully. Give a thorough, well-structured answer.
+        Focus on accuracy, edge cases, and trade-offs. Do not reference other agents.
+    - model: qwen/qwen-2.5-7b-instruct
+      system: |
+        You are a proposer. Give a concise, different angle. Skip what is obvious. No preamble.
+    - model: meta-llama/llama-3.1-8b-instruct
+      system: |
+        You are a proposer. Focus on practical implementation and concrete examples. No preamble.
+    - model: google/gemini-flash-1.5
+      system: |
+        You are a proposer. Suggest counterpoints, edge cases, or risks others may miss. No preamble.
+
+timeouts:
+  router_s: 8
+  proposer_s: 60
+  aggregator_s: 90

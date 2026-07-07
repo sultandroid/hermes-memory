@@ -1,0 +1,250 @@
+{
+  "jobs": [
+    {
+      "id": "33079e794c9f",
+      "name": "BIM Downloads Watchdog",
+      "prompt": "Run the BIM Downloads Watchdog script to check for new files in Downloads folder. Process any new files found: classify them, unzip if zip, and move to the correct BIM Unit project subfolder. Report any files processed.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "bim_watchdog.py --once",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 60,
+        "display": "every 60m"
+      },
+      "schedule_display": "every 60m",
+      "repeat": {
+        "times": null,
+        "completed": 303
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-28T14:15:33.894409+03:00",
+      "next_run_at": "2026-06-11T14:00:04.242456+03:00",
+      "last_run_at": "2026-06-11T13:00:04.242456+03:00",
+      "last_status": "error",
+      "last_error": "Script not found: /Users/mohamedessa/.hermes/scripts/bim_watchdog.py --once",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    },
+    {
+      "id": "048f24e5d9dd",
+      "name": "BIM Register Watchdog",
+      "prompt": "Run the BIM Register Watchdog scan for all Samaya BIM projects.\n\nExecute:\n/usr/bin/python3 /Users/mohamedessa/.hermes/scripts/bim_watchdog.py --scan\n\nThis scans Submittal's and Design Files folders across all 17 BIM projects, detects new/modified files, updates Drawing and Submittal registers automatically, and sends Telegram notifications via the hermes_notify.sh script.\n\nLog output is written to ~/.hermes/scripts/bim_watchdog.log \u2014 on errors, write the error summary to ~/.hermes/scripts/.watchdog_errors.txt.\n\nIMPORTANT: \n- This is a cron job \u2014 no user is present. \n- Do NOT ask questions or request clarification. \n- If the scan finds no changes, stay silent (no message sent).\n- If it processes changes, it sends Telegram notifications automatically.\n",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 60,
+        "display": "every 60m"
+      },
+      "schedule_display": "every 60m",
+      "repeat": {
+        "times": null,
+        "completed": 296
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-28T16:29:01.015590+03:00",
+      "next_run_at": "2026-06-11T14:03:15.681791+03:00",
+      "last_run_at": "2026-06-11T13:03:15.681791+03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "5832026231",
+        "chat_name": "Mohamed Essa",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    },
+    {
+      "id": "8bf950b52a36",
+      "name": "BIM Email Pipeline",
+      "prompt": "Run the BIM Email Pipeline to check Outlook for new project emails.\n\nExecution:\npython3 ~/.hermes/scripts/bim_email_pipeline.py 2>&1\n\nAfter the script runs, review its output. If new emails were found, report:\n- How many new emails processed\n- Which projects they were classified under\n- How many attachments were copied\n- Whether any errors occurred",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "bim_email_pipeline.py",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 120,
+        "display": "every 120m"
+      },
+      "schedule_display": "every 120m",
+      "repeat": {
+        "times": null,
+        "completed": 157
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-28T18:07:05.992660+03:00",
+      "next_run_at": "2026-06-11T14:34:02.019198+03:00",
+      "last_run_at": "2026-06-11T12:34:02.019198+03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    },
+    {
+      "id": "fc193a46ebc1",
+      "name": "Daily BIM Todo List",
+      "prompt": "Generate a bilingual daily todo list for Mohamed Essa (Director, Technical Office / BIM Unit at Samaya Investment, KSA).\n\nProjects: Aseer Regional Museum (Project 3092) and Zamzam Museum (ID 121/P0639).\n\nRun daily at 8:00 AM Riyadh time.\n\nDATA SOURCES:\n1. Aseer email register: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Docs/Email Archive/\u0645\u0634\u0631\u0648\u0639 \u0645\u062a\u062d\u0641 \u0639\u0633\u064a\u0631 \u0627\u0644\u0625\u0642\u0644\u064a\u0645\u064a/Register_ASEER_Professional.csv\n2. Zamzam register: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Zamzam Museum/Docs/Email Archive/\u0645\u0634\u0631\u0648\u0639 \u062a\u0623\u0647\u064a\u0644 \u0645\u0633\u0627\u0631 \u0627\u0644\u0632\u0648\u0627\u0631 \u0632\u0645\u0632\u0645/Project_Log_\u0645\u0634\u0631\u0648\u0639 \u062a\u0623\u0647\u064a\u0644 \u0645\u0633\u0627\u0631 \u0627\u0644\u0632\u0648\u0627\u0631 \u0632\u0645\u0632\u0645.csv\n3. Watchdog state: ~/.hermes/scripts/.watchdog_state.json\n\nTASK DEFINITION:\n- Scan last 7 days of entries from both registers\n- Extract HIGH priority items: RFPs (quotations), IR (inspection reports requiring decision), MEP clashes, critical submittals (HSE, Fire, Emergency)\n- Extract MEDIUM priority items: SDR submittals, SI site instructions, SCH schedule reviews, new design files from watchdog\n- Extract LOW priority: routine reviews, schedule approvals\n- From watchdog: new Zamzam files (last 3 days) \u2014 especially submittal logs, MEP clash files, design submissions\n- Deduplicate by task description (first 50 chars)\n- Sort by priority then date\n\nOUTPUT FORMAT:\nSend to Telegram channel 5832026231\n\nFormat:\n\ud83d\udccb *DAILY TODO \u2014 [DATE]*\nTotal: *N items*\n\n\ud83d\udd34 *HIGH PRIORITY (N)*\n1. [Project] Task \u2014 action needed | Category | Date\n\n\ud83d\udfe1 *MEDIUM PRIORITY (N)*\n1. [Project] Task \u2014 action needed | Category | Date\n\n\ud83d\udfe2 *LOW PRIORITY (N)*\n1. [Project] Task \u2014 action needed | Category | Date\n\nKeep it concise \u2014 max 15 items. If more, summarize lowest priority ones as \"Plus N more routine reviews\".",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 5 * * *",
+        "display": "0 5 * * *"
+      },
+      "schedule_display": "0 5 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 14
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-05-28T18:16:31.635912+03:00",
+      "next_run_at": "2026-06-12T05:00:00+03:00",
+      "last_run_at": "2026-06-11T05:42:07.078757+03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "telegram:5832026231",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "5832026231",
+        "chat_name": "Mohamed Essa",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    },
+    {
+      "id": "f1e7bf6068b5",
+      "name": "memory-skills-exchange",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": "memory_skills_exchange.sh",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 360,
+        "display": "every 360m"
+      },
+      "schedule_display": "every 360m",
+      "repeat": {
+        "times": null,
+        "completed": 34
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-06-02T19:25:46.384333+03:00",
+      "next_run_at": "2026-06-11T16:56:57.353762+03:00",
+      "last_run_at": "2026-06-11T10:56:57.353762+03:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "5832026231",
+        "chat_name": "Mohamed Essa",
+        "thread_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    },
+    {
+      "id": "f4d5c61f1f13",
+      "name": "Email Attachments Watchdog",
+      "prompt": "Process the Outlook email attachment pipeline:\n\nStep 1: First, check if Microsoft Outlook is running (osascript -e 'tell app \"System Events\" to (name of processes) contains \"Microsoft Outlook\"'). If yes, run `python3 ~/Documents/04_Outlook_Connection/download_mails.py` to download new emails and attachments.\n\nStep 2: Check ~/Documents/04_Outlook_Connection/mails/attachments/ for any new files not yet processed. Compare against files already filed in:\n- Aseer-Museum/Completed Tender Package From NRS/05_Correspondence_Archive/\n- Aseer-Museum/Completed Tender Package From NRS/04_Specifications_and_BOQ/\n- Aseer-Museum/Reports & Meeting/00_Daily Reports/\n- Aseer-Museum/Design Files/00_Scope_and_Proposals/\n- Aseer-Museum/Subcontractors/14_MEP_Contractor/\n- Aseer-Museum/Docs/00_Admin/99_Images/\n- Zamzam Museum/Docs/03_Inspection_Requests/\n\nStep 3: For each new file, identify the project (Aseer, Zamzam) and copy to the correct BIM subfolder under /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/\n\nStep 4: Check if any new .md files were generated in ~/Documents/04_Outlook_Connection/mails/ (like 23.md) that contain new CG responses or project updates. Read the new content and update the PROJECT_MEMORY.md at Aseer-Museum/PROJECT_MEMORY.md with any important findings (new CG codes, new RFIs, critical updates).\n\nStep 5: Report a summary: how many new files, which projects, key findings from emails.",
+      "skills": [
+        "orchestration"
+      ],
+      "skill": "orchestration",
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 60,
+        "display": "every 60m"
+      },
+      "schedule_display": "every 60m",
+      "repeat": {
+        "times": null,
+        "completed": 132
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-06-04T19:24:48.505727+03:00",
+      "next_run_at": "2026-06-11T13:59:04.024221+03:00",
+      "last_run_at": "2026-06-11T12:59:04.024221+03:00",
+      "last_status": "error",
+      "last_error": "RuntimeError: ## Pipeline Report \u2014 2026-06-11 12:58 SAST\n\n### Step 1: Email Download \u2705\n- **Outlook**: running\n- **`download_mails.py`**: executed successfully (exit 0, from `scripts/` directory, not root)\n\n### Step 2-3: Attachment Comparison & Filing \u2705\n- **201** attachment files scanned across 7 project directories\n- **201/201 already exist** in OneDrive BIM folders \u2014 **0 new files to copy**\n- All projects covered: Aseer Museum, Zamzam NWC, General, Admin/HR, Haramein Ghamamah, Makkah Jabal Omar, Hoarding Signage\n- BIM is fully up-to-date with email attachments\n\n### Step 4: .md Mail Content Analysis \u26a0\ufe0f **Not possible \u2014 dataless files**\n- All files under `04_Outlook_Connection/mails/` (including `23.md`, `PROJECT_MEMORY_WEEK24_UPDATE.md`, etc.) are in **`compressed,dataless`** APFS state \u2014 content evicted to cloud\n- **Root cause**: macOS APFS compression + `com.apple.provenance` xattr has flagged these as evictable. The cron job process lacks entitlements to materialize them.\n- Reading attempts generate `[Errno 11] Resource deadlock avoided` at every level (open, mmap, cat, head, dd, ditto, Python os.open, osascript)\n- Same issue affects **OneDrive BIM files** (PROJECT_MEMORY.md, summary reports) \u2014 all `compressed,dataless`\n- Crucially: **no new .md mail files** generated since last pipeline run (all `01-23.md` dated Jun 7-8; only pipeline_run logs changed Jun 9-11)\n- Future runs: need `brctl download` or OneDrive File Provider to rehydrate files before reading\n\n### Step 5: Infra Note\n- **Disk**: 99% full (6.4GB free out of 460GB) \u2014 likely exacerbating APFS dataless/eviction behavior\n\n### Key Files Affected (cannot read)\n| Path | Size | Issue |\n|------|------|-------|\n| `mails/23.md` | 590KB | dataless |\n| `mails/PROJECT_MEMORY_WEEK24_UPDATE.md` | 4.8KB | dataless |\n| `mails/attachments_inventory.json` | 53KB | dataless |\n| `BIM/.../PROJECT_MEMORY.md` | 9.6KB | dataless (OneDrive) |\n| `BIM/.../Weekly_Report_15_Summary.md` | 23KB | dataless (OneDrive) |\n\n### Bottom Line\nNo new files to file. No new .md content to extract. Pipeline is in steady state. The `dataless` APFS state on the entire `04_Outlook_Connection` directory prevents reading email content summaries this cycle \u2014 recommend freeing disk space and/or running `brctl download` before the next pipeline run to rehydrate files.",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "profile": null
+    }
+  ],
+  "updated_at": "2026-06-11T13:03:15.681993+03:00"
+}

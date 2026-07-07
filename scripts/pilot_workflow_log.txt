@@ -1,0 +1,146 @@
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54] PILOT PROJECT WORKFLOW — Starting
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54] STEP 1: Updating project index with audit register data
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54]   Backed up index to /Users/mohamedessa/.hermes/scripts/bim_project_index.json.bak
+[2026-05-28 15:07:54]   Updated: Aseer Regional Museum (71 registers found)
+[2026-05-28 15:07:54]   Updated: Zamzam Visitor Reception Center (2 registers found)
+[2026-05-28 15:07:54]   Updated: Zamzam Museum Path Rehabilitation (4 registers found)
+[2026-05-28 15:07:54]   Updated: Al Galal & Al Gamal Museum (Jabal Omar) (30 registers found)
+[2026-05-28 15:07:54]   Updated: Al Gamal & Al Galal Shop 8 Retail (1 registers found)
+[2026-05-28 15:07:54]   Updated: El-Ghamama Museum Phase 1 (3 registers found)
+[2026-05-28 15:07:54]   Updated: El-Ghamama Qahwtna Cafe (1 registers found)
+[2026-05-28 15:07:54]   Updated: El-Ghamama Gift Shop (1) (1 registers found)
+[2026-05-28 15:07:54]   Updated: El-Ghamama Gift Shop (2) (3 registers found)
+[2026-05-28 15:07:54]   Updated: Maalim Al-Haramain Museum (11 registers found)
+[2026-05-28 15:07:54]   Updated: Hadaya Teiba 01 Ground Floor (0 registers found)
+[2026-05-28 15:07:54]   Updated: Hera Cave / Ghar Hira (0 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Al-Noor Dispatch / Media Center (0 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Omar - Samaya Scope (0 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Omar Qahwatuna Cafe (Basement) (1 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Omar Hadaya Teiba - Al Galal Wal Gamal (GND) (2 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Omar Hadaya Teiba - Maalim Al-Haramain (BASS) (5 registers found)
+[2026-05-28 15:07:54]   Updated: Jabal Thawe - Thawr Heights (0 registers found)
+[2026-05-28 15:07:54]   Updated: Khair El-Khalq Museum (2 registers found)
+[2026-05-28 15:07:54]   Updated: Masjid Alnoor (0 registers found)
+[2026-05-28 15:07:54]   Updated: Prime Business Resort (0 registers found)
+[2026-05-28 15:07:54]   Updated: Ryadh Museum (0 registers found)
+[2026-05-28 15:07:54]   SKIP (no audit data): Template Folder
+[2026-05-28 15:07:54]   Index updated: 22 projects with register data
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54] STEP 2: Hera' Ghar — Creating registers and MD caches
+[2026-05-28 15:07:54] ============================================================
+[2026-05-28 15:07:54]   Discovering project identity for Hera' Ghar...
+[2026-05-28 15:07:54]   Created PROJECT_MEMORY.md at /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/PROJECT_MEMORY.md
+[2026-05-28 15:07:54]   Creating Excel registers...
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Submittal_Log.xlsx
+[2026-05-28 15:07:54]   Created register: Submittal_Log.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Drawing_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Drawing_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/RFI_Log.xlsx
+[2026-05-28 15:07:54]   Created register: RFI_Log.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Transmittal_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Transmittal_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/SI_Register.xlsx
+[2026-05-28 15:07:54]   Created register: SI_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/NCR_Log.xlsx
+[2026-05-28 15:07:54]   Created register: NCR_Log.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Meeting_Minutes.xlsx
+[2026-05-28 15:07:54]   Created register: Meeting_Minutes.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Invoice_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Invoice_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Contract_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Contract_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Material_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Material_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Change_Order.xlsx
+[2026-05-28 15:07:54]   Created register: Change_Order.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Risk_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Risk_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/HSE_Register.xlsx
+[2026-05-28 15:07:54]   Created register: HSE_Register.xlsx
+[2026-05-28 15:07:54]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Docs/09_Registers/Subcontractor_Register.xlsx
+[2026-05-28 15:07:54]   Created register: Subcontractor_Register.xlsx
+[2026-05-28 15:07:54]   Creating MD caches for document files...
+[2026-05-28 15:07:54]   Found 27 PDF files to cache
+[2026-05-28 15:07:59]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Design Files/drawing list ghar hera'.pdf.md
+[2026-05-28 15:08:03]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 25 INTEGRATED AUTOMATION.pdf.md
+[2026-05-28 15:08:04]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 40 PROCESS INTEGRATION.pdf.md
+[2026-05-28 15:08:06]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 33 UTILITIES.pdf.md
+[2026-05-28 15:08:07]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 01 GENERAL REQUIREMENTS.pdf.md
+[2026-05-28 15:08:08]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 00 GENERAL PROJECT REQUIREMENTS.pdf.md
+[2026-05-28 15:08:09]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 09 Finishes.pdf.md
+[2026-05-28 15:08:11]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 05 Metals.pdf.md
+[2026-05-28 15:08:13]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 31 EARTHWORK.pdf.md
+[2026-05-28 15:08:14]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 26 ELECTRICAL.pdf.md
+[2026-05-28 15:08:15]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 32 EXTERIOR IMPROVEMENTS.pdf.md
+[2026-05-28 15:08:16]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 14 CONVEYING EQUIPMENT.pdf.md
+[2026-05-28 15:08:17]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 07 THERMAL AND MOISTURE PROTECTION.pdf.md
+[2026-05-28 15:08:18]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 06 Wood, Plastic And Composites.pdf.md
+[2026-05-28 15:08:20]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 21 FIRE SUPPRESSION.pdf.md
+[2026-05-28 15:08:21]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 11 EQUIPMENT.pdf.md
+[2026-05-28 15:08:23]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 22 PLUMBING.pdf.md
+[2026-05-28 15:08:24]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 08 Openings.pdf.md
+[2026-05-28 15:08:25]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 23 HEATING, VENTILATING, AND AIR CONDITIONING (.pdf.md
+[2026-05-28 15:08:26]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 10 SPECIALTIES.pdf.md
+[2026-05-28 15:08:28]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 03 Concrete.pdf.md
+[2026-05-28 15:08:29]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 46 WATER AND WASTEWATER EQUIPMENT.pdf.md
+[2026-05-28 15:08:30]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 28 ELECTRONIC SAFETY AND SECURITY.pdf.md
+[2026-05-28 15:08:32]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 02 EXISTING CONDITIONS.pdf.md
+[2026-05-28 15:08:33]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 41 MATERIAL PROCESSING AND HANDLING EQUIPMENT.pdf.md
+[2026-05-28 15:08:35]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 12 FURNISHINGS.pdf.md
+[2026-05-28 15:08:36]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Hera' Ghar/Specs & Datasheet/GENERAL SPECIFICATIONS/Division 13 SPECIAL CONSTRUCTION.pdf.md
+[2026-05-28 15:08:36]   MD caches created: 27, skipped (already cached): 0
+[2026-05-28 15:08:36]   STEP 2 complete. 14 registers created.
+[2026-05-28 15:08:36] ============================================================
+[2026-05-28 15:08:36] STEP 3: Masjid Alnoor — Creating registers and MD caches
+[2026-05-28 15:08:36] ============================================================
+[2026-05-28 15:08:36]   Discovering project identity for Masjid Alnoor...
+[2026-05-28 15:08:36]   Updated existing PROJECT_MEMORY.md with register section
+[2026-05-28 15:08:36]   Creating Excel registers...
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Submittal_Log.xlsx
+[2026-05-28 15:08:36]   Created register: Submittal_Log.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Drawing_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Drawing_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/RFI_Log.xlsx
+[2026-05-28 15:08:36]   Created register: RFI_Log.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Transmittal_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Transmittal_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/SI_Register.xlsx
+[2026-05-28 15:08:36]   Created register: SI_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/NCR_Log.xlsx
+[2026-05-28 15:08:36]   Created register: NCR_Log.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Meeting_Minutes.xlsx
+[2026-05-28 15:08:36]   Created register: Meeting_Minutes.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Invoice_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Invoice_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Contract_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Contract_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Material_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Material_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Change_Order.xlsx
+[2026-05-28 15:08:36]   Created register: Change_Order.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Risk_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Risk_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/HSE_Register.xlsx
+[2026-05-28 15:08:36]   Created register: HSE_Register.xlsx
+[2026-05-28 15:08:36]   Written: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/09_Registers/Subcontractor_Register.xlsx
+[2026-05-28 15:08:36]   Created register: Subcontractor_Register.xlsx
+[2026-05-28 15:08:36]   Creating MD caches for document files...
+[2026-05-28 15:08:36]   Found 24 PDF files to cache
+[2026-05-28 15:08:36]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docs/عقد خدمات استشارية هندسية _ مسجد ومركز تفويج جبل النورٍٍREV-02 .pdf.md
+[2026-05-28 15:08:38]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/عقد خدمات استشارية هندسية _ مسجد ومركز تفويج جبل النورٍٍREV-02 .pdf.md
+[2026-05-28 15:08:39]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/عقد خدمات استشارية هندسية _ مسجد النور.pdf.md
+[2026-05-28 15:08:48]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/مشروع مسجد النور(المجمع) (1).pdf.md
+[2026-05-28 15:08:49]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/RFP_Al_Noor_Mosque_Design_Development.pdf.md
+[2026-05-28 15:08:50]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/DESIGN DEVELOPMENT REPORT.pdf.md
+[2026-05-28 15:08:51]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Proposals_Comparison_Report.pdf.md
+[2026-05-28 15:08:53]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/Ali Sigma profile.pdf.md
+[2026-05-28 15:08:53]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/EQA-26402272 2.pdf.md
+[2026-05-28 15:08:54]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/Team CVs/Ahmed Salah Selim  Resume 2026.pdf.md
+[2026-05-28 15:08:56]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/Team CVs/O.Elmeligy_Resume_2026-01-26%20.pdf.md
+[2026-05-28 15:08:58]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/Team CVs/ali elsayed portfolio_26.pdf.md
+[2026-05-28 15:09:02]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Segma/Team CVs/Resume_260305_042753.pdf.md
+[2026-05-28 15:09:03]   MD cache: /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Masjid Alnoor/Docx/Offers/Free Lancers Eng. Bedier/Technical, Financial & Timeline Proposal.pdf.md

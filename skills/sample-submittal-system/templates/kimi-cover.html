@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{SAMPLE-NAME} — {CODE} — Folder Label</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#9a9a9a;display:flex;flex-direction:column;align-items:center;padding:20px;gap:20px;font-family:Inter,sans-serif;}
+
+/* ── FRONT COVER ── */
+.front-cover{
+  width:240mm; height:330mm;
+  background:#13151A; color:#fff;
+  position:relative; overflow:hidden;
+  box-shadow:0 4px 40px rgba(0,0,0,.3);
+  display:flex; flex-direction:column;
+}
+.front-cover::before{
+  content:''; position:absolute; top:-60%; right:-30%;
+  width:80%; height:100%;
+  background:radial-gradient(ellipse at center,rgba(200,144,74,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.top-bar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 28px; border-bottom:1px solid rgba(255,255,255,.06);
+}
+.samaya-logo{height:18px; opacity:.7;}
+.top-ref{display:flex; align-items:center; gap:10px;}
+.top-ref-label{font-size:7px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35);}
+.top-ref-code{font-family:monospace; font-size:10px; color:#C8904A; letter-spacing:.08em;}
+.hero-area{flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 28px;}
+.material-title{
+  font-family:'Playfair Display',serif;
+  font-size:52px; font-weight:600; line-height:1.05;
+  color:#fff; letter-spacing:-.02em;
+}
+.material-subtitle{display:flex; align-items:center; gap:10px; margin-top:10px;}
+.type-badge{
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:#C8904A; font-weight:600; border:1px solid rgba(200,144,74,.3);
+  padding:3px 10px; border-radius:2px;
+}
+.divider-dot{width:3px; height:3px; background:rgba(255,255,255,.2); border-radius:50%;}
+.subtitle-text{font-size:11px; color:rgba(255,255,255,.5); letter-spacing:.04em;}
+.specs-panel{
+  margin:0 28px 20px; padding:16px 20px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+  border-radius:4px;
+}
+.specs-header{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+.specs-label{font-size:7px; letter-spacing:2px; text-transform:uppercase; color:#C8904A; font-weight:600;}
+.specs-accent-line{flex:1; height:1px; background:rgba(200,144,74,.2);}
+.specs-content{display:flex; flex-direction:column; gap:5px;}
+.spec-row{display:flex; gap:8px; font-size:9px; line-height:1.5;}
+.spec-key{color:rgba(255,255,255,.35); width:60px; flex:none; font-size:7.5px; letter-spacing:1px; text-transform:uppercase;}
+.spec-value{color:rgba(255,255,255,.85);}
+.apps-section{margin-top:8px;}
+.apps-grid{display:flex; flex-wrap:wrap; gap:4px 8px; margin-top:4px;}
+.apps-grid span{font-size:8px; color:rgba(255,255,255,.6); padding:2px 8px; background:rgba(255,255,255,.04); border-radius:2px;}
+.status-row{display:flex; align-items:center; gap:6px; margin-top:10px;}
+.status-indicator{width:6px; height:6px; background:#4CAF50; border-radius:50%;}
+.status-text{font-size:8px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.5);}
+.ref-area{
+  padding:14px 28px; border-top:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; gap:12px;
+}
+.ref-label{font-size:7px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.3);}
+.ref-code{font-family:monospace; font-size:9px; color:rgba(255,255,255,.6);}
+.ref-highlight{color:#C8904A;}
+.qr-float{
+  position:absolute; bottom:70px; right:28px;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.qr-img{width:50px; height:50px; display:block;}
+.qr-caption{font-size:6px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.3);}
+.party-strip{
+  display:flex; align-items:center; justify-content:center;
+  padding:10px 28px; gap:16px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.2);
+}
+.party-item{display:flex; align-items:center; gap:6px;}
+.party-logo-img{height:14px; opacity:.5;}
+.party-logo-svg{opacity:.5;}
+.party-name{font-size:7px; color:rgba(255,255,255,.35); letter-spacing:.04em;}
+.party-divider{width:1px; height:14px; background:rgba(255,255,255,.1);}
+
+/* ── BACK COVER ── */
+.back-cover{
+  width:240mm; height:330mm;
+  background:#13151A; color:#fff;
+  position:relative; overflow:hidden;
+  box-shadow:0 4px 40px rgba(0,0,0,.3);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.bg-type{
+  position:absolute; top:30px; right:30px;
+  font-family:monospace; font-size:9px; color:rgba(255,255,255,.08);
+  letter-spacing:.1em;
+}
+.deco-ring{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:280px; height:280px; border:1px solid rgba(255,255,255,.04); border-radius:50%;
+}
+.deco-ring-inner{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:200px; height:200px; border:1px solid rgba(255,255,255,.03); border-radius:50%;
+}
+.horiz-line{
+  position:absolute; top:50%; left:10%; right:10%;
+  height:1px; background:rgba(255,255,255,.04);
+}
+.back-top{position:absolute; top:40px; left:50%; transform:translateX(-50%);}
+.back-samaya-logo{height:20px; opacity:.4;}
+.qr-circle{display:flex; flex-direction:column; align-items:center; gap:8px; z-index:1;}
+.qr-ring{
+  width:90px; height:90px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.02);
+}
+.qr-center-img{width:60px; height:60px; display:block;}
+.qr-url{font-size:7px; color:rgba(255,255,255,.2); letter-spacing:.04em;}
+.back-brand{text-align:center; margin-top:30px; z-index:1;}
+.back-brand-name{font-size:10px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.4);}
+.back-brand-proj{font-size:8px; color:rgba(255,255,255,.2); margin-top:4px;}
+.back-ref-block{text-align:center; margin-top:20px; z-index:1;}
+.back-ref-code{font-size:14px; color:#C8904A; font-weight:500; letter-spacing:.06em;}
+.back-ref-sub{font-family:monospace; font-size:8px; color:rgba(255,255,255,.25); margin-top:4px;}
+.back-ref-accent{width:30px; height:1px; background:rgba(200,144,74,.3); margin:8px auto;}
+.back-ref-label{font-size:7px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.2);}
+.back-party-strip{
+  position:absolute; bottom:20px;
+  display:flex; align-items:center; gap:20px;
+}
+.back-party-item{display:flex; align-items:center;}
+.back-party-logo{height:14px; opacity:.3;}
+.back-party-svg{opacity:.3;}
+
+@page{size:240mm 330mm; margin:0;}
+@media print{
+  html,body{background:#fff;padding:0;gap:0;}
+  .front-cover,.back-cover{box-shadow:none;margin:0;page-break-after:always;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ FRONT COVER ═══ -->
+<div class="front-cover">
+  <div class="top-bar">
+    <img class="samaya-logo" src="assets/samaya-logo-trans.png" alt="Samaya">
+    <div class="top-ref">
+      <span class="top-ref-label">Material Code</span>
+      <span class="top-ref-code">{CODE}</span>
+    </div>
+  </div>
+
+  <div class="hero-area">
+    <h1 class="material-title">{TITLE_LINE1}<br>{TITLE_LINE2}</h1>
+    <div class="material-subtitle">
+      <span class="type-badge">{TYPE_BADGE}</span>
+      <span class="divider-dot"></span>
+      <span class="subtitle-text">{SUBTITLE}</span>
+    </div>
+  </div>
+
+  <div class="specs-panel">
+    <div class="specs-header">
+      <span class="specs-label">Specifications</span>
+      <div class="specs-accent-line"></div>
+    </div>
+    <div class="specs-content">
+      <div class="spec-row"><span class="spec-key">Substrate</span><span class="spec-value">{SUBSTRATE}</span></div>
+      <div class="spec-row"><span class="spec-key">Finish</span><span class="spec-value">{FINISH}</span></div>
+      <div class="spec-row"><span class="spec-key">{SPEC3_KEY}</span><span class="spec-value">{SPEC3_VAL}</span></div>
+      <div class="spec-row"><span class="spec-key">{SPEC4_KEY}</span><span class="spec-value">{SPEC4_VAL}</span></div>
+      <div class="apps-section">
+        <div class="spec-row"><span class="spec-key">Applications</span></div>
+        <div class="apps-grid">
+          {APPS}
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="status-indicator"></span>
+        <span class="status-text">Active</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-area">
+    <span class="ref-label">Submittal Reference</span>
+    <span class="ref-code">{SUBMITTAL_PREFIX}<span class="ref-highlight">{SUBMITTAL_HIGHLIGHT}</span></span>
+  </div>
+
+  <div class="qr-float">
+    <img class="qr-img" src="qr-{CODE}.png" alt="QR">
+    <span class="qr-caption">Scan for datasheet</span>
+  </div>
+
+  <div class="party-strip">
+    <div class="party-item">
+      <img class="party-logo-img" src="assets/cg-logo-trans.png" alt="CG">
+      <span class="party-name">Consultancy Group</span>
+    </div>
+    <div class="party-divider"></div>
+    <div class="party-item">
+      <img class="party-logo-img" src="assets/nrs-logo-trans.png" alt="NRS">
+      <span class="party-name">Nissen Richards Studio</span>
+    </div>
+    <div class="party-divider"></div>
+    <div class="party-item">
+      <img class="party-logo-img" src="assets/pmc-logo-trans.png" alt="PMC">
+      <span class="party-name">PMC</span>
+    </div>
+    <div class="party-divider"></div>
+    <div class="party-item">
+      <svg width="50" height="16" viewBox="0 0 76 24" class="party-logo-svg">
+        <text x="38" y="14" text-anchor="middle" font-size="9" fill="white" font-family="Inter,sans-serif">GLASBAU</text>
+        <text x="38" y="21" text-anchor="middle" font-size="5.5" fill="white" opacity="0.7" font-family="Inter,sans-serif">HAHN</text>
+      </svg>
+      <span class="party-name">Glasbau Hahn</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BACK COVER ═══ -->
+<div class="back-cover">
+  <div class="bg-type">{CODE}</div>
+  <div class="deco-ring"></div>
+  <div class="deco-ring-inner"></div>
+  <div class="horiz-line"></div>
+  <div class="back-top">
+    <img class="back-samaya-logo" src="assets/samaya-logo-trans.png" alt="Samaya">
+  </div>
+
+  <div class="qr-circle">
+    <div class="qr-ring">
+      <img class="qr-center-img" src="qr-{CODE}.png" alt="QR">
+    </div>
+    <span class="qr-url">samaya-factory.com/Samples/{CODE}</span>
+  </div>
+
+  <div class="back-brand">
+    <div class="back-brand-name">Samaya Technical Office</div>
+    <div class="back-brand-proj">Aseer Museum · KSA</div>
+  </div>
+
+  <div class="back-ref-block">
+    <div class="back-ref-code">{CODE}</div>
+    <div class="back-ref-sub">{SUBMITTAL_PREFIX}{SUBMITTAL_HIGHLIGHT}</div>
+    <div class="back-ref-accent"></div>
+    <div class="back-ref-label">Material Sample</div>
+  </div>
+
+  <div class="back-party-strip">
+    <div class="back-party-item"><img class="back-party-logo" src="assets/cg-logo-trans.png" alt="CG"></div>
+    <div class="back-party-item"><img class="back-party-logo" src="assets/nrs-logo-trans.png" alt="NRS"></div>
+    <div class="back-party-item"><img class="back-party-logo" src="assets/pmc-logo-trans.png" alt="PMC"></div>
+    <div class="back-party-item">
+      <svg width="50" height="16" viewBox="0 0 76 24" class="back-party-svg">
+        <text x="38" y="14" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.5)" font-family="Inter,sans-serif">GLASBAU</text>
+        <text x="38" y="21" text-anchor="middle" font-size="5.5" fill="rgba(255,255,255,0.3)" font-family="Inter,sans-serif">HAHN</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

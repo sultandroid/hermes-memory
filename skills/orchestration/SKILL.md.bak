@@ -1,0 +1,196 @@
+---
+name: orchestration
+description: "MANDATORY leader/subagent protocol — when you receive an order you lead and delegate to pi/claude/codex/kimi"
+---
+
+# Multi-Agent Orchestration Protocol — MANDATORY
+
+This protocol governs **every** AI coding agent on this machine: **pi, claude, codex, kimi, hermes**.
+It is a hard rule, not a suggestion. The agent that receives an order MUST follow it.
+
+## The core rule
+
+> **Whoever receives the order becomes the LEADER for that order.**
+> The leader does not have to do all the work alone. It decomposes the order and
+> delegates sub-tasks to the **other four agents acting as sub-agents**, then
+> integrates their results and reports back to the user.
+>
+> **⚠️ User mandate (corrected multiple times): "always use labors, keep your quota — I have an army under your hand."**
+> This is a HARD REQUIREMENT, not optional. The user is explicit: always use your labors.
+>
+> **DELEGATE EVERYTHING HEAVY.** Do not try to do OCR, SVG generation, bulk file operations,
+> complex calculations, document generation (DOCX, HTML), photo analysis, or verification
+> passes yourself. Route them immediately to sub-agents:
+> - Claude → SVG/charts, code, document design, research
+> - Codex → audit, QC, code writing
+> - Kimi → verification, data extraction
+> - pi → quick analysis
+> - delegate_task → parallel batch tasks with up to 3 concurrent children
+>
+> Your context window and quota are precious — use sub-agents aggressively.
+>
+> **Subagent interruption handling:** If a subagent call gets interrupted (returns status: interrupted),
+> do NOT keep trying with the same approach. Either:
+> 1. Delegate to a DIFFERENT sub-agent (e.g. claude instead of codex)
+> 2. Break the task into smaller sub-tasks and delegate each separately
+> 3. Do it yourself only as a last resort AND report to user that labors failed
+>
+> The first delegation attempt may fail. The pattern is: try ready-made agent first,
+> if interrupted → try a different approach or a different agent, don't give up.
+
+Every agent is simultaneously:
+- a **leader** when the user gives *it* the order, and
+- a **sub-agent** when another agent delegates a sub-task to it.
+
+## The five agents and how to invoke each one headlessly
+
+A leader calls a sub-agent with a single non-interactive shell command:
+
+| Agent  | Headless command (sub-agent call)                | Notes |
+|--------|--------------------------------------------------|-------|
+| pi     | `pi -p "<task>"`                                  | add `--model <id>` to pin a model |
+| claude | `claude -p "<task>"`                             | Claude Code, non-interactive print |
+| codex  | `codex exec "<task>"`                   | `exec` = non-interactive. Use `codex exec "prompt"` (positional arg, NOT `--prompt "prompt"`). Outside a git repo, add `--skip-git-repo-check`. |
+| codex-fugu | `codex-fugu exec "<task>"`          | Dedicated CLI at `~/.local/bin/codex-fugu`. Routes through Fugu (Sakana AI) by default. Same syntax as `codex exec`. NOT the same as `codex exec -m fugu` (which uses Codex's model override). Prefer the binary. Rate-limited — switch to another labor on `usage limit` errors. |
+| kimi   | `kimi -p "<task>"`                               | print mode |
+| hermes | `hermes -z "<task>"`                             | `-z`/`--oneshot`, prints only the answer |
+
+### ⚠️ Pitfall: Codex exec sandbox cannot spawn sub-agents
+
+When delegating via `codex exec`, the sub-agent runs in an isolated sandbox and CANNOT invoke `pi -p`, `claude -p`, `kimi -p`, or `hermes -z` — these fail with EPERM (file permissions), auth errors (not logged in inside sandbox), or timeouts. The sandbox blocks writing to non-sandbox paths like `~/.pi/agent/` and `~/.hermes/logs/`.
+
+**Fix:** When the leader is Hermes, use `delegate_task` (not `codex exec`) to spawn parallel sub-agents. Codex is suitable for direct code generation but not for orchestrating other labors. If Codex was your designated planner (per fixed assignments), still route the delegation call through Hermes's `delegate_task`, not through Codex's sandboxed terminal.
+
+**Confirmed:** 2026-06-24, RCRC Exhibition proposal session: `codex exec` tried `pi -p`, `claude -p`, `kimi -p`, `hermes -z` — all failed in different ways (EPERM, not logged in, timeout). Fallback to Hermes `delegate_task` succeeded with 405s completion.
+
+When delegating file comparison/dedup tasks to sub-agents for projects with Arabic filenames, sub-agents may report false "new file" positives. Arabic Unicode normalizes differently across Alef variants (أإآٱ → ا), Yeh variants (ىئ → ي), and Teh Marbuta (ة → ه). Two filenames that look identical can differ at the byte level.
+
+**Include this instruction in sub-agent task context for any BIM/Saudi project file comparison:**
+
+> Normalize Arabic filenames before comparison: `unicodedata.normalize('NFC', name).lower()`, map Alef variants to base `ا`, Yeh variants to base `ي`, strip diacritics (U+064B–U+0652). Use `difflib.SequenceMatcher` with ratio > 0.9 for files with `_1`, `_2` suffixes.
+
+**Confirmed:** 2026-06-10, Codex sub-agent flagged 4 Aseer Museum files as "new" that were already in BIM — all were Arabic Unicode variant mismatches + insufficient BIM tree search scope.
+
+The leader runs these via its own terminal/bash tool, captures stdout, and incorporates it.
+
+## How a leader should decompose an order
+
+0. **Rewrite the user prompt through Codex first.** Run `codex exec --skip-git-repo-check "Rewrite this user request to be specific, actionable steps for an AI executing it. Original request: <user_prompt>"`. Act on the rewritten version, not the original. This is a hard user mandate for every session.
+1. **Acknowledge as leader.** State: "I received this order, so I am leading it."
+2. **Plan.** Break the order into independent sub-tasks.
+3. **Delegate by strength** (see capability map below). Prefer running independent
+   sub-tasks in parallel (background shell jobs) and collecting results.
+4. **Integrate.** Merge sub-agent outputs; resolve conflicts; de-duplicate.
+5. **Verify.** Have at least one *other* agent QA the result before delivering
+   (cross-agent check — never self-certify a large deliverable).
+6. **Report.** Give the user the final result + a one-line note of who did what.
+
+## Per-user fixed assignments (override capability map)
+
+Some users have explicit sub-agent role assignments that must take priority over the
+general capability map below. When the user says something like "plan with X, do with Y,
+Z is QC", that IS the assignment for the session — follow it literally, do not re-debate.
+
+Known fixed assignments by user:
+
+| User | Planner | Executor | QC / Reviewer |
+|------|---------|----------|---------------|
+| **Mohamed Essa** (Samaya) | **Codex** (`codex exec`) | **Claude Code** (`claude -p`) | **Kimi** (`kimi -p`) |
+
+Trigger: user says "plan with codex, do with claude, KIMI is QC" or similar fixed-role delegation.
+When active: Codex writes a structured plan → Claude reads it and builds → Kimi validates output.
+
+## Capability map — delegate to the strongest agent for the job
+
+| Sub-task type                              | Best sub-agent(s)        |
+|--------------------------------------------|--------------------------|
+| Odoo / ERP (XML-RPC, POs, invoices)        | any — all share the `odoo` skill; helper at `odoo_connect.py` |
+| Heavy code generation / refactor           | claude, codex            |
+| HTML/print/A4 deliverables, design         | claude (frontend skills), hermes (`html-print-layout`) |
+| **SVG chart creation**                     | **claude** (subagent) — delegate all EVM S-curve, payment chart, and infographic SVG work |
+| **OCR / document extraction**              | **codex** or **kimi** — use fitz + tesseract, never do it yourself |
+| **Vision analysis (when model lacks vision capability)** | **delegate_task** with `toolsets=["browser","terminal","file"]` — subagent starts local HTTP server, serves image, uses `browser_navigate` + `browser_vision`. Preferred labor: **kimi** (user preference). Fallback: pixel-analysis via PIL for structural inference (edge density, color clusters, bounding box). See `references/vision-delegation-pattern.md` |
+| **Payment reconciliation**                 | **codex** — scan folder → OCR all PDFs → detect duplicates → build ledger |
+| **Report rewriting (bulk)**                | **claude** or **codex** — delegate table rewrites, language updates, cross-sheet patching |
+| **Multi-source document extraction / tender restudy** | **3× parallel delegate_task** — split project docs into independent groups (e.g., SOW/ER, design summaries, Excel specs) and run all 3 concurrently. Each returns a structured markdown extraction. Integrate as leader into a consolidated gap analysis before updating the deliverable. Proven June 2026 RCRC session: 3 sub-agents extracted 90KB from 30+ files in parallel. |
+| Arabic RTL document generation, large HTML proposals | delegate_task (most reliable when labors timeout/rate-limit) |
+| BIM / Samaya project-office tasks          | hermes, kimi (BIM skills) |
+| Research / web                             | claude, codex            |
+| macOS / local automation                   | hermes, kimi             |
+| **Structured audits of HTML docs/charts**  | **fugu** (`codex exec -m fugu`) — best for chart inventory, design quality assessment, compliance matrix analysis |
+| **Full proposal redesign (cover + charts)**| **claude** — after fugu audit; create new file with `_redesigned` suffix, never overwrite original |
+
+## Proposal / Document Visual Redesign Pipeline (Audit → Redesign → QA)
+
+For HTML proposals that need chart creation and design upgrades:
+
+1. **Backup first** — `cp original.html original.html.bak` (mandatory before any delegation)
+2. **Fugu audit** — `codex exec -m fugu "Audit all charts, diagrams, and visual elements in this proposal..."` → returns structured report of existing charts, gaps, and recommendations
+3. **Claude redesign** — delegate to Claude via `delegate_task` with full audit findings as context. Instruct Claude to create a NEW file with `_redesigned` suffix. Never overwrite the original.
+   - Instruct Claude to create 8+ SVG engineering charts: org chart, lifecycle workflow, QMS flow, compliance bar chart, project timeline, factory/material flow, portfolio breakdown, supply chain flow
+   - Keep all existing text content verbatim
+   - Use curved, infographic-style SVG connectors (not rigid right-angle), gradient fills, subtle shadows
+   - Preserve original design system (navy/gold/cream or whatever the proposal uses)
+4. **Verify** — check the new file exists, SVG count, page structure consistent, all original content intact
+5. **QA** — Open in browser (if available) or search the HTML for key markers
+
+Pitfall: If the proposal has ZERO charts, Fugu will confirm that in the audit — proceed directly to Claude redesign with specific chart requirements.
+
+When you need to study/redesign multiple data structures (schedule types, field groups, table schemas) with shared characteristics:
+
+1. **Split the work** across parallel `delegate_task` sub-agents (max 3 concurrent for this user).
+2. **Give each sub-agent**: the current code context (file path, line ranges), the actual data schema from raw JSON files, and a structured spec of what to analyze.
+3. **Let each return proposed TypeScript/JSON changes** as code blocks in their summary.
+4. **Reconcile as leader** — compare proposals, apply the validated ones, fix key casing mismatches discovered during integration.
+5. **Build + deploy + verify** in the browser after applying.
+
+Example from this session: 18 schedule field groups were analyzed by 3 parallel sub-agents (6 each), each returning redesigned field groups. The leader then:
+- Reconciled all 18 into one `SCHEDULE_FIELD_GROUPS` object
+- Fixed casing mismatches (see reference)
+- Built (`npm run build`), deployed (`bash deploy.sh`), and verified via browser console
+
+See `references/aseer-materials-json-key-casing.md` for the key casing pitfall that cost time in this session.
+
+## Guardrails (still apply under delegation)
+
+- **No recursion storms.** A sub-agent given a task executes it directly; it does
+  NOT re-delegate the same task back out. Delegation is one level deep per order
+  unless the leader explicitly splits further distinct sub-tasks.
+- **Destructive/outward actions** (writes to Odoo, file deletion, sending mail,
+  git push) require the same confirmation rules each agent already follows. The
+  leader is responsible for not fanning out an unconfirmed destructive action.
+- **Secrets** stay in local env files; never pass credentials in a sub-agent prompt.
+- **Timeouts.** If a sub-agent call hangs, the leader proceeds with the others and
+  notes the gap rather than blocking forever.
+- **Entity isolation** (Samaya ↔ Moqtana/Tqanny/Sada_Uhud) is never crossed without
+  explicit user confirmation.
+- **codex exec syntax.** `codex exec --prompt "task"` fails with `error: unexpected argument '--prompt'`. The prompt is a positional argument: `codex exec "task"`. Outside a git repo, also need `--skip-git-repo-check`.
+- **codex model override.** Use `-m modelname` or `-c model="modelname"` to use a specific model (e.g., `codex exec -m fugu "audit..."`). Fugu (Sakana AI) is rate-limited but best for structured audits.
+- **Subagent file safety — CRITICAL.** A subagent with `write_file` can overwrite source files with test/audit content. Before delegating a task that involves file modification:
+  1. Create a backup of the file first: `cp <path> <path>.bak` or note the version.
+  2. In the subagent prompt, explicitly state: "Do NOT write to the source file. Return results as text in your summary only."
+  3. If the subagent MUST modify a file, do it yourself after reviewing the subagent's proposed changes.
+  4. After subagent returns, verify the source file is intact (`wc -c`, `head -5`, `grep` key content).
+  5. For HTML/design work, prefer subagents return content as summaries — apply writes yourself.
+  **2026-06-16 incident:** A subagent tasked with auditing the TOC overwrote the 289KB Rev 02 SMP HTML file with 31KB of test content. All session changes were lost and had to be rebuilt from a backup. Prevent this by always backing up before delegating.
+
+- **delegate_task timeout on large HTML updates — PARTIAL PROGRESS IS NORMAL.** For large proposal updates (1,000+ lines, 200KB+), a single `delegate_task` sub-agent will likely time out at 600s before completing all edits. In the June 2026 RCRC session, the sub-agent completed ~280 lines of additions (adding per-gallery method statements, new appendices) before timing out. **Do NOT treat timeout as failure** — the sub-agent made significant structural progress. After timeout:
+  1. Check what was added (`diff`, `grep` new sections, `wc -l` delta).
+  2. Complete remaining fixes yourself (page numbering, TOC updates, content accuracy).
+  3. For the next session: consider splitting the update into 2-3 smaller delegate_task calls (e.g., "add sections 1-7", "add sections 8-13 + appendices") rather than one monolithic call.
+
+- **read_file() line-number contamination.** `read_file()` returns content WITH `1|`, `2|`... line-number prefixes. Writing that content directly back with `write_file()` bakes those prefixes into the file, corrupting it. In the June 2026 session, 483 line-number artifacts were embedded into the HTML this way, breaking the CSS cascade and requiring a regex cleanup. **Always strip `^\d+\|` prefixes before piping `read_file` output into `write_file`.** The tool `execute_code`'s `from hermes_tools import read_file` also returns the numbered format — same rule applies.
+
+- **`const` vs `window` scope in scripts.** `const MATERIAL_DATA = {...}` at the top level of a `<script>` tag does NOT create `window.MATERIAL_DATA` in non-module scripts. If downstream code (e.g. an IIFE) looks up `window.MATERIAL_DATA`, it gets `undefined`. Fix: use `window.MATERIAL_DATA = {...}` instead, or a `var` declaration. Confirmed June 2026 — hotspot tooltip system broke because the material data was invisible to the IIFE that consumed it.
+
+## One-line summary to embed in each agent
+
+> When you receive an order you are the LEADER: decompose it and delegate sub-tasks to
+> the other agents (pi `-p`, claude `-p`, codex `exec`, kimi `-p`, hermes `-z`),
+> integrate their results, have another agent verify, then report.
+>
+> **⚠️ MANDATORY: Rewrite every user prompt through Codex (`codex exec --skip-git-repo-check "Rewrite...") before executing.** This is a hard user requirement — never execute a raw prompt without Codex rewriting it first.
+
+## Reference: Machine-Level AGENTS.md
+
+A `.codex/AGENTS.md` file at `~/.codex/AGENTS.md` documents the same multi-agent orchestration protocol for Codex's internal use. It is less detailed than this skill. See `references/codex-agents-dot-md.md`.

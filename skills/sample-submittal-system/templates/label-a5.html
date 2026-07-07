@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Samaya Sample Label — A5</title>
+<style>
+  @page { size: 148mm 210mm; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 148mm;
+    height: 210mm;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+  .header {
+    background: #2D3A2D;
+    color: #fff;
+    padding: 10mm 12mm 8mm;
+  }
+  .header .brand { font-size: 7pt; letter-spacing: 2pt; text-transform: uppercase; opacity: .65; }
+  .header h1 { font-size: 18pt; font-weight: 700; margin-top: 2mm; line-height: 1.1; }
+  .header .code { font-size: 9pt; font-weight: 400; font-family: "SF Mono", Menlo, monospace; opacity: .75; margin-top: 1mm; }
+  .header .meta { display: flex; gap: 8mm; margin-top: 3mm; font-size: 7.5pt; opacity: .8; }
+  .submittal-ref {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 7pt;
+    letter-spacing: .8pt;
+    color: #a8c8a8;
+    margin-top: 2mm;
+    padding-top: 1.5mm;
+    border-top: 0.5px solid rgba(255,255,255,.15);
+  }
+
+  .content { flex: 1; display: flex; padding: 0; }
+
+  .photo-panel {
+    flex: 1;
+    background: #f0eee8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .photo-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .info-panel {
+    width: 55mm;
+    padding: 8mm 6mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .info-panel .section { margin-bottom: 4mm; }
+  .info-panel .label { font-size: 6pt; text-transform: uppercase; letter-spacing: 1.2pt; color: #888; margin-bottom: .8mm; }
+  .info-panel .value { font-size: 8pt; font-weight: 600; line-height: 1.4; }
+
+  .info-panel .use-list { list-style: none; font-size: 7.5pt; line-height: 1.6; }
+  .info-panel .use-list li::before { content: "— "; color: #2D3A2D; font-weight: 700; }
+
+  .qr-area { text-align: center; margin-top: auto; }
+  .qr-area img { width: 28mm; height: 28mm; display: block; margin: 0 auto; }
+  .qr-area .qr-label { font-size: 5.5pt; color: #888; margin-top: 1mm; }
+
+  .footer {
+    background: #2D3A2D;
+    color: #fff;
+    padding: 3mm 12mm;
+    font-size: 5.5pt;
+    letter-spacing: .5pt;
+    text-align: center;
+    opacity: .7;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="brand">Samaya Investment — Material Sample</div>
+    <h1 id="sample-name">Patinated Brass</h1>
+    <div class="code" id="sample-code">SAM-FIN-PB-001</div>
+    <div class="meta">
+      <span id="sample-date">2026-06-25</span>
+      <span id="sample-status">Active</span>
+      <span id="sample-category">Metal Finish</span>
+    </div>
+    <div class="submittal-ref">MOC-MUS-ASE-1A0-MA-0007</div>
+  </div>
+
+  <div class="content">
+    <div class="photo-panel">
+      <img id="sample-photo" src="photo-CODE.jpg" alt="Sample photo">
+    </div>
+    <div class="info-panel">
+      <div>
+        <div class="section">
+          <div class="label">Material</div>
+          <div class="value" id="material">Brass with chemical patina finish</div>
+        </div>
+        <div class="section">
+          <div class="label">Where to Use</div>
+          <ul class="use-list" id="use-list">
+            <li>Architectural cladding & feature panels</li>
+            <li>Door hardware & push plates</li>
+            <li>Handrails & balustrade infills</li>
+            <li>Decorative screens & grilles</li>
+            <li>Custom joinery & furniture accents</li>
+          </ul>
+        </div>
+        <div class="section">
+          <div class="label">Substrate</div>
+          <div class="value" id="substrate">Brass sheet 1.2mm — C26000 cartridge brass</div>
+        </div>
+        <div class="section">
+          <div class="label">Finish Process</div>
+          <div class="value" id="finish-process">Chemical patination — aged verdigris effect, sealed with microcrystalline wax</div>
+        </div>
+      </div>
+
+      <div class="qr-area">
+        <img src="qr-CODE.png" alt="QR Code">
+        <div class="qr-label">Scan for datasheet & test reports</div>
+        <div class="qr-label" style="font-size:4.5pt; word-break:break-all;">samaya-factory.com/Samples/SAM-FIN-PB-001</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    SAM-FIN-PB-001 · MOC-MUS-ASE-1A0-MA-0007 · Samaya Technical Office
+  </div>
+
+</div>
+</body>
+</html>

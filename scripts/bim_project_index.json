@@ -1,0 +1,1695 @@
+{
+  "updated": "2026-05-28",
+  "bim_root": "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit",
+  "standard_subdirs": [
+    "As-Built Docs",
+    "B.O.Q",
+    "Contracts",
+    "Coordination",
+    "Design Files",
+    "Docs",
+    "Email_Archive",
+    "Fabrication",
+    "Invoices",
+    "odoo",
+    "Reports & Meeting",
+    "Revit Files",
+    "Specs & Datasheet",
+    "Submittal's",
+    "Time Scheduales"
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "bim_dir": "Aseer-Museum",
+      "name_ar": "متحف عسير الإقليمى",
+      "name_en": "Aseer Regional Museum",
+      "odoo_id": 219,
+      "odoo_name": "متحف عسير الإقليمى",
+      "odoo_tasks": 73,
+      "keywords": [
+        "aseer",
+        "museum",
+        "nrs",
+        "aseer museum",
+        "عسير",
+        "متحف عسير"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Completed Tender Package From NRS",
+        "Contracts",
+        "Design Files",
+        "Design Files (Stage 04)",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "MOBILIZATION",
+        "odoo",
+        "Reports & Meetings",
+        "Revit Files",
+        "Scripts",
+        "Specs & Datasheet",
+        "Subcontractors",
+        "Submittals",
+        "Time Schedules"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Risk Register",
+          "Subcontractor Register",
+          "Submittal Log",
+          "Transmittal Register"
+        ],
+        "missing": [
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Change Order",
+          "HSE Register"
+        ],
+        "missing_core": [
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "file_count": 71,
+        "stakeholders": [
+          "| عادل درويش | Project Director |",
+          "| 1K0-PL-0029 | خطة إدارة التصميم | 18 مايو | 🔄 Rev.02 | تم نقاشها مع BIMC/SCG |",
+          "- **المطلوب:** Bluehaus يراجع ويوقع مواد التقديمات قبل رفعها للاستشاري",
+          "| محمد سمير | Project Manager |",
+          "- **المنافسون:** AD Engineering قدم تأهيل مسبق",
+          "- **جهة الاتصال:** Martina Rusconi (Proposals Manager), Imteeaz Goolamhossen (MEP Director), Ben Corrigan (Bluehaus)",
+          "| سلطان عيسى | BIM Lead |",
+          "- **نواقص:** مهندس معماري، مهندس جودة، مدير فني",
+          "- **SI-CG-ASEER-007 (Rev.02):** تم تقديم الرد من طرف سمايا بالأمس. الاستشاري أفاد بأن التنبيه لا يزال سارياً (Still Valid) حتى يتم اعتماد التقديمات (3D renders). الرد محفوظ في مجلد `Submittals/03.1_Architectural_Submittals/SI_007_Response/`.",
+          "| 14 مايو | Design Workshop | DMP Rev.02، ملاحظات BIMC/SCG |",
+          "| محمد أحمد | HSE Manager |"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "bim_dir": "Zamzam -Visitor Center",
+      "name_ar": "مركز استقبال الزوار بمتحف زمزم",
+      "name_en": "Zamzam Visitor Reception Center",
+      "odoo_id": 229,
+      "odoo_name": "مبني مركز التفويج - متحف زمزم",
+      "odoo_tasks": 11,
+      "keywords": [
+        "zamzam",
+        "visitor center",
+        "p0639",
+        "مركز استقبال",
+        "زمزم",
+        "nwc",
+        "زوار"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "attached",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          ""
+        ],
+        "file_count": 2,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 3,
+      "bim_dir": "Zamzam Museum",
+      "name_ar": "إعادة تأهيل مسار الزوار - متحف زمزم",
+      "name_en": "Zamzam Museum Path Rehabilitation",
+      "odoo_id": 121,
+      "odoo_name": "اعادة تأهيل مسار الزوار - متحف زمزم",
+      "odoo_tasks": 72,
+      "keywords": [
+        "zamzam museum",
+        "path rehab",
+        "121",
+        "متحف زمزم",
+        "اعادة تأهيل",
+        "مسار زمزم",
+        "zamzam path"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Coordination",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "ID121_Zamzam_Museum_Path_Rehab",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ",
+          "Drawing Register"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          "",
+          ""
+        ],
+        "file_count": 4,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 4,
+      "bim_dir": "Al Galal & Al Gamal Meuseum",
+      "name_ar": "متجر الهدايا -الجمال والجلال- جبل عمر",
+      "name_en": "Al Galal & Al Gamal Museum (Jabal Omar)",
+      "odoo_id": 195,
+      "odoo_name": "متجر الهدايا -الجمال والجلال- جبل عمر",
+      "odoo_tasks": 28,
+      "keywords": [
+        "galal",
+        "gamal",
+        "جلال",
+        "جمال",
+        "متحف",
+        "جبل عمر"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Cad files",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Fabrication",
+        "Invoices",
+        "LOGS",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ",
+          "Drawing Register",
+          "Submittal Log"
+        ],
+        "missing": [
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "file_count": 30,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 5,
+      "bim_dir": "Al Gamal And Al Galal Shop -8 retail",
+      "name_ar": "متجر 8 - جمال وجلال",
+      "name_en": "Al Gamal & Al Galal Shop 8 Retail",
+      "odoo_id": null,
+      "odoo_name": null,
+      "odoo_tasks": null,
+      "keywords": [
+        "retail",
+        "8 retail",
+        "shop",
+        "محل",
+        "8"
+      ],
+      "subdirs": [
+        "BOQ",
+        "cad",
+        "Docs",
+        "pdf",
+        "rfa",
+        "rvt"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          ""
+        ],
+        "file_count": 1,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 6,
+      "bim_dir": "El-Ghamama Museum",
+      "name_ar": "متحف الغمامة - المرحلة الأولي",
+      "name_en": "El-Ghamama Museum Phase 1",
+      "odoo_id": 136,
+      "odoo_name": "متحف الغمامة - المرحلة الأولي",
+      "odoo_tasks": 27,
+      "keywords": [
+        "ghamama",
+        "غمامة",
+        "متحف الغمامة",
+        "gama"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "NAVIS MODELS",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          ""
+        ],
+        "file_count": 3,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 7,
+      "bim_dir": "El-Ghamama -(Qahwtna)",
+      "name_ar": "قهوتنا - الغمامة",
+      "name_en": "El-Ghamama Qahwtna Cafe",
+      "odoo_id": 128,
+      "odoo_name": "كوفي شوب قهوتنا",
+      "odoo_tasks": 1,
+      "keywords": [
+        "qahwtna",
+        "قهوتنا",
+        "ghamama qahwa",
+        "cafe"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          ""
+        ],
+        "file_count": 1,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 8,
+      "bim_dir": "El-Ghamama Gift Shop(1)",
+      "name_ar": "متاجر الغمامة (1)",
+      "name_en": "El-Ghamama Gift Shop (1)",
+      "odoo_id": 282,
+      "odoo_name": "متاجر الغمامة",
+      "odoo_tasks": 1,
+      "keywords": [
+        "gift shop",
+        "هدايا",
+        "ghamama gift",
+        "متجر"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          ""
+        ],
+        "file_count": 1,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 9,
+      "bim_dir": "El-Ghamama Gift Shop(2)",
+      "name_ar": "متاجر الغمامة (2)",
+      "name_en": "El-Ghamama Gift Shop (2)",
+      "odoo_id": 282,
+      "odoo_name": "متاجر الغمامة",
+      "odoo_tasks": 1,
+      "keywords": [
+        "gift shop 2",
+        "ghamama gift 2"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          ""
+        ],
+        "file_count": 3,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 10,
+      "bim_dir": "El-Haramain Museum",
+      "name_ar": "معالم الحرمين",
+      "name_en": "Maalim Al-Haramain Museum",
+      "odoo_id": 176,
+      "odoo_name": "Maalim Al-Haramein- Jabal Omer",
+      "odoo_tasks": 78,
+      "keywords": [
+        "haramain",
+        "حرمين",
+        "متحف الحرمين",
+        "معالم الحرمين",
+        "maalim"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Fabrication drawings",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ",
+          "Drawing Register"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "file_count": 11,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 11,
+      "bim_dir": "Hadaya_Teiba_01_GND",
+      "name_ar": "هدايا طيبة GND",
+      "name_en": "Hadaya Teiba 01 Ground Floor",
+      "odoo_id": 194,
+      "odoo_name": "متجر الهدايا - معالم الحرمين- جبل عمر",
+      "odoo_tasks": 40,
+      "keywords": [
+        "hadaya",
+        "teiba",
+        "هدايا",
+        "طيبة",
+        "ground"
+      ],
+      "subdirs": [
+        "odoo"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 12,
+      "bim_dir": "Hera' Ghar",
+      "name_ar": "غار حراء",
+      "name_en": "Hera Cave / Ghar Hira",
+      "odoo_id": 131,
+      "odoo_name": "مبني تفويج زوار غار حراء",
+      "odoo_tasks": 1,
+      "keywords": [
+        "hera",
+        "hira",
+        "ghar",
+        "حراء",
+        "غار حراء",
+        "cave"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Completed Tender Package From NRS",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "MOBILIZATION",
+        "Reports & Meetings",
+        "Revit Files",
+        "Scripts",
+        "Specs & Datasheet",
+        "Submittals",
+        "Time Schedules",
+        "odoo"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      },
+      "notes": "Verified against Aseer template 2026-05-28"
+    },
+    {
+      "id": 13,
+      "bim_dir": "Jabal Al-Noor Dispatch Building - Makkah",
+      "name_ar": "المركز الإعلامي - حي حراء",
+      "name_en": "Jabal Al-Noor Dispatch / Media Center",
+      "odoo_id": 218,
+      "odoo_name": "المركز الإعلامي - حي حراء",
+      "odoo_tasks": 0,
+      "keywords": [
+        "jabal al noor",
+        "dispatch",
+        "جبل النور",
+        "اعلامي",
+        "media"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 14,
+      "bim_dir": "Jabal Omar - Samaya Scope",
+      "name_ar": "نطاق سمايا - جبل عمر",
+      "name_en": "Jabal Omar - Samaya Scope",
+      "odoo_id": null,
+      "odoo_name": null,
+      "odoo_tasks": null,
+      "keywords": [
+        "jabal omar",
+        "samaya scope",
+        "جبل عمر"
+      ],
+      "subdirs": [
+        "Datasheets",
+        "Docs",
+        "Email_Archive",
+        "Exterior Screens",
+        "General",
+        "Jabal Omar - Deliverables"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 15,
+      "bim_dir": "Jabal Omar- Qahwtna (BassFl)",
+      "name_ar": "قهوتنا - جبل عمر (بازمنت)",
+      "name_en": "Jabal Omar Qahwatuna Cafe (Basement)",
+      "odoo_id": 261,
+      "odoo_name": "Jabal Omer-  Qahwatuna Café",
+      "odoo_tasks": 4,
+      "keywords": [
+        "jabal omar qahwa",
+        "qahwtna",
+        "bass fl",
+        "قهوتنا"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          ""
+        ],
+        "file_count": 1,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 16,
+      "bim_dir": "Jabal Omar- Retails 01 Hadaya Teiba الجلال و الجمال  (GND FL)",
+      "name_ar": "هدايا طيبة - الجلال والجمال (GND)",
+      "name_en": "Jabal Omar Hadaya Teiba - Al Galal Wal Gamal (GND)",
+      "odoo_id": 195,
+      "odoo_name": "متجر الهدايا -الجمال والجلال- جبل عمر",
+      "odoo_tasks": 28,
+      "keywords": [
+        "hadaya teiba gnd",
+        "retails 01",
+        "جلال",
+        "جمال",
+        "gnd fl"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          ""
+        ],
+        "file_count": 2,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 17,
+      "bim_dir": "Jabal Omar- Retails 02 Hadaya Teiba معالم الحرمين (BASS FL)",
+      "name_ar": "هدايا طيبة - معالم الحرمين (BASS)",
+      "name_en": "Jabal Omar Hadaya Teiba - Maalim Al-Haramain (BASS)",
+      "odoo_id": 194,
+      "odoo_name": "متجر الهدايا - معالم الحرمين- جبل عمر",
+      "odoo_tasks": 40,
+      "keywords": [
+        "hadaya teiba bass",
+        "retails 02",
+        "معالم الحرمين",
+        "bass fl"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "file_count": 5,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 18,
+      "bim_dir": "Jabal Thawe --Thawr Heights",
+      "name_ar": "مطلات طريق الصعود - جبل ثور",
+      "name_en": "Jabal Thawe - Thawr Heights",
+      "odoo_id": 208,
+      "odoo_name": "مطلات طريق الصعود - جبل ثور",
+      "odoo_tasks": 58,
+      "keywords": [
+        "thawe",
+        "thawr",
+        "ثور",
+        "جبل ثور",
+        "thawr heights",
+        "طريق الصعود"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "odoo",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 19,
+      "bim_dir": "Khair El-Khalq Museum",
+      "name_ar": "متحف خير الخلق",
+      "name_en": "Khair El-Khalq Museum",
+      "odoo_id": 139,
+      "odoo_name": "متحف خير الخلق",
+      "odoo_tasks": 96,
+      "keywords": [
+        "khair",
+        "khalq",
+        "خير الخلق",
+        "متحف خير"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "External_Tarek_Karsoun_Files",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [
+          "BOQ"
+        ],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [
+          "",
+          ""
+        ],
+        "file_count": 2,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 20,
+      "bim_dir": "Masjid Alnoor",
+      "name_ar": "مسجد النور",
+      "name_en": "Masjid Alnoor",
+      "odoo_id": null,
+      "odoo_name": null,
+      "odoo_tasks": null,
+      "keywords": [
+        "masjid",
+        "alnoor",
+        "النور",
+        "مسجد"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Completed Tender Package From NRS",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Email_Archive",
+        "Invoices",
+        "MOBILIZATION",
+        "Reports & Meetings",
+        "Revit Files",
+        "Scripts",
+        "Specs & Datasheet",
+        "Submittals",
+        "Time Schedules",
+        "odoo"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": [
+          "عقد خدمات استشارية هندسية بقيمة **$24,000** ومدة **14 أسبوع**.",
+          "العجمي مصر على مراجعة إدارات (المحتوى، التصميم الفني، رواسن) رغم أن العقد خدمات استشارية هندسية بحت لا علاقة له بهذه الإدارات.",
+          "- المادة ٨: الاشتراطات والأكواد داخلة في النطاق ولا يحق للمقاول المطالبة بمقابل إضافي",
+          "- **عادل درويش** — adel@samayainvest.com",
+          "- **عبدالله محفوظ** — abdu@samayainvest.com (تنسيق)",
+          "- **Ahmed Jad** — a.jad@heritagesites.sa (طرف خارجي)",
+          "## 19 مايو 2026 — متابعة العقد الاستشاري الهندسي (SG Group)",
+          "- **عبدالله العجمي** — A.AlAjmi@samayainvest.com (اعتماد إداري)",
+          "- **محمد المكارم** — M.almakarem@samayainvest.com (أرسل العقد)"
+        ]
+      },
+      "notes": "Reorganized to Aseer template 2026-05-28"
+    },
+    {
+      "id": 21,
+      "bim_dir": "Prime Business Resort",
+      "name_ar": "منتجع برايم للأعمال",
+      "name_en": "Prime Business Resort",
+      "odoo_id": null,
+      "odoo_name": null,
+      "odoo_tasks": null,
+      "keywords": [
+        "prime",
+        "resort",
+        "business resort"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 22,
+      "bim_dir": "Ryadh Museum",
+      "name_ar": "متحف الرياض",
+      "name_en": "Ryadh Museum",
+      "odoo_id": 135,
+      "odoo_name": "متحف الرياض أعمال (تصميم متحفي)",
+      "odoo_tasks": 0,
+      "keywords": [
+        "ryadh",
+        "رياض",
+        "متحف الرياض"
+      ],
+      "subdirs": [
+        "Docs",
+        "Email_Archive",
+        "Ryadh Meuseum Fin"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0,
+        "stakeholders": []
+      }
+    },
+    {
+      "id": 23,
+      "bim_dir": "Template Folder",
+      "name_ar": "نموذج قالب",
+      "name_en": "Template Folder",
+      "odoo_id": null,
+      "odoo_name": null,
+      "odoo_tasks": null,
+      "keywords": [
+        "template"
+      ],
+      "subdirs": [
+        "As-Built Docs",
+        "B.O.Q",
+        "Contracts",
+        "Design Files",
+        "Docs",
+        "Invoices",
+        "Reports & Meeting",
+        "Revit Files",
+        "Specs & Datasheet",
+        "Submittal's",
+        "Time Scheduales"
+      ],
+      "registers": {
+        "existing": [],
+        "missing": [
+          "Submittal Log",
+          "Drawing Register",
+          "BOQ",
+          "Material Register",
+          "RFI Log",
+          "Invoice Register",
+          "Contract Register",
+          "Meeting Minutes",
+          "NCR Log",
+          "SI Register",
+          "Transmittal Register",
+          "Change Order",
+          "Risk Register",
+          "HSE Register",
+          "Subcontractor Register"
+        ],
+        "missing_core": [
+          "Submittal Log",
+          "Drawing Register",
+          "RFI Log",
+          "Transmittal Register",
+          "SI Register",
+          "NCR Log",
+          "Meeting Minutes"
+        ],
+        "register_files": [],
+        "file_count": 0
+      }
+    }
+  ],
+  "odoo_only_projects": [
+    {
+      "id": 164,
+      "name": "متجر خير الخلق",
+      "tasks": 40
+    },
+    {
+      "id": 306,
+      "name": "CEO Dashboard",
+      "tasks": 170
+    },
+    {
+      "id": 243,
+      "name": "Creative Consultant Office - Wood work",
+      "tasks": 13
+    },
+    {
+      "id": 247,
+      "name": "Dawam Tech- دوام التقنية",
+      "tasks": 6
+    },
+    {
+      "id": 167,
+      "name": "HR Office Alsully",
+      "tasks": 20
+    },
+    {
+      "id": 166,
+      "name": "Jalal & Jamal - Jabal Omer",
+      "tasks": 70
+    },
+    {
+      "id": 309,
+      "name": "Jalal & Jamal - Jabal Omer and Zam Zam",
+      "tasks": 2
+    },
+    {
+      "id": 165,
+      "name": "Metal Work : Fabrication only",
+      "tasks": 15
+    },
+    {
+      "id": 189,
+      "name": "OSUS SHOW ROOM PROJECT Wood Work",
+      "tasks": 6
+    },
+    {
+      "id": 244,
+      "name": "Samaya Factory",
+      "tasks": 32
+    },
+    {
+      "id": 169,
+      "name": "celebrating Silver Jubilee of Samaya Investment",
+      "tasks": 22
+    },
+    {
+      "id": 250,
+      "name": "exit-9 office",
+      "tasks": 0
+    },
+    {
+      "id": 294,
+      "name": "exit-9 office CEO VILLA",
+      "tasks": 0
+    },
+    {
+      "id": 220,
+      "name": "KAFD Elec, Boxes",
+      "tasks": 11
+    },
+    {
+      "id": 222,
+      "name": "بوثات لموقع برج الساعة",
+      "tasks": 4
+    },
+    {
+      "id": 228,
+      "name": "مؤتمر ومعرض الحج ٢٠٢٦ -أعمال فك وتركيب مجسم غار حراء",
+      "tasks": 16
+    }
+  ],
+  "register_audit_date": "2026-05-28",
+  "register_audit_source": "bim_audit_report.json",
+  "projects_updated_with_registers": 0
+}

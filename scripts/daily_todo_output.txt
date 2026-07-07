@@ -1,0 +1,22 @@
+📋 *DAILY TODO — 2026-06-12*
+Total: *14 items*
+
+🔴 *HIGH PRIORITY (5)*
+1. [Aseer] Abu Melha FACP Power Disconnection & Control Room Security Breach — qarar / Decision required | HSE | 2026-06-11
+2. [Aseer] LIFE SAFETY DRAWINGS — murajaa wa ietimad / Review & approve | HSE | 2026-06-11
+3. [Aseer] 35- العرض الفني والمالي - Structural Design Studies — qarar / Decision required | RFP | 2026-06-12
+4. [Aseer] MI-0001 - Project Mobilization Items (SharePoint Link) — murajaa wa ietimad / Review & approve | MOB | 2026-06-11
+5. [Zamzam] Quotation NO.3451 - SAMAYA INVEST (Zamzam Museum) — qarar / Decision required | RFP | 2026-06-08
+
+🟡 *MEDIUM PRIORITY (8)*
+6. [Aseer] Detailed Design Architecture Package (ZD-0061 + Drawing List ZD-0062) — murajaa wa ietimad / Review & approve | DOC | 2026-06-10
+7. [Aseer] Arch Visualization 3D Shots Package 01 (ZD-0060) — murajaa / Review | DOC | 2026-06-10
+8. [Aseer] TQ-0013 + TQ-0016 Rev.01 — rad / Respond | TQ | 2026-06-11
+9. [Aseer] RFI-010 + GBH Showcase RFIs (007-009) — rad / Respond | RFI | 2026-06-11
+10. [Aseer] NRS Information Release Schedule — murajaa wa ietimad / Review schedule | SCH | 2026-06-11
+11. [Aseer] A-02 AS BUILT King Khaled Road + A2742 Proposed Views — murajaa / Review | DOC | 2026-06-11
+12. [Aseer] Product Compliance Statement - Georg+Otto Friedrich GmbH — murajaa / Review | DOC | 2026-06-12
+13. [Zamzam] SDR-AR-033 Rev.00 — murajaa wa ietimad / Review & approve | SDR | 2026-06-09
+
+🟢 *LOW PRIORITY (1)*
+14. [Aseer] Infra Utilities Work spreadsheet — murajaa / Review | GEN | 2026-06-12
