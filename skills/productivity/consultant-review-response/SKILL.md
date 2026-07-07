@@ -875,6 +875,133 @@ State whether the current revision can still go to CG as-is (per conditional app
 
 **Pitfall — Don't accept all PD asks at face value:** PD may request items that are (a) already covered, (b) not contractually required, or (c) belong in a different plan. Always verify against SoW §5.4, Appendix B, and companion plan CG comments before deciding what to add. A PD asking for an org chart for construction phase may need the Construction Mobilization Plan, not the RMP.
 
+### 0h. Sustainability Plan / SMP Review
+
+When the user receives a Sustainability Management Plan (SMP) or scope reduction register from a sustainability consultant and asks you to review it against project requirements — including cross-referencing internal PD comments that may contradict CG directives.
+
+**Trigger phrases:** "review sustainability plan", "audit SMP against contract", "check sustainability scope", "review against project requirements", "sustainability manager scope"
+
+#### Step 1: Identify the Document's True Nature
+
+Not every document titled "Sustainability Management Plan" is actually a plan. Check:
+
+| Document Type | What It Contains | Red Flags |
+|---------------|------------------|-----------|
+| **Actual SMP** | Strategy, compliance framework, deliverables schedule, R&R, reporting cadence | None — this is what CG expects |
+| **Scope Reduction Register** | Proposes deleting sections, eliminating roles, reassigning duties to existing teams | 🔴 **Self-negating** — if the consultant wrote it, they're arguing their own role shouldn't exist |
+| **Invoice** | Payment request attached alongside the plan | 🔴 **Premature** — invoice before plan approval is a red flag. Payment should be tied to approval gates, not submission |
+
+**Critical check:** If the consultant sends BOTH a plan and a scope reduction register simultaneously, the documents contradict each other. The reduction register undermines the plan's credibility.
+
+#### Step 2: Map Against CG's Explicit Directives
+
+CG's approval of the Sustainability Manager typically comes with conditions. Extract these from the CG approval email and build a compliance matrix:
+
+| CG Condition | SMP Says | Verdict |
+|-------------|----------|---------|
+| Submit detailed R&R for Sustainability Manager | [check] | ✅ / ❌ |
+| Coordinate with Lead Designer (NRS) | [check] | ✅ / ❌ |
+| Submit comprehensive plan within 1 week | [check] | ✅ / ❌ |
+| Adhere to Mostadam + SBC 1001 | [check] | ✅ / ❌ |
+
+**If the scope reduction register proposes deleting the role CG just approved** → flag as a direct contradiction. The CG approval email is the authoritative document — the reduction register cannot override it.
+
+#### Step 3: Audit Each Reduction Item Against Contract
+
+For each item in a scope reduction register, produce a 3-way verdict:
+
+| Verdict | Meaning | Example |
+|---------|---------|---------|
+| ✅ **Valid reduction** — item genuinely duplicates existing plans (HSE, QA/QC) | Accept — merge into existing processes | Waste management → HSE Plan already covers this |
+| ⚠️ **Partial** — item can be reduced but not eliminated | Accept reduction, reject deletion | Reporting frequency: daily→monthly is fine, but monthly reports are required by SoW §13.9 |
+| 🔴 **Reject** — item is contractually required or CG-mandated | Keep as-is | Sustainability Manager role — CG just approved it |
+
+**Contractual basis for sustainability requirements:**
+- **SoW §13.9** — Sustainability management plan and monthly reporting
+- **ER §3.7.XIII** — Mostadam Manual + SBC 1001 as applicable codes
+- **ER §2.7** — Sustainability integrated into design and operation
+- **Contract Article 7** — Environmental protection (waste, IAQ, site management)
+- **CG approval email** — Explicit conditions for the role
+
+#### Step 4: Handle Internal PD Comments That Conflict with CG
+
+When the Project Director's comments contradict CG's explicit directives, do NOT automatically side with either. Produce a **conflict resolution table**:
+
+| Topic | PD Says | CG Says | Recommended Path |
+|-------|---------|---------|-----------------|
+| Role title | "Sustainability Specialist" not "Manager" | Approved as "Sustainability Manager" | **Keep CG's title** — changing it requires re-approval |
+| Role type | Part-time/advisory, no full-time | Full R&R required | **Part-time is fine** — R&R can reflect as-needed engagement |
+| Design phase | Minimal — avoid design changes | Coordinate with NRS on deliverables | **Light touch** — NRS coordination yes, but no design rework |
+| Reporting | Monthly/weekly only | Monthly progress report per SoW §13.9 | **Monthly** — aligns with both |
+| Document title | "Project Sustainability Strategy" | "Sustainability Plan & Strategy" | **Use ER's terminology** — "Project Sustainability Strategy" per ER §3.7.XIII |
+| Cost impact | State no cost/time impact | Not addressed | **Include the protection statement** PD wants |
+| HSE overlap | Remove duplication | Not addressed | **Reference HSE Plan**, don't duplicate |
+
+**Framing for the PD reply:**
+- Agree on valid points (cost protection, HSE de-duplication, monthly reporting, execution-phase focus)
+- Explain why CG-mandated items must stay (title, NRS coordination, Mostadam compliance)
+- Propose a middle ground that satisfies both
+
+#### Step 5: Add the Contractual Protection Statement
+
+CG's approval email and the SMP itself create a risk that sustainability requirements could be interpreted as scope/cost additions. Add this statement to the strategy:
+
+> *"No sustainability-specific guidelines or initial design criteria were provided with the tender documents. The design criteria and material initial selection were already defined in RIBA Stage 3. Therefore, no cost or time impact shall arise due to sustainability requirements that may affect the project's already-defined cost and time baseline."*
+
+This protects against CG later claiming that sustainability requirements justify scope changes.
+
+#### Step 6: Check for Invoice-Before-Approval Pattern
+
+If the consultant attached an invoice for payment alongside the unapproved plan:
+
+| Issue | Why It's a Problem | Action |
+|-------|-------------------|--------|
+| 50% payment requested before plan review | Payment should be tied to approval milestones, not submission | Withdraw invoice until SMP is approved |
+| "As agreed" without written evidence | No documented payment terms in project files | Request written payment terms before processing |
+| Remaining 50% on "final approval" | Ambiguous — who approves? CG or Samaya? | Define approval gate clearly |
+
+**Response:** Instruct the consultant to withdraw the invoice until the SMP is formally approved by CG. Payment milestones should follow the DMP gate structure (50%/90%/100% IFC), not submission.
+
+#### Step 7: Produce Structured Audit Report
+
+```markdown
+## Sustainability Plan / SMP Review
+
+**Documents reviewed:**
+- SMP / Scope Reduction Register: [filename]
+- CG Approval Email: [date]
+- PD Comments: [filename]
+- Contractual basis: SoW §13.9 · ER §3.7.XIII · ER §2.7 · Contract Art. 7
+
+### 🔴 Critical Issues (Block Submission)
+[# | Issue | Source | Why Critical]
+
+### 🟠 High-Severity Issues
+[# | Issue | Source | Recommended Action]
+
+### 🟡 Medium / Low Issues
+[# | Issue | Source | Recommended Action]
+
+### ✅ Valid Reductions (Accept)
+[# | Item | Why Valid]
+
+### ⚠️ PD-CG Conflict Resolution
+[Topic | PD Position | CG Position | Recommended Path]
+
+### 📋 Recommended Actions
+[Ordered list — what to tell the consultant, what to tell PD, what to submit to CG]
+```
+
+#### Pitfalls
+
+1. **Don't assume a "Sustainability Management Plan" is actually a plan** — It may be a scope reduction register. Read the content, not the title.
+2. **Don't ignore the invoice** — A consultant sending an invoice before plan approval is a red flag. Flag it explicitly.
+3. **Don't side with PD over CG (or vice versa)** — Produce a conflict resolution table that respects both positions. Agree on valid PD points, explain why CG-mandated items must stay.
+4. **Don't forget the contractual protection statement** — The "no cost/time impact from sustainability" statement protects against future scope creep claims.
+5. **Don't miss the 1-week CG deadline** — If the deadline has passed, flag the urgency. The plan needs to be submitted ASAP.
+6. **Self-negating documents** — If the consultant's scope reduction register proposes eliminating the role CG just approved, this undermines the consultant's credibility. Flag it.
+7. **Mostadam certification vs compliance** — ER §3.7.XIII lists Mostadam Manual as an applicable code. This means Mostadam compliance (following the manual's criteria) is required, but certification (scoring/rating) is not unless explicitly stated. The strategy should be framed as code-compliance, not certification-chasing.
+
 ### 0f. Incoming CG Email — Communication Protocol Verification
 
 When CG sends a request or instruction directly to a specific role (e.g., Technical Office Manager, Engineer), **do not assume the routing is correct**. CG often sends informal coordination emails that bypass the formal Communication Matrix. Before actioning:

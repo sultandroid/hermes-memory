@@ -14,6 +14,8 @@ Any time you generate a `.docx` file **for Samaya** — SOW, report, letter, tra
 
 **DO NOT use SamayaDoc when generating documents FOR a subcontractor to submit TO Samaya.** Those are the subcontractor's own documents and must use their branding, not Samaya's. Use standalone python-docx with the subcontractor's logo and color scheme instead. The cover should say "Submitted to: Samaya Investment" and "Prepared by: [Subcontractor Name]".
 
+This includes **prequalification packages** (letter + RACI + risk register) prepared on behalf of a subcontractor who lacks museum experience — see `references/subcontractor-prequalification-package.md`.
+
 Also use when:
 - **Reformatting an external document** (consultant/contractor deliverable) to Samaya branding — extract content from the original, apply SamayaDoc styles, and file in the project folder
 - **Checking document compliance** against project standards (BEP, ISO 19650, naming conventions) before or after reformatting — the review workflow is documented below
@@ -67,7 +69,7 @@ doc.save("/path/to/output.docx")
 | `add_h2` | `(number, text)` | Two positional args: number prefix then heading text |
 | `add_h2_u` | `(text)` | Unnumbered h2 |
 | `add_h3` | `(number, text)` | 12pt Bold Dark Gray |
-| `add_body` | `(text)` | 11pt Calibri justified. **No `add_bullet()` exists** — use `add_body("• item text")` for bullet lists |
+| `add_body` | `(text)` | 11pt Calibri justified. **No `add_bullet()` exists** — use `add_body("- item text")` for bullet lists |
 | `add_rich_body` | `(segments)` | For mixed bold/normal segments |
 | `add_table` | `(headers, rows, col_widths_cm=None)` | `col_widths_cm` works correctly (sum to ~16.5cm for A4) |
 | `create_header` | `(project_name, doc_ref, doc_type, revision, date)` | Call before `create_footer()` |
@@ -166,9 +168,11 @@ Apply these to ALL Samaya documents, whether DOCX, HTML, or markdown:
 - Get to the point. Every sentence carries information weight. Delete filler.
 
 ### Symbols and characters
-- **Never use the section symbol `§`** — write "Section 2.1" or "2.1" instead.
-- No emoji, no decorative Unicode, no icons in body text.
-- No ornamental dingbats, checkmarks, stars, arrows, or progress dots — use plain text or standard bullet marks.
+- **Never use the section symbol** - write "Section 2.1" or "2.1" instead.
+- **Never use decorative dashes** - use plain hyphen not em-dash or en-dash.
+- **Never use bullet symbols** - use plain hyphen not bullet characters.
+- **No accented characters** - write "cafe" not "cafe with accent", "facade" not "facade with cedilla".
+- No ornamental dingbats, checkmarks, stars, arrows, or progress dots - use plain text or standard bullet marks.
 
 ### Icons
 - No icons anywhere in the document body. Icons are decorative and add no verifiable information.
@@ -295,7 +299,7 @@ Before showing the document to the user, do a quick self-audit:
 - **Iterative document updates: patch existing file only, never regenerate.** When the user asks to update an existing DOCX, do NOT regenerate the entire file from scratch -- that overwrites any manual edits they made in Word. Instead, edit the existing DOCX directly via python-docx (read, modify, save with same path). For inserting new paragraphs/tables between existing ones, use lxml XML tree manipulation: `body.insert(list(body).index(ref) + 1, element)` where `body = doc.element.body`. Build new elements as `OxmlElement('w:p')` with manual run construction. The user explicitly said: when updating a file, only change what needs changing so you keep any other changes they made.
 - **Verify project context is correct before generating project-specific content.** In the SDE prequal session the context was SDE/Aseer, but the user asked about Zamzam Museum microclimate. I generated Aseer reports by mistake. Always confirm the project explicitly before writing showcase IDs, cluster arrangements, gallery names, or doc ref prefixes — or you'll waste time deleting and regenerating from scratch.
 - **DOCX close/reopen protocol (mandatory).** Before editing an existing DOCX via python-docx: (1) close Word first via `osascript -e 'tell application "Microsoft Word" to close every document saving yes'`, (2) make edits, (3) save, (4) reopen file via `open <path>`. Without step 1, Word holds a lock and python-docx can corrupt the file or produce a stale version the user cannot see. Without step 4, the user has to manually find and reopen the file.
-- **Strip AI fingerprints after every DOCX generation/edit pass.** Run a cleanup pass that removes: arrows (→), em/en dashes (— –), smart quotes (" " ' '), bullet symbols (• ●), section symbol (§), degree symbol (°). Rewrite AI-sounding openings ('This document outlines the technical methodology proposed by' → concise name + verb like 'SDE proposes'; 'applies a three-phase assessment protocol' → 'uses three phases'; 'SDE operates under a project-specific quality plan aligned with ISO 9001:2015 principles' → 'SDE follows ISO 9001:2015 principles'). Remove meta-commentary, hedging ('arguably', 'it could be said'), and self-referential language ('this document was created by'). The user explicitly asked for 'like human written' — every sentence should carry information weight, no filler.
+- **Strip AI fingerprints after every DOCX generation/edit pass.** Run a cleanup pass that removes: em/en dashes, smart quotes, bullet symbols, section symbol, degree symbol, accented characters. Rewrite AI-sounding openings ('This document outlines the technical methodology proposed by' -> concise name + verb like 'SDE proposes'; 'applies a three-phase assessment protocol' -> 'uses three phases'; 'SDE operates under a project-specific quality plan aligned with ISO 9001:2015 principles' -> 'SDE follows ISO 9001:2015 principles'). Remove meta-commentary, hedging ('arguably', 'it could be said'), and self-referential language ('this document was created by'). The user explicitly asked for 'like human written' - every sentence should carry information weight, no filler. **Checklist: scan for these exact characters before presenting - § • — – · → × ° " " ' ' é è ê ë à â ä ù û ü ô ö î ï ç.**
 - **Flowcharts in DOCX: prefer SVG for first gen, tables for later edits.** SVG via cairosvg renders cleanly. If the user wants editable charts, replace with styled tables using arrow characters (> v) as connectors. Do NOT use Word VML shapes — python-docx cannot build them reliably. See `references/standalone-subcontractor-docx-pattern.md` for both patterns.
 - **Removing table rows: always remove highest index first.** `tbl._tbl.remove(tbl.rows[2]._tr)` before `tbl.rows[1]._tr`, or the index shifts and you delete the wrong row.
 - **Table body cells: plain text only** — no `**bold**`, no emoji/icons (🔴🟠). User explicitly rejects these. Use plain severity labels like "Critical" vs "Moderate".
@@ -304,7 +308,7 @@ Before showing the document to the user, do a quick self-audit:
 - **Verification pattern for published values:** After writing any project-specific number (area, dates, counts), search PROJECT_MEMORY.md for the authoritative value. If they differ, fix the document and note the corrected source in the revision log. area is 4,616 m² not "~4,000".
 - **Stakeholder logos: NEVER create custom SVG logos.** Use actual files from `_Style-Guides/logos archives/` (moc-logo.png, pmc-logo-trans.png, cg-logo-trans.png, samaya-logo-trans.png, rcrc-logo.svg, bma-logo.svg). Embed as base64 img tags. Authoritative Samaya PNG at `_Style-Guides/samaya-rfi-style-guide/assets/samaya.png` (1885x621, 50KB, RGBA transparent).
 - Base64 truncation when patching HTML: verify base64 integrity after any data URI patch. Regenerate via Python base64.b64encode() and replace via script, not patch.
-- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body(\"• item text\")` for bullet lists. The `add_body()` method renders as 11pt Calibri justified body text — prefix with bullet character for list items. This is a common error; the SamayaDoc class only has `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`.
+- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body("- item text")` for bullet lists. The `add_body()` method renders as 11pt Calibri justified body text — prefix with dash for list items. This is a common error; the SamayaDoc class only has `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`.
 - MEP scope completeness: cross-reference design packages against references/mep-scope-completeness.md before pricing. Scenographic sets only cover exhibition-facing power and AV containment.
 - **Arabic-led bilingual documents:** When the document is bilingual (AR/EN), put Arabic content first. Cover title, eyebrow, and metadata labels should appear in Arabic before English. Add RTL CSS: `.ar{font-family:var(--font-arabic);direction:rtl;text-align:right}`. Wrap Arabic blocks with `dir="rtl"` or class `ar`.
 
@@ -333,6 +337,8 @@ Before showing the document to the user, do a quick self-audit:
   ```
   Call this on every paragraph that contains Arabic text. Also set `p.alignment = WD_ALIGN_PARAGRAPH.RIGHT` for Arabic paragraphs. For bilingual documents, English paragraphs stay left-aligned, Arabic paragraphs right-aligned with RTL.
 - **Personnel names in sign-off/tables: always verify against SMP + KPR first.** Do NOT use generic role titles, leave rows blank, or invent names from memory. Open and read the latest Stakeholder Management Plan (PL-0020 Rev03 HTML at `.../02.13_Stakeholder_Plan/01_Source_Files/01_HTML/`) and the email-derived Stakeholder_Register_Update_Findings.md before inserting any person's name. See `references/method-of-statement-pattern.md` Technical notes for exact extraction commands.
+- **Reference drawings must match the subcontractor's scope.** Do NOT include interior architecture drawings (GA plans, sections, wall details, room elevations) for a landscape subcontractor. Only site/external/irrigation drawings are relevant. Verify each drawing against the SOW scope before copying. See `references/subcontractor-prequalification-package.md` for the drawing selection rules.
+- **Prequalification routing: procurement contacts the supplier, not you.** When preparing a prequalification package on behalf of a subcontractor, save to `00_Prequalification/` and email procurement to send it to the supplier. Procurement does NOT stamp the doc — the supplier stamps and signs it. The email should explain why you prepared it (sub lacks museum experience) and what the supplier must do (review, stamp, sign, return).
 
 ## Offer Gap Analysis section in SOW
 
@@ -701,6 +707,7 @@ Subagents frequently download HTML error pages instead of real JPEG images:
 - `references/samaya-html-print-template.md` — **HTML print-ready document design system**: CSS classes, cover page pattern, page shell, photo embedding, project folder template, weasyprint/Surge workflow
 - `references/standalone-subcontractor-docx-pattern.md` — Creating standalone DOCX for subcontractors to submit TO Samaya (not Samaya-branded). Includes: subcontractor's own logo + color palette, day-based Gantt charts (not calendar dates), DMP Gate + RACI columns, SVG vs table flowchart patterns, third-party report handling ("use as guide only"), Oddy scope boundary, BIM coordination ownership split, and all helper functions. See the `When to use` section for the distinction.
 - `references/sustainability-points-stripping.md` — Complete reference for stripping points-chasing / rating-tier language from sustainability documents. The ER mandates code compliance (Mostadam Manual + SBC 1001), not a rating tier. This reference documents every pattern to remove and what to replace it with, plus the verification checklist.
+- `references/subcontractor-prequalification-package.md` — Prequalification package for subs lacking museum experience: letter, RACI, risk register, procurement routing, email template, drawing selection rules
 
 ## Reusable scripts
 

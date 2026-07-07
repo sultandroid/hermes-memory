@@ -27,6 +27,8 @@ metadata:
 |---------|--------|------|
 | **Full** | Risk Register + RBS/Scoring Guide + Dashboard | Single consolidated register for entire project (31+ risks) |
 | **Phase** | Summary + Risk Register | Phase-specific register (24 risks, lighter, faster) — ideal when user says "phase after phase" |
+| **Subcontractor** | Markdown document (not Excel) | Package-specific register for a single subcontractor (e.g. MEP Designer, AV Contractor). Phase-gate aligned (Pre-Appointment → Mobilisation → 50% → 90% → IFC → AFC). Sourced from contract documents (offer, SOW, DMP, specialist SOWs), not project memory. See `references/subcontractor-risk-register-pattern.md`. |
+| **Subcontractor → Enhanced Excel** | Two-phase: Markdown first, then openpyxl Excel | When the user needs both a decision-support tool during negotiation AND a governance deliverable. Phase 1 = markdown (fast, contract-sourced). Phase 2 = enhanced Excel with data validation, conditional formatting, alternating rows, status/review-date columns, and summary sheet. See `references/subcontractor-risk-register-pattern.md` §Two-Phase Workflow. |
 | **Quick** | Single sheet Risk Register | <12 risks, quick stand-up for a meeting
 
 ## Do NOT Use When
@@ -337,3 +339,7 @@ Charts need data references in the worksheet. Place chart data in a hidden area 
 - `project-register-manager` — For appending rows to existing Excel registers (append-only pattern)
 - `evm-analysis-chart` — For financial risk / cost variance reporting (different domain)
 - `samaya-technical-office` — For project context and document conventions
+
+## Reference Files
+
+- `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.

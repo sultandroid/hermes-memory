@@ -46,7 +46,19 @@ Auto-fill status fields:
 
 Short email to Project Team asking them to source candidates. Include scope summary and SOW path.
 
-### 6. Copy reference files → `03_Specifications_and_Standards/`
+### 6. Create prequalification package → `00_Prequalification/`
+
+If the subcontractor lacks museum/cultural project experience, prepare a prequalification support document on their behalf:
+
+- Prequalification letter (project understanding, design, execution, compliance)
+- RACI matrix (12+ activities × 6 parties)
+- Risk register (8+ risks with mitigation)
+
+See `references/subcontractor-prequalification-package.md` for full workflow, email template, and drawing selection rules.
+
+**Routing:** Save to `00_Prequalification/`, then email procurement to send to the supplier for their stamp and signature. Procurement does NOT stamp it — the supplier does.
+
+### 7. Copy reference files → `03_Specifications_and_Standards/`
 
 Standard set: ER Document R02, Division 00, Division 01, Applicable Codes (from 10_Oddy_Testing_Lab).
 

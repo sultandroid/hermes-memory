@@ -326,6 +326,53 @@ The `open` command triggers macOS LaunchServices → Preview → OneDrive hydrat
 
 Do NOT use non-native apps (e.g. `open -a TextEdit file.pdf`) — they open blank for dataless files.
 
+## OneDrive Path-Too-Long Sync Error
+
+OneDrive on macOS has a ~260-character path limit (inherited from Windows NTFS). When a file or folder name is excessively long — common with Alibaba product page downloads, deeply nested folder structures, or auto-generated filenames — OneDrive shows the error:
+
+> "We can't sync this item because the path is too long"
+
+The error dialog shows the truncated path. The file exists locally but OneDrive refuses to sync it.
+
+### Detection
+
+```bash
+# Find files/folders with long paths in a OneDrive directory
+find ~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/ -maxdepth 8 -type d -name "*Alibaba*" -o -name "*alibaba*" 2>/dev/null
+```
+
+The most common cause: downloading an Alibaba product page (HTML + `_files` folder) which generates a filename like:
+```
+Active Microclimate Generator For Museum Display Cases - Buy Microclimate Generator active Microclimate Generator microclimate Generator For Museum Display Cases Product on Alibaba.com
+```
+
+### Fix
+
+Rename both the folder and the HTML file to short names:
+
+```bash
+cd ~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/.../target_directory/
+
+# Rename the _files folder
+mv "Long Product Name - Buy Product active Product Product For Product on Alibaba.com_files" "ShortName_files"
+
+# Rename the HTML file
+mv "Long Product Name - Buy Product active Product Product For Product on Alibaba.com.html" "ShortName.html"
+```
+
+### Prevention
+
+- When downloading product pages from Alibaba or similar sites, save to `/tmp/` first, then rename before moving to OneDrive
+- Check path length before moving: `echo $PATH | wc -c`
+- Keep folder names under 50 characters in deep OneDrive trees
+
+### Pitfalls
+
+1. **The `_files` folder and `.html` file must both be renamed** — OneDrive tracks the pair. Renaming only one leaves a dangling reference.
+2. **The folder may contain hundreds of items** (images, CSS, JS) — `mv` on the folder renames the whole tree, no need to touch individual files.
+3. **OneDrive may take minutes to notice the rename** — the error dialog may persist briefly. Check OneDrive icon in menu bar for sync status.
+4. **Other long paths in the same directory** — after fixing one, check for others with `find ... -maxdepth 1 -type d | awk 'length>80'`
+
 ## OneDrive 4-byte stub files
 
 A distinct failure mode from `compressed,dataless`: some OneDrive cloud-only files are **4-byte text files containing `"null"`** — placeholders for files that were never synced locally.

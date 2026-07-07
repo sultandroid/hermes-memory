@@ -13,6 +13,31 @@ triggers:
 
 # Odoo — Query & Manage Moqtana / Samaya Odoo 18
 
+## ⚠️ SSL Certificate — XML-RPC on macOS
+
+Python 3.13+ on macOS may fail with `SSL: CERTIFICATE_VERIFY_FAILED`. Fix:
+
+```bash
+SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 script.py
+```
+
+## ⚠️ Odoo 18 Field Name Quirks
+
+`mrp.production` uses different field names than some docs suggest:
+
+| Wrong (doesn't exist) | Correct |
+|---|---|
+| `date_planned_start` | `date_start` |
+| `date_planned_finished` | `date_finished` |
+
+`purchase.order` has `project_id` on the **header**. `analytic_distribution` only on `purchase.order.line`.
+
+See `references/odoo-18-field-schemas.md` for full field lists.
+
+## ⚠️ Odoo 18 Domain Quirks (CRITICAL)
+
+`project_id` in `search_read` domains and `['name','in',list]` domains **crash Odoo 18**. Always fetch all records and filter in Python, or use the two-step `search` + `read` pattern. See `references/odoo-18-domain-quirks.md` for full details and code examples.
+
 ## 🔴 CRITICAL: لا تلخبط بين الشركات — Never Confuse Instances
 
 This user operates **two separate Odoo instances** for **two separate companies**. Getting it wrong triggers immediate user frustration.

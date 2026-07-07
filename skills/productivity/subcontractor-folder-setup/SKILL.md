@@ -14,7 +14,7 @@ description: Full workflow for creating, auditing, and populating subcontractor 
 
 Subcontractors live under `Subcontractors/NN_Name/` where NN = sequential number.
 
-```\nNN_Subcontractor_Name/\n├── SCOPE_REQUEST.docx                 (generated from SamayaDoc template)\n├── 00_Prequalification/              Prequalification dossiers, company profiles, qualifications docs (each firm gets its own subfolder, or flat if single firm)\n├── 01_Schedule_and_BOQ/               BOQs, schedules, cost data\n├── 02_Reference_Drawings/             IFC drawings, reference CAD/PDF\n├── 03_Specifications_and_Standards/   ER, SoW, Division specs, codes, TDS/SDS\n├── 04_Reference_Imagery/             Photos, reference images\n├── 05_Returned_Submittals/           Submittals returned from review\n├── 06_RFIs/                          RFI register and correspondence\n├── 07_Approvals/                     Approved documents, certificates\n├── 09_Offers/                        Commercial proposals, quotations per company — each company gets its own subfolder (e.g., `AD_Engineering/`, `SG_Group/`)\n├── Email_Data_Extraction/            Extracted email threads\n└── _MANAGER_DASHBOARD/               All .md management files live here (NO Excel files, NO draft email .md files)\n    ├── SCOPE_REQUEST.md               Source markdown (editing copy)\n    ├── SITUATION_REPORT.md            Status tracking\n    └── SPEC.md                        Package specification (scope, deliverables by stage, long-lead items)\n\n**Note:** Draft email .md files (`_Email_to_*.md`, `DRAFT_EMAIL_*.md`) are deleted — do not keep them. Send the email directly instead.\n```
+```\\nNN_Subcontractor_Name/\\n├── SCOPE_REQUEST.docx                 (generated from SamayaDoc template)\\n├── 00_Prequalification/              Prequalification dossiers, company profiles, qualifications docs, support docs for supplier to stamp\\n├── 01_Schedule_and_BOQ/               BOQs, schedules, cost data\\n├── 02_Reference_Drawings/             IFC drawings, reference CAD/PDF\\n├── 03_Specifications_and_Standards/   ER, SoW, Division specs, codes, TDS/SDS\\n├── 04_Reference_Imagery/             Photos, reference images\\n├── 05_Returned_Submittals/           Submittals returned from review\\n├── 06_RFIs/                          RFI register and correspondence\\n├── 07_Approvals/                     Approved documents, certificates\\n├── 09_Offers/                        Commercial proposals, quotations per company — each company gets its own subfolder (e.g., `AD_Engineering/`, `SG_Group/`)\\n├── Email_Data_Extraction/            Extracted email threads\\n└── _MANAGER_DASHBOARD/               All .md management files live here (NO Excel files, NO draft email .md files, NO .docx)\\n    ├── SCOPE_REQUEST.md               Source markdown (editing copy)\\n    ├── SITUATION_REPORT.md            Status tracking\\n    └── SPEC.md                        Package specification (scope, deliverables by stage, long-lead items)\\n\\n**Note:** Draft email .md files (`_Email_to_*.md`, `DRAFT_EMAIL_*.md`) are deleted — do not keep them. Send the email directly instead.\\n```
 
 ## File placement rules (hard conventions)
 
@@ -187,6 +187,87 @@ Procedure:
 
 See `references/mep-scope-split-consolidation.md` for the full Arabic→English translation table covering the 23 most common document types.
 
+## Domain: Supplier Profile Receipt & Assessment Workflow
+
+When a supplier sends a company profile / prequalification PDF (via email, download, or file share):
+
+### 1. Check if already filed
+
+Compare MD5 hash of the incoming file against the file already in the subcontractor folder. If identical, no move needed — confirm to user.
+
+### 2. Assess compliance against project specs
+
+Open the sub's `_MANAGER_DASHBOARD/SCOPE_REQUEST.md` and `SPEC.md`. Compare the supplier profile against each requirement:
+
+| Check | What to verify |
+|-------|---------------|
+| Portfolio | ≥3 similar projects (museum/cultural/high-profile) |
+| Climate/region | Experience in project-specific conditions (e.g. high altitude, coastal) |
+| Team depth | Landscape Architect, Engineers, specialists per SPEC |
+| Certifications | CR, VAT, SCA, ISO, Classification |
+| Scale | Has the supplier done projects of comparable complexity? |
+
+Produce a structured verdict: recommended for sole appointment, keep as execution-only sub, or not recommended. List specific gaps.
+
+### 3. Create prequalification support document
+
+Generate a DOCX for the supplier to complete and stamp. This is Samaya's document sent TO the supplier — NOT the supplier's own methodology doc. See "Prequalification Support Document" below.
+
+### 4. Organize folder
+
+- Create `00_Prequalification/` at sub root if not exists
+- Move supplier profile PDF into `00_Prequalification/`
+- Move the support document into `00_Prequalification/`
+- Clean up any Word temp files (`~$*.tmp`)
+- Remove duplicate SCOPE_REQUEST.docx from `_MANAGER_DASHBOARD/` (keep only .md there)
+
+## Domain: Prequalification Support Document (Samaya → Supplier)
+
+When Samaya needs to send a supplier a document to complete, stamp, and return as part of prequalification. This is distinct from SCOPE_REQUEST (Samaya's scope brief) and from the supplier's own methodology doc.
+
+### Document structure (10 sections)
+
+| Section | Content |
+|---------|---------|
+| Cover | Project name, contract ref, trade, "Submitted to: Samaya Investment" |
+| 1.0 | Introduction & Purpose |
+| 2.0 | Project overview table (location, altitude, contract type, team) |
+| 3.0 | Scope of Work (hard/soft landscape, existing services) |
+| 4.0 | Design deliverables by stage (50%/90%/100%/IFC) |
+| 5.0 | Supporting documents provided (table: #, Document, Contents) |
+| 6.0 | **Submission forms to fill** — blank tables for CR info, portfolio (5 rows), personnel CVs, method statement, plant schedule, priced BoQ, O&M sample |
+| 7.0 | Coordination interfaces |
+| 8.0 | Programme & milestones |
+| 9.0 | Commercial terms |
+| 10.0 | **Declaration & signature block** — "Authorised Signatory", "Signature", "Date", "Company Stamp" |
+
+### Branding rule
+
+This is Samaya's document sent TO the supplier. Use Samaya branding (navy/red, SamayaDoc template or standalone navy style). Cover says "Submitted to: Samaya Investment" and "Prepared by: [Supplier Name]". The supplier stamps Section 10.0.
+
+### Key sections that must be fill-in forms
+
+Section 6.0 must contain blank tables the supplier fills out:
+
+- **Company Information** — CR No., VAT, SCA, ISO, employees, turnover
+- **Portfolio** — 5-row table: Project Name, Location, Client, Value, Year, Scope
+- **High-Altitude / Region Experience** — blank lines for narrative
+- **Key Personnel** — Role, Min. Experience, Name (blank)
+- **Method Statement** — blank lines
+- **Plant Schedule** — blank
+- **Priced BoQ** — blank
+- **O&M Manual Sample** — request
+
+### Generation approach
+
+Use standalone python-docx (not SamayaDoc) with navy color scheme. The document is a formal Samaya document but doesn't need the full SamayaDoc header/footer template — it's a working document for the supplier to fill.
+
+### When to generate
+
+- A supplier profile is received and assessed (see Supplier Profile Receipt workflow)
+- The user asks "make a doc for the supplier to stamp"
+- A prequalification process is initiated for a new sub
+
 ## Domain: Subcontractor Prequalification Doc Generation (absorbed from session learnings)
 
 When creating prequalification documents for a subcontractor (methodology, programme, company profile docs):
@@ -196,6 +277,45 @@ When creating prequalification documents for a subcontractor (methodology, progr
 The documents are prepared FOR Samaya BY the subcontractor. Use the subcontractor's own logo and color palette. The cover should say "Submitted to: Samaya Investment — Technical Office" and "Prepared by: [Subcontractor Name]". Do NOT use SamayaDoc or Samaya colors.
 
 See `samaya-docx-template/references/standalone-subcontractor-docx-pattern.md` for the full pattern: SVG chart embedding, programmatic DOCX generation with cairosvg, DMP Gate + Day + RACI column templates, Oddy scope boundary, BIM coordination ownership split, and third-party report handling.
+
+### Two prequalification doc patterns
+
+**Pattern A — Samaya prepares ON BEHALF of the supplier (preferred when supplier needs guidance):**
+Samaya writes the complete prequalification letter as if from the supplier, confirming project understanding, design awareness, execution sequence, and compliance. The doc is then sent to the supplier to stamp and return. This is the preferred pattern when the supplier needs guidance on what to submit.
+
+Standard package includes:
+- Prequalification letter (project understanding, design awareness, execution sequence, compliance statement, company capability)
+- RACI matrix (12+ activities × all project parties — Landscape Evergreen, NRS, Samaya BIM Unit, Samaya PM, CG)
+- Risk register (8+ project-specific risks with likelihood/impact/severity/mitigation/owner)
+- Declaration & signature block
+
+**Pattern B — Samaya sends a support doc for the supplier to fill (existing pattern):**
+Samaya creates a document with blank fill-in forms (CR info, portfolio, personnel, method statement, plant schedule, priced BoQ) for the supplier to complete and stamp. See "Prequalification Support Document" section above.
+
+### Procurement handoff after prequalification
+
+After the prequalification doc is prepared on behalf of the supplier:
+1. Save to `00_Prequalification/` under the subcontractor's folder
+2. Email procurement team with the doc attached
+3. Procurement's role: contact the supplier directly, ask them to review, apply company stamp, sign, and return
+4. A separate Scope of Work (SOW) document follows as a standalone deliverable
+
+Email template for procurement handoff:
+```
+Subject: [Supplier Name] — Prequalification Package — Please Contact Supplier to Stamp & Resend
+
+Team,
+
+Please find attached the prequalification package for [Supplier Name].
+
+Action required:
+Please contact [Supplier Name] directly, ask them to review the document, apply their company stamp, sign it, and resend it back to us. This is their prequalification submission — it needs their stamp and signature to be valid.
+
+Note:
+We have prepared this document on their behalf to ensure they understand the scope of work and all project requirements. A separate Scope of Work (SOW) document will follow to define the full scope, deliverables, and programme.
+
+Please proceed and confirm once done.
+```
 
 ### Programme: day-based, not calendar dates
 

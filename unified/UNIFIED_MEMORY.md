@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-07 07:30:00
+Generated: 2026-07-07 19:02:41
 
 ---
 
@@ -45,7 +45,6 @@ DOCX: edit existing file directly (never regenerate). Close if open first. Confi
 Project check: confirm project before generating content (Aseer vs Zamzam doc refs, showcase IDs, clusters). Zamzam microclimate = 18 showcases in 4 clusters (SHC-01 x10, SHC-02 x4, SHC-04/05 x2 each). Reports: branded products only, no cheap alternatives.
 Odoo timesheet unit_amount = MINUTES on Samaya Odoo (90 = 1.5h), not hours. Log full session hours accurately (corrected 0.5→10hr).
 Zamzam Museum PM: Mustafa Alkhayyat, M.Alkhayyat@samayainvest.com
-Zamzam microclimate Odoo tasks: 3396 (Action Report), 3397 (Methodology Approval), 3398 (Supplier Quotations), 3399 (Installation)
 Eng. Mohamed Sultan Abbas, Tech Office Mgr, Samaya. Aseer + Zamzam. English only. DOCX: close before edit, reopen after. SVG charts > tables/VML. DMP gates + RACI in tables. Days not calendar dates. No site survey when shell exists. Rejects AI fingerprints & symbols. Fix-not-describe. OneDrive BIM path.
 Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, with recurring museum and exhibition tasks around Aseer Museum and RCRC proposal material. He usually gives terse, outcome-first requests and prefers agents to inspect the real target quickly instead of narrating possibilities. For Samaya delivery work, the current durable default is that the OneDrive BIM path is the primary destination, while the local Document Control folder is only a working copy.
 - Keep responses concise and direct; for Samaya construction-facing work, prefer formal English, action tables when useful, consolidated-email style summaries, and avoid prices, emoji, and decorative icons.
@@ -59,6 +58,7 @@ Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, wi
 - Samaya delivery defaults and file placement: OneDrive BIM path, Asher_Regional_Museum_Document_Control, samaya-docx-template, SamayaDoc, samaya-logo-trans.png
   - desc: Use for recurring Samaya delivery mechanics and branding defaults when deciding where files belong, how `.docx` outputs should be generated, and which logo asset is acceptable; applies to `cwd=/Users/mohamedessa` and related Samaya work.
 rollout_summary_file: 2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md
+description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
 
 ## Key People
 
@@ -86,10 +86,8 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 ## Agents & Tools
 
 Odoo timesheet unit_amount = MINUTES on Samaya Odoo (90 = 1.5h), not hours. Log full session hours accurately (corrected 0.5→10hr).
-Odoo timesheets: unit_amount = minutes, not hours. Log 300 min for a 5hr session.
-Zamzam microclimate Odoo tasks: 3396 (Action Report), 3397 (Methodology Approval), 3398 (Supplier Quotations), 3399 (Installation)
-Odoo timesheets: unit_amount in minutes not hours. Task descriptions must be human-written, not bullet lists.
 Rejects unverified costs — mark TBC. Prefers incremental file patches over full regen. Wants flowcharts in reports. Delegates to AI agents. Odoo: human paragraphs with <p> tags, no bullets/icons/AI language. Timesheet unit_amount in minutes. Always set progress + check stage.
+Cashout report preferences: PO # as clickable Odoo link, vendor reference column, exclude zero-amount and cancelled POs, credit supplier balances shown as totals (not individual POs) with note about periodic statements.
 - Hermes Nous work is not yet validated as a plain API-key flow here; current evidence points to an OAuth/device-code provider model plus optional `NOUS_BASE_URL`, so confirm the auth surface before applying secrets.
 - Hermes Nous auth preflight: Hermes Agent, nous, oauth_device_code, NOUS_BASE_URL, hermes_cli/auth.py, incomplete verification
   - desc: Use this before touching Hermes Nous credentials; it routes to an auth-model inspection, not a validated apply workflow.
@@ -105,6 +103,8 @@ task_group: Hermes Agent configuration
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 - `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
+- `hermes_cli/config.py`: `NOUS_BASE_URL` optional env metadata.
+rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/28/rollout-2026-06-28T12-13-22-019f0d81-4173-74c2-a350-5d3bbaa497d4.jsonl
 
 ## Contracts & Documents
 

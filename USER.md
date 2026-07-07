@@ -7,3 +7,5 @@ Strategic negotiator: 'acknowledge receipt' ≠ acceptance, 'without prejudice',
 Rejects unverified costs — mark TBC. Prefers incremental file patches over full regen. Wants flowcharts in reports. Delegates to AI agents. Odoo: human paragraphs with <p> tags, no bullets/icons/AI language. Timesheet unit_amount in minutes. Always set progress + check stage.
 §
 Wants model routing by task type — announce which model I'm using so they can override. Model-routing skill created at autonomous-ai-agents/model-routing.
+§
+Cashout report preferences: PO # as clickable Odoo link, vendor reference column, exclude zero-amount and cancelled POs, credit supplier balances shown as totals (not individual POs) with note about periodic statements.

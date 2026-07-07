@@ -615,6 +615,101 @@ def uri(data, mime='image/jpeg'):
 # Write HTML with __PLACEHOLDER__ tokens, then replace
 ```
 
+### Phase 3b: Prequalification Profile Compliance Assessment
+
+Evaluate a received company profile/prequalification dossier against the project's scope documents (SCOPE_REQUEST.md, SPEC.md, SoW, ER) to determine suitability and identify gaps.
+
+#### When to Use
+
+- A subcontractor submits a company profile for prequalification
+- User asks "check if this complies with project specs"
+- Need to decide whether to shortlist, reject, or request supplementary information
+
+#### Workflow
+
+**Step 1: Verify File Placement**
+
+Check if the profile is already filed in the correct subcontractor folder. Compare MD5 hashes between Downloads and the target folder to avoid duplicates.
+
+**Step 2: Read Project Requirements**
+
+Read these documents in order:
+1. `_MANAGER_DASHBOARD/SCOPE_REQUEST.md` — scope brief, submission requirements, portfolio criteria (≥3 similar projects, museum/cultural preferred)
+2. `_MANAGER_DASHBOARD/SPEC.md` — deliverable breakdown by stage, coordination interfaces
+3. `03_Specifications_and_Standards/` — SoW sections and ER extracts relevant to the trade
+4. `01_Schedule_and_BOQ/` — BOQ items to understand scale and complexity
+
+**Step 3: Extract Profile Data**
+
+Use `pdftotext` to extract the profile content. Key data points:
+
+| Data Point | What to look for |
+|------------|------------------|
+| Company registration | CR number, Ministry of Commerce, VAT cert |
+| Portfolio | Project names, clients, sectors, scale |
+| Team | Named roles, qualifications, depth |
+| Certifications | ISO, Saudi Contractors Authority, Classification |
+| Services offered | Design, supply, install, maintain |
+| Geographic experience | Regions, climates, altitudes |
+
+**Step 4: Gap Analysis Against Requirements**
+
+Build a compliance table:
+
+| Requirement (from SCOPE_REQUEST/SPEC) | Profile Evidence | Status |
+|---|---|---|
+| Portfolio: ≥3 museum/cultural/high-profile | List of projects with client names | ✅ / ⚠️ / ❌ |
+| Aseer region / high-altitude experience | Projects in Abha, Taif, or similar | ✅ / ⚠️ / ❌ |
+| Key personnel (Landscape Architect, etc.) | Named roles in org chart | ✅ / ⚠️ / ❌ |
+| Hardscape + softscape capability | Services listed, portfolio examples | ✅ / ⚠️ / ❌ |
+| Irrigation design | Irrigation technicians, past projects | ✅ / ⚠️ / ❌ |
+| Commercial registration | CR number, Chamber of Commerce | ✅ / ⚠️ / ❌ |
+| Certifications | ISO, SCA, Classification | ✅ / ⚠️ / ❌ |
+
+**Step 5: Assess Scale & Complexity Fit**
+
+Compare the profile's largest past projects against the project's scale:
+- If all past projects are private villas and the project is a museum → scale mismatch
+- If past projects are in lowland coastal cities and the project is high-altitude → climate/region gap
+- If team is 1-2 people and the project needs multi-disciplinary coordination → depth concern
+
+**Step 6: Recommend Supporting Documents**
+
+When the profile has gaps, recommend specific project documents the sub can use to strengthen their submission. This is NOT a rejection — it's a constructive path to compliance.
+
+| Gap | Supporting Document to Give Them | Why |
+|-----|----------------------------------|-----|
+| No museum/cultural portfolio | SCOPE_REQUEST.md + SPEC.md | Shows them the exact scope so they can map their relevant experience |
+| No high-altitude experience | ER extracts (existing services, climate data) | Lets them propose a plant sourcing plan from local nurseries |
+| Thin team | SoW §6.22.4(xv) — Horticulture/Landscape Design | Shows the full deliverable scope so they can propose adequate team |
+| No weight loading experience | Stramp layout drawing + structural report | Lets them demonstrate structural coordination capability |
+| No O&M manual sample | Submittal Register | Shows them what deliverables are expected |
+
+**Step 7: Verdict**
+
+| Verdict | Criteria | Action |
+|---------|----------|--------|
+| **Recommended** | Meets all requirements, strong portfolio | Proceed to offer stage |
+| **Conditional** | Gaps exist but addressable with supporting docs | Send supporting docs + request supplementary submission |
+| **Not recommended for sole appointment** | Major gaps (no museum experience, wrong climate zone, wrong scale) | Keep on file as potential execution subcontractor under a design lead; recommend they partner with a qualified design consultant |
+
+**Step 8: Document the Assessment**
+
+Save the assessment to `_MANAGER_DASHBOARD/PREQUALIFICATION_ASSESSMENT.md` with:
+- Compliance table
+- Gap analysis
+- Supporting documents recommended
+- Verdict and recommendation
+
+#### Pitfalls
+
+- **Same file in Downloads and target folder** — always MD5-check before moving. If identical, it's already filed.
+- **Profile may look competent but wrong sector** — a residential landscaping contractor may have good credentials but zero museum/cultural experience. This is the most common gap.
+- **High-altitude horticulture is a real constraint** — Aseer (Abha ~2,200m) has a unique microclimate. A contractor with only coastal/Jeddah experience cannot simply transplant their plant palette.
+- **Team depth vs project complexity** — a 1-person Landscape Architect + 2 Engineers is thin for a project requiring design, shop drawings, installation supervision, and 90-day establishment period simultaneously.
+- **Supporting docs are not a guarantee** — giving the sub the SCOPE_REQUEST and SoW helps them submit better, but it doesn't create museum experience they don't have. Be honest about fundamental gaps.
+- **"Supporting documents" vs "rejection"** — frame the recommendation constructively. The sub may be a good execution partner even if not the right design lead.
+
 ### Profile Content Structure (7 Pages)
 
 | Page | Content | Image |

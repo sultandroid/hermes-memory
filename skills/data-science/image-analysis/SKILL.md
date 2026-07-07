@@ -27,6 +27,29 @@ Use this skill when:
 - You need **quantitative** pixel data (not just a description)
 - You need to estimate dimensions, aspect ratios, or detect objects without a vision model
 
+## First Step: Try OCR Directly
+
+Before diving into pixel analysis, try `pytesseract` on the **raw image** first. This often works on complex images (screenshots, error dialogs, UI elements, WhatsApp photos) and can reveal the content immediately:
+
+```python
+import pytesseract
+from PIL import Image
+
+img = Image.open('/path/to/image.jpg')
+text = pytesseract.image_to_string(img, lang='eng')
+if text.strip():
+    print(text)
+```
+
+**Why this works:** Many images the user sends are screenshots of text (error messages, chat conversations, document snippets). OCR on the raw image often extracts the text directly, bypassing the need for pixel-level analysis.
+
+**Language selection:**
+- `lang='eng'` — English text (default)
+- `lang='ara'` — Arabic text
+- `lang='ara+eng'` — Bilingual (Arabic + English)
+
+**If OCR returns nothing:** Proceed to the analysis modules below. The image likely contains graphics, photos, or very small text that needs the ASCII rendering pipeline.
+
 ## Quick Start
 
 ```python

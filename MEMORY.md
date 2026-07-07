@@ -12,14 +12,10 @@ Odoo timesheet unit_amount = MINUTES on Samaya Odoo (90 = 1.5h), not hours. Log 
 §
 Document update rule: only patch changed sections via old_string/new_string — never regenerate entire file or user loses manual edits.
 §
-Time tracking: log full session hours (10hr for heavy doc work), not underestimated 0.5hr.
-§
 Flowcharts: SVG via cairosvg (never VML shapes). RACI matrix in methodology docs. iAcoustics report = guide only, SDE produces own report. No site survey phase for existing bldg.
-§
-Odoo timesheets: unit_amount = minutes, not hours. Log 300 min for a 5hr session.
 §
 Zamzam Museum PM: Mustafa Alkhayyat, M.Alkhayyat@samayainvest.com
 §
-Zamzam microclimate Odoo tasks: 3396 (Action Report), 3397 (Methodology Approval), 3398 (Supplier Quotations), 3399 (Installation)
+RCRC Exhibition area: ~870+ sqm exhibition (7 galleries G1–G7 + Reception), not 3,500+ sqm. User corrected this 2026-07-07.
 §
-Odoo timesheets: unit_amount in minutes not hours. Task descriptions must be human-written, not bullet lists.
+User expects actionable fixes not just critique — when structural issues identified, deliver corrected file (DOCX/HTML), not a report.

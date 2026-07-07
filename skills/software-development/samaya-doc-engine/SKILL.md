@@ -5,9 +5,141 @@ version: 1.2.0
 author: Samaya Technical Office
 ---
 
-# Samaya Document & Engineering-Chart Framework v1.2
+# Samaya Document & Engineering-Chart Framework v1.3
 
-## Quick Reference
+## Overview
+
+This skill covers TWO output formats for Samaya-branded engineering technical proposals:
+
+1. **HTML/SVG** — self-contained A4 print-ready pages with auto-numbering, SVG charts, bilingual content (the original focus)
+2. **DOCX** — Microsoft Word documents using the `samaya_doc_template.py` Python class (python-docx wrapper)
+
+Choose the format based on the deliverable: HTML for self-contained digital viewing/printing, DOCX for formal submission packages where the client expects editable Word documents.
+
+## Quick Reference — DOCX Generation
+
+### Setup
+
+The `samaya_doc_template.py` module lives at:
+```
+/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/_Style-Guides/Doc Style Guide/samaya_doc_template.py
+```
+
+Add it to sys.path in your generation script:
+```python
+import sys
+sys.path.insert(0, "/path/to/Doc Style Guide")
+from samaya_doc_template import SamayaDoc, SamayaColors
+```
+
+### Basic Usage Pattern
+
+```python
+doc = SamayaDoc()
+doc.create_header('Project Name', 'REF-001', 'TP', '01', 'Jul 2026')
+doc.create_footer('REF-001', confidential=True)
+
+# Cover page content (manual formatting)
+p = doc.doc.add_paragraph()
+p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+run = p.add_run("TECHNICAL PROPOSAL")
+run.font.size = Pt(24)
+run.font.bold = True
+run.font.color.rgb = SamayaColors.NAVY
+
+# Sections
+doc.add_h2('1.0', 'SECTION TITLE')
+doc.add_h3('1.1', 'SUBSECTION TITLE')
+doc.add_body("Body text here.")
+
+# Tables
+doc.add_table(
+    ['HEADER 1', 'HEADER 2'],
+    [['Row 1', 'Value 1'], ['Row 2', 'Value 2']],
+    col_widths_cm=[4.0, 12.5]  # A4 usable width ~16.5cm
+)
+
+doc.save('output.docx')
+```
+
+### Available Methods
+
+| Method | Purpose |
+|--------|---------|
+| `create_header(project, doc_ref, type, rev, date)` | Header with logo, doc ref, revision |
+| `create_footer(doc_number, confidential=True)` | Footer with page numbers, confidentiality notice |
+| `add_h1(text)` | Document title — 18pt Bold Navy, bottom border |
+| `add_h2(number, text)` | Section heading — 14pt Bold Navy, numbered |
+| `add_h2_u(text)` | Unnumbered H2 (for front matter, appendices) |
+| `add_h3(number, text)` | Subsection — 12pt Bold Dark Gray |
+| `add_body(text, bold, italic, size, color, align)` | Standard body paragraph (11pt justified) |
+| `add_rich_body(segments)` | Mixed-format paragraph (list of dicts with text/bold/color) |
+| `add_table(headers, rows, col_widths_cm)` | Styled table with navy header, alternating rows |
+| `line()` | Small spacer paragraph |
+| `save(path)` | Save to file |
+| `save_temp(prefix)` | Save to /tmp with timestamp |
+
+### Table Column Widths
+
+A4 portrait usable width = **16.5 cm** (21cm page - 2.5cm left - 2.0cm right margins). Sum of col_widths_cm should equal ~16.5.
+
+Common patterns:
+- 2 columns: [4.0, 12.5] — key-value pairs
+- 3 columns: [3.0, 8.0, 5.5] — description tables
+- 4 columns: [1.0, 5.0, 5.0, 5.5] — numbered lists
+- 7+ columns: [1.0, 1.5, 5.0, 1.2, 1.2, 1.2, 4.5, 2.5] — risk registers
+
+### DOCX Proposal Structure (Standard Template)
+
+A comprehensive technical proposal DOCX should follow this structure:
+
+1. **Cover Page** — project name, client, contractor, location, area, duration, doc ref, rev, date
+2. **Table of Contents** — all sections + appendices with page numbers
+3. **Executive Summary** — project overview, key differentiators, key commitments
+4. **Company Profile & Qualifications** — entity overview, core competencies, relevant projects, client references
+5. **Project Understanding & Approach** — project overview, gallery descriptions, approach principles
+6. **Scope of Work** — WBS, detailed scope by gallery, supporting areas, exclusions, assumptions
+7. **Technical Methodology & Approach** — execution phases, methodology flow, method statements per gallery, AV content production
+8. **Project Management Plan** — governance, project controls, design coordination
+9. **Schedule & Time Management** — programme table, milestones, critical path items
+10. **Quality Management** — QMS, ITPs, mock-up approval, NCR procedure, commissioning protocol
+11. **Resource & Organisation** — org chart with named personnel, workforce deployment, subcontractor management
+12. **Health, Safety & Environment** — HSE policy, project-specific hazards, environmental management, emergency response
+13. **Risk Management** — framework, risk register (15+ risks across 6 categories)
+14. **Procurement & Logistics** — strategy, procurement schedule, shipping, local content
+15. **Value Engineering** — VE approach, opportunities, submission process
+16. **Stakeholder Communication Plan** — communication matrix, reporting, escalation
+17. **Sustainability** — initiatives, compliance framework
+18. **Warranty & After-Sales Support** — defects liability, manufacturer warranties, support structure, spare parts
+19. **Handover, Training & Operations** — deliverables, training programme, handover process
+20. **Appendices** — Compliance Matrix, RACI, Key Personnel, Risk Register, Document Control, Past Project Portfolio
+
+### DOCX-Specific Rules
+
+- **NO prices in technical proposals** — same rule as HTML. Strip all $/SAR values from body, tables, risk registers, and appendices.
+- **NO icons, emoji, or AI symbols** — same rule as HTML. Use plain text labels.
+- **NO section symbol (§)** — use "Section" or "Clause" instead.
+- **Level 6 English** — short sentences, active voice, no jargon. Write at a clear professional level.
+- **Use "Samaya" not "the Contractor"** — first-person company reference throughout.
+- **No AI fingerprints** — avoid "seamlessly", "synergistic", "cutting-edge", "robust", "arguably", "it could be said".
+- **No meta-commentary** — don't say "this section describes", "as outlined above", "it should be noted that".
+- **Named personnel** — use actual names (e.g. "Eng. Ahmed Salah") not placeholders like "TBC" or "المهندس / ………………….".
+- **Risk register** — minimum 15 risks across 6 categories (TEC, DES, MAN, HSE, SIT, LOG). Each risk needs ID, category, description, probability, impact, rating, mitigation, owner.
+- **Past project portfolio** — minimum 5 projects with area, client, scope, duration, completion year, key features.
+- **Compliance matrix** — minimum 30 items mapping proposal sections to requirements with status (Compliant / TBC).
+- **RACI matrix** — minimum 14 activities × 10 roles including BMA (Designer) and RCRC (Client) columns.
+- **Document control appendix** — EDMS description, transmittal procedure, RFI procedure, submittal workflow, version control, distribution matrix.
+
+### Page Break Discipline
+
+- Add `doc.doc.add_page_break()` after each major section.
+- Appendices each get their own page break.
+- The TOC gets its own page break after the cover.
+- Long tables (risk register, compliance matrix) may span multiple pages naturally — python-docx handles this.
+
+### Quick Reference — HTML (Original)
+
+#### Page Template
 
 ### Page Template
 ```html
