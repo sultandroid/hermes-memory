@@ -9,10 +9,11 @@ author: Samaya Technical Office
 
 ## Overview
 
-This skill covers TWO output formats for Samaya-branded engineering technical proposals:
+This skill covers THREE output formats for Samaya-branded engineering technical proposals:
 
 1. **HTML/SVG** — self-contained A4 print-ready pages with auto-numbering, SVG charts, bilingual content (the original focus)
 2. **DOCX** — Microsoft Word documents using the `samaya_doc_template.py` Python class (python-docx wrapper)
+3. **Review** — evaluating incoming technical proposals (from subcontractors, competitors, or Samaya's own drafts) using `references/technical-proposal-review-methodology.md`
 
 Choose the format based on the deliverable: HTML for self-contained digital viewing/printing, DOCX for formal submission packages where the client expects editable Word documents.
 

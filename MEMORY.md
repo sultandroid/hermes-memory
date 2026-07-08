@@ -19,3 +19,5 @@ Zamzam Museum PM: Mustafa Alkhayyat, M.Alkhayyat@samayainvest.com
 RCRC Exhibition area: ~870+ sqm exhibition (7 galleries G1–G7 + Reception), not 3,500+ sqm. User corrected this 2026-07-07.
 §
 User expects actionable fixes not just critique — when structural issues identified, deliver corrected file (DOCX/HTML), not a report.
+§
+Teaching pi all memory and skills - initiated 2026-07-07

@@ -893,6 +893,10 @@ Not every document titled "Sustainability Management Plan" is actually a plan. C
 
 **Critical check:** If the consultant sends BOTH a plan and a scope reduction register simultaneously, the documents contradict each other. The reduction register undermines the plan's credibility.
 
+**🚨 Self-Contradictory Submission Pattern:** When a consultant sends two documents in the same email — an SMP establishing their role AND a scope reduction register proposing to delete that role — this is internally inconsistent. The reduction register argues the role shouldn't exist while the SMP assumes it does. Flag this explicitly: the consultant cannot have both positions. The reduction register is likely a cost-reduction exercise, not a genuine plan improvement document.
+
+**🚨 SMP Not Available Locally:** The actual SMP is often an email attachment that never gets saved to the project filesystem. The only document available locally may be the scope reduction register or the CG/PD email thread. When the user says "review the SMP" and only a reduction register or email PDF is in Downloads, state clearly: "The actual SMP is not available locally — only [X] was found. The SMP was an email attachment that needs to be saved to the project folder first." Do not fabricate an SMP review from the reduction register alone.
+
 #### Step 2: Map Against CG's Explicit Directives
 
 CG's approval of the Sustainability Manager typically comes with conditions. Extract these from the CG approval email and build a compliance matrix:
