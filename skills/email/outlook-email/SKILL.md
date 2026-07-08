@@ -563,6 +563,8 @@ end tell
 
 **User preference: provide text for manual copy, not Outlook drafts.** When the user asks you to prepare an email response, provide the text directly in your reply for them to review and copy. Do not create an Outlook draft unilaterally. The user edits the wording before sending.
 
+**User preference: list format over tables in email drafts.** When listing package contents or items in an email body, use a simple numbered list (1. 2. 3.) — not an HTML table. The user explicitly corrected this. Reserve tables for Excel deliverables only.
+
 ## Batch Email Processing with Sub-Agents
 
 For processing many project emails (10+), delegate individual emails to sub-agents in parallel batches of 3. Each sub-agent handles: read body → extract attachments → read content → determine routing → save to project folder.

@@ -99,6 +99,18 @@ Use color coding (green tint = AV Designer, blue tint = Samaya) and section head
 
 When CG issues comments on a submission plan (e.g., "add scenography drawings", "add furniture layouts"), follow this sequence:
 
+### Response Voice Rules
+
+- **Samaya is the contractor.** All responses are from Samaya's perspective. Do NOT say "NRS scope" or "AV Designer scope" — CG sees everything as Samaya.
+- **No internal sub-consultant splits.** If a designer (NRS, ZNA, etc.) provides input, report it as information received, not as a scope boundary.
+- **Items to be included later** → "will be coordinated and included in subsequent stages from 50% to 90% to IFC. [Specialist] to be appointed."
+- **Items already covered by Stage 3** → "was defined and approved at Stage 3. To be confirmed with CG whether existing submission is sufficient."
+- **Items by other discipline** → "will be provided as part of the overall submission under the relevant scope, coordinated with the [specialist]."
+
+### Full CR Sheet + Response Package Workflow
+
+See `references/cr-sheet-response-package.md` for the complete workflow: building the CR Sheet, updating submission plans, splitting specialized scope registers, packaging the response folder, and filing to OneDrive.
+
 ### Step 1: Check the Designer's SOW/Contract FIRST
 
 **Do NOT ask the designer "is this in your scope?"** — the user will correct you. Check the signed SOW, responsibility matrix, and contract documents before writing to the designer.

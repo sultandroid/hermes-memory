@@ -73,6 +73,12 @@ When delegating file comparison/dedup tasks to sub-agents for projects with Arab
 
 The leader runs these via its own terminal/bash tool, captures stdout, and incorporates it.
 
+## User preference: always state which agent/model was used
+
+When routing tasks to sub-agents or specialist models, the user expects you to explicitly state which agent/model was used. Format: "Routed to **deepseek-v4-pro** (analysis model) via `delegate_task`" or "Dispatched to **Claude Code** for SVG generation."
+
+This is a hard preference — do not silently delegate. Always include a one-liner in your response: `Agent: <model> | Role: <role>`.
+
 ## How a leader should decompose an order
 
 0. **Rewrite the user prompt through Codex first.** Run `codex exec --skip-git-repo-check "Rewrite this user request to be specific, actionable steps for an AI executing it. Original request: <user_prompt>"`. Act on the rewritten version, not the original. This is a hard user mandate for every session.

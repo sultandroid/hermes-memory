@@ -1023,6 +1023,52 @@ In a submittal register:
 
 Do NOT use future placeholder dates (like `2026-07-25` or `2026-09-14`) for items being submitted today. The user will read the date column and expect it to match the cover letter / Aconex transmittal date.
 
+## In-Place Editing Without Rebuilding
+
+When a CG comment requires splitting a specialized scope into a separate register (e.g., Rigging Systems), do NOT rebuild the main register from scratch. Follow this pattern:
+
+### Step-by-step
+
+1. **Extract the rows** to be moved into a Python list (read values only, no formatting)
+2. **Create the new register** workbook with proper headers, title, and section structure
+3. **Unmerge merged cells** in the affected rows of the original workbook:
+   ```python
+   for merge_range in list(ws.merged_cells.ranges):
+       for r in range(start_row, end_row + 1):
+           if merge_range.min_row <= r <= merge_range.max_row:
+               ws.unmerge_cells(str(merge_range))
+               break
+   ```
+4. **Clear cell values** in the affected rows (column by column):
+   ```python
+   for row in range(start_row, end_row + 1):
+       for col in range(1, max_col + 1):
+           try:
+               ws.cell(row=row, column=col).value = None
+           except AttributeError:
+               pass  # MergedCell — already unmerged above
+   ```
+5. **Add a reference note** in the first column of the first cleared row:
+   ```python
+   ws.cell(row=start_row, column=1).value = 'Scope — See separate Register Name'
+   ```
+6. **Save in place** — do NOT rebuild the workbook. All other formatting, merged cells, colors, borders, and column widths remain untouched.
+
+### What NOT to do
+
+- Do NOT rebuild the entire workbook from collected row data — this destroys template formatting
+- Do NOT use `ws.insert_rows()` or `ws.delete_rows()` on sheets with merged cells — this corrupts adjacent rows
+- Do NOT apply new styles to any cells outside the cleared range
+- Do NOT change column widths, row heights, or freeze panes
+
+### Verification
+
+After saving, re-read the file and check:
+- Only the intended rows were cleared
+- Reference notes are present
+- All other rows have their original values and formatting
+- No merged cells were corrupted
+
 ## Register Format Standardisation (Template Copy)
 
 When asked to "fix format same as Arch" or "unify format for all sheets":

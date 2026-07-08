@@ -34,6 +34,122 @@ See `references/cg-schedule-processing.md` for the full workflow with templates 
 - `references/comment-extraction-technique.md` — Detailed technique for extracting and mapping comments
 - `references/cg-schedule-processing.md` — Processing CG Excel/PDF schedules (object schedules, drawing registers): extraction, version comparison, gap analysis, multi-party routing, handling designer pushback
 
+## Extended Workflow: CR Sheet (Comment Response Register) Excel
+
+When the task is to produce a structured CR Sheet mapping consultant comments to responses:
+
+1. **Extract CG comments** — `pdftotext` the CG review PDF. Read the full text. Group by discipline (Architecture, Structure, MEP, etc.)
+2. **Extract designer input** — Pull from email (Outlook SQLite + AppleScript for full body) or from a response PDF. The designer's email often contains point-by-point responses embedded in the reply chain
+3. **Read supporting documents** — Before accepting or rejecting a claim, read the referenced drawings/documents. The designer may claim "already exists at Stage 3" — verify by reading the actual Stage 3 PDFs
+4. **Build the CR Sheet** — Use `openpyxl` to create a 2-sheet workbook:
+   - **Sheet 1: CR Register** — Columns: CR#, CG Comment, CG Reference, Response, Position, Status, Action Required, Supporting Documents
+   - **Sheet 2: Summary** — Status breakdown, key positions, recommended next steps
+5. **Status classification** — Use these categories:
+   - **Acknowledged** — comment noted, no further action
+   - **Already covered by Stage 3** — existing approved documents address the comment
+   - **To be included in subsequent stages** — item will be developed from 50% to 90% to IFC
+   - **To be provided under relevant scope** — belongs to another discipline/specialist
+   - **N/A** — comment belongs to another discipline
+6. **Color coding** — Yellow=Partial, Red=Not part of this submission, Blue=Acknowledged, Grey=N/A
+7. **Cross-reference verification** — When designer says "already exists at Stage 3", verify by reading the referenced PDFs. Note the drawing numbers and document titles in the Supporting Documents column
+8. **Propose next steps** — For each CR, state what needs to happen: confirm with CG, coordinate with specialist, appoint supplier, etc.
+
+### CRITICAL: Response Voice Rules
+
+**The CR Sheet speaks as the contractor (Samaya), not the designer (NRS).** This is the most common mistake. Follow these rules:
+
+- **No sub-consultant scope splits.** Never say "NRS scope" vs "Samaya scope" — everything is under Samaya. The CG does not need to know internal sub-consultant allocations.
+- **No "our design scope covers" framing.** The contractor's scope covers everything. Items not yet developed are "to be coordinated and included in subsequent stages" not "outside our scope."
+- **Items to be developed later:** Say "will be coordinated and included in subsequent stages from 50% to 90% to IFC. Supplier to be appointed." Do not say "outside NRS scope" or "being sourced by Samaya."
+- **Items handled by specialists:** Say "will be provided under the relevant scope, coordinated with the [specialist name] specialist." Do not say "by others" or "outside NRS scope."
+- **Items already covered by Stage 3:** Say "was defined and approved at Stage 3. The existing Stage 3 document already addresses this. To be confirmed with CG whether sufficient." Do not say "NRS confirms" or "NRS position."
+- **Column header:** Use "Response" not "Designer Response" or "NRS Response."
+- **Designer input is raw material only.** Extract the designer's technical position from their email, then rephrase it as the contractor's response. The designer's frustration ("this is pointless", "not what RIBA defines") stays in the source — do not carry it into the CR Sheet.
+
+### Staging Pattern for Items Not Yet Developed
+
+When CG asks for items that were not in the original submission plan:
+
+| Item Type | Response Pattern |
+|-----------|-----------------|
+| FF&E layouts | "Will be coordinated and included in subsequent stages from 50% to 90% to IFC. Supplier to be appointed." |
+| Signage/Graphics | "Included in the 50% gate. Will be submitted separately, coordinated with the signage and graphics specialist." |
+| Life Safety | "Will be provided under the relevant scope, coordinated with the Life Safety specialist." |
+| Structural items | "To be included as part of the structural submission." |
+| Simple acceptance | "Noted. [Action] to be prepared." — Status: Accepted |
+
+### Open/Closed/Noted Status Column
+
+After building the CR Sheet, add a status column with three values:
+
+| Status | Meaning | Color |
+|--------|---------|-------|
+| **Open** | Action pending — supplier to be appointed, specialist to coordinate, information pending | Red (#FCE4EC) |
+| **Closed** | Resolved — draft submitted, CG confirmed, item accepted | Green (#E2EFDA) |
+| **Noted** | Acknowledged — process requirement, no further action | Blue (#D6E4F0) |
+
+Insert this column between the Status column and Action Required column. Use `ws.insert_cols(7)` to shift existing columns right.
+
+### Supporting Documents Column Rules
+
+- List only file names and paths — no parenthetical internal notes
+- Wrong: `Consultant_Comment_Register_Revised.xlsx (Comment 3)`
+- Right: `Consultant_Comment_Register_Revised.xlsx`
+- If a document reference is internal (e.g., a specific comment number), put it in the Action Required column instead
+- Use `N/A` when no supporting document exists
+
+### Cross-Referencing Between Registers
+
+When multiple registers exist for the same project (CR Sheet, Consultant Comment Register, Structural Submittal Register, etc.):
+
+1. **Read all relevant registers** before writing responses. The Consultant Comment Register may contain detailed responses that should inform the CR Sheet.
+2. **Reference file names only** in the Supporting Documents column — no parenthetical internal notes (e.g. use `Consultant_Comment_Register_Revised.xlsx` not `Consultant_Comment_Register_Revised.xlsx (Comment 3)`).
+3. **Put specific references** (comment numbers, section references) in the Action Required column instead.
+4. **Update all registers** when a CR status changes — the CR Sheet, submission plan, and discipline-specific register should all reflect the same status.
+
+### Register Split Pattern (Specialized Scope)
+
+When CG requests a separate register for a specialized scope (e.g., rigging systems):
+
+1. **Create a new register file** — Extract the relevant rows from the main register into a new workbook with its own title and section headers.
+2. **Reference in the main register** — Replace the extracted rows with a single reference note: `"[Scope] — See separate [Register Name]"`
+3. **Preserve template formatting** — Only clear the specific rows being moved. Do NOT rebuild the entire workbook. Unmerge any merged cells in those rows first, then clear cell values. Leave all other formatting, merged cells, colors, and styles untouched.
+4. **Name the new file** consistently — `[Discipline]_Submittal_Register/[Scope]_Submittal_Register.xlsx`
+
+### Template Preservation Rule
+
+When editing an existing Excel register or submission plan:
+
+- **Only modify the specific cells/rows needed.** Do not rebuild the file from scratch.
+- **Unmerge merged cells** in the affected rows before clearing values.
+- **Preserve all original formatting** — header styles, column widths, merged cells in unaffected rows, section colors, borders.
+- **Add reference notes as plain text** in the first column of cleared rows. Do not apply special formatting to these notes.
+- **Verify** by re-reading the file after saving to confirm only intended changes were made.
+
+### Closing a CR When Designer Provides Drafts
+
+When the designer initially pushes back on a CG comment but then prepares draft drawings anyway:
+
+- **Update the CR to reflect the actual outcome**, not the initial position.
+- Change status from "Partial - needs CG confirmation" to "Closed - draft submitted"
+- List the actual drawing numbers in Supporting Documents
+- Keep the Action Required focused on what remains (e.g., "Update title sheet and submit final")
+- The designer's frustration or pushback language stays in the source email — do not carry it into the CR Sheet
+
+### Simple Acceptance Pattern
+
+When a CG comment is straightforward and accepted without debate:
+
+- Response: `"Noted. [Specific action] to be prepared."`
+- Position: `"Accepted"`
+- Status: `"Accepted"`
+- Open/Closed: `"Closed"` (green)
+- Action Required: The specific action to take
+
+Example: CR-07 (Rigging register) → "Noted. Separate submittal register for rigging works to be prepared."
+
+See `references/cr-sheet-workflow.md` for the complete technique with openpyxl patterns and status classification rules.
+
 ## Pitfalls
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks
 - Comments may have inline status markers like "OK", "OK - comply with Ad.", "OK - Update in DL" — these need careful parsing
