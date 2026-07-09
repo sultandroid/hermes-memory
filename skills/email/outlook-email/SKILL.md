@@ -60,7 +60,7 @@ Only one account (sultan@samayainvest.com) — no account filtering needed.
 | `Message_SenderList` | TEXT | Display name of sender |
 | `Message_SenderAddressList` | TEXT | Email address of sender |
 | `Message_NormalizedSubject` | TEXT | Email subject line |
-| `Message_TimeReceived` | INTEGER | Unix timestamp (use `datetime(col, 'unixepoch')`) |
+| `Message_TimeReceived` | INTEGER | Mac absolute time (seconds since 2001-01-01). Use `datetime(col + 978307200, 'unixepoch')` to convert — NOT `datetime(col, 'unixepoch')` which gives wrong dates (2057). |
 | `Message_HasAttachment` | BOOLEAN | 1 = has attachments, 0 = no attachments |
 | `PathToDataFile` | TEXT | Relative path to `.olk15Message` file (proprietary — use AppleScript instead) |
 
@@ -198,7 +198,17 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 **macOS TCC blocks direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` returns "authorization denied" even via AppleScript's `do shell script`. This is NOT fixable with permissions grants — the sandbox is hard. **Always use AppleScript's Outlook object model** as the primary access method. Only SQLite fallback when AppleScript fails for a specific query.
 
-**`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum"`. Do NOT attempt `(every folder)` iteration.
+**`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.
+
+**Aconex sender is a record, not a string.** `sender of m` returns a Mail Recipient record, not a Unicode text. Using it directly in a string comparison (`senderName contains "Aconex"`) crashes with error -1700. Always wrap in a try block with `as text` coercion or `name of senderRecord`:
+```applescript
+set senderName to ""
+try
+    set senderRecord to sender of m
+    set senderName to (name of senderRecord) as text
+end try
+```
+This applies to any sender where the record might be a distribution list, system account, or Aconex notification.
 
 **AppleScript body extraction returns empty for some emails.** `plain text content of m` works reliably for Inbox messages but may return `""` (empty string) for messages in project sub-folders, archived messages, or very old emails. When body is empty, fall back to subject + attachment analysis — don't try `properties of theMsg` which returns an unparseable record. The subject line and attachment names usually carry enough signal for triage purposes.
 
@@ -239,6 +249,8 @@ See `references/register-log-reconciliation.md` for the complete workflow with c
 ### Aconex / Oracle C&E Browser Access
 
 The user's project uses Oracle Construction and Engineering (Oracle Aconex) as the Common Data Environment (CDE). Access is via browser tools.
+
+**Aconex notification emails** are system-generated (sender `Aconex Notification` or `Aconex Notification (Aseer Museum)`) with no email address — query `Message_SenderList LIKE '%Aconex%'` not `Message_SenderAddressList`. These are notification-only with no attachments. See `references/aconex-email-patterns.md` for sender format, transmittal naming conventions, volume patterns, and the epoch offset fix for SQLite timestamps.
 
 **Login:**
 - Navigate to `https://constructionandengineering.oraclecloud.com/ui/v1/login`
@@ -857,7 +869,7 @@ The file header (first ~285 bytes) contains metadata in plain text:
   1. `osascript -e 'do shell script "python3 <script.py> 2>&1"'` — even from a fully locked directory, AppleScript's `do shell script` can execute Python scripts when direct shell access fails. Proven to work on both iCloud and OneDrive.
   2. `python3 <script.py>` — can execute cloud-stored `.py` scripts successfully even when `cat`/`head`/`file` commands fail on the same file. `wc -c` reads full size.
   3. `brctl download <path>` — forces the file to sync locally. Wait 1–2s, verify with `stat -f "%Sf" <path>` (output `-` when fully local).
-  4. Delete-and-copy — `os.remove(target_path)` then `cp -X /tmp/source target`; deleting the existing stub removes the sync engine lock.
+  4. Delete-and-copy — `os.remove(target_path)` then `cp -X /tmp/source target`; deleting the existing stub removes the sync engine lock. For iCloud `~/Documents/` files, `rm -f` + `cp /tmp/source target` also works after `brctl download` to force local sync first.
   5. `cat <src> > /tmp/x && mv /tmp/x <dest>` — bypasses `fcopyfile` deadlock in `cp`. ⚠️ Only works for OneDrive files, NOT iCloud Drive dataless files (those silently produce 0-byte output).
   6. **Content-request via time-based detection** — when you cannot read file contents, use `find -ctime -1` (change time), `find -newermt "<date>"` (modification time), or `find -newer <reference_file>` to detect if new/changed files exist. Compare filenames against target BIM folders with `find ... -name "${base}*"` to determine if already filed, without needing to read file bytes.
 

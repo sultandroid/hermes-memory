@@ -431,6 +431,13 @@ gh gist create script.py --public --desc "Useful script"
 
 ---
 
+## Related Reference Files
+
+| File | When to Use |
+|------|-------------|
+| `references/pmi-pmbok-repo-structure.md` | Creating a new project repo organized by PMI PMBOK knowledge areas |
+| `references/cron-status-repo.md` | Setting up a cron-driven repo that auto-syncs `.md` status files from a local source — scripts outside repo, silent delivery, 4× daily schedule |
+
 ## Quick Reference
 
 | Action | gh | curl |

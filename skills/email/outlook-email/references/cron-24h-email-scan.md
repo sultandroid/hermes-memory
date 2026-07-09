@@ -5,7 +5,7 @@ Trigger: Scheduled cron job checking for project-critical emails in last 24 hour
 ## Key Constraints
 
 - **No TCC SQLite access** — `sqlite3` returns "authorization denied". Use AppleScript Outlook object model only.
-- **`every folder` fails** — must target `inbox` directly or `folder "Name"` for project folders.
+- **`every folder` fails** — must target `inbox` directly or `folder "Name" of inbox` for project folders. Standalone `folder "Name"` fails.
 - **No user present** — must be fully autonomous with no clarification.
 - **SILENT protocol** — if nothing new, output `[SILENT]` only.
 

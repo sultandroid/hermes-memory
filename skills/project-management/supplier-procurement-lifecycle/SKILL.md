@@ -947,6 +947,7 @@ For structured Excel registers (Key Personnel Register, Subcontractor Register, 
 - **Cascade status updates everywhere** — when the user corrects a subcontractor's contract status (e.g. "actually it's EXECUTED not pre-qualified"), update ALL of: `_CONTRACT_STATUS.md`, `_MANAGER_DASHBOARD/SITUATION_REPORT.md`, `AV_STATUS_REGISTER.md` (or equivalent), `PROJECT_MEMORY.md §0`, `Scripts/notes/stakeholders.md`, and persistent memory. A single-source update leaves stale copies that confuse future sessions. Search for the old status string across the project to catch every occurrence.
 
 See `references/fls-dossier-example.md` for a real-world Aseer FLS dossier run (88 files, 193MB) with source discovery order and pitfalls discovered.
+See `references/av-subcontractor-dossier-pattern.md` for AV/IT subcontractor folder structure (NMK/Q-Sys), UUID duplicate detection, and product datasheet organization.
 
 ---
 

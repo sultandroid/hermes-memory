@@ -81,6 +81,58 @@ CG comments are numbered (1, 2, 3...) and listed after "CG Comments:" or "Consul
 | Architectural/MEP coordination | All items (noted for next stage) |
 | Documentation/format | Specs, Calculations |
 
+## Two-Stream Response
+
+When CG comments arrive, separate into two streams:
+
+1. **Submission Plan CR Sheet** (sent to CG) — what to submit, when, by whom. Caveman style responses.
+2. **Consultant Comment Register** (internal tracking) — technical review details, Code C items, action tracking.
+
+Never merge both streams into one response document. The CR sheet goes to CG. The comment register stays internal.
+
+## Multiple CG Sources — One CR Sheet
+
+When multiple CG reviewers comment on the same submission package, merge into one CR sheet. Example: Mohammad Elbaz (13 comments) + Maged Zamzam (7 comments) on the same Arch Submission Plan → one CR sheet with CR-01 to CR-20.
+
+**What NOT to merge:** Structural BOD detailed comments (14 comments from Abdrabo Shahin) are a separate submission package — track in Consultant Comment Register, not in the CR sheet.
+
+## CR Sheet Response Style (Caveman)
+
+Apply caveman style to all CR responses:
+- Drop articles, filler, hedging
+- Short fragments, technical terms exact
+- Samaya perspective always — no sub-consultant splits
+- **Preserve CG comment verbatim** in column 2 — never rewrite
+
+**NRS "Easy Win" Pattern:** When NRS disagrees but complies:
+- "Stage 3 covers this. No changes. NRS draft [doc] as reference. Easy win for CG."
+- "Stage 3 defines [scope]. No changes. NRS draft [doc] as reference. Will submit as per submission plan."
+- "[Scope] outside NRS scope. [Party] responsible."
+
+**Furniture Layout Rule:** Furniture layout is an architectural package deliverable, not dependent on FF&E supplier. The layout plan showing furniture locations, dimensions, and clearances is part of the architectural package. The FF&E supplier provides the actual furniture items. CG comment is Closed when layout is on GA drawings and noted in submission plan.
+
+## Step 7: Outlook Extraction
+
+CG responses often come from `cg.com.sa` addresses. Search by doc code or subject:
+
+```sql
+SELECT m.Record_RecordID, datetime(m.Message_TimeReceived, 'unixepoch', 'localtime'),
+       m.Message_NormalizedSubject, m.Message_HasAttachment
+FROM Mail m
+WHERE m.Message_NormalizedSubject LIKE '%MOC-MUS-ASE-1C0-1G-0001%'
+ORDER BY m.Message_TimeReceived DESC;
+```
+
+Extract the attachment via AppleScript (see Step 2 in main workflow).
+
+## Step 8: Git Repo Update
+
+The project repo (`aseer-museum-pm`) is status-only:
+- Push only `00_Status/project_status.md` updates
+- No binaries, no xlsx, no PDFs
+- `.gitignore` blocks all binary formats
+- Commit message format: "Update status: {summary} - {date}"
+
 ## Pitfalls
 
 - CG response PDFs often have the cover sheet (with status code) as page 1 and detailed comments on subsequent pages. Extract all pages.

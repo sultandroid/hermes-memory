@@ -102,14 +102,23 @@ if po['name'] in FORCE_INCLUDE:
 
 - **Odoo domain bugs:** Never use `project_id` or `'in'` operator in `search_read`/`search` domains on Odoo 18.0+e. Fetch all and filter in Python.
 - **Limit too low:** Odoo has ~1895 POs total. Use `limit=2000` or higher.
-- **Credit suppliers:** User explicitly wants them as statement balances, not individual POs. Do NOT include Mada Aljezera or Saba Najad POs in the main list.
+- **Credit suppliers:** User explicitly wants them as statement balances, not individual POs. Do NOT include Mada Aljezera or Saba Najad POs in the main list. Show them as statement balances with opening/payment/closing breakdown.
+- **Credit supplier balance from statement PDF, not Odoo:** The balance comes from the supplier's PDF statement, not from summing Odoo POs. Use `pdftotext -layout` to extract the PDF and find the closing balance line.
 - **Zero-amount POs:** Always exclude (draft POs with no amount).
 - **Cancelled POs:** Exclude.
-- **Vendor Reference column:** Use `partner_ref` field from Odoo.
+- **Vendor Reference column:** Use `partner_ref` field from Odoo. Place in column I (last column), NOT column C — user preference.
 - **Indent in openpyxl:** Use `Alignment(indent=N)`, NOT `.indent = N` (AttributeError on openpyxl).
 - **Number format:** Use `.number_format = '#,##0.00'` for amount cells.
 - **User wants to see the file:** Always `open` the file after saving.
+- **Force-include delivered-but-not-paid POs:** When user says "they delivery but still not payed", add a `FORCE_INCLUDE` set and check it before other filters. These POs may show `invoice_status=invoiced` in Odoo but the user confirms they haven't been paid.
+- **Odoo message_post for comments:** Use `call('purchase.order', 'message_post', [[id]], {'body': '...', 'subject': '...', 'message_type': 'comment', 'subtype_xmlid': 'mail.mt_note'})` to add chatter comments to POs. The `message_post` method is always available even though it doesn't appear in `fields_get`.
 
 ## Related Skills
 
 - `odoo` — Odoo connection, field schemas, SSL fix
+
+## Support Files
+
+### References
+- `references/saba-najad-statement-2026-07.md` — Full transaction detail from the Saba Najad statement PDF (01 May - 07 Jul 2026), including opening/closing balances and PO-to-invoice mapping.
+- `references/odoo-po-comment-workflow.md` — How to add chatter comments to Odoo POs via `message_post` for tracking cashout report references.

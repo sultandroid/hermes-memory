@@ -35,12 +35,14 @@ The schedule uses prefix codes:
 
 | Activity ID | Description | Typical Finish |
 |-------------|-------------|----------------|
-| EN102 | Preparation & Submission of Structural Design 50% | 19-Aug-26 |
-| EN103 | Preparation Structural BIM Model 50% | 19-Aug-26 |
+| EN102 | Preparation & Submission of Structural Design 50% | 02-Jul-26 (submitted) / 19-Aug-26 (BL) |
+| EN103 | Preparation Structural BIM Model 50% | 19-Jul-26 |
 | EN104 | Preparation Structural Product/Material Submittal Schedule 50% | 16-Aug-26 |
 | EN106 | Approval of Structural Product/Material Submittal Schedule 50% | 19-Aug-26 |
 | EN144 | Preparation & Submission of Structural Design 90% | 19-Aug-26 |
 | EN163 | Preparation & Submission of BIM Model 90% | 03-Sep-26 |
+
+**Actual:** BOD + Loading Plans submitted 02-Jul-26, returned Code C 05-Jul-26 (15 comments). Resubmission pending.
 
 ## Key Programme Dates
 
@@ -54,12 +56,13 @@ The schedule uses prefix codes:
 
 The schedule treats 50% DD as one package per discipline (not per floor). The submission plan breaks it by floor. When mapping:
 
-1. **All floor-level DD items** under the same discipline map to the same activity ID (e.g. all Basement, LGF, GF, 1F architectural items -> EN108)
-2. **All structural items** (BOD, loading, analysis, gallery) map to EN102
-3. **Specialized designs** (showcase, graphic, lighting, AV) map to their own activity IDs
-4. **Material submittals** map to the product/material schedule activity (EN104/EN110)
-5. **BIM models** map to BIM activities (EN103/EN109/EN163)
-6. **IFC packages** map to the 90% design activity (EN144)
+1. All floor-level DD items under the same discipline map to the same activity ID
+2. All structural items (BOD, loading, analysis, gallery) map to EN102
+3. Specialized designs (showcase, graphic, lighting, AV) map to their own activity IDs
+4. Material submittals map to the product/material schedule activity (EN104/EN110)
+5. BIM models map to BIM activities (EN103/EN109/EN163)
+6. IFC packages map to the 90% design activity (EN144)
+7. Rigging items are a subset of structural — map to EN102 (DD) and EN144 (IFC) like other structural items. The separate rigging register doesn't change the activity ID mapping.
 
 ## Pitfalls
 

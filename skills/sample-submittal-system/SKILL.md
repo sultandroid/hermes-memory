@@ -54,7 +54,7 @@ Key CSS differences from A4 variant:
 - Decorative rings: 180px and 130px (smaller than A4 variant's 220/160px)
 - `@page{size:420mm 297mm landscape; margin:0;}`
 
-### Variant 3: A3 Booklet Spread with Photo Background
+### Variant 3: A3 Booklet Spread with Photo Background (PREFERRED for new samples)
 
 Same as Variant 2 but the front cover (left half) has the sample photo as a subtle background image:
 
@@ -86,7 +86,7 @@ All party logos on the dark cover need `filter:brightness(0) invert(1)` to rende
 
 ### Sample Name Format
 
-The user corrected the name format on SS-002. Use this pattern:
+Use this pattern (confirmed on SS-002):
 
 ```
 METAL SS PVD Coated Patinated Brass Effect
@@ -99,28 +99,32 @@ METAL SS PVD Coated Patinated Brass Effect
 
 ### Front Cover Layout
 - **Background**: `#13151A` with subtle radial gradient decoration (`radial-gradient(ellipse at center, rgba(200,144,74,.08) 0%, transparent 70%)`)
-- **Top bar**: Samaya logo (left, 18px, 0.7 opacity) — "Material Code" label (7px, uppercase, 0.35 opacity) + code in bronze monospace (right)
-- **Hero**: Material name in Playfair Display 52px, subtitle with type badge (bronze border, 9px uppercase), divider dot, finish description
-- **Specs panel**: Semi-transparent panel (`rgba(255,255,255,.04)` bg, `rgba(255,255,255,.06)` border, 4px radius) with Substrate, Finish, Hardness, Corrosion, Applications (tag grid), Status indicator (green dot + "Active")
+- **Photo background** (Variant 3 only): Sample photo at 20% opacity, full-cover, `object-fit:cover`
+- **Top bar**: Samaya logo (left, 16px, `filter:brightness(0) invert(1)` opacity .8) — "Material Code" label (6px, uppercase, 0.35 opacity) + code in bronze monospace (right)
+- **Hero**: Material name in Playfair Display 38px (700 weight for print readability), subtitle with type badge (bronze border, 8px uppercase), divider dot, finish description
+- **Project name**: "Aseer Regional Museum · KSA" below subtitle (8px, uppercase, 0.3 opacity, letter-spacing 1.5px)
+- **Specs panel**: Semi-transparent panel (`rgba(0,0,0,.75)` bg for readability over photo, `rgba(255,255,255,.12)` border, 4px radius) with Substrate, Finish, Hardness, Corrosion, Applications (tag grid), Status indicator (green dot + "Active")
 - **Ref area**: "Submittal Reference" label + doc ref with bronze-highlighted section
-- **QR float**: 50px QR code in bottom-right corner
-- **Party strip**: CG, NRS, PMC, Glasbau Hahn logos (14px height, 0.5 opacity) + names in a row at bottom
+- **QR float**: 40px QR code in bottom-right corner
+- **Party strip**: CG, NRS, PMC, Glasbau Hahn logos (12px height, `filter:brightness(0) invert(1)` opacity .6) + names in a row at bottom, on `rgba(0,0,0,.5)` background
 
 ### Back Cover Layout
-- **Background**: Same `#13151A` with decorative concentric rings (280px and 200px, 0.04/0.03 opacity) and horizontal line
-- **Top**: Samaya logo centered (20px, 0.4 opacity)
-- **Center**: QR code (60px) in circular frame (90px, `rgba(255,255,255,.1)` border, `rgba(255,255,255,.02)` bg)
-- **Brand**: "Samaya Technical Office" (10px, uppercase, 0.4 opacity) + "Aseer Museum · KSA" (8px, 0.2 opacity)
-- **Ref block**: Code (14px, bronze), submittal ref (8px, 0.25 opacity), accent line (30px, `rgba(200,144,74,.3)`), "Material Sample" label (7px, uppercase, 0.2 opacity)
-- **Bottom**: Party logos only (no names, 14px, 0.3 opacity)
+- **Background**: Same `#13151A` with decorative concentric rings (180px and 130px, 0.04/0.03 opacity) and horizontal line
+- **Top**: Samaya logo centered (16px, `filter:brightness(0) invert(1)` opacity .5)
+- **Center**: QR code (48px) in circular frame (70px, `rgba(255,255,255,.1)` border, `rgba(255,255,255,.02)` bg)
+- **Brand**: "Samaya Technical Office" (9px, uppercase, 0.4 opacity) + "Aseer Museum · KSA" (7px, 0.2 opacity)
+- **Ref block**: Code (12px, bronze), submittal ref (7px, 0.25 opacity), accent line (24px, `rgba(200,144,74,.3)`), "Material Sample" label (6px, uppercase, 0.2 opacity)
+- **Bottom**: Party logos only (no names, 12px, `filter:brightness(0) invert(1)` opacity .4)
 
 ### Key CSS
 - Fonts: `Playfair Display` for title, `Inter` for everything else
 - Accent color: `#C8904A` (bronze/gold)
 - Cover dimensions: `210mm × 297mm` (A4 portrait) — NOT 240×330mm. The user corrected this from booklet size to A4.
-- Print: `@page{size:A4 portrait; margin:0;}`
+- Print: `@page{size:A4 portrait; margin:0;}` for A4 variant, `@page{size:420mm 297mm landscape; margin:0;}` for booklet spread
 - `-webkit-print-color-adjust:exact` preserves dark background
-- Decorative rings: 220px and 160px (scaled for A4, not the original 280/200px from the Kimi prototype)
+- Decorative rings: 220px and 160px (A4 variant), 180px and 130px (booklet spread)
+- **Logo rendering**: ALL party logos on dark backgrounds need `filter:brightness(0) invert(1)` — this is the fix for invisible logos
+- **Print contrast**: Title weight 700, spec values 0.9 opacity, spec keys 0.5 opacity, specs panel bg 75% black minimum
 
 ### Creating a Kimi Cover
 Build from scratch using the structure above, or adapt an existing live cover:
@@ -226,7 +230,7 @@ User: `u517606786`
 - **403 Forbidden after deploy** = permissions issue. Files uploaded via SSH pipe get mode 600. Always run chmod 644 on files + 755 on directories after deploy.
 - **Logo download from live server** is faster than OneDrive for asset retrieval. Use curl from an existing live sample.
 - **Prepared-by entity** varies per sample — not always Glasbau Hahn. Set to the actual supplier/submitter (e.g. "Samaya Technical Office" for in-house samples).
-- **Datasheet PDFs** are optional placeholders. The page works without them — links just won't resolve until PDFs are uploaded.
+- **Datasheet PDFs** are optional placeholders. The page works without them — links just won't resolve until PDFs are uploaded. Wikipedia PDFs can serve as interim reference material when manufacturer datasheets are blocked behind forms/403s.
 - **Landing page template mismatch** — The skill specifies the Kimi-style folder cover as `index.html`, but early samples (PB-001, SS-001) were deployed with the A4 submittal sheet as `index.html` instead. Before deploying a new sample, CONFIRM with the user which template should be the landing page. If the A4 sheet is the landing page, the Kimi cover goes in a separate `label.html` file (local copy only). If the Kimi cover is the landing page, the A4 sheet goes in `submittal.html`. Do not assume — the user will flag a mismatch.
 - **Apple Double files (._*)** — macOS creates hidden `._filename` resource fork files when copying to non-Apple filesystems. These appear on the server as `._index.html`, `._photo-*.jpg`, etc. They are harmless but clutter the directory. Remove them after deploy: `ssh ... "find ... -name '._*' -delete"`.
 - **Cover size correction** — The Kimi prototype uses 240×330mm (booklet). The user wants A4 (210×297mm). Always set cover dimensions to A4 portrait unless explicitly told otherwise. Also scale decorative elements (rings, font sizes) proportionally when resizing.
@@ -237,6 +241,9 @@ User: `u517606786`
 - **Logo rendering on dark backgrounds** — All party logos on the dark navy cover need `filter: brightness(0) invert(1)` to render white. Without this, dark-colored logos are invisible on the dark background.
 - **Print readability** — For dark-background covers, ensure sufficient contrast: specs panel bg at least 75% black, spec values at 0.9 opacity, spec keys at 0.5 opacity, title weight 700. Add `@media print` overrides to darken panels further for print (print rendering can wash out semi-transparent overlays).
 - **Project name on cover** — Add "Aseer Regional Museum · KSA" below the subtitle on the front cover (8px, uppercase, 0.3 opacity, letter-spacing 1.5px).
+- **Datasheet sourcing** — Manufacturer datasheets (AISI 304, PVD coating) are often behind Cloudflare/403 walls or require form submission. Wikipedia PDFs (via `/api/rest_v1/page/pdf/`) are a reliable fallback for interim reference. Upload them as `datasheet-*.pdf` to the sample folder. The user expects the datasheet links on the submittal page to resolve — don't leave them as dead links.
+- **SCP can hang on Hostinger** — SCP to port 65002 on samaya-factory.com sometimes hangs silently. Use SSH pipe (`cat deploy.tar.gz | ssh ... "cat > file.tar.gz"`) as a more reliable alternative. Always verify with `curl -sI` after deploy.
+- **Cover vs submittal naming confusion** — The user may refer to "the cover" meaning the Kimi-style folder cover, not the A4 submittal sheet. When they say "cover page" they mean the physical folder cover for printing, not the formal submittal document. Clarify which is which before deploying.
 
 ## Template Variables
 

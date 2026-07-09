@@ -900,6 +900,59 @@ When reviewing a quotation/proposal against contract documents (ER, SOW, DMP), s
 - **OneDrive sync blocks file operations** — Write to `/tmp/` first, then copy to OneDrive path. See section 1c for the workaround.
 - **Registers may not have a dedicated PQ column** — Some registers track PQs under "Submittal No." or "Type" columns. Check the register structure before appending.
 
+## 4c. Processing Aconex Metadata Template Exports
+
+**Trigger:** User provides an Aconex Metadata Template export (.xlsx) or asks to check actual document statuses from Aconex.
+
+Aconex email notifications (WTRAN transmittals) are **notification-only** — they carry transmittal numbers but NO status codes. The actual A/B/C/D status is only available from:
+1. CG response PDFs attached to the transmittal
+2. The **Aconex Metadata Template export** — a system-generated .xlsx that lists every document registered in Aconex with its current status code
+
+### Workflow
+
+1. **Read the Metadata Template export** using `read_file` (auto-extracts openpyxl content to readable text)
+2. **Identify the MetadataTemplate sheet** — contains columns: Document No, Revision, Title, Type, Status, Discipline, Floor, File, Revision Date, etc.
+3. **Extract status codes** for each document — map the `Status` column value:
+   - `A - Approved` / `B - Approved with Comments` / `C - Revise and Resubmit` / `D - Rejected`
+   - `For Review` = pending CG assessment
+   - `E - Review Not Required` = administrative only
+4. **Cross-reference against WTRAN transmittal numbers** from Outlook notifications:
+   - The Metadata Template export does NOT contain WTRAN numbers — it contains document numbers (e.g., MOC-MUS-ASE-1E0-ZD-0074)
+   - To map WTRAN → status, match the document subject/description between the email notification and the Metadata Template
+   - Example: CGP-WTRAN-000050 "Evaluation & Assessment for Master Clock" → MOC-MUS-ASE-1E0-ZD-0074 = **B — Approved w/ comments**
+5. **Update the submittal register** with the actual status codes (replacing "—" placeholders)
+
+### When to Request a Metadata Export
+
+- After a batch of WTRAN notifications arrives (10+ in a day)
+- When the user asks "what's the status on these submittals?" and you only have notification emails
+- Before building a status report or management plans Excel
+
+### User Preference: Latest Status Only
+
+When presenting plan/submittal status data, show **only the latest revision per document** — not the full revision history. A single row per plan with its current status, date, and key notes. History is internal reference only.
+
+### Status Color Coding for Excel Reports
+
+When building status Excel files in openpyxl:
+
+| Status | Color | Fill |
+|--------|-------|------|
+| A — Approved | Green | `C6EFCE` |
+| B — Approved w/ comments | Yellow | `FFEB9C` |
+| C — Revise & Resubmit | Orange | `FCD5B4` |
+| D — Disapproved | Red | `FFC7CE` |
+| For Review / Submitted | Blue | `BDD7EE` |
+| No CG response / Unknown | Gray | `D9D9D9` |
+
+### Pitfalls
+
+- **Demo/test entries** — The Metadata Template may contain test data (e.g., `MOC-MUS-ASE-DEMO-0000`, `MOS-MUS-ASE-TEST`). Skip these by checking for `DEMO` or `TEST` in the doc number.
+- **Contract number mismatches** — Some PQs may belong to a different Samaya project (contract 4800000960 instead of 0010003521). Flag for verification.
+- **Status is unreadable via pdftotext** — Some CG response PDFs use embedded fonts that cannot be extracted. The Metadata Template is the fallback source.
+- **Metadata Template is a snapshot** — It reflects status at the time of export. New WTRAN notifications after the export date may have different statuses.
+- **Export file naming** — The file is typically named `TemplateMetadata-{DDMMMYYYY}_HH-MM-SS.xlsx` and comes from the user's Downloads folder.
+
 ## 4b. Processing Incoming Email Submissions (Batch Workflow)
 
 Trigger: user asks to process project emails — read, extract attachments, route to folders, update registers.
