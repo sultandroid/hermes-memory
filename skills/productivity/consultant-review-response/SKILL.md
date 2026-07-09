@@ -1432,6 +1432,65 @@ When a consultant submits a final fee proposal, evaluate it against the RACI mat
 - **OneDrive file lock (macOS)** — files under `Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/` may throw `[Errno 11] Resource deadlock avoided` when not synced locally (`isDownloaded = 0`). Check for pre-existing Markdown extracts in `Docs/07_Reports/07.5 Audit Report/EXTRACT_*.md` before attempting direct PDF extraction. See `references/aseer-sow-er-scope-reference.md` for cached SOW/ER scope data.
 - **Programme audits require SOW+ER, not CG pattern mining** — never treat a schedule review as a PM plan compliance check. They use different reference documents (contract scope vs CG comments) and different severity taxonomies. Use §0b for programme audits, §0a for plan reviews.
 
+## §0h — CR Sheet (Comment Response Sheet) Creation
+
+When CG returns comments on a submission plan and NRS/designer provides responses, build a consolidated CR Sheet Excel that maps every CG comment to the response, status, and action.
+
+### Trigger
+User provides: CG comments PDF/email + designer response + submission plan + reference drawings. Asks to "make CR sheet" or "build response matrix."
+
+### CR Sheet Structure
+
+**Sheet 1 — CR Sheet** (9 columns):
+
+| Column | Content |
+|--------|---------|
+| CR | Sequential number (CR-01, CR-02...) |
+| CG Comment | Exact CG comment text — never paraphrase |
+| CG Reference | Source document + date |
+| Response | **Samaya's response** — see framing rules below |
+| Position | Short label (Accepted / Already covered / To be included / N/A) |
+| Status | Detailed status (Closed - draft submitted / Open - pending / Noted) |
+| Open / Closed | One of: Open, Closed, Noted — color-coded (green/red/blue) |
+| Action Required | What needs to happen next |
+| Supporting Documents | File references |
+
+**Sheet 2 — Summary**: Status breakdown, key positions, next steps.
+
+### Response Framing — CRITICAL RULES
+
+1. **Samaya voice only.** Never say "NRS scope" or "NRS confirms" — everything is Samaya. NRS input is reported as information from the designer, not as Samaya's own position.
+2. **No internal sub-consultant splits.** CG sees Samaya as one entity. Don't tell CG about internal responsibility splits.
+3. **Items completed at Stage 3:** "This was completed at Stage 3. NRS prepared a draft copy ([ref]) for reference. Will be included in the submission plan and drawing register."
+4. **Items for other disciplines:** "This will be in the [discipline] registers and submittals ([specialist name]), not in the current [package] package."
+5. **Items for subsequent stages:** "Will be coordinated and included in subsequent stages from 50% to 90% to IFC. [Specialist] supplier to be appointed."
+6. **Items already covered by Stage 3 documents:** Reference the existing Stage 3 document by name and drawing number.
+
+### Status Taxonomy
+
+| Status | Color | When |
+|--------|-------|------|
+| Closed | Green | Draft submitted, accepted, or already covered by Stage 3 |
+| Open | Red | Pending action, specialist appointment, or in progress |
+| Noted | Blue | Acknowledged — no further action needed |
+
+### Post-CR Update Workflow
+
+After finalizing the CR sheet, update all related documents:
+
+1. **Submission plan** — update statuses, dates, and descriptions to match CR sheet responses
+2. **Registers** — update item statuses, add new items if needed
+3. **Draft drawings** — file to proper project folder
+4. **Correspondence** — file email to correspondence folder
+
+### Pitfalls
+
+- **Don't write from NRS perspective** — user will correct: "we talk as Samaya, not NRS"
+- **Don't mention sub-consultant scope splits** — "all under Samaya" from CG's view
+- **Don't use emoji or icons** in formal CR sheets — plain text only
+- **Don't paraphrase CG comments** — preserve exact wording in the CG Comment column
+- **Don't leave internal notes in supporting documents column** — clean file references only
+
 ## Verification
 
 - [ ] All "Rev C01" references replaced with "Rev C02" (or appropriate new revision)

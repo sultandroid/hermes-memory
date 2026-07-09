@@ -66,6 +66,27 @@ When the task is to produce a structured CR Sheet mapping consultant comments to
 - **Column header:** Use "Response" not "Designer Response" or "NRS Response."
 - **Designer input is raw material only.** Extract the designer's technical position from their email, then rephrase it as the contractor's response. The designer's frustration ("this is pointless", "not what RIBA defines") stays in the source — do not carry it into the CR Sheet.
 
+### Submission Plan vs CR Sheet — Separation of Concerns
+
+**Critical distinction:** The submission plan and the CR sheet serve different purposes and must NOT mix content:
+
+| Document | Purpose | Content |
+|----------|---------|---------|
+| **Submission Plan** | Forward schedule — what we will submit and when | Deliverable name, brief description, responsibility, planned date, status. No explanations, no Stage 3 references, no commentary. |
+| **CR Sheet** | Response to CG comments — positions, explanations, evidence | Full response text, position statement, status, action required, supporting documents. |
+
+**Submission Plan description rules:**
+- State only the deliverable: "Scenography drawing showing showcase locations, circulation paths, and key interaction points."
+- Do NOT add: "Completed at Stage 3. NRS draft included in submission plan." — that belongs in the CR Sheet
+- Do NOT add: "Wayfinding discrepancies flagged by NRS to be resolved." — that belongs in the CR Sheet
+- Do NOT add: "FF and E supplier to be appointed. To be included from 50% to 90% to IFC stages." — keep it as "FF and E layout plan."
+- Remarks column: use only for scheduling notes (e.g., "FF and E supplier to be appointed"), not for commentary
+
+**CR Sheet description rules:**
+- Full response: "This was completed at Stage 3. NRS prepared a draft copy (MOC-...) for reference. Will be included in the submission plan and drawing register."
+- Action required: "Include in submission plan and drawing register"
+- Supporting documents: List the actual file names
+
 ### Staging Pattern for Items Not Yet Developed
 
 When CG asks for items that were not in the original submission plan:

@@ -1023,6 +1023,32 @@ In a submittal register:
 
 Do NOT use future placeholder dates (like `2026-07-25` or `2026-09-14`) for items being submitted today. The user will read the date column and expect it to match the cover letter / Aconex transmittal date.
 
+### Response Folder Creation
+
+When a CG comment response package is assembled (CR sheet + updated registers + draft drawings + correspondence), create a dated response folder under `02_Submittals/`:
+
+```
+02_Submittals/2026-07-08_CG_Comments_Response/
+  ├── 01_CR_Sheet/          → CR Sheet Excel
+  ├── 02_NRS_Draft_Drawings/ → Draft PDFs from designer
+  ├── 03_Registers/          → Updated submission plans and registers
+  └── 04_Correspondence/     → Email PDFs
+```
+
+### Register Folder Cleanup
+
+When organizing the `04_Registers/` folder:
+
+1. **Move loose risk registers** into a `Risk_Registers/` subfolder
+2. **Move misplaced files** (PDFs, DOCX, temp files) out of discipline folders
+3. **Remove temp files** (files starting with `~$`)
+4. **Keep CR sheets at root** of registers folder (they reference multiple disciplines)
+5. **Each discipline folder** should contain only its own register files
+6. **Remove misplaced PDFs** (Submission Comments + Arch.pdf) from Structural and Arch folders
+7. **Remove misplaced DOCX** (Structural Audit Report Template) from Structural folder
+8. **Remove misplaced PDFs** (MOC-MUS-ASE-MEP-ZD-0068.pdf) from Electrical and Mechanical folders
+9. **Remove temp RACI files** (`~$RACI_*.tmp`) from RACI_Matrix folder
+
 ## In-Place Editing Without Rebuilding
 
 When a CG comment requires splitting a specialized scope into a separate register (e.g., Rigging Systems), do NOT rebuild the main register from scratch. Follow this pattern:

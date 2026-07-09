@@ -196,6 +196,12 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 ### Pitfalls
 
+**macOS TCC blocks direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` returns "authorization denied" even via AppleScript's `do shell script`. This is NOT fixable with permissions grants — the sandbox is hard. **Always use AppleScript's Outlook object model** as the primary access method. Only SQLite fallback when AppleScript fails for a specific query.
+
+**`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum"`. Do NOT attempt `(every folder)` iteration.
+
+**AppleScript body extraction returns empty for some emails.** `plain text content of m` works reliably for Inbox messages but may return `""` (empty string) for messages in project sub-folders, archived messages, or very old emails. When body is empty, fall back to subject + attachment analysis — don't try `properties of theMsg` which returns an unparseable record. The subject line and attachment names usually carry enough signal for triage purposes.
+
 **Always show folder context.** Every email listing MUST JOIN with `folders` table and display the folder name. Without it, the user cannot tell which messages are in Inbox vs project-specific sub-folders.
 
 **Arabic subject lines — translate on display, every time.** The user prefers English-only output. When Arabic subjects appear, present them with a concise English description (e.g. `طلب تصديق من الخارجية` → "Attestation request from Ministry of Foreign Affairs"). Do not show raw Arabic text. This applies to sender names and any other Arabic content in email output. Even if the subject was shown raw once, the user expects you to fix it immediately when called out — do not let it appear again in the same session.
@@ -864,3 +870,4 @@ See `references/meeting-agenda-workflow.md` for the weekly meeting agenda workfl
 See `references/cg-deliverables-schedule-response.md` for constructing the response schedule when CG requests a Deliverables Submission Schedule — ownership matrix, schedule rules, phases, and Excel format.
 See `references/contract-review-from-email-attachment.md` for the contract-review workflow when the user asks to "check the contract" from an Outlook email attachment — DOCX/PDF extraction, structured summary template, and red-flag checklist.
 See `references/onedrive-edeadlk.md` for full diagnostics.
+See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 24h scan using AppleScript (since TCC blocks SQLite), project-critical filtering, emoji status reporting, and SILENT protocol.
