@@ -6,6 +6,33 @@ trigger: user asks to create/clean/organize a submittal register, add dates, fix
 tags: [bim, submittal-register, aseer, openpyxl, excel, schedule]
 ---
 
+## AV Prequalification Package Handling
+
+When processing AV equipment supplier prequalifications (suppliers to Rawasin, the AV contractor):
+
+### Document Organization
+
+File under `04_Submittals/AV/` with three subfolders: Prequalifications/, Product_Datasheets/, Scope_of_Work/.
+
+### Submittal Statement Format (to CG)
+
+> This prequalification submittal presents [Supplier] as the authorized [Brand] distributor for the supply of [equipment types] to Rawasin Media Production, the AV contractor. The equipment complies with the approved DHD AV design specifications.
+
+### Register Tracking
+
+Before submitting to Aconex, track packages in a dedicated "In Preparation" section at the top of the submittal register with status **In Preparation**.
+
+### Compliance Check
+
+Compare supplier scope against the DHD AV design. Qty variances are procurement issues to reconcile with Rawasin. Equipment type and technical spec compliance is what matters for prequalification approval.
+
+### Known AV Suppliers (Aseer Museum)
+
+| Supplier | Brand | Equipment | Role |
+|----------|-------|-----------|------|
+| NMK | Q-Sys | Core 510i DSP, TSC-50-G3, TSC-70-G3 | Supplier to Rawasin |
+| Adawliah | Yamaha | VXC6, VXS8, XMV8140-D | Supplier to Rawasin |
+
 # Submittal Register Management
 
 ## Standard Template

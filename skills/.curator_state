@@ -1,9 +1,9 @@
 {
-  "last_report_path": "/Users/mohamedessa/.hermes/logs/curator/20260702-153119",
-  "last_run_at": "2026-07-02T15:31:19.398643+00:00",
-  "last_run_duration_seconds": 0.620755,
+  "last_report_path": "/Users/mohamedessa/.hermes/logs/curator/20260709-171920",
+  "last_run_at": "2026-07-09T17:19:20.987235+00:00",
+  "last_run_duration_seconds": 0.769381,
   "last_run_summary": "auto: no changes; llm: skipped (consolidation off)",
   "last_run_summary_shown_at": "2026-06-25T13:22:13.278518+00:00",
   "paused": false,
-  "run_count": 5
+  "run_count": 6
 }

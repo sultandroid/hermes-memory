@@ -64,7 +64,14 @@ More reliable than `mdls` for OneDrive — works even when `mdls -name com_apple
 | `stat -f "%Sf"` | Returns `-` (local) or `compressed,dataless` (cloud) | Returns `-` or `compressed,dataless` |
 | Safe operations | `find`, `ls -la`, `stat` on filenames, directory listing | `find`, `ls` (but `stat` fails) |
 | Python read via AppleScript | Fails (same EDEADLK) | May work |
-| Delete-and-copy workaround | `os.remove()` + `cp -X` | Silent 0-byte output from `cat`
+| Delete-and-copy workaround | `os.remove()` + `cp -X` | Silent 0-byte output from `cat` |
+| **`read_file` tool** | Returns EDEADLK error | Returns **empty content** (no error, just blank) — the tool's dedup cache then returns "unchanged" on retry, masking the problem |
+| **`osascript -e 'do shell script "cat ..."'`** | Fails (EDEADLK) | Also fails — returns empty string with exit 0 |
+| **Python script via `osascript -e 'do shell script "python3 /tmp/script.py"'`** | Fails | **WORKS** — AppleScript's `do shell script` bridges permissions and can read iCloud files that direct shell access cannot |
+
+## iCloud-specific detection
+
+When `read_file` returns empty content and `file` command says "cannot read (Resource deadlock avoided)", the file is an iCloud dataless stub. The `read_file` tool's dedup cache then reports "unchanged" on subsequent reads, making it look like the file is empty. **Workaround:** Write a Python script to `/tmp/` and execute it via `osascript -e 'do shell script "python3 /tmp/script.py"'` — this bypasses the iCloud file provider lock.
 
 ## Solutions
 

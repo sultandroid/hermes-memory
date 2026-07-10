@@ -200,6 +200,8 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 **`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.
 
+**Multiple Inbox folders exist (one per account).** `mail folder "Inbox"` or `mail folder id 1` may return the wrong Inbox (empty or stale). Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count of mail folder id <N>` to find the active one. The primary account's Inbox is often NOT id 1 — it can be id 114 or higher. Always verify before querying.
+
 **Aconex sender is a record, not a string.** `sender of m` returns a Mail Recipient record, not a Unicode text. Using it directly in a string comparison (`senderName contains "Aconex"`) crashes with error -1700. Always wrap in a try block with `as text` coercion or `name of senderRecord`:
 ```applescript
 set senderName to ""
@@ -221,6 +223,14 @@ This applies to any sender where the record might be a distribution list, system
 **Mail table spans ALL folders implicitly.** Querying `Mail` without a `JOIN folders` on `Record_FolderID` returns everything (Inbox, Sent, Archive, project sub-folders) mixed together. The canonical query always uses `FROM Mail m JOIN folders f ON m.Record_FolderID = f.Record_RecordID` and includes `f.Folder_Name` in the SELECT. Without this, the user sees a jumbled list and can't tell which emails are actionable.
 
 **`PathToDataFile` returns %20-encoded paths.** The `Message%20Attachments/` paths from the DB use URL-encoded spaces. On the filesystem, the actual directory is `Message Attachments/` (literal spaces). Use `$'...'` bash quoting or Python `urllib.parse.unquote` when resolving attachment paths.
+
+**AppleScript `.applescript` files have a ~700-byte script body limit.** Scripts longer than ~700 bytes of AppleScript code (not comments) cause `Expected variable name or property but found class name (-2741)` at runtime. The parser chokes on large token streams. Workarounds:
+  - **Keep scripts short.** Break into multiple small files (one per folder/query) and call `osascript` separately for each.
+  - **Use `osascript -e` for one-liners** (no file at all) when the logic fits in a single line.
+  - **Use `tell application "Microsoft Outlook" to get ...`** as a single-line `-e` expression for simple property reads (unread count, folder count, last message time).
+  - **For complex multi-folder scans**, write a bash loop that calls a short `.applescript` per folder rather than one monolithic script.
+  - **Variable name shortening** (single-letter vars, no `set ... to ...` where possible) helps fit more logic under the limit.
+  - **`linefeed` vs `return`** — both work, but `linefeed` is one fewer character. Every byte counts.
 
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
 

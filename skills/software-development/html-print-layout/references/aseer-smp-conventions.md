@@ -53,6 +53,11 @@ Exception: QC Sign-off and Revision History tables need real names.
 | Status | 65px | Badge text |
 | Route/Scope | 90px | Category name |
 
+### Round Placement — ALL Rounds in ONE Table
+All CG comment rounds (R1, R2, R3, etc.) must be in the **same table**, not split across separate tables on different pages. Adding a new round to a second table while Rounds 1-2 are in the first table is wrong — the user will flag it.
+
+If the table overflows A4, split the table content (move some rows to the next page) but keep the round structure intact. Use a single `<table>` with multiple `<tbody>` sections if needed, or split rows at round boundaries but keep all rounds in the same logical table.
+
 ### Comment Preservation
 CG comment text must be **preserved verbatim** — never summarize, shorten, or rephrase. Even typos (`"Structrual"`, `"seperatly"`, `"experianced"`) are part of the original CG record.
 
@@ -65,6 +70,41 @@ CG comment text must be **preserved verbatim** — never summarize, shorten, or 
 
 ### No Legend Blocks
 Do NOT include Status Legend, Route/Scope definitions, Outstanding Submittals, or Notes below the CG disposition matrix. Column headers are self-explanatory.
+
+## AI Fingerprint Removal (CG-Facing Documents)
+
+CG-facing documents must read as human-written. Remove all of these:
+
+| Pattern | Replace with | Reason |
+|---------|-------------|--------|
+| `§` symbol | `Clause` or `Section` | § is an AI/legal-notation symbol, not human writing |
+| Verbose section subtitles (e.g. "audit trail · baseline integrity") | Remove entirely | Adds no value for CG reader |
+| Internal doc references in client-facing text (e.g. "Aligned with BEP Code B (17-Mar-2026) · NRS Methodology Pkg ZD-0026") | Remove or move to internal notes | CG doesn't need to know which internal docs were consulted |
+| "Plan Snapshot" cards with icons and metrics | Remove | Visual clutter, not useful for CG review |
+| "NEW" badges on TOC items | Remove | Self-evident from revision history |
+| Elaborate spec-strip explanations (Scoring Convention, Tier 2 coverage, Register Total) | Condense to 1-2 sentences | CG knows what these mean |
+| "honest status" in headers | Remove | Implies other statuses are dishonest |
+| Compliance notice boxes with doc references | Shorten to 1 line | CG doesn't need the doc chain |
+| Approval sequence with gate criteria | Remove gate criteria details | CG knows their own process |
+| SLA convention with calendar-day equivalents | Remove | Working days is standard |
+| RACI definitions with full descriptions | Shorten to 1-2 words per role | Self-explanatory |
+| Concurrent escalation rules with register lists | Condense to 1 sentence | Detail belongs in procedure, not plan |
+
+## Cover Page Rules
+
+- Keep cover description brief — 1-2 sentences max
+- Do NOT list methodology references, BEP codes, or internal doc numbers
+- "Issued for CG Resubmission" + "REV N · Status Update" + one short sentence is sufficient
+- Example: "Status update per specialist deployment review (Jun 2026). Rev 03 updates specialist assignments, statuses, and vendor names per live Key Personnel Register."
+
+## Revision History Rules
+
+- Sort **descending** (most recent revision first: 04, 03, 02, 01, 00)
+- Prepared column: use **department/team name** (`Technical Office`), not personal name — never use individual names
+- Approved column: use **real person name** with `Eng.` prefix
+- Only include revisions formally submitted to CG — no internal drafts
+- Description: keep factual, no fluff. List what changed, not why.
+- When adding a new revision, insert at the TOP of the tbody (before the current first row), not at the bottom.
 
 ## Stakeholder Count Updates
 
