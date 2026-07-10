@@ -710,6 +710,26 @@ Save the assessment to `_MANAGER_DASHBOARD/PREQUALIFICATION_ASSESSMENT.md` with:
 - **Supporting docs are not a guarantee** — giving the sub the SCOPE_REQUEST and SoW helps them submit better, but it doesn't create museum experience they don't have. Be honest about fundamental gaps.
 - **"Supporting documents" vs "rejection"** — frame the recommendation constructively. The sub may be a good execution partner even if not the right design lead.
 
+### Submittal Statement Drafting (AV Prequal Packages)
+
+When writing the submittal statement for an AV equipment prequalification package, keep it **very short**. The user explicitly rejected verbose framing. Pattern:
+
+> **Submittal Statement — [Supplier] [Equipment] Prequalification Package**
+>
+> This prequalification is for the **[equipment purpose]** to the Aseer Museum AV system, in compliance with the approved project specifications. Equipment types and technical specs ([key models]) match the approved DHD AV design.
+>
+> **Details:**
+> - Supplier: [Name] ([role])
+> - Contractor: Rawasin Media Production (AV contractor)
+> - Proposed Ref: MOC-MUS-ASE-1K0-PQ-NNNN
+>
+> **Provided files:**
+> [numbered list]
+
+No explanation, no context paragraph, no quantity variance notes. Just the statement and the file list.
+
+See `references/av-prequal-compliance-pattern.md` for the full workflow including design compliance check, quantity variance handling, and register update.
+
 ### Profile Content Structure (7 Pages)
 
 | Page | Content | Image |

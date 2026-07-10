@@ -18,11 +18,14 @@ Only count revisions **formally submitted to CG/MoC**. Internal iterations betwe
 | Internal CRS prep | Rev 03 (05-JUN-26) | ❌ |
 | Formal resubmission | Rev 02 (16-JUN-26, formal) | ✅ |
 
-## Name Format
+## Revision History Rules
 
-- Always use `"Eng."` prefix for engineering personnel: `"Eng. Waris Sultan"` not `"Waris"`
-- Revision history: Approved/Prepared columns use full names, not "Samaya PMO" or "Per live KPR"
-- QC sign-off: Every row gets an actual person's name
+- Sort **descending** (most recent revision first: 04, 03, 02, 01, 00)
+- **Prepared column: use department/team name** (`Technical Office`), not personal name — never use individual names like "Mohamed Sultan"
+- **Approved column: use real person name** with `Eng.` prefix
+- Only include revisions formally submitted to CG — no internal drafts
+- Description: keep factual, no fluff. List what changed, not why.
+- When adding a new revision, insert at the **TOP of the tbody** (before the current first row), not at the bottom.
 
 ## QC Sign-Off Chain
 

@@ -5,7 +5,8 @@ Trigger: Scheduled cron job checking for project-critical emails in last 24 hour
 ## Key Constraints
 
 - **No TCC SQLite access** — `sqlite3` returns "authorization denied". Use AppleScript Outlook object model only.
-- **`every folder` fails** — must target `inbox` directly or `mail folder "Name"` for project folders. Standalone `folder "Name"` or `folder "Name" of inbox` both fail.
+- **iCloud EDEADLK on register files** — `~/Documents/` files (iCloud-synced) return `OSError: [Errno 11] Resource deadlock avoided` on direct read/write. Wrap all file I/O in `osascript -e 'do shell script "python3 /tmp/script.py 2>&1"' 2>&1` — the AppleScript bridge bypasses the iCloud lock. See `references/icloud-edeadlk-workaround.md`.
+- **`every folder` fails** — must target `inbox` directly. Use `folder "Name" of inbox` for project sub-folders. Standalone `folder "Name"` or `mail folder "Name"` both fail with error -1728.
 - **Multiple Inbox folders exist** — `mail folder "Inbox"` or `mail folder id 1` may return the wrong (empty) Inbox. Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count` to find the active one.
 - **AppleScript `.applescript` files have a ~700-byte script body limit.** Scripts longer than ~700 bytes of AppleScript code cause `Expected variable name or property but found class name (-2741)`. Break into multiple small files (one per folder) and call `osascript` separately for each.
 - **No user present** — must be fully autonomous with no clarification.
@@ -61,9 +62,11 @@ end tell
 
 ### Phase 2: Scan Project Folders by Name (one file per folder)
 
+**CORRECT SYNTAX:** Use `folder "Name" of inbox` — NOT `mail folder "Name"`. The `mail folder` class returns error -1728 for project sub-folders. The `folder "Name" of inbox` pattern is the only reliable way to access project sub-folders.
+
 ```applescript
 tell application "Microsoft Outlook"
-	set msgs to every message of mail folder "Asher Regional Museum"
+	set msgs to every message of folder "Asher Regional Museum" of inbox
 	set n to count of msgs
 	set out to "ASHER:" & n
 	set now to current date
@@ -91,7 +94,7 @@ tell application "Microsoft Outlook"
 end tell
 ```
 
-**IMPORTANT:** Use `mail folder "Name"` (not `folder "Name"` or `folder "Name" of inbox`). The `mail folder` class is the correct AppleScript class for Outlook on Mac. Create a separate `.applescript` file per folder to stay under the ~700-byte script body limit.
+**IMPORTANT:** Use `folder "Name" of inbox` (NOT `mail folder "Name"`). The `mail folder` class returns error -1728 for project sub-folders. Create a separate `.applescript` file per folder to stay under the ~700-byte script body limit.
 
 ### Phase 3: Get Email Details (body + attachments)
 
@@ -138,3 +141,25 @@ Keep one line per item unless critical action needed. Translate Arabic subjects 
 ## Key Sender Verification
 
 After scanning, explicitly state which key senders were NOT seen (e.g., "❌ Mimon Allitou — no emails"). This proves the scan ran and the absence was detected, not missed.
+
+## Aconex Transmittal Register Update Pattern
+
+When the cron task is to update a submittal register from Aconex emails:
+
+1. **Query the project folder** (not Inbox) — Aconex notifications are filed in the project sub-folder (e.g., "Asher Regional Museum"). Use `folder "Name" of inbox` to target it directly. This is faster than scanning the full Inbox and avoids the 120s timeout trap.
+
+2. **Extract transmittal numbers** from subject lines — pattern `{Prefix}-WTRAN-{Number}`. Prefixes: `CGP-WTRAN` = CG→Samaya, `SIC.-WTRAN` = Samaya→CG.
+
+3. **Read the existing register** — use `osascript -e 'do shell script "python3 /tmp/script.py 2>&1"'` to bypass iCloud EDEADLK on `~/Documents/` files.
+
+4. **Compare by transmittal number** — check if each WTRAN number already appears in the register content string. Only add rows for numbers NOT found.
+
+5. **Insert new rows** — append to the appropriate table section (CG→Samaya, Samaya→CG, or Other). Use Python string replacement to insert after the last existing row in that table.
+
+6. **Update frontmatter** — bump `last_updated` date and append a scan note to the `source` line.
+
+7. **Verify** — re-read the file and confirm new transmittal numbers are present, old ones unchanged.
+
+### Pitfall: iCloud EDEADLK on verification
+
+After writing, re-reading the same file for verification also hits EDEADLK. Use the same `osascript` bridge for verification, or rely on the write tool's success return and skip re-read verification.

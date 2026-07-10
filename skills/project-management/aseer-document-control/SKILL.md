@@ -61,6 +61,21 @@ Every schedule row must include:
 
 ---
 
+## In Preparation Section (Submittal Register)
+
+When adding items not yet submitted to Aconex, add an **In Preparation** section at the top of the submittal register (before "Recent / Active Submittals"):
+
+```
+## In Preparation (Not Yet Submitted to Aconex)
+
+| Ref | Subject | Discipline | Status | Notes |
+|-----|---------|------------|--------|-------|
+| MOC-MUS-ASE-1K0-PQ-NNNN | [Supplier] [Equipment] Prequalification | AV | **In Preparation** | Supplier to Rawasin. Equipment: [models]. Complies with DHD AV design. |
+| MOC-MUS-ASE-1A0-MA-NNNN | [Material] — [Code] | Materials | **In Preparation** | [Brief description]. Photo + datasheets ready. |
+```
+
+This keeps the register clean — items in preparation are visible but clearly separated from submitted items.
+
 ## 0. Creating New Submittal Folders for Unmatched Doc Types
 
 **Trigger:** A document's type prefix (e.g., `MS-` for Method Statement) has no matching folder under `02_Submittals/`.

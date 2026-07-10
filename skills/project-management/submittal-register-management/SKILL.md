@@ -16,7 +16,26 @@ File under `04_Submittals/AV/` with three subfolders: Prequalifications/, Produc
 
 ### Submittal Statement Format (to CG)
 
-> This prequalification submittal presents [Supplier] as the authorized [Brand] distributor for the supply of [equipment types] to Rawasin Media Production, the AV contractor. The equipment complies with the approved DHD AV design specifications.
+Keep statements **very short** — the user explicitly rejected verbose framing:
+
+> This prequalification submittal presents [Supplier] as the authorized [product line] distributor for the supply of [equipment] to [contractor], in compliance with the approved [design/spec].
+
+No explanation, no context paragraph, no quantity variance notes. Just the statement.
+
+### Register Tracking
+
+Add new items to the **In Preparation** section at the top of `01_Registers/submittal_register.md`:
+
+| Ref | Subject | Discipline | Status | Notes |
+|-----|---------|------------|--------|-------|
+| MOC-MUS-ASE-1K0-PQ-00XX | [Supplier] [Product] Prequalification | AV | **In Preparation** | Supplier to [contractor]. Equipment: [list]. Complies with [design]. |
+
+### Repo Rule: Markdown-Only
+
+The project repo is **markdown-only**. Never copy binary files (PDFs, xlsx, images) into the repo. Instead:
+- Create a `.md` summary with YAML frontmatter + OneDrive source path
+- Reference the original file by its OneDrive path
+- Cross-link to related files in the repo
 
 ### Register Tracking
 

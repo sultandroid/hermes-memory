@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-10 07:00:53
+Generated: 2026-07-10 19:00:24
 
 ---
 
@@ -44,7 +44,7 @@ OneDrive BIM path is the primary location for project files: ~/Library/CloudStor
 CG responses: respond as Samaya (unified contractor), never mention sub-consultant splits.
 Aseer email triage 08-Jul: MEP SOW ZD-0068 Rev.01 submitted to CG, Arch 50% DD Basement Code C, Dust Control ZD-0076 Code C, Showcase 08.03_SC_01 omit per Yara, ZNA agreement ready, Time Extension LT-0027 pending, Abu Malha Palace protection needed.
 Aseer PM repo at ~/aseer-museum-pm (github.com/sultandroid/aseer-museum-pm). Structure: 00_Status/project_status.md (generated from Odoo live sync), 01_Odoo_Mapping/task_mapping.md (full task tree), 01_Odoo_Mapping/status_to_odoo.md (cross-reference). Sync script at ~/.hermes/scripts/aseer-pm-status.py — reads all 347 Odoo tasks from Project 219, generates discipline health, deadlines, critical issues. Cron runs 4× daily (06/10/14/18 KSA).
-Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no §, no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
+Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
 Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, with recurring museum and exhibition tasks around Aseer Museum and RCRC proposal material. He usually gives terse, outcome-first requests and prefers agents to inspect the real target quickly instead of narrating possibilities. For Samaya delivery work, the current durable default is that the OneDrive BIM path is the primary destination, while the local Document Control folder is only a working copy.
 - Keep responses concise and direct; for Samaya construction-facing work, prefer formal English, action tables when useful, consolidated-email style summaries, and avoid prices, emoji, and decorative icons.
 - For Samaya file placement, use the OneDrive BIM path as the primary destination and treat `~/Documents/Asher_Regional_Museum_Document_Control/` as a working copy.
@@ -64,6 +64,7 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
 
 CG responses: respond as Samaya (unified contractor), never mention sub-consultant splits.
 Aseer PM repo at ~/aseer-museum-pm (github.com/sultandroid/aseer-museum-pm). Structure: 00_Status/project_status.md (generated from Odoo live sync), 01_Odoo_Mapping/task_mapping.md (full task tree), 01_Odoo_Mapping/status_to_odoo.md (cross-reference). Sync script at ~/.hermes/scripts/aseer-pm-status.py — reads all 347 Odoo tasks from Project 219, generates discipline health, deadlines, critical issues. Cron runs 4× daily (06/10/14/18 KSA).
+When OneDrive locks files (Operation not permitted), use /Volumes/MIcro/Temp/ as working directory — copy files there, fix, then copy back to OneDrive.
 - The folder is substantial and healthy: 610 files, 57 dirs, ~521 MB; major areas include schedule/BOQ, reference drawings, specs, RFIs, approvals, material submittals, purchasing, email extraction, and manager dashboards.
 - The scan showed the folder is readable and organized, but the naming inconsistency can mislead future agents if not checked early.
 - `_MANAGER_DASHBOARD/SITUATION_REPORT.md`: trade health, 39 BOQ items, 567 reference drawing files, content freeze dependency.
@@ -81,11 +82,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
 You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
-2. **Technical Office Manager** — design reviews, submittals, BIM, specs, technical gaps
 
 ## Agents & Tools
 
-Odoo timesheet unit_amount = MINUTES (90=1.5h).
+Odoo timesheet unit_amount in minutes.
 Aseer PM repo at ~/aseer-museum-pm (github.com/sultandroid/aseer-museum-pm). Structure: 00_Status/project_status.md (generated from Odoo live sync), 01_Odoo_Mapping/task_mapping.md (full task tree), 01_Odoo_Mapping/status_to_odoo.md (cross-reference). Sync script at ~/.hermes/scripts/aseer-pm-status.py — reads all 347 Odoo tasks from Project 219, generates discipline health, deadlines, critical issues. Cron runs 4× daily (06/10/14/18 KSA).
 Rejects unverified costs — mark TBC. Prefers incremental patches. Odoo: human paragraphs, <p> tags. Timesheet unit_amount in minutes.
 - Hermes Nous work is not yet validated as a plain API-key flow here; current evidence points to an OAuth/device-code provider model plus optional `NOUS_BASE_URL`, so confirm the auth surface before applying secrets.
@@ -111,10 +111,10 @@ rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/28/rollout-2026-06-28T1
 Aseer root: ~/Documents/Asher_Regional_Museum_Document_Control/. Doc codes: 1A0=Arch, 1E0=Elec, 1M0=Mech, 1K0=Gen. CG codes: A=Approved, B=Approved w/Comments, C=Revise&Resubmit.
 CG responses: respond as Samaya (unified contractor), never mention sub-consultant splits.
 Aseer email triage 08-Jul: MEP SOW ZD-0068 Rev.01 submitted to CG, Arch 50% DD Basement Code C, Dust Control ZD-0076 Code C, Showcase 08.03_SC_01 omit per Yara, ZNA agreement ready, Time Extension LT-0027 pending, Abu Malha Palace protection needed.
-Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no §, no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
+Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
 Strategic negotiator: 'acknowledge receipt' ≠ acceptance, 'without prejudice', never start work without VO. Sends draft to PM+NRS first before CG.
 Submittal register: 15 cols, Linked Activity IDs, forward schedule only. CR sheet: arch first, struct last. CG comments verbatim. Caveman responses.
-Cover page descriptions in CG-submission docs: strip internal doc references (BEP codes, methodology package numbers, KPR revision numbers). Only state the purpose in plain language. Revision History "Prepared" column uses "Technical Office" not personal name.
+CG submittal docs: strip internal refs (BEP codes, package numbers, KPR revisions). Cover descriptions: plain language purpose only. Submittal statements: 1-2 sentences max — package name + compliance. Revision History "Prepared" = "Technical Office".
 - Aseer graphics contractor folder audit: Aseer, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, Graphics_Submittal_Register.xlsx, path drift
   - desc: Search this first for Samaya/Aseer folder inspections when live subcontractor paths may differ from older internal references; applies to `cwd=/Users/mohamedessa`.
   - learnings: The live path was `03_Graphics_Contractor` while older docs still said `08_Graphics_Contractor` / `Sub-08`; the package looked healthy but remained pre-award Graphit work gated by content freeze and scope clarifications.
@@ -144,7 +144,8 @@ Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 0
 Aseer root: ~/Documents/Asher_Regional_Museum_Document_Control/. Doc codes: 1A0=Arch, 1E0=Elec, 1M0=Mech, 1K0=Gen. CG codes: A=Approved, B=Approved w/Comments, C=Revise&Resubmit.
 OneDrive BIM path is the primary location for project files: ~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/. The Document Control folder (~/Documents/Asher_Regional_Museum_Document_Control/) is a working copy only. Always use OneDrive BIM path as the primary destination for new files.
 Aseer PM repo at ~/aseer-museum-pm (github.com/sultandroid/aseer-museum-pm). Structure: 00_Status/project_status.md (generated from Odoo live sync), 01_Odoo_Mapping/task_mapping.md (full task tree), 01_Odoo_Mapping/status_to_odoo.md (cross-reference). Sync script at ~/.hermes/scripts/aseer-pm-status.py — reads all 347 Odoo tasks from Project 219, generates discipline health, deadlines, critical issues. Cron runs 4× daily (06/10/14/18 KSA).
-Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no §, no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
+When OneDrive locks files (Operation not permitted), use /Volumes/MIcro/Temp/ as working directory — copy files there, fix, then copy back to OneDrive.
+Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
 Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, with recurring museum and exhibition tasks around Aseer Museum and RCRC proposal material. He usually gives terse, outcome-first requests and prefers agents to inspect the real target quickly instead of narrating possibilities. For Samaya delivery work, the current durable default is that the OneDrive BIM path is the primary destination, while the local Document Control folder is only a working copy.
 - For Samaya file placement, use the OneDrive BIM path as the primary destination and treat `~/Documents/Asher_Regional_Museum_Document_Control/` as a working copy.
 - OneDrive macOS default: never write directly to OneDrive paths and never use `mv` on OneDrive files; stage to `/tmp`, copy via Finder/AppleScript duplicate, then verify ZIP-backed Office files with `xxd -l 8` showing `PK\x03\x04`.
@@ -155,4 +156,3 @@ rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/28/rollout-2026-06-28T1
 - rollout_summaries/2026-06-28T09-13-22-UOUc-rcrc_exhibition_html_structure_audit.md (cwd=/Users/mohamedessa, rollout_path=/Users/mohamedessa/.codex/sessions/2026/06/28/rollout-2026-06-28T12-13-22-019f0d81-4173-74c2-a350-5d3bbaa497d4.jsonl, updated_at=2026-06-28T09:30:22+00:00, thread_id=019f0d81-4173-74c2-a350-5d3bbaa497d4, live URL inspection plus offline parse)
 - rollout_summaries/2026-06-28T09-13-22-UOUc-rcrc_exhibition_html_structure_audit.md (cwd=/Users/mohamedessa, rollout_path=/Users/mohamedessa/.codex/sessions/2026/06/28/rollout-2026-06-28T12-13-22-019f0d81-4173-74c2-a350-5d3bbaa497d4.jsonl, updated_at=2026-06-28T09:30:22+00:00, thread_id=019f0d81-4173-74c2-a350-5d3bbaa497d4, PDF render used as the runtime truth source)
 applies_to: cwd=/Users/mohamedessa; reuse_rule=folder-audit guidance is safe for similar Samaya/Aseer OneDrive inspections, but the Hermes Nous notes are only a preflight reference until a later rollout shows a completed write and verification path
-- rollout_summaries/2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md (cwd=/Users/mohamedessa, rollout_path=/Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl, updated_at=2026-06-25T23:51:07+00:00, thread_id=019efc22-1c5d-7810-a5f7-b4b5b768203f, read-only folder audit with path-drift findings)

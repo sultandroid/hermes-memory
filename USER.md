@@ -1,4 +1,4 @@
-Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no §, no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
+Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Fix-not-describe. English only. Rejects AI fingerprints: no verbose subtitles, no elaborate notices. Documents for Client/CG: concise, human-like. Revision History "Prepared" = "Technical Office". Cover descriptions strip internal doc references.
 §
 Cloud-only LLM user. ollama-cloud provider (34 models). Trusts agent autonomy, approves ops quickly. Values direct action.
 §
@@ -10,4 +10,4 @@ Project repos: status-only markdown, no binaries. Push only .md files.
 §
 Submittal register: 15 cols, Linked Activity IDs, forward schedule only. CR sheet: arch first, struct last. CG comments verbatim. Caveman responses.
 §
-Cover page descriptions in CG-submission docs: strip internal doc references (BEP codes, methodology package numbers, KPR revision numbers). Only state the purpose in plain language. Revision History "Prepared" column uses "Technical Office" not personal name.
+CG submittal docs: strip internal refs (BEP codes, package numbers, KPR revisions). Cover descriptions: plain language purpose only. Submittal statements: 1-2 sentences max — package name + compliance. Revision History "Prepared" = "Technical Office".

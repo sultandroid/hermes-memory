@@ -500,4 +500,5 @@ GalleryViewer → saveHotspots() → localStorage
 
 - `scripts/qa_check.py` — canonical HTML QA validator. Handles `.sheet`/`.page` layouts, accounts for cover sheets when counting footers, validates asset paths, detects `read_file()` line-number contamination, and accepts spaced CSS values such as `page-break-after: always`. Accepts one or more files; exit code 0 = all clean, 1 = issues found.
 - `references/html-sheet-audit-notes.md` — patterns for validating multi-sheet A4 HTML documents: sheet counting with modifier classes, CSS whitespace normalization, continuation-sheet footer checks, and project-fact/role audits.
+- `references/html-css-audit-checklist.md` — HTML/CSS quality audit checklist (tag balance, section drift, inline styles, print CSS, RTL edge cases). Merged from html-css-audit skill.
 - `references/cumulative-disposition-table.md` — pattern for tracking review comments across multiple CG submission rounds in project documents. Use when building or editing CG Comment Disposition tables (summary + detailed).

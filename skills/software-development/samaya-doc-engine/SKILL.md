@@ -19,126 +19,14 @@ Choose the format based on the deliverable: HTML for self-contained digital view
 
 ## Quick Reference — DOCX Generation
 
-### Setup
+**DOCX generation is covered by the `samaya-docx-template` skill.** Load that skill for:
+- SamayaDoc class API (create_header, add_h1, add_body, add_table, etc.)
+- Table column widths (A4 16.5cm usable width)
+- Style rules (navy/gold, Calibri 11pt, A4 portrait)
+- Arabic RTL handling
+- OneDrive deployment via AppleScript
 
-The `samaya_doc_template.py` module lives at:
-```
-/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/_Style-Guides/Doc Style Guide/samaya_doc_template.py
-```
-
-Add it to sys.path in your generation script:
-```python
-import sys
-sys.path.insert(0, "/path/to/Doc Style Guide")
-from samaya_doc_template import SamayaDoc, SamayaColors
-```
-
-### Basic Usage Pattern
-
-```python
-doc = SamayaDoc()
-doc.create_header('Project Name', 'REF-001', 'TP', '01', 'Jul 2026')
-doc.create_footer('REF-001', confidential=True)
-
-# Cover page content (manual formatting)
-p = doc.doc.add_paragraph()
-p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-run = p.add_run("TECHNICAL PROPOSAL")
-run.font.size = Pt(24)
-run.font.bold = True
-run.font.color.rgb = SamayaColors.NAVY
-
-# Sections
-doc.add_h2('1.0', 'SECTION TITLE')
-doc.add_h3('1.1', 'SUBSECTION TITLE')
-doc.add_body("Body text here.")
-
-# Tables
-doc.add_table(
-    ['HEADER 1', 'HEADER 2'],
-    [['Row 1', 'Value 1'], ['Row 2', 'Value 2']],
-    col_widths_cm=[4.0, 12.5]  # A4 usable width ~16.5cm
-)
-
-doc.save('output.docx')
-```
-
-### Available Methods
-
-| Method | Purpose |
-|--------|---------|
-| `create_header(project, doc_ref, type, rev, date)` | Header with logo, doc ref, revision |
-| `create_footer(doc_number, confidential=True)` | Footer with page numbers, confidentiality notice |
-| `add_h1(text)` | Document title — 18pt Bold Navy, bottom border |
-| `add_h2(number, text)` | Section heading — 14pt Bold Navy, numbered |
-| `add_h2_u(text)` | Unnumbered H2 (for front matter, appendices) |
-| `add_h3(number, text)` | Subsection — 12pt Bold Dark Gray |
-| `add_body(text, bold, italic, size, color, align)` | Standard body paragraph (11pt justified) |
-| `add_rich_body(segments)` | Mixed-format paragraph (list of dicts with text/bold/color) |
-| `add_table(headers, rows, col_widths_cm)` | Styled table with navy header, alternating rows |
-| `line()` | Small spacer paragraph |
-| `save(path)` | Save to file |
-| `save_temp(prefix)` | Save to /tmp with timestamp |
-
-### Table Column Widths
-
-A4 portrait usable width = **16.5 cm** (21cm page - 2.5cm left - 2.0cm right margins). Sum of col_widths_cm should equal ~16.5.
-
-Common patterns:
-- 2 columns: [4.0, 12.5] — key-value pairs
-- 3 columns: [3.0, 8.0, 5.5] — description tables
-- 4 columns: [1.0, 5.0, 5.0, 5.5] — numbered lists
-- 7+ columns: [1.0, 1.5, 5.0, 1.2, 1.2, 1.2, 4.5, 2.5] — risk registers
-
-### DOCX Proposal Structure (Standard Template)
-
-A comprehensive technical proposal DOCX should follow this structure:
-
-1. **Cover Page** — project name, client, contractor, location, area, duration, doc ref, rev, date
-2. **Table of Contents** — all sections + appendices with page numbers
-3. **Executive Summary** — project overview, key differentiators, key commitments
-4. **Company Profile & Qualifications** — entity overview, core competencies, relevant projects, client references
-5. **Project Understanding & Approach** — project overview, gallery descriptions, approach principles
-6. **Scope of Work** — WBS, detailed scope by gallery, supporting areas, exclusions, assumptions
-7. **Technical Methodology & Approach** — execution phases, methodology flow, method statements per gallery, AV content production
-8. **Project Management Plan** — governance, project controls, design coordination
-9. **Schedule & Time Management** — programme table, milestones, critical path items
-10. **Quality Management** — QMS, ITPs, mock-up approval, NCR procedure, commissioning protocol
-11. **Resource & Organisation** — org chart with named personnel, workforce deployment, subcontractor management
-12. **Health, Safety & Environment** — HSE policy, project-specific hazards, environmental management, emergency response
-13. **Risk Management** — framework, risk register (15+ risks across 6 categories)
-14. **Procurement & Logistics** — strategy, procurement schedule, shipping, local content
-15. **Value Engineering** — VE approach, opportunities, submission process
-16. **Stakeholder Communication Plan** — communication matrix, reporting, escalation
-17. **Sustainability** — initiatives, compliance framework
-18. **Warranty & After-Sales Support** — defects liability, manufacturer warranties, support structure, spare parts
-19. **Handover, Training & Operations** — deliverables, training programme, handover process
-20. **Appendices** — Compliance Matrix, RACI, Key Personnel, Risk Register, Document Control, Past Project Portfolio
-
-### DOCX-Specific Rules
-
-- **NO prices in technical proposals** — same rule as HTML. Strip all $/SAR values from body, tables, risk registers, and appendices.
-- **NO icons, emoji, or AI symbols** — same rule as HTML. Use plain text labels.
-- **NO section symbol (§)** — use "Section" or "Clause" instead.
-- **Level 6 English** — short sentences, active voice, no jargon. Write at a clear professional level.
-- **Use "Samaya" not "the Contractor"** — first-person company reference throughout.
-- **No AI fingerprints** — avoid "seamlessly", "synergistic", "cutting-edge", "robust", "arguably", "it could be said".
-- **No meta-commentary** — don't say "this section describes", "as outlined above", "it should be noted that".
-- **Named personnel** — use actual names (e.g. "Eng. Ahmed Salah") not placeholders like "TBC" or "المهندس / ………………….".
-- **Risk register** — minimum 15 risks across 6 categories (TEC, DES, MAN, HSE, SIT, LOG). Each risk needs ID, category, description, probability, impact, rating, mitigation, owner.
-- **Past project portfolio** — minimum 5 projects with area, client, scope, duration, completion year, key features.
-- **Compliance matrix** — minimum 30 items mapping proposal sections to requirements with status (Compliant / TBC).
-- **RACI matrix** — minimum 14 activities × 10 roles including BMA (Designer) and RCRC (Client) columns.
-- **Document control appendix** — EDMS description, transmittal procedure, RFI procedure, submittal workflow, version control, distribution matrix.
-
-### Page Break Discipline
-
-- Add `doc.doc.add_page_break()` after each major section.
-- Appendices each get their own page break.
-- The TOC gets its own page break after the cover.
-- Long tables (risk register, compliance matrix) may span multiple pages naturally — python-docx handles this.
-
-### Quick Reference — HTML (Original)
+This skill covers **HTML/SVG** and **Review** only. For DOCX, use `skill_view(name='samaya-docx-template')`.
 
 #### Page Template
 
@@ -282,26 +170,6 @@ for f in glob.glob('pages/*.html'):
 ```
 Fix a corrupted file by appending the missing closing tags at the end before any closing `</section>`.
 
-##### Post-Subagent File Re-read
-After ANY delegate_task sub-agent modifies a page file, the parent session MUST re-read the file before writing. The sandbox cache is stale — writing without re-reading overwrites the sub-agent's changes. This caused data loss multiple times in the RCRC session.
-
-##### Page Count & Rev Sync
-After page count changes, update BOTH:
-- Document Control: `عدد الصفحات</span><span class="value">N</span>`
-- Rev number in Document Control header AND every `<span class="doc-rev">Rev XX</span>` in page headers
-- Add revision history entry
-
-##### Arabic Projector Terminology
-NEVER use "أجهزة إسقاط" (literal translation). Always use "بروجيكتور" (arabicized loanword). Example: "بروجيكتور Epson" not "أجهزة إسقاط Epson"
-
-##### Cover Arabic Text Color
-`شركة سمايا الاستثمارية` on the cover page needs explicit `color:#fff` in the `<span>` style. Parent div color does NOT always cascade to RTL-direction spans.
-
-##### Revision History Convention
-Never list specific changes or corrections in the revision history. Use the generic format:
-"النسخة المحدثة — تمت المراجعة والاعتماد وجاهزة للتقديم"
-(Updated version — reviewed, approved, ready for submission)
-
 ##### Font Size Rules for Balanced Pages
 | Context | Font Size | Notes |
 |---------|-----------|-------|
@@ -345,10 +213,6 @@ NEVER use "أجهزة إسقاط" (literal translation). Always use "بروجي�
 Never list specific changes or corrections in the revision history. Use the generic format:
 "النسخة المحدثة — تمت المراجعة والاعتماد وجاهزة للتقديم"
 (Updated version — reviewed, approved, ready for submission)
-
-##### Arabic Projector Terminology
-When referring to projectors in Arabic text, use "بروجيكتور" NOT "أجهزة إسقاط" (literal translation). Example:
-"بروجيكتور Epson" not "أجهزة إسقاط Epson"
 
 ###### Workforce Summary Table (Section 9.4)
 When a detailed workforce table is needed alongside the curve chart, use a compact 4-category table:

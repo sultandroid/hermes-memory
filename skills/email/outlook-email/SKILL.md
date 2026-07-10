@@ -892,4 +892,5 @@ See `references/meeting-agenda-workflow.md` for the weekly meeting agenda workfl
 See `references/cg-deliverables-schedule-response.md` for constructing the response schedule when CG requests a Deliverables Submission Schedule — ownership matrix, schedule rules, phases, and Excel format.
 See `references/contract-review-from-email-attachment.md` for the contract-review workflow when the user asks to "check the contract" from an Outlook email attachment — DOCX/PDF extraction, structured summary template, and red-flag checklist.
 See `references/onedrive-edeadlk.md` for full diagnostics.
-See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 24h scan using AppleScript (since TCC blocks SQLite), project-critical filtering, emoji status reporting, and SILENT protocol.
+See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 24h scan using AppleScript (since TCC blocks SQLite), project-critical filtering, emoji status reporting, SILENT protocol, and Aconex transmittal register update workflow.
+See `references/icloud-edeadlk-workaround.md` for the `osascript -e 'do shell script "python3 ..."'` bridge that bypasses iCloud EDEADLK on `~/Documents/` register files — the only reliable read/write method for iCloud-synced project directories.

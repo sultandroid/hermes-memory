@@ -245,6 +245,32 @@ User: `u517606786`
 - **SCP can hang on Hostinger** — SCP to port 65002 on samaya-factory.com sometimes hangs silently. Use SSH pipe (`cat deploy.tar.gz | ssh ... "cat > file.tar.gz"`) as a more reliable alternative. Always verify with `curl -sI` after deploy.
 - **Cover vs submittal naming confusion** — The user may refer to "the cover" meaning the Kimi-style folder cover, not the A4 submittal sheet. When they say "cover page" they mean the physical folder cover for printing, not the formal submittal document. Clarify which is which before deploying.
 
+## User Preferences
+
+### Short Submittal Statements
+
+When drafting submittal statements for material samples or prequal packages, keep them **very short**. The user explicitly rejected verbose framing. Pattern:
+
+> **Submittal Statement — [Material] — [Code]**
+>
+> This package contains [description] in compliance with the approved [design/spec].
+
+No explanation, no context paragraph, no quantity variance notes. Just the statement and the file list.
+
+### Repo: Markdown-Only, No Binaries
+
+The project repo (`Asher_Regional_Museum_Document_Control`) is **markdown-only**. Never copy PDFs, Excel, images, or any binary files into the repo. Instead:
+- Create a `.md` summary with YAML frontmatter + OneDrive source path
+- Reference the original file by its OneDrive path
+- Cross-link to related files in the repo
+
+### Submittal Register Updates
+
+When adding new materials or prequal packages to the register:
+1. Add an **In Preparation** section entry with ref, subject, discipline, status, and notes
+2. Create the `.md` submittal statement in the appropriate discipline folder
+3. Do NOT copy binary files into the repo
+
 ## Template Variables
 
 | Variable | Example | Description |
