@@ -19,8 +19,6 @@ Comprehensive cost reconciliation methodology for Samaya's sister company projec
 | 12 | Ice Coffee Shop | — | Makkah |
 | 13 | Hera Visitor Center | — | Makkah |
 
-> **📖 See also:** `~/hermes-memory/references/sister-companies-knowledge-map.md` — comprehensive index of all project MD files, classifications, factory data, reallocations, and remaining work.
-
 ## Cost Sources
 1. **Accounting (Source A)** — Ibrahim Shaban email files (`من ايميل ابراهيم`). Raw invoice line items from bank statements or accounting system. May contain combined-project entries.
 2. **Factory Cost (Source B)** — Internal workshop costs from `*_Factory_Cost_Analysis.xlsx` files: labor hours + purchase orders (POs).

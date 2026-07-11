@@ -81,27 +81,80 @@ page_ends = [html.find('</section>', ps) + len('</section>') for ps in page_star
 - External CSS files — the original monolithic had all CSS inline and it worked reliably
 - Post-processing that regex-replaces HTML tags — always ends up creating broken markup
 
+## Pre-deploy: Check git status
+
+Before editing any file in a git-tracked project, check for uncommitted changes:
+
+```bash
+cd /path/to/app
+git status
+git diff src/sections/Gallery.tsx  # or any file you plan to edit
+```
+
+**Why:** The file on disk may have accumulated uncommitted design changes from a previous session. Editing it without checking can deploy unintended design changes alongside your data-only changes. If the user says "go back to the morning version" or "this is the old design", use `git show <commit>:<file>` to restore the exact original, then re-apply only your data changes.
+
 ## Steps
 
-1. **Build**
-   ```bash
-   node node_modules/vite/bin/vite.js build
-   ```
-   (Do NOT use `npm run build` — it times out.)
+1. **Build from /tmp/** (OneDrive paths cause `ETIMEDOUT` and `lseek(SEEK_HOLE)` errors during build and tar)
 
-2. **Package**
    ```bash
-   tar -czf deploy.tar.gz index.html assets/ sync.php
+   APP="/path/to/OneDrive/app"
+   mkdir -p /tmp/aseer-build/src/sections /tmp/aseer-build/src/hooks /tmp/aseer-build/src/lib /tmp/aseer-build/src/components /tmp/aseer-build/src/pages /tmp/aseer-build/src/data/schedules /tmp/aseer-build/src/components/ui /tmp/aseer-build/public/images /tmp/aseer-build/public/fonts
+
+   # Config files — use cat pipe to avoid OneDrive timeout
+   for f in package.json package-lock.json vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tailwind.config.js index.html; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+
+   # Source files
+   for f in src/index.css src/main.tsx src/App.tsx; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+   for f in src/sections/*.tsx; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+   for f in src/hooks/*.ts src/lib/*.ts; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+   for f in src/components/*.tsx; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+   for f in src/components/ui/*.tsx; do
+     cat "$APP/$f" > "/tmp/aseer-build/src/components/ui/$(basename $f)"
+   done
+   for f in src/data/*.json; do
+     cat "$APP/$f" > "/tmp/aseer-build/$f"
+   done
+   for f in src/data/schedules/*.json; do
+     cat "$APP/$f" > "/tmp/aseer-build/src/data/schedules/$(basename $f)"
+   done
+
+   # Images
+   for img in *.jpg *.png; do
+     cat "$APP/public/images/$img" > "/tmp/aseer-build/public/images/$img"
+   done
+
+   # Install deps (first time only)
+   cd /tmp/aseer-build && npm install --legacy-peer-deps
+
+   # Build
+   cd /tmp/aseer-build && npx vite build
    ```
 
-3. **Deploy via SSH pipe**
+2. **Package from /tmp/**
    ```bash
-   cat deploy.tar.gz | ssh u517606786@samaya-factory.com -p 65002 'cd build/aseer && tar -xzf -'
+   cd /tmp/aseer-build/dist
+   tar czf /tmp/aseer-deploy.tar.gz .
    ```
 
-4. **Fix symlink** (if OneDrive resets it)
+3. **Upload via SCP**
    ```bash
-   ssh u517606786@samaya-factory.com -p 65002 'ln -sfn public/aseer/images build/aseer/images'
+   scp -P 65002 -o StrictHostKeyChecking=no -o ConnectTimeout=30 /tmp/aseer-deploy.tar.gz u517606786@samaya-factory.com:/home/u517606786/
+   ```
+
+4. **Extract and clean on server**
+   ```bash
+   ssh -p 65002 -o StrictHostKeyChecking=no u517606786@samaya-factory.com "cd /home/u517606786/domains/samaya-factory.com/public_html/build && rm -rf aseer && mkdir aseer && cd aseer && tar xzf /home/u517606786/aseer-deploy.tar.gz && rm /home/u517606786/aseer-deploy.tar.gz && chmod 755 sync.php 2>/dev/null"
    ```
 
 5. **Verify** — open the site and check file listing.

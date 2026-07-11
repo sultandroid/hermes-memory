@@ -58,12 +58,25 @@ ssh -p 65002 -o BatchMode=yes u517606786@samaya-factory.com "cd /web/root && tar
 
 **Note:** SCP often hangs on this host — always use SSH pipe instead.
 
-## Build
+## Build & Deploy (Full)
 
 ```bash
-cd "$APP" && node node_modules/vite/bin/vite.js build
-# Then copy sync.php:
+APP="<project/app path>"
+cd "$APP"
+npm run build
 cp sync.php dist/sync.php
+
+# Copy to /tmp/ first (OneDrive sparse files break tar)
+rm -rf /tmp/aseer-dist
+cp -R dist /tmp/aseer-dist
+cd /tmp/aseer-dist
+tar czf /tmp/aseer-deploy.tar.gz .
+
+# Upload via SCP
+scp -P 65002 -o StrictHostKeyChecking=no -o ConnectTimeout=30 /tmp/aseer-deploy.tar.gz u517606786@samaya-factory.com:/home/u517606786/
+
+# Extract on server
+ssh -p 65002 -o BatchMode=yes u517606786@samaya-factory.com "cd /home/u517606786/domains/samaya-factory.com/public_html/build && rm -rf aseer && mkdir aseer && cd aseer && tar xzf /home/u517606786/aseer-deploy.tar.gz && rm /home/u517606786/aseer-deploy.tar.gz && chmod 755 sync.php 2>/dev/null"
 ```
 
 ## Technical Proposals Subfolder
@@ -110,7 +123,7 @@ Gallery views are defined in `src/sections/Gallery.tsx` in the `galleryData` arr
 
 Image naming: short readable names like `g4_G4_View_1.jpg`, `lgf_vis017.jpg` (not full MoC codes).
 
-### Current Galleries (June 2026)
+### Current Galleries (July 2026)
 
 | ID | Title | Views | Floor |
 |----|-------|-------|-------|
@@ -126,8 +139,26 @@ Image naming: short readable names like `g4_G4_View_1.jpg`, `lgf_vis017.jpg` (no
 | g3 | G3 – Al Muftaha | 1 | LGF |
 | lb2 | LB2 – Lobby | 1 | LGF |
 | tg | TG – Temporary Gallery | 1 | LGF |
+| gf_lb1 | LB1 – Main Lobby | 2 | Ground |
+| gf_v1 | V1 – VIP Reception | 1 | Ground |
+| gf_ec | EC – Children's Educational Centre | 1 | Ground |
+| gf_rt | RT – Gift Shop & Retail | 1 | Ground |
 
 ## Adding New Photos
+
+### CRITICAL RULE: Data-only additions, never design changes
+
+When adding new gallery entries, **append ONLY to the `galleryData` array**. Do NOT touch:
+- Styling/layout (card backgrounds, borders, shadows, hover effects)
+- Section numbering (`01 / Gallery` — not `05 / Gallery`)
+- Floor grouping (the design uses a flat grid, not floor-separated sections)
+- Description text format (`"16 annotated 3D views across 8 galleries"` — not `"25 annotated 3D views across 16 galleries"`)
+- Any rendering logic (the `Gallery()` component JSX must remain untouched)
+- Any other section files (Navigation, App.tsx, etc.)
+
+The existing design is the **committed git version**. If you need to verify what the original looks like, `git checkout -- src/sections/Gallery.tsx` to restore it, then only add data entries.
+
+**User will reject any deploy that changes the visual design.** If you accidentally modified the design, revert with `git checkout -- src/sections/Gallery.tsx` and re-apply only the data additions.
 
 ### 1. Upload images to server
 Use short readable server filenames — the full MoC codes are unwieldy in the source.

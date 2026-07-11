@@ -200,6 +200,8 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 **`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.
 
+**`folder "Name" of inbox` may fail with error -10006.** When `folder "Name" of inbox` returns `Can't set subfolders to every mail folder of mail folder id N. (-10006)`, the `set` assignment is the problem — not the access itself. **Workaround:** iterate directly without assignment: `repeat with f in (every mail folder of inboxN)`. To get folder IDs reliably: iterate and capture `(name of f) & "|" & (id of f)`, then use `mail folder id <N>` for subsequent queries. This bypasses the `set` assignment error entirely.
+
 **Multiple Inbox folders exist (one per account).** `mail folder "Inbox"` or `mail folder id 1` may return the wrong Inbox (empty or stale). Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count of mail folder id <N>` to find the active one. The primary account's Inbox is often NOT id 1 — it can be id 114 or higher. Always verify before querying.
 
 **`sender` returns a Mail Recipient record, not a string.** This applies to ALL senders, not just Aconex. Using `sender of m` directly in a string comparison crashes with error -1700. Always wrap in a try block with `as text` coercion or `name of senderRecord`:
@@ -911,4 +913,4 @@ See `references/cg-deliverables-schedule-response.md` for constructing the respo
 See `references/contract-review-from-email-attachment.md` for the contract-review workflow when the user asks to "check the contract" from an Outlook email attachment — DOCX/PDF extraction, structured summary template, and red-flag checklist.
 See `references/onedrive-edeadlk.md` for full diagnostics.
 See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 24h scan using AppleScript (since TCC blocks SQLite), project-critical filtering, emoji status reporting, SILENT protocol, and Aconex transmittal register update workflow.
-See `references/icloud-edeadlk-workaround.md` for the `osascript -e 'do shell script "python3 ..."'` bridge that bypasses iCloud EDEADLK on `~/Documents/` register files — the only reliable read/write method for iCloud-synced project directories.
+See `references/icloud-edeadlk-workaround.md` for the iCloud EDEADLK workaround — `cat > /tmp/` for reads, `python3 /tmp/script.py` for writes, `osascript` bridge as fallback.

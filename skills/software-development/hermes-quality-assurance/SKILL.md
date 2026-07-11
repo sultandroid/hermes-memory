@@ -427,6 +427,83 @@ When a humanization pass is requested, apply these specific changes:
 - **Paragraph length:** max 3-4 sentences
 - **Number presentation:** plain without dramatic lead-ins ("CV = -218K" not "a troubling variance of")
 
+### Document Humanization Pass (Symbol Stripping + Engineer Voice + Typos)
+
+When the user asks to "humanize" a document (make it sound less AI-generated), apply a three-layer pass in this order:
+
+#### Layer 1 — Symbol Stripping
+Remove these specific symbols from the document body (they are AI/Markdown formatting artifacts, not natural writing):
+- **`§`** → replace with "Section" or "Clause" (e.g., `§4` → `Section 4`, `§2.4D` → `Section 2.4D`)
+- **`→`** → replace with "to", "through", or " - " depending on context (e.g., `Design → Commissioning` → `Design to Commissioning`)
+- **`—`** (em dash) → replace with " - " (space hyphen space) — standard ASCII punctuation
+- **`·`** (middle dot) → replace with " - " in text contexts, or remove in scientific notation (e.g., `W/m²·K` → `W/m²K`)
+- **`–`** (en dash) → replace with " - " or "to" depending on context
+- **`"` `"`** (curly quotes) → replace with straight `"` quotes
+
+**Exception:** Do NOT strip symbols from code blocks, URLs, file paths, or technical identifiers where they carry meaning.
+
+#### Layer 2 — Engineer Voice Rewrite
+Rewrite prose to sound like an engineer wrote it, not a marketing writer or an AI:
+- **Shorten sentences.** Engineers write in declarative statements, not compound clauses.
+- **Remove corporate padding.** Strip "robust," "innovative," "cutting-edge," "best-in-class," "holistic," "seamless," "leverage," "optimize" (when used vaguely).
+- **Replace "in accordance with"** with "per" or "under".
+- **Replace "shall be [verb]ed"** with active voice: "we [verb]" or "[verb]s".
+- **Use concrete numbers and references** instead of vague qualifiers. Engineers cite code sections, not concepts.
+- **Keep technical data exactly as-is.** Never change numbers, targets, thresholds, code references, or contractual citations.
+- **Table headers:** replace `→` with "to" in timeline/range columns. Replace `—` with " - " in separator columns.
+- **Section references in tables:** `§4.5` → `Section 4.5`, `§2.4D.3.n` → `Section 2.4D.3.n`.
+
+#### Layer 3 — Authentic Typos (5-8 per large document)
+Add subtle, believable typos that an engineer would make when typing fast. Rules:
+- **Never change technical data** — no number changes, no code reference changes, no threshold changes.
+- **Never change proper nouns** — project names, company names, person names, code names stay correct.
+- **Prefer these typo types:**
+  - Double letters: `commitment` → `committment`, `accommodate` → `accomodate`
+  - Missing letters: `management` → `managment`, `public` → `publc`, `commercial` → `commerical`
+  - Transposed letters: `achieve` → `acheive`, `relevant` → `relevent`
+  - Double spaces between words: `and artefacts` → `and  artefacts`
+  - Missing spaces: `in accordance` → `inaccordance` (rare, only in dense text)
+- **Distribution:** spread across the document, not clustered in one paragraph.
+- **Density:** 1 typo per ~150-200 lines of text. A 900-line document gets 5-6 typos.
+- **Avoid obvious typos** that change meaning (e.g., "not" → "now", "comply" → "complys").
+- **Avoid typos in:** table headers, code references, section numbers, URLs, file paths, proper names, numbers, units of measure.
+- **Verification:** after inserting typos, grep for the original correct spelling to confirm you didn't accidentally change a code reference or proper noun.
+
+#### Verification After Humanization Pass
+```bash
+# 1. Confirm all target symbols are gone
+grep -c '[§→—·–]' document.md    # should be 0
+
+# 2. Confirm no technical data was changed
+# Spot-check 5-10 numbers, code references, and proper nouns
+
+# 3. Confirm typos are in prose only, not in data
+grep -n 'committment\|managment\|publc\|commerical' document.md
+# Verify each match is in a prose paragraph, not a table cell with technical data
+```
+
+### Additional Humanization — "Shall Be" → Active Voice
+When cleaning AI fingerprints from plan documents, target these specific patterns:
+
+| AI Pattern | Human Replacement |
+|------------|-------------------|
+| `shall be maintained` | `we keep` / `we maintain` |
+| `shall be screened` | `we screen` |
+| `shall be conducted` | `follows this protocol` / `we do` |
+| `shall be reviewed` | `is reviewed` / `we review` |
+| `shall be submitted` | `goes to` / `we submit` |
+| `in accordance with` | `per` / `to` / `under` |
+| `as per` | `per` |
+| `overarching` | (remove) |
+| `comprehensive` | (remove or replace with specific) |
+| `establishes the framework` | `sets out` / `covers` |
+| `strategic pivot` | `we moved away from` |
+| `demonstrably meet` | `meet` |
+| `overall accountability` | `runs` / `owns` |
+| `implementation` (as noun) | `delivery` / `doing` / (active verb) |
+
+**Rule of thumb:** If you can replace 3+ words with 1-2, do it. If the sentence uses passive voice and a named subject exists, make the subject the actor.
+
 ### EV Bracket Calculation
 - When calculating earned value percentages, use **actual drawing/submittal counts from project registers** — not estimates or judgement calls.
 - Search for registers (XLSX logs, submittal trackers, drawing lists) and count actual items.
@@ -495,6 +572,32 @@ GalleryViewer → saveHotspots() → localStorage
 - `aseer_hotspots_{galleryId}_{viewName}` — per-view hotspot overrides
 - `aseer_custom_materials` — added/edited materials
 - `aseer_hidden_materials` — codes of deleted default materials
+
+## Targeted Fix Workflow (Fix Existing, Don't Rewrite)
+
+When the user provides someone else's document (PDF, DOCX) and asks to "fix the problems only":
+
+1. **Extract text** from the source document first (pdftotext for PDF, python-docx for DOCX)
+2. **Identify the specific problems** — grep for the exact strings that need changing (e.g. "75%", "Bronze Level", "+45 Points")
+3. **Fix only those strings** — do NOT rewrite the document structure, language, or content
+4. **Preserve the author's voice** — keep their sentence structure, terminology, section organization. Only change what's contractually wrong.
+5. **For DOCX files with complex tables**, use direct XML patching (see `references/docx-xml-patching.md`) — python-docx often can't find text in deeply nested table cells
+6. **Verify** the fixed document opens correctly and only the intended changes were made
+
+**Pitfall — Don't regenerate from scratch:** The user explicitly corrected: "just change what need to change same his language, or fix the problems only." Regenerating the whole document destroys the author's formatting, structure, and voice. Always patch the existing file.
+
+**Pitfall — python-docx misses table cell text:** For documents with many tables (Fida's SMP had 20+), `python-docx` may return 0 matches because text lives in runs inside table cells that the library doesn't traverse the same way. Use direct XML editing of `word/document.xml` inside the .docx zip instead.
+
+## Repo-First Workflow for Project Documents
+
+**HARD RULE — Always check the repo before touching any project plan document.**
+
+1. **Check the repo first** — `~/aseer-museum-pm/03_Plans/` has the accepted versions with CG status, conflict resolutions, and correct framing
+2. **OneDrive files are working copies** — they may be out of sync with the repo
+3. **The repo is the single source of truth** — if the OneDrive HTML/DOCX contradicts the repo, the repo wins
+4. **Only fix what's wrong** — don't rewrite the whole document to match the repo's structure. Just fix the specific contradictions (waste target, Oddy period, rating language, etc.)
+
+**User correction signal:** If the user says "you didnt follow the SoW we already accepted on REPO, always make repo your single source of information", you skipped step 1. Stop, read the repo, and redo the work from there.
 
 ## References
 

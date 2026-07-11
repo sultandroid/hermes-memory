@@ -17,7 +17,7 @@ When working with NRS visualisation location plans (floor plans showing where ea
 
 ```bash
 pdftotext "MOC-ASE-AR-ARC-BF-DDD-1210-00.pdf" /tmp/output.txt
-grep -o 'VIS[0-9][0-9][0-9]\|MOC-ASE-AR-ARC-BF-DDD-VIS[0-9][0-9][0-9]' /tmp/output.txt | sort -u
+grep -o 'VIS[0-9][0-9][0-9]\\|MOC-ASE-AR-ARC-BF-DDD-VIS[0-9][0-9][0-9]' /tmp/output.txt | sort -u
 ```
 
 **Limitation:** Only captures labels that pdftotext can reconstruct from the PDF's text stream. Labels placed inside annotation blocks, callout bubbles, or tightly packed areas may be missed.
@@ -72,6 +72,15 @@ On the Lower Ground Floor plan (MOC-ASE-AR-ARC-LGF-DDD-1211-00):
 | G3 – Al Muftaha | Al Muftaha | VIS018 |
 | LB2 – Lobby | Main Lobby | VIS019 |
 | TG – Temporary Gallery | Temporary Gallery | VIS020 |
+
+On the Ground Floor plan (MOC-ASE-AR-ARC-GF-DDD-1212-00):
+
+| Area | Gallery | VIS Numbers |
+|------|---------|-------------|
+| LB1 – Main Lobby | Lobby & Welcome Desk | VIS021, VIS023 |
+| V1 – VIP Reception | VIP Reception | VIS022 |
+| EC – Children's Educational Centre | Educational Centre | VIS024 |
+| RT – Gift Shop & Retail | Gift Shop / Retail | VIS025 |
 
 ## Limitations
 

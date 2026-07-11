@@ -268,6 +268,7 @@ $dataDir = __DIR__ . '/../../hotspot-data';
 ### Pitfalls
 
 - **🔴 Hotspot-data wiped on every deploy**: Always use `__DIR__ . '/../../hotspot-data'` (two levels up from sync.php) so data survives `rm -rf <build-dir>`.
+- **🔴 Uncommitted design changes get deployed with data-only edits**: Before editing gallery data, run `git diff src/sections/Gallery.tsx` to check for uncommitted design changes. If the file has accumulated design changes from a previous session, restore from the init commit first, then re-apply only your data additions. See `references/gallery-data-restoration.md`.
 - **PHP not available on Surge**: Surge.sh is static-only. Need a host with PHP (Hostinger, SiteGround, etc.).
 - **localStorage is truth, server is cache**: Always write to localStorage first, then sync to server.
 - **Admin password in JS is visible**: For casual access control only — use a proper backend for real security.

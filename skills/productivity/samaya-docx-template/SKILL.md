@@ -77,6 +77,16 @@ doc.save("/path/to/output.docx")
 | `save` | `(path)` | Save to final location |
 | `save_temp` | `()` | Save to temp file |
 
+## HTML-to-content extraction for DOCX generation
+
+When the source content is a large HTML file on a private network path (OneDrive, local filesystem) that `web_extract` cannot read (returns "Blocked: URL targets a private or internal network address"), use `html2text` via terminal to extract the text, then read in chunks via `read_file` with offset/limit.
+
+See `references/html-to-content-extraction.md` for the full workflow including:
+- RevC05→SMP→DOCX merge pattern (7-step pipeline)
+- Contradiction-fixing rules: contract (ER/SoW) always wins over consultant strategy documents
+- Common RevC05 errors: waste diversion (75%→60%), Oddy aging (49-day→14-day)
+- DOCX generation script patterns for large multi-section documents
+
 ## External Document Intake & Reformatting Workflow
 
 When receiving an external document (consultant deliverable, reference standard, vendor document) that needs Samaya-branded reformatting, follow this sequence:
@@ -158,7 +168,7 @@ doc.add_table(
 
 If you are NOT using `SamayaDoc` and are hand-coding with raw `python-docx`, use `set_table_widths()` after creation (see `references/docx-generation-example.md`).
 
-## Writing & Language Rules (mandatory — from Samaya style guide Section 11)
+### Writing & Language Rules (mandatory — from Samaya style guide Section 11)
 
 Apply these to ALL Samaya documents, whether DOCX, HTML, or markdown:
 
@@ -166,6 +176,15 @@ Apply these to ALL Samaya documents, whether DOCX, HTML, or markdown:
 - **Level 6 English (CEFR B2–C1)** — short sentences (15–22 words), active voice, everyday vocabulary.
 - No AI-generated clichés: avoid "seamlessly", "synergistic", "cutting-edge", "state-of-the-art", "holistic", "leverage", "robust", "innovative", "bespoke", "delighted to", "committed to excellence", or padded introductions.
 - Get to the point. Every sentence carries information weight. Delete filler.
+
+### Stakeholder names — use proper names, not generic roles
+- Use **Samaya Investment** (not "the Contractor" or "the Company")
+- Use **Ministry of Culture (MoC)** (not "the Client")
+- Use **Consultancy Group (CG)** (not "the Consultant")
+- Use **ACE Moharram-Bakhoum (PMC)** (not "the Project Manager")
+- Use **Nissen Richards Studio (NRS)** (not "the Designer" or "the Lead Designer")
+- This applies to ALL documents — plans, SOWs, emails, reports, review comments
+- **User correction signal:** If the user says "dont say Contractors you have to mention all the stakeholders with their names like Samaya Inv", you used generic terms. Fix immediately.
 
 ### Symbols and characters
 - **Never use the section symbol** - write "Section 2.1" or "2.1" instead.

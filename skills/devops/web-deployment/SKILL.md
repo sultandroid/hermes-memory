@@ -517,6 +517,7 @@ Hostinger/LiteSpeed serves `.js` as `application/x-javascript`. For `<script typ
   ```
 - **OneDrive + git slowness**: Git init/commit/push operations on OneDrive paths can time out. Copy files to `/tmp/` first, run git from there, push. The `/tmp/` version becomes the authoritative git source.
 - **OneDrive file locks**: Files under OneDrive may be unreadable. Copy to `/tmp/` first.
+- **OneDrive sparse files break tar**: OneDrive macOS creates sparse files that cause `tar: lseek(SEEK_HOLE) failed: Operation timed out` and produce truncated archives (e.g. 757B instead of 90MB). **Always copy dist/ to /tmp/ before packaging:** `cp -R dist /tmp/aseer-dist && cd /tmp/aseer-dist && tar czf /tmp/aseer-deploy.tar.gz .`
 - **URL-encoded filenames**: `Oddy%20Test_Lab.jpg` won't match filesystem. Use `urllib.parse.unquote()`.
 - **macOS TCC permission**: Files from Downloads may have quarantine flags preventing copy.
 - **React/Vite base path**: Must match deploy subdirectory. Set `base: '/app/'` in `vite.config.ts`.

@@ -105,13 +105,25 @@ interface GalleryData { id: string; title: string; floor?: string; views: View[]
 // In gallery data:
 {id:'g4', title:'G4 - Saudi Art', floor:'BF', views:[...]}
 {id:'g1', title:'G1 - Welcome Gallery', floor:'LGF', views:[...]}
-
-// Sort in render - LGF first, BF second:
-{[...galleryData].sort((a,b)=>{
-  const order = {LGF:0, BF:1};
-  return (order[a.floor||'']||2) - (order[b.floor||'']||2);
-}).map(g=>{...})}
+{id:'gf_lb1', title:'LB1 - Main Lobby', floor:'GF', views:[...]}
 ```
+
+**Three-floor system (LGF, BF, GF):** When adding a new floor, update 3 places:
+
+1. **Floors object** — add the new key to the Record:
+   ```typescript
+   const floors: Record<string, typeof galleryData> = {LGF:[], BF:[], GF:[]};
+   ```
+
+2. **Floor label** — add a ternary for the new floor:
+   ```typescript
+   {key === 'LGF' ? 'LOWER GROUND FLOOR' : key === 'GF' ? 'GROUND FLOOR' : 'BASEMENT FLOOR'}
+   ```
+
+3. **Gallery count text** — update the static description:
+   ```
+   25 annotated 3D views across 16 galleries. Click to explore...
+   ```
 
 Floor badge on each gallery card (gold monospace label, below the title):
 ```typescript
@@ -293,9 +305,70 @@ Commit after every working change. The user explicitly requested version control
 
 ## Build on OneDrive — Workarounds
 
-The project lives under OneDrive. The large schedule JSON files (`src/data/schedules/*.json`, each 1-5MB, 21 files) cause `tsc -b` and `vite build` to hang for minutes or time out entirely.
+The project lives under OneDrive. Even `cp`, `read_file`, and `cat` can time out on OneDrive's FUSE filesystem. The large schedule JSON files (`src/data/schedules/*.json`, each 1-5MB, 21 files) cause `tsc -b` and `vite build` to hang for minutes.
 
-### Workaround 1: API Build (skip tsc)
+### Workaround 1: Build from /tmp (most reliable)
+
+Copy source files to `/tmp/` using `cat` pipes (NOT `cp`), install deps there, build from `/tmp/`:
+
+```bash
+# 1. Copy source files via cat pipes (avoids OneDrive timeout)
+mkdir -p /tmp/aseer-build/src/sections /tmp/aseer-build/src/hooks /tmp/aseer-build/src/lib /tmp/aseer-build/src/components /tmp/aseer-build/src/pages /tmp/aseer-build/public/images /tmp/aseer-build/public/fonts /tmp/aseer-build/src/data/schedules
+
+APP="/path/to/OneDrive/app"
+for f in package.json package-lock.json vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json tailwind.config.js index.html; do
+  cat "$APP/$f" > /tmp/aseer-build/$f
+done
+
+# Copy source files
+for f in index.css main.tsx App.tsx; do
+  cat "$APP/src/$f" > /tmp/aseer-build/src/$f
+done
+for f in Gallery.tsx Hero.tsx Footer.tsx Schedule.tsx Navigation.tsx Materials.tsx MaterialsAdmin.tsx TableOfContents.tsx PrintView.tsx ExecutiveSummary.tsx; do
+  cat "$APP/src/sections/$f" > /tmp/aseer-build/src/sections/$f
+done
+for f in useCustomCursor.ts useInfiniteLights.ts use-mobile.ts; do
+  cat "$APP/src/hooks/$f" > /tmp/aseer-build/src/hooks/$f
+done
+for f in hotspotStore.ts materialStore.ts utils.ts; do
+  cat "$APP/src/lib/$f" > /tmp/aseer-build/src/lib/$f
+done
+for f in EditorOverlay.tsx MaterialPicker.tsx; do
+  cat "$APP/src/components/$f" > /tmp/aseer-build/src/components/$f
+done
+cat "$APP/src/pages/Home.tsx" > /tmp/aseer-build/src/pages/Home.tsx
+cat "$APP/src/data/materials.json" > /tmp/aseer-build/src/data/materials.json
+for f in "$APP/src/data/schedules/"*.json; do
+  cat "$f" > "/tmp/aseer-build/src/data/schedules/$(basename $f)"
+done
+# Copy UI components
+mkdir -p /tmp/aseer-build/src/components/ui
+for f in "$APP/src/components/ui/"*.tsx; do
+  cat "$f" > "/tmp/aseer-build/src/components/ui/$(basename $f)"
+done
+# Copy images
+for img in *.jpg *.png; do
+  cat "$APP/public/images/$img" > /tmp/aseer-build/public/images/$img 2>/dev/null
+done
+
+# 2. Install deps
+cd /tmp/aseer-build && npm install --legacy-peer-deps
+
+# 3. Build
+cd /tmp/aseer-build && npx vite build
+
+# 4. Deploy from /tmp
+cd /tmp/aseer-build/dist && tar czf /tmp/aseer-deploy.tar.gz .
+scp -P <port> /tmp/aseer-deploy.tar.gz user@host:/remote/
+```
+
+**Key points:**
+- Use `cat "$file" > /tmp/target` NOT `cp` — `cp` on OneDrive can hang
+- `npm install --legacy-peer-deps` may be needed for dependency conflicts
+- Build completes in ~1-2s from /tmp vs minutes on OneDrive
+- After building, deploy from `/tmp/aseer-build/dist/` not the OneDrive path
+
+### Workaround 2: API Build (skip tsc)
 
 Create a `build.mjs` in the project root:
 ```js
@@ -307,7 +380,7 @@ Then: `node build.mjs`
 
 This bypasses `tsc -b` (which is `noEmit: true` anyway — only type-checks) and runs Vite's Rollup build directly. Completes in ~60-90s instead of hanging indefinitely.
 
-### Workaround 2: Incremental Deploy (skip tarball)
+### Workaround 3: Incremental Deploy (skip tarball)
 
 Rather than `tar czf dist/` (47MB+ with images), upload only changed files:
 ```bash

@@ -13,6 +13,8 @@ Review consultant/subcontractor responses to CG-approved scopes of work, evaluat
 
 **Specialist Deployment Breakdown (NRS vs SAMAYA):** See `references/specialist-deployment-breakdown.md` for mapping SOW §5.5 specialist positions against NRS contractual scope vs SAMAYA subcontractor engagements — formal response template with position-level breakdown and project data source references.
 
+**Consultant Document Audit Methodology:** See `references/consultant-document-audit-methodology.md` for the section-by-section audit workflow — extract, map, check each section for empty/duplicate/wrong-content/format issues, categorize, and present as structured feedback. CR Register uses Open/Closed status (not Accept/Reject).
+
 ## 0e. Design Schedule Management (absorbed from `design-schedule-management`)
 
 Build realistic design-phase schedules when the contract demands compressed timelines (e.g., SOW/ER requires 3-month design for a museum fit-out). Covers both ideal compression and real-world baseline given staffing/content gaps.

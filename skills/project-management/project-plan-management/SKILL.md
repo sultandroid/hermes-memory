@@ -398,7 +398,130 @@ schedule:
 | Monitoring | Prometheus + Grafana | — |
 | Containerization | Docker + Docker Compose | Single server |
 
-## 6. Pitfalls
+## 6. Critical Rule — Repo is Single Source of Truth
+
+**The PM repo (`~/aseer-museum-pm/03_Plans/`) is the single source of truth for all plan content.** OneDrive HTML/DOCX files are derived outputs, not authoritative sources.
+
+### 6.1 Before Editing Any Plan File
+
+1. **READ the repo version first** — check `~/aseer-museum-pm/03_Plans/<NN_Plan>/<plan_name>.md`
+2. **Check `08_Document_Index/approved_plans.md`** for CG approval status and revision history
+3. **Check `08_Document_Index/00_compliance_system.md`** for the master obligations register
+4. **Only then** edit the OneDrive HTML/DOCX if needed — but the repo MD is the canonical version
+
+### 6.2 Framing Alignment
+
+The repo SMP uses a **code-compliance-based approach**, not a rating-target approach:
+- "strategic pivot from a rating-target approach to a code-compliance-based approach"
+- "While Mostadam practices are followed for excellence, final certification is subject to ministerial review and is not treated as a contractual performance bond"
+- Silver 45+ is a "trajectory" / "readiness" target, not the primary framing
+
+**Never use points-chasing language** (SILVER/GOLD targets, "stretch goals", "credit pool", "~X points") as the primary framing. Always lead with code compliance (SBC 1001 + Mostadam Manual), then reference certification trajectory as secondary.
+
+### 6.3 Human Tone — No AI Fingerprints
+
+**This user strongly prefers documents that read like a human engineer wrote them.** Every plan, register, and deliverable must be scrubbed of AI-sounding language before delivery.
+
+#### 6.3.1 Symbols to Remove
+
+| Symbol | Replace With | Example |
+|--------|-------------|---------|
+| `§` | "Section" or "Clause" | `SBC 1001 Section 4` not `SBC 1001 §4` |
+| `→` | "to" or "through" | `Design to Commissioning` not `Design → Commissioning` |
+| `—` (em dash) | ` - ` (space-hyphen-space) | `SBC 1001 - Saudi Green Building Code` |
+| `·` (middle dot) | `, ` or ` / ` | `energy, water, materials` not `energy·water·materials` |
+
+#### 6.3.2 Prose Rules
+
+- **No "shall be"** — use active voice: "We keep a register" not "A register shall be maintained"
+- **No "establishes the framework"** — just say what the document does
+- **No "strategic pivot"** or "paradigm shift" — plain language
+- **No "overarching"** — remove it
+- **No "comprehensive"** — remove it or replace with specific description
+- **No "in accordance with"** — use "per" or "to"
+- **No "as per"** — use "per"
+- **No "demonstrably"** — remove it
+- **Short sentences** — break long clauses into separate sentences
+- **Active voice** — "The designer certifies" not "It is certified by the designer"
+- **Plain language** — "cuts environmental impact" not "minimises environmental impact through resource efficiency"
+
+#### 6.3.3 Authenticity Touches
+
+- Add **a few small typos** (5-8 across a 900-line document) — missing 's', transposed letters, double spaces. Not too many, just enough to feel human.
+- Inconsistent capitalization is OK in a few places
+- Use contractions: "it's" not "it is", "we're" not "we are"
+- Write like an engineer talking to another engineer, not a consultant writing a report
+
+#### 6.3.4 DOCX Fix Pattern (Preserve Consultant's Language)
+
+When fixing a consultant's existing DOCX (e.g., Fida's SMP), **do not rewrite the whole document**. Instead:
+
+1. **Identify only the problems** — waste diversion 75%→60%, Oddy 49-day→14-day, points-chasing language
+2. **Edit the XML directly** — use zipfile + xml.etree.ElementTree to find and replace exact `<w:t>` element text
+3. **Preserve everything else** — keep the consultant's language, formatting, tables, and structure intact
+4. **Generate a CR Register Excel** (not Markdown) listing each change with contractual basis
+
+The XML patching approach:
+```python
+import zipfile, tempfile, shutil, xml.etree.ElementTree as ET
+
+with zipfile.ZipFile(src, 'r') as z:
+    xml = z.read('word/document.xml').decode('utf-8')
+
+# Find exact w:t elements and replace
+xml = xml.replace(
+    '<w:t>Old text here</w:t>',
+    '<w:t>New text here</w:t>'
+)
+
+# Write back preserving all other files
+tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.docx')
+with zipfile.ZipFile(src, 'r') as zin:
+    with zipfile.ZipFile(tmp.name, 'w', zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename == 'word/document.xml':
+                zout.writestr(item, xml.encode('utf-8'))
+            else:
+                zout.writestr(item, data)
+shutil.move(tmp.name, out)
+```
+
+### 6.4 ER/SoW Compliance Only Rule
+
+When setting targets or resolving contradictions in the SMP, **comply with ER and SoW only**:
+- **Waste diversion**: 60% (SBC 1001 §8, ER §2.4D) — NOT 75% (Mostadam stretch)
+- **Oddy aging**: 14-day at 60°C (SoW §1.5, ER §2.4D) — NOT 49-day (Mostadam recommendation)
+- **Mostadam tier**: No contractual mandate. Certification subject to ministerial review per SoW §13.9.
+- **Rating targets**: Remove all Silver/Gold/Platinum point targets from primary framing. Keep as aspirational trajectory only.
+
+### 6.4 SMP Contradiction Resolution Workflow
+
+When a sustainability consultant (e.g., Fida Noor) submits a scope reduction register that contradicts their own SMP:
+
+1. **Audit** each proposed change against ER, SoW, and DMP — produce item-by-item verdict (Accept / Reject / Partial)
+2. **Generate CR Register** as an **Excel file** (not Markdown) with columns: #, Section, Change, Reason/Contractual Basis, Fida Status (☐ Accept / ☐ Reject)
+3. **Fix the document** to align with repo's code-compliance framing
+4. **Send both** the CR Register Excel + fixed document to the consultant for approval
+5. **Update Odoo** task 2947 with progress and link to files
+
+### 6.5 CR Register Format (User Preference)
+
+CR registers for consultant review must be **Excel files**, not Markdown:
+- Navy `#1F3864` header with white text
+- Columns: #, Section, Change, Reason/Contractual Basis, Fida Status
+- Landscape A4, alternating row shading
+- Freeze panes on header row
+- Each item has ☐ Accept / ☐ Reject checkbox for the consultant to mark
+
+### 6.3 When Editing OneDrive HTML/DOCX
+
+- The repo MD is authoritative — align the HTML/DOCX to match the repo, not the other way around
+- After editing, verify by grepping for prohibited framing patterns (SILVER/GOLD as primary targets, points-chasing language)
+- Update `CG_STATUS.md` in the OneDrive folder to reflect current status
+- Log the work in Odoo task 2947 (Sustainability) with progress update
+
+## 7. Pitfalls
 
 - **OneDrive placeholder files (0 bytes)**: PDFs in OneDrive may appear as 0-byte files when accessed via the local filesystem. Always check file size before attempting to read. Use the repo's `99_Archive/` copies or download from OneDrive web.
 - **PDF extraction quality**: `pymupdf` may produce garbled text from scanned PDFs. For scanned documents, use OCR (tesseract) or extract from the DOCX source instead.
