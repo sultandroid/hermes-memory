@@ -202,7 +202,7 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 **Multiple Inbox folders exist (one per account).** `mail folder "Inbox"` or `mail folder id 1` may return the wrong Inbox (empty or stale). Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count of mail folder id <N>` to find the active one. The primary account's Inbox is often NOT id 1 — it can be id 114 or higher. Always verify before querying.
 
-**Aconex sender is a record, not a string.** `sender of m` returns a Mail Recipient record, not a Unicode text. Using it directly in a string comparison (`senderName contains "Aconex"`) crashes with error -1700. Always wrap in a try block with `as text` coercion or `name of senderRecord`:
+**`sender` returns a Mail Recipient record, not a string.** This applies to ALL senders, not just Aconex. Using `sender of m` directly in a string comparison crashes with error -1700. Always wrap in a try block with `as text` coercion or `name of senderRecord`:
 ```applescript
 set senderName to ""
 try
@@ -210,9 +210,10 @@ try
     set senderName to (name of senderRecord) as text
 end try
 ```
-This applies to any sender where the record might be a distribution list, system account, or Aconex notification.
 
-**AppleScript body extraction returns empty for some emails.** `plain text content of m` works reliably for Inbox messages but may return `""` (empty string) for messages in project sub-folders, archived messages, or very old emails. When body is empty, fall back to subject + attachment analysis — don't try `properties of theMsg` which returns an unparseable record. The subject line and attachment names usually carry enough signal for triage purposes.
+**`sender` returns blank via `osascript -e` one-liners.** When using the bash loop pattern (`osascript -e "tell application \"Microsoft Outlook\" to set sr to sender of message $i of ...; return name of sr"`), the sender name consistently returns empty string even though the message exists. This is a serialization quirk — the `sender` property's Mail Recipient record doesn't serialize to text in one-liner mode. **Workaround:** Use a short `.applescript` file on disk for sender extraction instead of inline `-e` one-liners. The file-based `osascript` call serializes the record correctly. See `references/sender-blank-one-liner.md` for the two-phase pattern (fast bash loop for subjects/times, file-based script for senders).
+
+**`plain text content` works reliably for Inbox messages, may fail for sub-folders.** `plain text content of message N of inbox` returns the full email body for inbox messages. For messages in project sub-folders, archived messages, or very old emails, it may return `""` (empty string). When body is empty, fall back to subject + attachment analysis — don't try `properties of theMsg` which returns an unparseable record. The subject line and attachment names usually carry enough signal for triage purposes.
 
 **Always show folder context.** Every email listing MUST JOIN with `folders` table and display the folder name. Without it, the user cannot tell which messages are in Inbox vs project-specific sub-folders.
 
@@ -231,6 +232,26 @@ This applies to any sender where the record might be a distribution list, system
   - **For complex multi-folder scans**, write a bash loop that calls a short `.applescript` per folder rather than one monolithic script.
   - **Variable name shortening** (single-letter vars, no `set ... to ...` where possible) helps fit more logic under the limit.
   - **`linefeed` vs `return`** — both work, but `linefeed` is one fewer character. Every byte counts.
+
+**Most reliable pattern: bash `for` loop with individual `osascript -e` one-liners per property.** When the script body limit blocks multi-property scripts, use a bash loop that calls one `osascript -e` per property per message. Each call is a single-line expression that stays well under the limit:
+
+```bash
+for i in 1 2 3 4 5; do
+  subj=$(osascript -e "tell application \"Microsoft Outlook\" to get subject of message $i of inbox" 2>/dev/null)
+  att=$(osascript -e "tell application \"Microsoft Outlook\" to get has attachment of message $i of inbox" 2>/dev/null)
+  echo "$i|$subj|$att"
+done
+```
+
+This is slow (N calls × M messages) but **always works** when file-based scripts fail. The `2>/dev/null` suppresses errors from messages that don't exist. For 20 messages × 3 properties = 60 calls, expect ~30-60s runtime.
+
+**`has attachment` returns empty string via `osascript -e` one-liners.** When called as `get has attachment of message N of inbox`, the property returns blank (not `true`/`false`/`1`/`0`). This is a macOS Outlook AppleScript quirk — the property exists but serializes as empty in one-liner mode. For reliable attachment detection, use a `.applescript` file (if under the byte limit) or extract all attachments unconditionally and filter by content type.
+
+**`read status` filtering is unreliable.** Both `where unread is true` and `whose read status is not read` fail with errors (`The variable unread is not defined` / `Can't make application into type file`). There is no reliable AppleScript filter for unread messages. Workaround: scan all inbox messages and present the most recent N, letting the user identify what's new. The `unread count of inbox` property works (returns a number) but cannot be used as a filter predicate.
+
+**`time received` returns a formatted date string.** `get time received of message N of inbox` returns a string like `date Saturday, 11 July 2026 at 1:48:57 AM` — not a Unix timestamp. Parse with `date -j -f "%A, %d %B %Y at %I:%M:%S %p"` on macOS.
+
+**Inbox message ordering is oldest-first (CRITICAL).** When you iterate `(every message in mail folder id N)`, message index 1 is the **newest** message and index N is the **oldest**. This is the opposite of what most agents assume. Scanning the "last 100" messages by index (e.g. `repeat with i from n-99 to n`) returns the **oldest** emails, not the most recent. To find recent emails, scan from index 1 forward (e.g. `repeat with i from 1 to 100`). This applies to ALL folders, not just Inbox. The Asher Regional Museum folder (1257 messages) also follows this pattern: index 1 = newest (Apr 2024), index 1257 = oldest (Aug 2022).
 
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
 
@@ -444,7 +465,6 @@ For mass extraction (50+ emails), the sub-agent approach serializes work. A fast
 
 ```bash
 #!/bin/bash
-#!/bin/bash
 # Save as /tmp/batch_extract.sh, then: bash /tmp/batch_extract.sh
 for id in 35001 35002 35003; do
   osascript <<EOF
@@ -521,8 +541,6 @@ end tell
 Use `make new outgoing message` (NOT `make new draft message` — that class doesn't exist in Outlook for Mac).
 
 When drafting appointment/contract emails to subcontractors: reference their own SOW, not other contractors' scope. See `references/subcontractor-email-protocol.md`.
-
-### Plain Text Draft
 
 ### Plain Text Draft
 

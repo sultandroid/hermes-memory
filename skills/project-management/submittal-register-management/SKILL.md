@@ -16,11 +16,23 @@ File under `04_Submittals/AV/` with three subfolders: Prequalifications/, Produc
 
 ### Submittal Statement Format (to CG)
 
-Keep statements **very short** — the user explicitly rejected verbose framing:
+Keep statements **very short** — the user explicitly rejected verbose framing. Format:
 
-> This prequalification submittal presents [Supplier] as the authorized [product line] distributor for the supply of [equipment] to [contractor], in compliance with the approved [design/spec].
+> This prequalification complies with the project [specifications/AV design]. Equipment types and technical specs match the approved design.
 
-No explanation, no context paragraph, no quantity variance notes. Just the statement.
+**Details:**
+- Supplier: [Name] ([Brand] authorized distributor — KSA)
+- Contractor: [Main contractor name]
+- Proposed Ref: MOC-MUS-ASE-1K0-PQ-XXXX
+
+**Provided files:**
+1. [File 1]
+2. [File 2]
+...
+
+Do NOT add explanations about quantity variances, compliance analysis, or background context in the statement itself. Those go in the email draft to the DC, not the CG submittal statement.
+
+The user explicitly corrected: "dont talk too much, you can just mention as package" and "tell this prequalification complay with projects specs please submit the prequalification under datils : and write the statment here , with the provid files"
 
 ### Register Tracking
 

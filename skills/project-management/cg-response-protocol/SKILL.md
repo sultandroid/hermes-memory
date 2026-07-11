@@ -49,6 +49,46 @@ CG comments come in two distinct types. **Never merge them into one response.**
 - "Noted." - for accepted process comments
 - "All applicable loads in BOD per SBC. Showcase weights from manufacturer. Artwork weights from curator." - for technical clarifications
 
+## Multi-Round CRS Disposition Matrix Pattern
+
+When CG issues multiple rounds of comments on the same document (e.g., R1 9-Mar, R2 2-Jun, R3 18-Jun), use a **single consolidated disposition matrix** with round-separator rows:
+
+### Structure
+
+```
+| # | Round | CG Comment | Disposition | Ref | Status | Route/Scope |
+|---|---|---|---|---|---|---|
+| cat-row | Round 1 — CG comments (9-Mar-26) — closed in Rev 1/2 |
+| CG-01 | R1·9-Mar | [comment] | [response] | §X | CLOSED | SMP-scope |
+| cat-row | Round 2 — CG CRS (2-Jun-26, Code C) — addressed in Rev 3 |
+| CRS-01 | R2·2-Jun | [comment] | [response] | T1-07 | CLOSED | SMP-scope |
+| cat-row | Round 3 — CG CRS (18-Jun-26, Code C) — addressed in Rev 4 |
+| CRS-18 | R3·18-Jun | [comment] | [response] | CRS | CLOSED | Procedural |
+```
+
+### Rules
+- **cat-row** (`.cat-row td` with dark background) separates rounds — never use blank rows
+- **Round column** shows date + round number for traceability
+- **Status badges**: `CLOSED` (green), `SUBMITTAL-PENDING` (amber), `IN-PROGRESS` (blue), `RE-OPENED` (red)
+- **Ref column** links to the document section or role ID that addresses the comment
+- **Route/Scope** column shows whether the fix is in-scope or requires external action (PQD Register, DS, etc.)
+- Each round gets its own cat-row header, even if only 1-2 comments remain open
+- Comments that span multiple rounds (e.g., CG-03 re-opened in R2) get a `RE-OPENED` badge with explanation
+
+### Status Progression
+```
+R1: CG-01 → CLOSED
+R2: CG-01 → CLOSED (carried forward), CRS-07 → RE-OPENED (CV not yet submitted)
+R3: CRS-18 → CLOSED (CRS completed, QA performed)
+```
+
+### Caveman Style for C:Resubmit Reasons
+
+When adding CG resubmit reasons to remarks, write short direct sentences:
+- "CG want: loading schedule, masonry weights, concrete cover, wind/seismic refs. All in BOD per SBC. Need to clarify and resubmit."
+- "CG want: loading notation schedule, load combo names. Loading tables in BOD per SBC. Need to clarify and resubmit."
+- "CG want: audit report for previous design stage. Under preparation. Will include in next package."
+
 ## Interpreting Mixed-Status CG Responses
 
 CG often returns a submittal with **different statuses at different levels**. Do not conflate them.
@@ -151,6 +191,14 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 | Open | Action required, pending | Red |
 | Noted | Acknowledged, no action needed | Blue |
 | C:Resubmit | CG returned with comments, blocked until resubmission | Yellow + "BLOCKED" prefix |
+
+## Pitfalls
+
+- **Never add unapproved names to documents.** If a person's name hasn't been formally approved by CG/MoC (via CV submission, KPR update, or formal appointment), list the role only with a note: "Per live KPR" or "TBC — appointment pending." Adding unapproved names creates liability — CG will hold Samaya to that person's qualifications even if they were never formally accepted. The user explicitly corrected: "dont add names are not approved."
+- **Never merge submission plan comments with detailed technical reviews** — they are two separate streams with different audiences and response formats.
+- **cat-row separators** must use `.cat-row td` class (dark background, white text), not blank rows. Blank rows break table continuity.
+- **Status badges** must be consistent: CLOSED (green), SUBMITTAL-PENDING (amber), IN-PROGRESS (blue), RE-OPENED (red). Don't invent new badge types mid-document.
+- **Round column** must include both date and round number (e.g., "R2 · 2-Jun") for traceability across revisions.
 
 ## File Organization
 

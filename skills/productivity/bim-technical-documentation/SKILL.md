@@ -255,6 +255,117 @@ After any page merge/split/remove:
 6. Reference citations are from contract docs (ER, SOW, DMP) only
 7. **No status suffixes on TBC entries** — grep for "TBC —" to catch any that slipped through. Named firms only get status notes.
 
+## 9. Plan Conversion Pipeline — PDF/Legacy → Structured Markdown
+
+When the user asks to convert existing project plans (PDF, DOCX, legacy MD) into structured Markdown in the repo, follow this pipeline.
+
+### 9.1 Survey Phase
+
+1. **Map all source locations** — check both OneDrive (`04_Docs/02_Plans_and_Procedures/`) and the repo archive (`99_Archive/`) for each plan
+2. **Check approval status** — load `approved_plans.md` to know which plans are Code B (approved, do not modify content) vs Code C/D (unapproved, can fix conflicts)
+3. **Identify existing MD analysis files** — the repo may already have partial MD content (DMP chapters, HSE analysis, stakeholder guidelines) that can be copied directly
+4. **Check PDF viability** — OneDrive PDFs may be 0-byte placeholders or corrupted; use repo copies or PMBOK reference MDs as fallback
+
+### 9.2 Directory Structure
+
+Create `03_Plans/` with numbered subdirectories matching PMBOK knowledge areas:
+
+```
+03_Plans/
+  01_DMP/          — Design Management Plan
+  02_Stakeholder/  — Stakeholder Management Plan
+  03_Communication/ — Communication Plan
+  04_HSE/          — HSE Plans (sub-plans as separate files)
+  05_PEP/          — Project Execution Plan
+  06_BEP/          — BIM Execution Plan
+  07_Mobilization/ — Mobilization Plan
+  08_Risk/         — Risk Management Plan
+  09_Procurement/  — Procurement Plan
+  10_Resource/     — Resource Management Plan
+  11_Quality/      — Project Quality Plan (PQP)
+  12_SMP/          — Sustainability Management Plan
+  99_Consolidated/ — Cross-plan analysis + system architecture
+```
+
+### 9.3 Parallel Delegation Pattern
+
+For large-scale conversion (5+ plans), use `delegate_task` to dispatch one subagent per plan:
+
+```python
+# Survey first
+terminal("find ... -type f \( -name '*.pdf' -o -name '*.md' \)")
+
+# Create structure
+terminal("mkdir -p 03_Plans/{01_DMP,...,99_Consolidated}")
+
+# Copy existing MD content
+terminal("cp .../99_Archive/.../*.md 03_Plans/01_DMP/")
+
+# Delegate new conversions in parallel
+delegate_task(goal="Create Communication Plan Markdown", context="...")
+delegate_task(goal="Create PEP Markdown", context="...")
+delegate_task(goal="Create BEP Markdown", context="...")
+# ... up to 3 concurrent per user limit
+```
+
+**Context for each subagent must include:**
+- The plan's approval status (Code B = do not change content)
+- The PMBOK reference or structural template to follow
+- Real project data (team names, contract values, dates, entities)
+- YAML frontmatter requirements (last_updated, owner_agent, status, source, doc_ref)
+- The exact output path
+
+### 9.4 YAML Frontmatter Convention
+
+Every plan Markdown file must start with:
+
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: Hermes
+status: active | draft
+doc_ref: MOC-MUS-ASE-1KH-PL-XXXX
+revision: C01
+conflict_resolution: |
+  Conflicts resolved:
+  - Handover date aligned to 30 Sep 2026
+  - NTP aligned to 01 Dec 2025
+  - Review period: 14 calendar days per ER §2.4
+source: OneDrive path or document reference
+---
+```
+
+For unapproved plans that had conflicts fixed, add `conflict_resolution` in YAML and bump the revision.
+
+### 9.5 Consolidated Analysis
+
+After all plans are converted, create two documents in `99_Consolidated/`:
+
+1. **`consolidated_analysis.md`** — Cross-plan analysis identifying:
+   - **Overlaps**: same requirement in multiple plans (e.g., document control in 6 plans)
+   - **Conflicts**: contradictory requirements (e.g., 14 calendar vs 14 working days)
+   - **Gaps**: missing plans or content (e.g., no standalone Schedule, Cost, or Change plans)
+   - **Linked requirements**: dependencies between plans
+   - **Compliance obligations**: all mandatory actions by discipline
+
+2. **`compliance_system_architecture.md`** — Automation architecture:
+   - Rule engine: each plan requirement → machine-readable rule
+   - Odoo integration: failed checks create tasks
+   - Submittal register integration: Aconex API + compliance columns
+   - Dashboard: 4 views (Overview, Plan Detail, Timeline, Action Items)
+   - Implementation roadmap (4 phases, ~16 weeks)
+
+### 9.6 Conflict Resolution Rules
+
+| Rule | Action |
+|------|--------|
+| Plan is Code B (approved) | **Do NOT change anything** — the approved version is the contractual baseline |
+| Plan is Code C/D or not submitted | Fix conflicts, bump revision, add `conflict_resolution` to YAML |
+| Source of truth for dates | Contract 0010003521 and ER take precedence over any plan |
+| Source of truth for review periods | ER §2.4 — 14 **calendar** days (not working days) |
+| Source of truth for LOD | ER §2.3.D — LOD 300 contractual minimum; BEP can require higher for specific stages |
+| Source of truth for approvals | Contract §4 Art. 13 — MoC approval required for sub-consultant appointments |
+
 ## Reference Files
 
 - `references/management-plan-chart-recommendations.md` — What charts/figures are needed in each management plan section (Interface, Risk, Schedule, Comms, Quality), with priority tiers and rationale for museum/cultural projects. Use when the user asks "do we need charts here?" for a specific section.

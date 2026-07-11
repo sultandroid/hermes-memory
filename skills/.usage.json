@@ -95,13 +95,13 @@
     "created_at": "2026-06-27T09:16:06.232517+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-06-27T09:16:06.234000+00:00",
-    "last_viewed_at": "2026-06-27T09:16:06.232525+00:00",
+    "last_used_at": "2026-07-10T22:26:54.493774+00:00",
+    "last_viewed_at": "2026-07-10T22:26:54.489558+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "aseer-document-control": {
     "archived_at": null,
@@ -211,14 +211,14 @@
     "archived_at": null,
     "created_at": "2026-06-21T07:16:02.255997+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-09T18:53:10.065372+00:00",
-    "last_used_at": "2026-07-09T18:53:02.960880+00:00",
-    "last_viewed_at": "2026-07-09T18:53:02.958878+00:00",
-    "patch_count": 42,
+    "last_patched_at": "2026-07-10T22:42:51.689210+00:00",
+    "last_used_at": "2026-07-10T22:42:29.173207+00:00",
+    "last_viewed_at": "2026-07-10T22:42:29.169920+00:00",
+    "patch_count": 44,
     "pinned": false,
     "state": "active",
-    "use_count": 42,
-    "view_count": 42
+    "use_count": 47,
+    "view_count": 47
   },
   "blogwatcher": {
     "archived_at": null,
@@ -276,14 +276,14 @@
     "archived_at": null,
     "created_at": "2026-07-09T05:14:23.739476+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-09T10:36:01.266832+00:00",
-    "last_used_at": "2026-07-09T10:35:49.506253+00:00",
-    "last_viewed_at": "2026-07-09T10:35:49.503355+00:00",
-    "patch_count": 4,
+    "last_patched_at": "2026-07-10T17:24:56.235340+00:00",
+    "last_used_at": "2026-07-10T17:24:41.367934+00:00",
+    "last_viewed_at": "2026-07-10T17:24:41.366334+00:00",
+    "patch_count": 7,
     "pinned": false,
     "state": "active",
-    "use_count": 10,
-    "view_count": 10
+    "use_count": 13,
+    "view_count": 13
   },
   "claude-code": {
     "archived_at": null,
@@ -1039,6 +1039,19 @@
     "use_count": 4,
     "view_count": 4
   },
+  "materials-register-management": {
+    "archived_at": null,
+    "created_at": "2026-07-10T17:08:37.537548+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-07-10T17:08:47.748321+00:00",
+    "last_used_at": null,
+    "last_viewed_at": null,
+    "patch_count": 1,
+    "pinned": false,
+    "state": "active",
+    "use_count": 0,
+    "view_count": 0
+  },
   "mixture-of-agents": {
     "archived_at": null,
     "created_at": "2026-07-01T00:40:25.128703+00:00",
@@ -1070,13 +1083,13 @@
     "created_at": "2026-07-06T11:48:24.871276+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-06T11:48:33.074028+00:00",
-    "last_used_at": "2026-07-06T11:48:24.873370+00:00",
-    "last_viewed_at": "2026-07-06T11:48:24.871292+00:00",
+    "last_used_at": "2026-07-10T22:32:48.013445+00:00",
+    "last_viewed_at": "2026-07-10T22:32:48.009018+00:00",
     "patch_count": 1,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 4,
+    "view_count": 4
   },
   "nano-pdf": {
     "archived_at": null,
@@ -1135,13 +1148,13 @@
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-07T11:08:34.746519+00:00",
-    "last_used_at": "2026-07-09T03:12:53.213648+00:00",
-    "last_viewed_at": "2026-07-09T03:12:53.211754+00:00",
+    "last_used_at": "2026-07-10T19:05:53.479624+00:00",
+    "last_viewed_at": "2026-07-10T19:05:53.476463+00:00",
     "patch_count": 234,
     "pinned": false,
     "state": "active",
-    "use_count": 340,
-    "view_count": 340
+    "use_count": 341,
+    "view_count": 341
   },
   "odoo-project-management": {
     "archived_at": null,
@@ -1290,14 +1303,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-10T15:07:47.260701+00:00",
-    "last_used_at": "2026-07-10T15:07:31.488550+00:00",
-    "last_viewed_at": "2026-07-10T15:07:31.486192+00:00",
-    "patch_count": 120,
+    "last_patched_at": "2026-07-11T03:12:01.973036+00:00",
+    "last_used_at": "2026-07-11T03:11:54.573762+00:00",
+    "last_viewed_at": "2026-07-11T03:11:54.571052+00:00",
+    "patch_count": 134,
     "pinned": false,
     "state": "active",
-    "use_count": 186,
-    "view_count": 172
+    "use_count": 198,
+    "view_count": 183
   },
   "p5js": {
     "archived_at": null,
@@ -1343,13 +1356,13 @@
     "created_at": "2026-06-22T07:47:43.229348+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-10T15:43:18.047198+00:00",
-    "last_used_at": "2026-07-10T15:40:18.488739+00:00",
-    "last_viewed_at": "2026-07-10T15:40:18.479199+00:00",
+    "last_used_at": "2026-07-10T22:42:11.898336+00:00",
+    "last_viewed_at": "2026-07-10T22:42:11.886519+00:00",
     "patch_count": 1,
     "pinned": false,
     "state": "active",
-    "use_count": 3,
-    "view_count": 3
+    "use_count": 4,
+    "view_count": 4
   },
   "polymarket": {
     "archived_at": null,
@@ -1538,13 +1551,13 @@
     "created_at": "2026-06-02T09:16:03.912223+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-06-30T10:49:21.284976+00:00",
-    "last_used_at": "2026-06-30T10:48:32.301428+00:00",
-    "last_viewed_at": "2026-06-30T10:48:32.297229+00:00",
+    "last_used_at": "2026-07-10T22:32:17.008230+00:00",
+    "last_viewed_at": "2026-07-10T22:32:17.004032+00:00",
     "patch_count": 38,
     "pinned": false,
     "state": "active",
-    "use_count": 50,
-    "view_count": 50
+    "use_count": 51,
+    "view_count": 51
   },
   "project-email-archive": {
     "archived_at": null,
@@ -1585,18 +1598,31 @@
     "use_count": 18,
     "view_count": 18
   },
+  "project-plan-management": {
+    "archived_at": null,
+    "created_at": "2026-07-10T22:33:24.605291+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-07-10T22:36:31.481763+00:00",
+    "last_used_at": "2026-07-10T22:36:34.990019+00:00",
+    "last_viewed_at": "2026-07-10T22:36:34.958857+00:00",
+    "patch_count": 3,
+    "pinned": false,
+    "state": "active",
+    "use_count": 3,
+    "view_count": 3
+  },
   "project-register-manager": {
     "archived_at": null,
     "created_at": "2026-05-28T12:09:32.563297+00:00",
     "created_by": null,
-    "last_patched_at": "2026-07-10T15:50:09.145843+00:00",
-    "last_used_at": "2026-07-10T15:40:38.799081+00:00",
-    "last_viewed_at": "2026-07-10T15:40:38.794186+00:00",
-    "patch_count": 91,
+    "last_patched_at": "2026-07-10T18:55:57.099810+00:00",
+    "last_used_at": "2026-07-10T18:55:48.822491+00:00",
+    "last_viewed_at": "2026-07-10T18:55:48.819679+00:00",
+    "patch_count": 93,
     "pinned": false,
     "state": "active",
-    "use_count": 97,
-    "view_count": 97
+    "use_count": 99,
+    "view_count": 99
   },
   "project-resource-loading": {
     "archived_at": null,
@@ -1759,13 +1785,13 @@
     "created_at": "2026-06-28T17:44:52.860741+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-10T15:41:13.838411+00:00",
-    "last_used_at": "2026-07-10T15:40:18.482224+00:00",
-    "last_viewed_at": "2026-07-10T15:40:18.472472+00:00",
+    "last_used_at": "2026-07-10T22:32:17.009780+00:00",
+    "last_viewed_at": "2026-07-10T22:32:17.005736+00:00",
     "patch_count": 99,
     "pinned": false,
     "state": "active",
-    "use_count": 55,
-    "view_count": 55
+    "use_count": 56,
+    "view_count": 56
   },
   "samaya-docx-template": {
     "archived_at": null,
@@ -2071,13 +2097,13 @@
     "created_at": "2026-06-16T08:52:07.580765+00:00",
     "created_by": null,
     "last_patched_at": "2026-06-25T00:37:49.541207+00:00",
-    "last_used_at": "2026-06-27T04:43:50.339446+00:00",
-    "last_viewed_at": "2026-06-27T04:43:50.334816+00:00",
+    "last_used_at": "2026-07-10T22:42:11.893632+00:00",
+    "last_viewed_at": "2026-07-10T22:42:11.878690+00:00",
     "patch_count": 31,
     "pinned": false,
     "state": "active",
-    "use_count": 29,
-    "view_count": 29
+    "use_count": 30,
+    "view_count": 30
   },
   "subcontractor-dossier": {
     "archived_at": null,
@@ -2148,14 +2174,14 @@
     "archived_at": null,
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-10T15:56:07.863147+00:00",
-    "last_used_at": "2026-07-10T15:55:44.910423+00:00",
-    "last_viewed_at": "2026-07-10T15:55:44.908508+00:00",
-    "patch_count": 92,
+    "last_patched_at": "2026-07-10T18:55:34.880783+00:00",
+    "last_used_at": "2026-07-10T18:55:12.620713+00:00",
+    "last_viewed_at": "2026-07-10T18:55:12.618760+00:00",
+    "patch_count": 93,
     "pinned": false,
     "state": "active",
-    "use_count": 88,
-    "view_count": 88
+    "use_count": 91,
+    "view_count": 91
   },
   "supplier-prequalification": {
     "archived_at": null,
@@ -2175,13 +2201,13 @@
     "created_at": "2026-06-06T03:06:10.691415+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-10T12:22:18.791430+00:00",
-    "last_used_at": "2026-07-10T12:22:02.389784+00:00",
-    "last_viewed_at": "2026-07-10T12:22:02.387909+00:00",
+    "last_used_at": "2026-07-10T17:08:16.892972+00:00",
+    "last_viewed_at": "2026-07-10T17:08:16.889169+00:00",
     "patch_count": 42,
     "pinned": false,
     "state": "active",
-    "use_count": 38,
-    "view_count": 38
+    "use_count": 39,
+    "view_count": 39
   },
   "surge-deploy": {
     "archived_at": null,

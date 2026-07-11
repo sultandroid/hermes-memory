@@ -110,6 +110,7 @@ See `references/register-outlook-reconciliation.md` for full workflow, SQL templ
 - `references/stakeholder-plan-authoring-conventions.md` — SMP authoring conventions
 - `references/gates-plan-alignment-workflow.md` — Full workflow for aligning register ref numbers and items with a consultant's Stage 04 Submission Plan (Gates plan): gap analysis, numbering patterns (per-floor sequences vs uniform), missing item categories, floor-zone reorganization, date handling, pitfalls.
 - `references/cg-data-package-forwarding.md` (in `outlook-email` skill) — Extract, compare, map, and forward CG data packages (object schedules, material lists) with formal Excel deliverables
+- `references/materials-register-from-nrs-schedules.md` — Full materials register creation from NRS 6930 exhibition schedules: 15 schedule types, NRS spec reference format (A2742-{CODE}), column structure, full project scope (~170+ items), Oddy testing requirements, Excel generation pattern, critical path items.
 - `references/cross-subcontractor-conflict-audit.md` — Audit a new RFP/SOW against all other subcontractors for scope overlaps, interface gaps, contradictions, and missing coordination. Worked example: Acoustic Ceiling RFP vs 7 subcontractors (12 conflicts).
 
 ## Related Skills

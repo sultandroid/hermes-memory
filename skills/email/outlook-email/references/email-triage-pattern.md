@@ -113,6 +113,75 @@ WHERE f.Folder_Name = '<Project Folder>'
 ORDER BY m.Message_TimeReceived DESC LIMIT 15;
 ```
 
+## AppleScript Inbox Access — Known Limitations & Workarounds
+
+SQLite is blocked by macOS TCC (`authorization denied`). AppleScript is the only access path, but has critical quirks:
+
+### `where unread is true` DOES NOT WORK
+
+```applescript
+-- ❌ FAILS: "The variable unread is not defined" (-2753)
+every message of inbox where unread is true
+every message of inbox whose unread is true
+```
+
+Outlook for Mac does not expose `unread` as a filterable property in AppleScript. The `read status` property exists but cannot be used in `where`/`whose` clauses — it throws `Can't get status` (-1728) or `Can't make application into type file` (-1700).
+
+### Reliable Workaround — Per-Index One-Liners
+
+The only reliable way to read inbox messages is by **numeric index** (1 = newest):
+
+```bash
+# Read subject of message N
+osascript -e "tell application \"Microsoft Outlook\" to get subject of message $N of inbox"
+
+# Read full body
+osascript -e "tell application \"Microsoft Outlook\" to get plain text content of message $N of inbox"
+
+# Read multiple properties (one call per property)
+for i in 1 2 3 4 5; do
+  subj=$(osascript -e "tell application \"Microsoft Outlook\" to get subject of message $i of inbox" 2>/dev/null)
+  att=$(osascript -e "tell application \"Microsoft Outlook\" to get has attachment of message $i of inbox" 2>/dev/null)
+  echo "$i|$subj|$att"
+done
+```
+
+**Why this works:** Each `osascript -e` is a separate process invocation. The ~700-byte script body limit applies per file, not per process. One-liners stay well under the limit.
+
+### `has attachment` is Unreliable
+
+The `has attachment` property of `message` returns **empty string** for most messages, even those with attachments. Do not rely on it for triage. The only reliable attachment detection is:
+1. Extract all attachments via AppleScript `save` and count them
+2. Or check the SQLite `Message_HasAttachment` column (when SQLite is accessible)
+
+### `plain text content` Works for Inbox (Contrary to Earlier Notes)
+
+Despite the skill's earlier pessimism, `plain text content of message N of inbox` **reliably returns full email body** for inbox messages. It worked for all 13+ emails tested in this session. The earlier note about empty returns applies to project sub-folders and archived messages, not the inbox.
+
+### `sender` Returns a Record, Not a String
+
+```applescript
+-- ❌ FAILS: returns a Mail Recipient record, not text
+set s to sender of m
+
+-- ✅ WORKS: wrap in try block with as-text coercion
+set senderName to ""
+try
+    set senderRecord to sender of m
+    set senderName to (name of senderRecord) as text
+end try
+```
+
+This applies to ALL senders, not just Aconex. The skill's earlier Aconex-specific note was too narrow.
+
+### Unread Count is Reliable
+
+```applescript
+osascript -e 'tell application "Microsoft Outlook" to get unread count of inbox'
+```
+
+This single property read works correctly and returns the actual count.
+
 ## Presentation Format
 
 Group results into sections by urgency:
