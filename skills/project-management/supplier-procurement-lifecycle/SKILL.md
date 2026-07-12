@@ -729,6 +729,7 @@ When writing the submittal statement for an AV equipment prequalification packag
 No explanation, no context paragraph, no quantity variance notes. Just the statement and the file list.
 
 See `references/av-prequal-compliance-pattern.md` for the full workflow including design compliance check, quantity variance handling, and register update.
+See `references/compliance-sheet-template.md` for the multi-sheet compliance workbook template — supplier product vs project requirements cross-reference (6 sheets, RAG status, gap analysis). Use this when a supplier submits products/documents and you need to assess compliance against the project's contract requirements (spec list, PQ register, design research, scope docs).
 
 ### Profile Content Structure (7 Pages)
 

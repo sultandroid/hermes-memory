@@ -372,6 +372,7 @@ When a register's scope is fully covered by another (e.g., Exhibition Fit-Out �
 > Submission calendar (live dates): see `references/aseer-submission-calendar.md`
 > Structural register worked example (39 items, 5 categories, 4 tiers): see `references/aseer-structural-register-pattern.md`
 > Master Plan generator script: `scripts/master_submission_plan.py`
+> Appending submission plan sheets to existing register: `references/appending-submission-plan-sheets.md`
 > Icon cleanup scanner: `scripts/scan_icons.py` — run it against any `_scripts/` directory to verify zero icons
 > Gates plan gap analysis (Aseer Mech cross-reference): see `references/gates-plan-gap-analysis.md` — raw comparison data with per-system numbering ranges, stage-mismatch items, and the audit script
 

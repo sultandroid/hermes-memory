@@ -11,6 +11,8 @@ triggers:
   - Supplier has sent raw pricing data (Excel) for multiple stores/projects — needs conversion to Samaya proposals
   - Multi-store/multi-client tender program with partial pricing data
   - Creating framework proposals with TBD pricing for upcoming supplier quotations
+  - User asks to "prepare costing" or "price this tender" for a supply/manufacturing item (non-construction)
+  - Extracting specs from an Etimad government tender PDF
 ---
 
 # Samaya Proposals — HTML Tender Proposal Workflow
@@ -424,6 +426,8 @@ const pageRegex = /<section[^>]*class="[^"]*page[^"]*"[^>]*>/g;
 5. Auto-calculating totals with formulas
 6. See `references/BOQ-structure.md` for full item list and formula pattern
 
+> **For supply/manufacturing tenders (توريد عام, non-construction):** Use an alternative costing structure — Materials + Hardware + Labor + Logistics + OH&P. See `references/supply-tender-pricing.md` for the 4-cost-category model, Etimad PDF extraction tips, and 3-sheet Excel template.
+
 ### Phase 5 — Deploy
 1. Copy `index.html` + `proposal_assets/` + `assets/` + `Obekan.pdf` to `/tmp/surge-full/`
 2. **Large asset folders (>100MB from OneDrive):** directly copying folders like `assets/` (can be 781MB) times out via OneDrive. Instead:
@@ -785,6 +789,7 @@ When doc cards overflow page 16 or payment/terms overflow page 17:
 - `references/pdf-study-and-logos.md` — Studying project PDFs and downloading/embedding client logos for tender proposals.
 - `references/pdf-extraction-pipeline.md` — Extracting text from project PDFs via PyMuPDF for scope analysis and technical content gathering.
 - `references/supplier-data-classification.md` — Converting raw supplier pricing Excel data into Samaya-branded HTML proposals: Excel structure, Arabic keyword classification rules, store inventory patterns, framework vs complete proposal logic, and the PROPOSAL_STUDY_REPORT.md format for multi-store tender programs.
+- `references/supply-tender-pricing.md` — Costing model for supply/manufacturing tenders (non-construction): 4 direct-cost categories (materials, hardware, labor, logistics) + OH&P loading, Etimad PDF extraction tips, and 3-sheet Excel template.
 - **Do NOT reference Samaya-authored documents** — If Samaya wrote the SOW, ER, or technical specs, do not cite them in the proposal as if they're external requirements (`"Per ER §2.1"`, `"per SOW"`). Remove the reference or rephrase as `"Excluded — client scope"`.
 - **⚠️ ER document not received — use internal section refs only:** The Employer's Requirements (ER) document was NOT received. Replace ALL `ER-X.X` clause references with internal proposal section codes (`ق.10`, `ق.14`, `ق.18`, etc.). Replace "كراسة الشروط (ER)" with "نطاق العمل (SOW)". The compliance matrix column header becomes `المرجع (SOW/ق.)` instead of `المرجع (ER/SOW)`. Only reference documents Samaya actually has in hand.
 - **Do NOT mention galvanizing** — use Jotun Epoxy Mastic

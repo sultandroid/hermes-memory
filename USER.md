@@ -1,3 +1,7 @@
 Eng. Mohamed Sultan Abbas — Tech Office Mgr, Samaya. Aseer Museum. Prefers concise actionable deliverables, direct instructions. Repo (~/aseer-museum-pm) is single source of truth. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed. Documents: no AI fingerprints, write like engineer, use stakeholder names not 'the Contractor'. Fix others' work by telling them what to fix, not rewriting.
 §
 Very sensitive about design changes — only add data, never modify styling/layout. When adding new gallery entries, study source PDF plans carefully to get correct names before assigning. Prefers floor-organized gallery sections (LGF/BF/GF) with original dark styling.
+§
+Email drafts: provide as plain text in the response, not as Outlook drafts. User copies and sends manually. Keep drafts short — no preamble, no explanations of what the email contains.
+§
+RMP (Risk Management Plan) is a contractual deliverable (MOC-MUS-ASE-1KH-PL-02.17) requested by CG/MoC. The RMP must match the Excel consolidated risk register methodology — not the other way around. Scoring scale: 1-4 P×S (not 1-5). Risk IDs: PRR-XXX-XX format (not PRR-XXX). Risk count: 33 Master risks (not 29). 4-register architecture: Master, DRR, HSE, AV. SOW-Protect is a formal response strategy. HSE uses separate 5×5 scoring.

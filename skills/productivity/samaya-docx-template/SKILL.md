@@ -153,6 +153,10 @@ When reviewing a document against the project BEP (Rev R02, Table 24/30/31):
 
 See `references/document-compliance-review.md` for the detailed compliance analysis methodology with worked example.
 
+### Retrofitting Samaya branding onto existing DOCX
+
+When you have an existing `.docx` that was NOT created with `SamayaDoc` and needs Samaya-branded formatting (header, footer, margins, heading styles, table styles, symbol cleanup), see `references/retrofit-samaya-branding.md`. This covers the full workflow: close Word, set margins, create header/footer, classify paragraphs by heading level, format all tables, clean symbols, save, reopen.
+
 ## Table column widths
 
 `SamayaDoc.add_table()` accepts `col_widths_cm` and applies `Cm(w)` to each cell — this works correctly with the current template. A4 text area = 16.5cm total (21cm page - 2.5cm left - 2.0cm right).
@@ -706,12 +710,27 @@ Subagents frequently download HTML error pages instead of real JPEG images:
   ```
 - **Stakeholder logos:** Prefer inline SVGs over text or base64 images for logos. Create 4-column grid with `viewBox="0 0 200 100"` SVGs. Keep them monochrome (#000) for the CV-pack template style.
 
+## DOCX formatting fixes (page breaks, table splitting, column widths)
+
+When the user asks to "fix tables", "don't split tables", "add page breaks", "fix column widths", or "make Rev00" from an existing DOCX, see `references/docx-formatting-fixes.md`. This covers:
+
+- Adding `pageBreakBefore` to H2 section headings (not sub-headings)
+- Setting `cantSplit` on all table rows to prevent page-splitting
+- Setting proportional percentage column widths per column count
+- RevC03→Rev00 reset pattern (copy + format fixes, no metadata changes)
+- Verification checks after fixes
+- Charts vs images detection
+
+**Pitfall:** Only add page breaks to section-level H2 headings, not sub-headings (H3 like "1.1", "2.1"). The divider paragraphs (all-caps section labels) also need breaks. `cantSplit` on every row means a tall table pushes entirely to the next page — this is correct per user request.
+
 ## Related reference files
 
+- `references/docx-formatting-fixes.md` — DOCX formatting fixes: page breaks before sections, prevent table splitting, set proportional column widths, RevC03→Rev00 reset pattern
 - `references/cg-correspondence-best-practices.md` — CG correspondence strategy: don't ask logic questions, separate threads, align with NRS before sending, acknowledge without commitment, state commercial impact upfront. Derived from user corrections on email drafts to CG.
 - `references/contract-grounded-sow-methodology.md` — Verifying SOW scope against contract (SoW + ER) before writing. Every scope statement must map to a contract clause; never invent tasks. Dispatch labors (Kimi/Codex/Claude) for cross-verification. Copy PDFs from OneDrive via AppleScript first, then extract text with PyMuPDF. See the "SOW contract-accuracy verification" section above.
 - `references/onedrive-macos-workaround.md` — OneDrive macOS sandbox workaround via Finder AppleScript (essential when files lock after `mv`)
 - `references/docx-generation-example.md` — Full working gen script with `set_table_widths()` + `get_col_widths()`
+- `references/markdown-to-docx-pipeline.md` — Full-feature markdown-to-DOCX pipeline: cover page, styled tables, colour-coded P-I matrix, header/footer with Page X of Y, code blocks, blockquotes, lists. Use when source is a `.md` file and SamayaDoc is not available.
 - `references/batch-md-to-docx-conversion.md` — Converting multiple MD deliverables to Samaya-branded DOCX in one script pass
 - `references/microclimate-action-report-pattern.md` — Museum showcase microclimate control + T&H monitoring action reports. Connected vs individual showcase architecture, 7/8-section structure, cost presentation rules, SVG flowchart patterns for DOCX.
 - `references/docx-editing-techniques.md` — Editing existing DOCX files (remove table rows, update paragraphs, save as R01). Use terminal heredoc, not execute_code sandbox.

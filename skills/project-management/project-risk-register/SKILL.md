@@ -29,6 +29,7 @@ metadata:
 | **Phase** | Summary + Risk Register | Phase-specific register (24 risks, lighter, faster) — ideal when user says "phase after phase" |
 | **Subcontractor** | Markdown document (not Excel) | Package-specific register for a single subcontractor (e.g. MEP Designer, AV Contractor). Phase-gate aligned (Pre-Appointment → Mobilisation → 50% → 90% → IFC → AFC). Sourced from contract documents (offer, SOW, DMP, specialist SOWs), not project memory. See `references/subcontractor-risk-register-pattern.md`. |
 | **Subcontractor → Enhanced Excel** | Two-phase: Markdown first, then openpyxl Excel | When the user needs both a decision-support tool during negotiation AND a governance deliverable. Phase 1 = markdown (fast, contract-sourced). Phase 2 = enhanced Excel with data validation, conditional formatting, alternating rows, status/review-date columns, and summary sheet. See `references/subcontractor-risk-register-pattern.md` §Two-Phase Workflow. |
+| **Audit** | Multi-sheet audit report | QA an existing risk register (supplier, consultant, or internal). See `references/risk-register-audit-methodology.md` for the full 9-step checklist, common findings, and output format. |
 | **Quick** | Single sheet Risk Register | <12 risks, quick stand-up for a meeting
 
 ## Do NOT Use When
@@ -343,3 +344,4 @@ Charts need data references in the worksheet. Place chart data in a hidden area 
 ## Reference Files
 
 - `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.
+- `references/risk-register-audit-methodology.md` — 9-step audit checklist for QA-checking an existing risk register. Covers scoring integrity, cross-referencing, lifecycle gaps, residual risk, mitigation quality, and dashboard verification. Use when the user sends an existing XLSX and asks "check this" or "audit this."

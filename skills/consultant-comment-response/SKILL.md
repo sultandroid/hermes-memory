@@ -171,6 +171,60 @@ Example: CR-07 (Rigging register) → "Noted. Separate submittal register for ri
 
 See `references/cr-sheet-workflow.md` for the complete technique with openpyxl patterns and status classification rules.
 
+## Extended Workflow: MAR Compliance Sheet Resubmission
+
+When the consultant returns a **Code C (Revise and Resubmit)** on a Material Approval Request (MAR) with comments about the compliance sheet:
+
+### The Core Rule: Achieved Values + Test Report References
+
+The most common and critical CG comment on MARs is: **"Compliance sheet shall include the achieved values and the corresponding test report references."**
+
+This means:
+- **Status markers are NOT acceptable.** Do not use "Partial", "Gap", "Supported", "Compliant", or any qualitative status in the compliance column.
+- **Every row must have an actual number** — density in kg/m³, modulus in MPa/N/mm², thickness in mm, moisture content in %, flame spread index, formaldehyde emission class, etc.
+- **Every value must cite a source** — the exact file name and page/section of the datasheet, test report, or certificate that proves it.
+
+### Compliance Sheet Structure
+
+| Column | Content | Example |
+|--------|---------|---------|
+| Spec Clause | Exact clause reference | 061000 2.1.A |
+| Parameter | What is being measured | Density (air-dry) |
+| Required Value | From the spec | ≥ 640 kg/m³ |
+| Achieved Value | From the datasheet | 680 kg/m³ |
+| Test Standard | ASTM/BS/EN ref | ASTM D2395 |
+| Source Reference | File name + page | Garnica_Duraply_TDS.pdf p.3 |
+| Compliance | ✓ or ✗ only | ✓ |
+
+### Workflow
+
+1. **Extract spec requirements** — `pdftotext` the spec PDFs (e.g., 061000, 064023). List every clause with a numerical requirement: density, modulus, thickness, moisture content, fire rating, formaldehyde emission, screw withdrawal, etc.
+2. **Extract achieved values** — `pdftotext` every datasheet PDF in the submission. Build a table of Manufacturer → Product → Parameter → Achieved Value → Test Standard → Source File.
+3. **Cross-reference** — For each spec clause, find the matching achieved value from the datasheets. If no datasheet covers a required parameter, that's a real gap to flag.
+4. **Build the compliance sheet** — One row per spec clause. Every row has a number in the Achieved Value column and a file reference in the Source column.
+5. **Update the MAR checklist** — Items that were "No" or "N/A" should be upgraded to "Yes" once the evidence is in place.
+
+### Common Gaps Found in Practice
+
+| Gap | What's Needed |
+|-----|--------------|
+| Fire test report | Product TDS is NOT a fire test report. Need a lab report (UL, Intertek, Warringtonfire) explicitly stating Class A flame spread (≤ 25) and smoke developed (≤ 450) per ASTM E84 or equivalent. |
+| Metal component datasheets | Blum hinges/runners alone are not enough. Need datasheets for ALL metal: brackets, anchors, screws, tracks, connectors, fasteners. |
+| Adhesive TDS | Brand-family evidence is not enough. Need the exact product TDS showing EN 204 D3 or ASTM D4317 Type II compliance. |
+| Hardware schedule | No itemized project hardware schedule = gap. Need a schedule listing every handle, lock, hinge, runner, and fixing with model numbers. |
+| Shop drawings | Approved shop drawings showing framing, furring, locations, dimensions, and attachments. |
+
+### Pitfalls (MAR-specific)
+- **"Compliant" is not a value.** The engineer will reject any compliance sheet that uses words instead of numbers.
+- **Product TDS ≠ test report.** A manufacturer datasheet states design values; a test report from a recognized lab proves actual performance. Fire ratings especially need the latter.
+- **Partial compliance = non-compliance.** If even one clause lacks a verified achieved value, the whole submission gets Code C.
+- **Metal components are often forgotten.** The spec requires all metal to have datasheets — not just the branded hardware (Blum) but also generic brackets, screws, and anchors.
+- **Check the MAR checklist too.** The consultant's checklist items (Testing, Certifications, Method Statement) must all be upgraded to "Yes" with evidence, not left as "No" or "N/A".
+- **"Not just noted" — the engineer wants numbers.** When the engineer says "achieved values shall be clearly reflected", they mean actual numerical values in every row. Status markers like "Partial" or "Supported" are not acceptable. Every row must have a number (kg/m³, MPa, mm, %) and a source file reference.
+- **EN vs ASTM fire standards need bridging.** Greenlam/Garnica provide EN 13501-1 B-s1,d0 (European Class A equivalent) but the spec calls for ASTM E84. A cross-reference letter or direct ASTM E84 test report from the manufacturer is needed — don't assume the engineer will accept the EN classification without explanation.
+- **Blum/Henkel catalogs don't state BHMA/EN grades explicitly.** Blum catalogs show load capacities and cycle durability but not BHMA A156.9 Grade 1. Henkel TDSs show viscosity and lap shear but not EN 204 D3. A manufacturer declaration letter is needed for each — don't assume the catalog data alone satisfies the spec.
+- **Consolidate evidence into one folder.** Create `10_Compliance_Evidence/` with subfolders `Datasheets/` (organized by manufacturer) and `Certificates/`. Update all file references in the compliance sheet and MAR checklist to point to this consolidated folder. This makes the resubmission package self-contained and easy for the engineer to audit.
+
 ## Pitfalls
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks
 - Comments may have inline status markers like "OK", "OK - comply with Ad.", "OK - Update in DL" — these need careful parsing

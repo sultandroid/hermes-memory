@@ -161,6 +161,41 @@ The project may be stored under OneDrive with deep paths. When OneDrive sync res
 
 Common symptom of broken symlink: `ENOENT: no such file or directory, stat 'public/aseer/images'` during build.
 
+### ⚠ OneDrive Folder Name Pitfall
+
+OneDrive sync may rename folders with numeric prefixes. The user may reference old names (without numbers) but actual paths use the new names. When `ls` or `cp` fails with "No such file or directory" on a path the user provided:
+
+1. **Use `find` to locate the actual directory** — the path structure is correct but the folder name differs
+2. **Common rename pattern**: `VIS - VISUALS (BASEMENT)` → `VIS - VISUALS (0_BASEMENT)`, `VIS -Ground Floor` → `VIS - VISUALS (2_Ground Floor)`
+3. **Use `find` with `-maxdepth`** to avoid OneDrive timeout:
+   ```bash
+   find "/path/to/OneDrive/..." -maxdepth 2 -type d -name "*BASEMENT*" 2>/dev/null
+   ```
+4. **Copy via `cat` pipe, not `cp`** — `cp` on OneDrive FUSE can hang. Use `cat "source" > /tmp/target` instead.
+
+### Floor-Based Gallery Organization
+
+The user prefers galleries organized by floor (LGF/BF/GF) with the original dark styling. When adding new galleries from NRS visualization plans:
+
+1. **USE THE FOLDER STRUCTURE FIRST** — the NRS visualization folders are organized by floor. The user's folder paths (e.g., `VIS - VISUALS (0_BASEMENT)`) are the primary source. Do NOT try to re-derive the floor from PDF text extraction alone.
+2. **Determine the floor** from the folder name: `0_BASEMENT` = BF, `1_LOWER GROUND FLOOR` = LGF, `2_Ground Floor` = GF. The numeric prefix (0_, 1_, 2_) is the floor classifier.
+3. **Get gallery names** from the NRS floor plan PDF using `pdftotext` — the plan labels each gallery zone (G4, G8, LB3, etc.)
+4. **Cross-reference with `space_gallery_schedule.json`** for full gallery names (e.g., G4 = "Saudi Art (Landscape & Architecture)")
+5. **Add `floor` field** to each gallery entry in `galleryData`
+6. **Update 3 places** when adding a new floor: floors Record, floor label ternary, gallery count text
+7. **Reference file**: `references/architectural-pdf-extraction.md` has the complete floor-to-gallery mapping from the NRS plans
+
+### ⚠ PDF Text Extraction Pitfall (A0 Drawings)
+
+When extracting VIS numbers from A0-scale location plan PDFs:
+- `pdftotext -layout` produces extremely wide lines (2000+ chars) — the position data is unreliable
+- Text extraction may miss labels inside callout bubbles, annotation blocks, or curved text
+- Gallery labels and VIS numbers that appear near each other visually may be far apart in the text stream
+- **Do NOT rely on `pdftotext -layout` spatial proximity** to map VIS numbers to galleries on A0 drawings
+- **Do NOT try to re-derive the floor classification** from PDF text — the folder names are the source of truth
+
+**Preferred approach:** Use the folder structure for floor classification, and use the existing gallery images (which are already named by gallery) for VIS-to-gallery mapping. Supplement with PDF text extraction only for gallery *names* (e.g., confirming "G4 – Saudi Art" vs just "G4").
+
 ### Tooltip Card Styling (Redesigned — Light Gold Accent)
 
 ```css

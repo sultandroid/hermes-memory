@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-12 09:33:38
+Generated: 2026-07-12 19:09:58
 
 ---
 
@@ -40,6 +40,7 @@ On every project update/task completion, ALWAYS advise from 3 perspectives, expl
 ## Active Projects
 
 Repo (~/aseer-museum-pm) is single source of truth for plan content — check before OneDrive files. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed status. Fida's SMP: construction-phase focus, MOSTADAM Bronze framing — fix only contradictions (waste 60%, Oddy 14-day), keep his language.
+Aseer Museum viz app gallery floor mapping: BF (Basement) = G4 Saudi Art, G5 Making Space, G6 Saudi Art, G7 Reem Alnasser, G8 Al Qatt, G9 Flowersmen, G10 Faisal Samra, G11 Script, G12 Archaeology, G13 Tarek Atoui, LB3 Lobby. LGF (Lower Ground) = G1 Welcome Gallery, G2 Ayman Zedani, G3 Al Muftaha, G14 Event Space, LB2 King Khaled Lobby, TG Temporary Gallery. GF (Ground) = LB1 Al Bahar Main Entrance, EC Children's Education Centre, RT Retail, VI VIP Reception. VIS numbers: 001-016=BF, 017-020=LGF, 021-025=GF. NRS folders use numeric prefixes (0_BASEMENT, 1_LOWER GROUND FLOOR, 2_Ground Floor). Gallery titles corrected: G5=Making Space (not Children's Room), G9=Flowersmen & Photography, G11=Script (not Scripts), LB3=Lobby Basement Level (not Link Bridge).
 Eng. Mohamed Sultan Abbas — Tech Office Mgr, Samaya. Aseer Museum. Prefers concise actionable deliverables, direct instructions. Repo (~/aseer-museum-pm) is single source of truth. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed. Documents: no AI fingerprints, write like engineer, use stakeholder names not 'the Contractor'. Fix others' work by telling them what to fix, not rewriting.
 Mohamed Essa runs agent-driven Samaya Technical Office / BIM work from macOS, with recurring museum and exhibition tasks around Aseer Museum and RCRC proposal material. He usually gives terse, outcome-first requests and prefers agents to inspect the real target quickly instead of narrating possibilities. For Samaya delivery work, the current durable default is that the OneDrive BIM path is the primary destination, while the local Document Control folder is only a working copy.
 - Keep responses concise and direct; for Samaya construction-facing work, prefer formal English, action tables when useful, consolidated-email style summaries, and avoid prices, emoji, and decorative icons.
@@ -58,7 +59,6 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
 keywords: Aseer, Graphics_Submittal_Register, RFI_Register.xlsx, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, NOUS_BASE_URL, nous auth, oauth_device_code, read-only audit, path drift
 task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Subcontractors/03_Graphics_Contractor
 task_group: Aseer Museum / Samaya Technical Office / subcontractor audit
-task_group: samaya technical-office html print audit
 
 ## Key People
 
@@ -108,7 +108,9 @@ scope: Read-only audit memory for the Aseer graphics contractor package plus pre
 
 ## Contracts & Documents
 
+Aseer Museum viz app gallery floor mapping: BF (Basement) = G4 Saudi Art, G5 Making Space, G6 Saudi Art, G7 Reem Alnasser, G8 Al Qatt, G9 Flowersmen, G10 Faisal Samra, G11 Script, G12 Archaeology, G13 Tarek Atoui, LB3 Lobby. LGF (Lower Ground) = G1 Welcome Gallery, G2 Ayman Zedani, G3 Al Muftaha, G14 Event Space, LB2 King Khaled Lobby, TG Temporary Gallery. GF (Ground) = LB1 Al Bahar Main Entrance, EC Children's Education Centre, RT Retail, VI VIP Reception. VIS numbers: 001-016=BF, 017-020=LGF, 021-025=GF. NRS folders use numeric prefixes (0_BASEMENT, 1_LOWER GROUND FLOOR, 2_Ground Floor). Gallery titles corrected: G5=Making Space (not Children's Room), G9=Flowersmen & Photography, G11=Script (not Scripts), LB3=Lobby Basement Level (not Link Bridge).
 Eng. Mohamed Sultan Abbas — Tech Office Mgr, Samaya. Aseer Museum. Prefers concise actionable deliverables, direct instructions. Repo (~/aseer-museum-pm) is single source of truth. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed. Documents: no AI fingerprints, write like engineer, use stakeholder names not 'the Contractor'. Fix others' work by telling them what to fix, not rewriting.
+RMP (Risk Management Plan) is a contractual deliverable (MOC-MUS-ASE-1KH-PL-02.17) requested by CG/MoC. The RMP must match the Excel consolidated risk register methodology — not the other way around. Scoring scale: 1-4 P×S (not 1-5). Risk IDs: PRR-XXX-XX format (not PRR-XXX). Risk count: 33 Master risks (not 29). 4-register architecture: Master, DRR, HSE, AV. SOW-Protect is a formal response strategy. HSE uses separate 5×5 scoring.
 - Aseer graphics contractor folder audit: Aseer, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, Graphics_Submittal_Register.xlsx, path drift
   - desc: Search this first for Samaya/Aseer folder inspections when live subcontractor paths may differ from older internal references; applies to `cwd=/Users/mohamedessa`.
   - learnings: The live path was `03_Graphics_Contractor` while older docs still said `08_Graphics_Contractor` / `Sub-08`; the package looked healthy but remained pre-award Graphit work gated by content freeze and scope clarifications.
@@ -136,8 +138,6 @@ Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submit
 No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
-- RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
-- **Contract:** Ministry of Culture (MoC) × Samaya Investment. Effective Date 2025-12-01, Term 10 months → 2026-09-30.
 
 ## Locations
 

@@ -60,7 +60,7 @@ Only one account (sultan@samayainvest.com) — no account filtering needed.
 | `Message_SenderList` | TEXT | Display name of sender |
 | `Message_SenderAddressList` | TEXT | Email address of sender |
 | `Message_NormalizedSubject` | TEXT | Email subject line |
-| `Message_TimeReceived` | INTEGER | Mac absolute time (seconds since 2001-01-01). Use `datetime(col + 978307200, 'unixepoch')` to convert — NOT `datetime(col, 'unixepoch')` which gives wrong dates (2057). |
+| `Message_TimeReceived` | INTEGER | **Epoch varies by DB.** Some Outlook DBs use Mac absolute time (seconds since 2001-01-01), others use standard Unix epoch. **Always verify first:** `SELECT Message_TimeReceived, datetime(Message_TimeReceived, 'unixepoch', 'localtime') as as_unix, datetime(Message_TimeReceived + 978307200, 'unixepoch', 'localtime') as as_mac FROM Mail ORDER BY Message_TimeReceived DESC LIMIT 1;` — the one showing today's date is correct. If `as_unix` is correct, use `datetime(col, 'unixepoch')`. If `as_mac` is correct, use `datetime(col + 978307200, 'unixepoch')`. |
 | `Message_HasAttachment` | BOOLEAN | 1 = has attachments, 0 = no attachments |
 | `PathToDataFile` | TEXT | Relative path to `.olk15Message` file (proprietary — use AppleScript instead) |
 
@@ -196,11 +196,23 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 ### Pitfalls
 
-**macOS TCC blocks direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` returns "authorization denied" even via AppleScript's `do shell script`. This is NOT fixable with permissions grants — the sandbox is hard. **Always use AppleScript's Outlook object model** as the primary access method. Only SQLite fallback when AppleScript fails for a specific query.
+**macOS TCC may block direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` sometimes returns "authorization denied". **However, this is not universal** — in some sessions SQLite access works fine. **Always try SQLite first** (it's faster and supports proper filtering/joins). If it fails with "authorization denied", fall back to AppleScript's Outlook object model. The TCC block is intermittent and may depend on whether the terminal/agent process has been granted Automation permissions to Outlook.
 
 **`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.
 
 **`folder "Name" of inbox` may fail with error -10006.** When `folder "Name" of inbox` returns `Can't set subfolders to every mail folder of mail folder id N. (-10006)`, the `set` assignment is the problem — not the access itself. **Workaround:** iterate directly without assignment: `repeat with f in (every mail folder of inboxN)`. To get folder IDs reliably: iterate and capture `(name of f) & "|" & (id of f)`, then use `mail folder id <N>` for subsequent queries. This bypasses the `set` assignment error entirely.
+
+**`mail folder id <N>` is more reliable than `folder "Name" of inbox`.** When `folder "Name" of inbox` fails with -10006, switch to `every message of mail folder id <N>`. Discover the numeric ID first with a short script:
+```applescript
+tell application "Microsoft Outlook"
+    set out to ""
+    repeat with f in (every mail folder of inbox)
+        set out to out & (name of f) & "|" & (id of f) & linefeed
+    end repeat
+    return out
+end tell
+```
+Then use `every message of mail folder id <N>` directly — this avoids the `set` assignment that triggers -10006. This pattern also works for folders that aren't subfolders of Inbox (e.g., top-level mail folders like "erp", "SPMS", "Archive").
 
 **Multiple Inbox folders exist (one per account).** `mail folder "Inbox"` or `mail folder id 1` may return the wrong Inbox (empty or stale). Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count of mail folder id <N>` to find the active one. The primary account's Inbox is often NOT id 1 — it can be id 114 or higher. Always verify before querying.
 
@@ -612,6 +624,8 @@ end tell
 **User preference: provide text for manual copy, not Outlook drafts.** When the user asks you to prepare an email response, provide the text directly in your reply for them to review and copy. Do not create an Outlook draft unilaterally. The user edits the wording before sending.
 
 **User preference: list format over tables in email drafts.** When listing package contents or items in an email body, use a simple numbered list (1. 2. 3.) — not an HTML table. The user explicitly corrected this. Reserve tables for Excel deliverables only.
+
+**User preference: concise email drafts — no preamble.** When drafting an email, present only the email body text. No introductory explanation, no "here's what I prepared", no commentary about what you did. The user reads the draft directly. If they want it sent as an Outlook draft, they'll ask. If they want changes, they'll tell you. Default: just the text.
 
 ## Batch Email Processing with Sub-Agents
 
