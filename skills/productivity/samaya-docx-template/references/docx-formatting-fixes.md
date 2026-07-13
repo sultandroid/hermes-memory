@@ -244,37 +244,40 @@ for ti, t in enumerate(doc2.tables):
         print(f"  T{ti} widths: {widths}")
 ```
 
-## 6. Halftone remark/descriptive paragraphs
+## 6. Halftone remark paragraphs using `add_remark()`
 
-Descriptive sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "9 attributes per stakeholder row...") should render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
+Every SamayaDoc document should use `add_remark()` for descriptive/commentary sentences between headings and tables instead of `add_body()`. This renders them in **halftone gray `#64748B` at 9pt** — visually de-emphasised from substantive body text.
 
 ```python
-from docx.shared import Pt, RGBColor
+# Instead of:
+doc.add_body("4 spheres of influence showing the contractual hierarchy.")
 
+# Use:
+doc.add_remark("4 spheres of influence showing the contractual hierarchy.")
+# → 9pt halftone #64748B, compact spacing (2pt before/after, 11pt line)
+```
+
+**When to use `add_remark()` vs `add_body()`:**
+
+| Use `add_body()` for | Use `add_remark()` for |
+|---|---|
+| Project metadata (name, ref, revision) | Short descriptions of tables/charts |
+| Policy statements, scope descriptions | Explanatory notes between sections |
+| Formal content paragraphs | Commentary / clarification sentences |
+| Paragraphs that carry contractual weight | "This snapshot baselined..." timestamps |
+| Paragraphs > ~180 chars of content | RACI legend definitions |
+
+**Post-processing fallback** (when editing existing docs, not generating from scratch):
+
+```python
 HALFTONE = RGBColor(0x64, 0x74, 0x8B)
-remark_keywords = [
-    'attributes per stakeholder', 'spheres of influence', 'graphical classification',
-    'tier escalation path', 'sets out how', 'R = Responsible', 'A = Accountable',
-    'C = Consulted', 'I = Informed', 'Stop-Authority', 'concurrent escalation',
-    'All durations are in', 'Live Stakeholder Register', 'This snapshot',
-    'Source: Live', 'baselined', 'This Stakeholder Management Plan',
-    '4 spheres of influence', '2x2 graphical classification'
-]
-
 for p in doc.paragraphs:
-    t = p.text.strip()
-    if not t:
+    text = p.text.strip()
+    if not text or len(text) < 15:
         continue
-    is_remark = any(kw.lower() in t.lower() for kw in remark_keywords)
-    # Also catch long descriptive sentences that aren't headings
-    if not is_remark and len(t) > 60 and not t[0].isdigit() \
-       and not t.startswith('STAKEHOLDER') and not t.startswith('Project:') \
-       and not t.startswith('Employer:') and not t.startswith('Contractor:') \
-       and not t.startswith('PMC:') and not t.startswith('Design Lead:') \
-       and not t.startswith('Revision:') and not t.startswith('Supersedes') \
-       and not t.startswith('Aligned'):
-        is_remark = True
-    if is_remark:
+    if p.runs and p.runs[0].font.bold:
+        continue  # skip headings
+    if len(text) < 180:
         for run in p.runs:
             run.font.size = Pt(9)
             run.font.color.rgb = HALFTONE

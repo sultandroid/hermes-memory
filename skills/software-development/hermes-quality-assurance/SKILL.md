@@ -627,6 +627,8 @@ When writing Comment Response Sheets (CR Sheets) for CG resubmission:
 4. **Reference document codes** — cite actual submittal refs (ZD-0033, MA-0006, etc.) not vague descriptions.
 5. **Status labels** — use plain text: `CLOSED`, `OPEN`, `PARTIAL`, `REQUESTED`. No emoji, no icons, no colored dots.
 6. **Separate submittals stay separate** — if an item (e.g. patinated brass) is under a different MA number, say so clearly and state that the current submittal does not depend on it.
+7. **Email thread references** — reference emails by date and sender only (e.g. "Glasbau Hahn reply 29-Apr-2026", "NRS Jim Richards 19-Jun-2026"). Do not include raw .txt email dumps or full thread transcripts in the support folder.
+8. **SI closure status** — never claim an SI is formally closed unless CG stamped acceptance. If the substantive requirement was satisfied (submittals approved, register says "clears SI-XXX"), just state what was submitted and approved. Do not mention the SI closure status at all — CG may challenge it.
 
 ### Document Humanization Pass (Symbol Stripping + Engineer Voice + Typos)
 

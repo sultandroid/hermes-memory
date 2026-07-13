@@ -73,6 +73,7 @@ doc.save("/path/to/output.docx")
 | `add_h3` | `(number, text)` | 12pt Bold Dark Gray |
 | `add_body` | `(text)` | 11pt Calibri justified. **No `add_bullet()` exists** — use `add_body("- item text")` for bullet lists |
 | `add_rich_body` | `(segments)` | For mixed bold/normal segments |
+| `add_remark` | `(text, size=9)` | Halftone gray #64748B, 9pt, compact spacing. Use for descriptive sentences between headings/tables, timestamps, legend definitions |
 | `add_table` | `(headers, rows, col_widths_cm=None)` | `col_widths_cm` works correctly (sum to ~16.5cm for A4) |
 | `create_header` | `(project_name, doc_ref, doc_type, revision, date)` | Call before `create_footer()` |
 | `create_footer` | `(doc_ref)` | Call after `create_header()` |
@@ -354,7 +355,7 @@ Before showing the document to the user, do a quick self-audit:
 - **Verification pattern for published values:** After writing any project-specific number (area, dates, counts), search PROJECT_MEMORY.md for the authoritative value. If they differ, fix the document and note the corrected source in the revision log. area is 4,616 m² not "~4,000".
 - **Stakeholder logos: NEVER create custom SVG logos.** Use actual files from `_Style-Guides/logos archives/` (moc-logo.png, pmc-logo-trans.png, cg-logo-trans.png, samaya-logo-trans.png, rcrc-logo.svg, bma-logo.svg). Embed as base64 img tags. Authoritative Samaya PNG at `_Style-Guides/samaya-rfi-style-guide/assets/samaya.png` (1885x621, 50KB, RGBA transparent).
 - Base64 truncation when patching HTML: verify base64 integrity after any data URI patch. Regenerate via Python base64.b64encode() and replace via script, not patch.
-- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body("- item text")` for bullet lists. The `add_body()` method renders as 11pt Calibri justified body text — prefix with dash for list items. This is a common error; the SamayaDoc class only has `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`.
+- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body("- item text")` for bullet lists. The `add_body()` method renders as 11pt Calibri justified body text — prefix with dash for list items. This is a common error; the SamayaDoc class provides `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_remark`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`.
 - MEP scope completeness: cross-reference design packages against references/mep-scope-completeness.md before pricing. Scenographic sets only cover exhibition-facing power and AV containment.
 - **Arabic-led bilingual documents:** When the document is bilingual (AR/EN), put Arabic content first. Cover title, eyebrow, and metadata labels should appear in Arabic before English. Add RTL CSS: `.ar{font-family:var(--font-arabic);direction:rtl;text-align:right}`. Wrap Arabic blocks with `dir="rtl"` or class `ar`.
 
@@ -387,6 +388,8 @@ Before showing the document to the user, do a quick self-audit:
   2. `03_Plans/10_Resource/resource_management_plan.md` — team roster with status
   3. `99_Archive/00_Project_Overview/PROJECT_MEMORY.md` — latest project updates
   Only after all three agree, use the name. If they disagree, flag the discrepancy. Do NOT trust the SMP HTML alone — it may be a draft with stale data.
+
+- **Stakeholder descriptions: keep them concise - no internal tracking detail.** Do NOT include CV status, PQD status, target dates, PO/fee details, or internal progress notes in stakeholder register entries. Show only: role name, person/firm, and basic approval status (Approved/TBC/TBD). See references/stakeholder-data-rules.md for full rules. User correction signal: no need extra information.
 - **Reference drawings must match the subcontractor's scope.** Do NOT include interior architecture drawings (GA plans, sections, wall details, room elevations) for a landscape subcontractor. Only site/external/irrigation drawings are relevant. Verify each drawing against the SOW scope before copying. See `references/subcontractor-prequalification-package.md` for the drawing selection rules.
 - **Prequalification routing: procurement contacts the supplier, not you.** When preparing a prequalification package on behalf of a subcontractor, save to `00_Prequalification/` and email procurement to send it to the supplier. Procurement does NOT stamp the doc — the supplier stamps and signs it. The email should explain why you prepared it (sub lacks museum experience) and what the supplier must do (review, stamp, sign, return).
 
@@ -657,46 +660,52 @@ When the DOCX is the master (updated by a stakeholder) and the existing HTML mus
 
 See `references/docx-to-html-sync.md` for the full step-by-step workflow with exact delegation prompt structure and verification checklist.
 
-## Halftone remark paragraphs (descriptive text between headings and tables)
+## Halftone remark paragraphs using `add_remark()`
 
-Descriptive sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "9 attributes per stakeholder row...") must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
+Descriptive/commentary sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "snapshot baselined...") must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
 
-Apply after all content is added:
+### Preferred approach: `doc.add_remark()`
+
+Use the `add_remark()` method on `SamayaDoc` instead of `add_body()` for remark content:
+
+```python
+# Instead of:
+doc.add_body("4 spheres of influence showing the contractual hierarchy.")
+doc.add_body("R = Responsible, A = Accountable, C = Consulted, I = Informed.")
+
+# Use:
+doc.add_remark("4 spheres of influence showing the contractual hierarchy.")
+# → 9pt halftone #64748B, compact spacing (2pt before/after, 11pt line)
+doc.add_remark("R = Responsible, A = Accountable, C = Consulted, I = Informed.")
+```
+
+| Use `add_body()` for | Use `add_remark()` for |
+|---|---|
+| Project metadata, policy statements, scope descriptions | Short descriptions of tables/charts |
+| Formal content paragraphs with contractual weight | Explanatory notes, commentary, timestamp notes |
+| Paragraphs > ~180 chars of substantive content | RACI legend definitions, "This snapshot baselined..." notes |
+
+### Post-processing fallback (editing existing docs)
+
+When retrofitting an existing DOCX that wasn't generated with `add_remark()`, use this heuristic — short (<180 chars), non-bold paragraphs after headings are treated as remarks:
 
 ```python
 from docx.shared import Pt, RGBColor
 
 HALFTONE = RGBColor(0x64, 0x74, 0x8B)
-remark_keywords = [
-    'attributes per stakeholder', 'spheres of influence', 'graphical classification',
-    'tier escalation path', 'sets out how', 'R = Responsible', 'A = Accountable',
-    'C = Consulted', 'I = Informed', 'Stop-Authority', 'concurrent escalation',
-    'All durations are in', 'Live Stakeholder Register', 'This snapshot',
-    'Source: Live', 'baselined', 'This Stakeholder Management Plan',
-    '4 spheres of influence', '2x2 graphical classification'
-]
-
 for p in doc.paragraphs:
-    t = p.text.strip()
-    if not t:
+    text = p.text.strip()
+    if not text or len(text) < 15:
         continue
-    is_remark = any(kw.lower() in t.lower() for kw in remark_keywords)
-    if not is_remark and len(t) > 60 and not t[0].isdigit() \
-       and not t.startswith('STAKEHOLDER') and not t.startswith('Project:') \
-       and not t.startswith('Employer:') and not t.startswith('Contractor:') \
-       and not t.startswith('PMC:') and not t.startswith('Design Lead:') \
-       and not t.startswith('Revision:') and not t.startswith('Supersedes') \
-       and not t.startswith('Aligned'):
-        is_remark = True
-    if is_remark:
+    if p.runs and p.runs[0].font.bold:
+        continue  # skip headings
+    if len(text) < 180:
         for run in p.runs:
             run.font.size = Pt(9)
             run.font.color.rgb = HALFTONE
         p.paragraph_format.space_before = Pt(2)
         p.paragraph_format.space_after = Pt(2)
 ```
-
-User correction signal: "for any remarks santences should be in smaller font and halftone" — if you skip this, the user will call it out.
 
 Contractual references (SoW section numbers, ER clauses, code names, CG comments) in DOCX body text must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes the reference from the task statement.
 
@@ -944,9 +953,22 @@ When the user asks to "fix tables", "don't split tables", "add page breaks", "fi
 
 **Pitfall:** Only add page breaks to section-level H2 headings, not sub-headings (H3 like "1.1", "2.1"). The divider paragraphs (all-caps section labels) also need breaks. `cantSplit` on every row means a tall table pushes entirely to the next page — this is correct per user request.
 
+## DOCX Audit-and-Fix Workflow (non-SamayaDoc documents)
+
+When the user says "check this [plan docx]" on a document that was NOT created via SamayaDoc, use `references/docx-audit-and-fix-workflow.md` for a systematic audit-and-fix pattern:
+
+1. **Audit** — check heading styles (all "Normal"?), cantSplit on tables, RBS/category consistency across sections, stale timelines, missing project-specific risks (e.g., Mostadam)
+2. **Fix** — apply Heading 1/2/3 styles by paragraph index, add cantSplit to all rows, rebuild taxonomy tables via XML row replacement, fix run-level text content, add missing rows
+3. **Cross-reference** — compare DOCX content against the repo markdown version of the same plan (scoring scale, risk count, categories, EMV values, risk IDs). Also check related Excel registers against the plan's stated numbers.
+4. **Present findings** — use a table with Arabic summaries for each point (one short line per finding, simple everyday Arabic, no symbols)
+5. **Verify** — re-read and assert all fixes applied
+
+See the reference file for complete code patterns including: table XML rebuild with width-per-column, run-level text replacement vs XML-level for split-run text, and adding new rows to existing tables.
+
 ## Related reference files
 
 - `references/dc-submission-transmittal-pattern.md` — DC submission transmittal for submitting prequalification packages to CG via Aconex (cover document with attachments table)
+- `references/docx-audit-and-fix-workflow.md` — Systematic audit and structural fix for existing DOCX (heading styles, cantSplit, table rebuilding via XML, content correction). Use when user says "check this [plan docx]" on non-SamayaDoc documents.
 - `references/docx-formatting-fixes.md` — DOCX formatting fixes: page breaks before sections, prevent table splitting, set proportional column widths, RevC03→Rev00 reset pattern
 - `references/docx-image-rendering-fix.md` — Fix for images disappearing after bulk DOCX edits: empty cNvPr name, missing noChangeAspect, AND RGBA->RGB conversion (Word on macOS does not render RGBA PNGs). Run after any page-break/table-width/symbol-cleanup pass.
 - `references/cg-correspondence-best-practices.md` — CG correspondence strategy: don't ask logic questions, separate threads, align with NRS before sending, acknowledge without commitment, state commercial impact upfront. Derived from user corrections on email drafts to CG.

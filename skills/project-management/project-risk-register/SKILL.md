@@ -30,7 +30,9 @@ metadata:
 | **Subcontractor** | Markdown document (not Excel) | Package-specific register for a single subcontractor (e.g. MEP Designer, AV Contractor). Phase-gate aligned (Pre-Appointment → Mobilisation → 50% → 90% → IFC → AFC). Sourced from contract documents (offer, SOW, DMP, specialist SOWs), not project memory. See `references/subcontractor-risk-register-pattern.md`. |
 | **Subcontractor → Enhanced Excel** | Two-phase: Markdown first, then openpyxl Excel | When the user needs both a decision-support tool during negotiation AND a governance deliverable. Phase 1 = markdown (fast, contract-sourced). Phase 2 = enhanced Excel with data validation, conditional formatting, alternating rows, status/review-date columns, and summary sheet. See `references/subcontractor-risk-register-pattern.md` §Two-Phase Workflow. |
 | **Audit** | Multi-sheet audit report | QA an existing risk register (supplier, consultant, or internal). See `references/risk-register-audit-methodology.md` for the full 9-step checklist, common findings, and output format. |
-| **Quick** | Single sheet Risk Register | <12 risks, quick stand-up for a meeting
+| **Reconcile RMP + DRR** | RMP DOCX + repo + DRR Excel | Cross-reference the Risk Management Plan (DOCX) against the repo Markdown RMP and the Design Risk Register (Excel). Identify discrepancies in scoring scale, RBS categories, risk counts, EMV values, register architecture, and status definitions. Fix all documents to achieve alignment. See `references/rmp-drr-reconciliation.md`. |
+| **Template Application** | Source register's layout + styling applied to target | Apply one existing register's full 24-column template, styling, RBS guide, and dashboard to another existing register with different column structure. See `references/template-application-pattern.md`. |
+| **Quick** | Single sheet Risk Register | <12 risks, quick stand-up for a meeting |
 
 ## Do NOT Use When
 
@@ -264,6 +266,19 @@ After generating:
 4. **Auto-filter** on the risk register header row
 5. **Deliver** — the file lives at `/tmp/`; user can download or you can copy to project folder
 
+## Scoring Scale Variants
+
+Different registers on the same project can use different scales. Document each register's scale explicitly:
+
+| Register | Scale | Range | Critical | High | Medium | Low |
+|----------|-------|-------|----------|------|--------|-----|
+| Master Risk Register (PRR) | P x S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 |
+| Designer Risk Register (DRR) | P x I 1-5 | 1-20 | >=15 | 10-14 | 5-9 | <=4 |
+| HSE Risk Register | C x L 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 |
+| AV Risk Register | P x S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 |
+
+When reconciling, verify each register's scale matches its actual data distribution. A mismatch means either the thresholds or the scoring data needs updating.
+
 ## RBS Categories Standard (8)
 
 | # | Category | Description |
@@ -328,8 +343,27 @@ The walrus operator `:=` inside a keyword argument is valid Python 3.8+ but caus
 ### 🔴 Heat map matrix row order
 The P×I matrix should display Probability 5→1 descending (high probability at top), and Impact 1→5 ascending (low impact on left). This matches standard PM heat map conventions.
 
+### 🔴 DOCX rebuild_table column count mismatch
+When rebuilding a python-docx table with `clear_table()` + `add_row()`, the new rows must have the same number of cells as the `w:tblGrid` column count. If they don't, Word renders extra blank columns. After rebuild always verify:
+```python
+grid = table._tbl.find(qn('w:tblGrid'))
+actual_cols = len(grid.findall(qn('w:gridCol')))
+header_cells = len(table.rows[0].cells)
+# These must match
+```
+If they differ, either pad the grid (remove extra gridCol elements) or pad the data rows (add empty cells).
+
+### 🔴 Deleting paragraphs shifts indices
+In python-docx, `p._element.getparent().remove(p._element)` removes the paragraph from the XML body tree. This shifts the index of every subsequent `doc.paragraphs[i]`. After any paragraph deletion, re-verify all paragraph index references before further modification.
+
+### 🔴 Cover table row index is not sequential document section
+The cover page table (Table 0) has rows that map to cover fields. Contract value is at Row 1 (not Row 3), Contractor at Row 3. Always print and verify before editing. Use `cell.text.strip()` to check current content.
+
 ### 🔴 openpyxl not in execute_code sandbox
 `execute_code` sandbox does NOT have `openpyxl`. Use `terminal(python3 -c "..." )` with system Python (3.13 on macOS).
+
+### 🔴 DataPoint import from wrong module
+`from openpyxl.chart import DataPoint` raises `ImportError: cannot import name 'DataPoint'`. The correct import is `from openpyxl.chart.series import DataPoint`. Always use the series submodule for DataPoint, DataPointList, etc.
 
 ### 🔴 Chart data in hidden area
 Charts need data references in the worksheet. Place chart data in a hidden area (e.g., row 50+) with minimal styling. Keep the chart data references simple — use contiguous ranges.
@@ -343,5 +377,7 @@ Charts need data references in the worksheet. Place chart data in a hidden area 
 
 ## Reference Files
 
+- `references/template-application-pattern.md` — Apply one existing register's column layout, styling, sheets, and dashboard structure to another existing register. Covers data column mapping, scoring scale bridging, source styling capture, Cover preservation, and verification.
 - `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.
 - `references/risk-register-audit-methodology.md` — 9-step audit checklist for QA-checking an existing risk register. Covers scoring integrity, cross-referencing, lifecycle gaps, residual risk, mitigation quality, and dashboard verification. Use when the user sends an existing XLSX and asks "check this" or "audit this."
+- `references/rmp-drr-reconciliation.md` — Cross-reference RMP DOCX, repo Markdown RMP, and DRR Excel to eliminate conflicts. Covers scoring scale alignment, RBS category sync, risk count verification, EMV values, register architecture, status definitions, common DOCX fixes (heading styles, cantSplit, rebuild_table), and common Excel fixes (legends, formulas). Use when the user asks to "check" or "fix" risk management documents that should agree but don't.

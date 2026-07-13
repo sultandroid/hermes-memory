@@ -1,19 +1,15 @@
-No AI fingerprints, write like engineer, use stakeholder names not generic terms. No emoji/icons/symbols (including section sign) in deliverables — plain professional formatting only.
+Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Write like engineer: plain ASCII, no em-dash/bullet/smart quotes. No AI fingerprints. Arabic summaries alongside English in audits. All names from repo. DOCX: heading styles, cantSplit, compact. CG disp = external Excel. Radiance = Dr Waleed only.
 §
-Gallery viz: data-only edits only (append to galleryData array). Never change JSX/CSS/layout/imports. Deploy incrementally (index.html + assets/ only). User frustration signal: "you changed the design totally". Study source PDFs for correct gallery names.
+Concise, no-nonsense. No AI fingerprints, no meta-commentary, no padding. Plain hyphens only, no em-dash/middle-dot.
 §
-Email drafts: plain text in response, not Outlook drafts. Short, no preamble.
+All data must be verified against the repo before presenting. Cross-check personnel names, roles, and statuses from specialist_register.md and resource_management_plan.md. Do not assume or infer.
 §
-RMP: 4-register (Master/DRR/HSE/AV), 1-4 PxS scoring, PRR-XXX-XX IDs. Excel is source.
+CG comment disposition should be external Excel (CR sheet), not inline in the document. Remove full CG comment pages from plans, reference attached CR sheet only.
 §
-DC submissions: text for Aconex cover form, not separate DOCX transmittal.
+No extra info in stakeholder descriptions — no CV/PQD/fee/PO details. Just name and status.
 §
-Personnel names: verify every name against repo (specialist_register.md, resource_plan.md, PROJECT_MEMORY.md) before writing.
+Self-QC before presenting. Audit for overflow, style errors, broken refs, data accuracy. Don't let the user find issues.
 §
-DOCX: cantSplit on all table rows, compact cells (small margins, 8pt body), page break before H2 sections.
+CR Sheets and formal docs: state facts only — what was submitted, what was done. Never claim closure/approval unless CG explicitly stamped it. No inferred statuses.
 §
-Cover/revision history: only CG-relevant info. No verbose descriptions, no internal notes. Revision history = actual CG submissions only.
-§
-Self-QA before presenting: check broken assets, verify names, run subagent audit. Don't let user find obvious issues.
-§
-Prefers concise cover pages — only what CG needs to see (superseded revs + reference docs), no verbose change listings.
+When unsure which report to update, ask for clarification rather than guessing.

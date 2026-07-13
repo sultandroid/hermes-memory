@@ -89,6 +89,8 @@ stat -f "%Sf" <path>  # "-" = local, "d" = dataless stub
 When a cron job needs to read/write register files in `~/Documents/`:
 
 1. Write all processing logic to `/tmp/script.py` using the `write_file` tool
-2. Execute via: `osascript -e 'do shell script "python3 /tmp/script.py 2>&1"' 2>&1`
-3. The script reads/writes the iCloud path directly — the osascript bridge handles the lock
-4. No need for `brctl download` or other pre-flight checks
+2. Execute via: `python3 /tmp/script.py` — writes trigger implicit iCloud download and succeed even when reads fail
+3. For reading the file first: `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock
+4. **Do NOT use `osascript -e 'do shell script "python3 ..."'`** as the primary bridge — it also fails with EDEADLK on some macOS versions. Use `cat > /tmp/` for reads and direct `python3 /tmp/script.py` for writes instead.
+5. **Do NOT use `cp`** to copy from iCloud — it uses `fcopyfile` which deadlocks on cloud stubs.
+6. **`read_file` tool dedup quirk:** After writing via `python3 /tmp/script.py`, the `read_file` tool may return "unchanged" (cached from earlier read in the same session). Use `cat` or `terminal` to verify writes instead — the file on disk is actually updated even if `read_file` says unchanged.

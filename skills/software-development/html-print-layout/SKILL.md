@@ -456,7 +456,10 @@ Only after this gate prints `ALL N SHEETS FIT A4` may you report the task comple
 | **Pre-existing h2-row split across page boundary** | Original HTML has `<div class="h2-row"><div class="h2-bar"></div>` opening on page N but `<h2>...</h2><span>chip</span></div>` closing on page N+1 outside any `<section>` tag. Mechanical splitting by `<section>` boundaries produces: page N = empty with orphaned div start; page N+1 = bare `</div>` + h2 with no section wrapper. | Before splitting, scan for incomplete structural divs near `</section>` boundaries. Reconstruct: page N gets its own complete h2-row with a proper title; page N+1 gets a fresh `<section class="page">` wrapper with its own header + h2-row. |
 | **SECTION comment numbering drift survives splitting** | Source HTML has `<!-- SECTION 17: ... -->` comment but the matching `<h2>` says `16. Title`. The comment-to-h2 mapping is off-by-N due to earlier edits or skipped section numbers. Splitting by `<section>` boundaries preserves the drift — the comment number stays wrong in the partial. | After splitting, renumber all SECTION comments to match the h2 text number before writing partials. Find each `<!-- SECTION N: -->`, check the next `<h2>M.` — if M != N, fix the comment to read M. |
 | **SVG `width="auto"` causes browser console error** | `<svg width="auto" height="40">` — SVG `width` attribute expects a length (e.g. `100%`, `40px`), not `auto`. Chrome logs: `Error: <svg> attribute width: Expected length, "auto".` The attribute has no effect; the browser defaults to 300x150. | Remove `width="auto"` entirely. Use CSS for sizing: `style="width:auto;height:40px"` or a numeric width value. Grep for `width="auto"` before final validation — expect zero occurrences. |
-| **Literal `§` in SVG `<text>` elements survives `&sect;` replacement** | Python `str.replace('&sect;', 'Sec.')` only catches HTML entity `&sect;`. Literal Unicode `§` characters inside SVG `<text>` elements (e.g. `SoW §5.5`) are NOT caught because they are raw Unicode, not HTML entities. After bulk replacement, 5+ literal `§` can remain in SVG text nodes, producing mixed output like `SoW Sec.5.1.2 - ER §2.6.B`. | After `&sect;` → `Sec.` replacement, grep for literal `§` (Unicode U+00A7) in the file. These are typically in SVG `<text>` elements. Replace each with `Sec.` individually. Verify with `grep -c '§' file.html` — must be 0. |
+| **Literals `§` in SVG `<text>` elements survives `&sect;` replacement** | Python `str.replace('&sect;', 'Sec.')` only catches HTML entity `&sect;`. Literal Unicode `§` characters inside SVG `<text>` elements (e.g. `SoW §5.5`) are NOT caught because they are raw Unicode, not HTML entities. After bulk replacement, 5+ literal `§` can remain in SVG text nodes, producing mixed output like `SoW Sec.5.1.2 - ER §2.6.B`. | After `&sect;` → `Sec.` replacement, grep for literal `§` (Unicode U+00A7) in the file. These are typically in SVG `<text>` elements. Replace each with `Sec.` individually. Verify with `grep -c '§' file.html` — must be 0. |
+| **Over-compacting pages that have space** | Applying `xtight` to every page makes sparse pages look cramped and hard to read. The user explicitly rejected uniform compaction across all pages. | Measure each page's content density (`table_rows * 12 + text_len * 0.03 + svgs * 100`). Only apply `xtight` to pages at >75% usage. Use `compact tight` (less aggressive) for pages at 50-75%. Use no compaction classes (or just `compact`) for pages under 50%. Check each page individually — never blanket-apply xtight. |
+| **Verbose internal notes in stakeholder descriptions** | User rejected details like "CV submitted", "PQD under submission", "PO issued Jun 21", "Fee 40,527 approved", "Target: CP-2 Decision", "Per KP Register Rev C02", "waiting object research from client" in stakeholder registers. These are internal tracking notes CG doesn't need. | Stakeholder descriptions should state only: role title, person/firm name, and status if relevant (e.g. "TBD", "Approved", "Vacant"). Drop all procurement/fee/register-reference detail. If CG needs the detail, it goes in the external CR sheet or procurement register, not the plan itself. |
+| **CG comment disposition belongs in external CR sheet** | Embedding full CG comment-by-comment disposition in the plan wastes 2+ pages and goes stale immediately. User explicitly said: "CR sheet we make it excel file only." | Replace the full disposition table with a 4-row summary spec-strip: Round 1 count, Round 2 count, CG Approval reference, and a note saying "Full disposition per attached CR sheet." Do NOT include the 2-page comment table in the plan. |
 
 ## Merging Pages and Compacting Content
 
@@ -591,6 +594,32 @@ For 20+ rows, also reduce the role/scope column font.
 ```
 
 Apply to pages with 25+ table rows or heavy content that overflows even with compact+tight. Place the CSS in the document's `<style>` block and add the class to the `<section>` tag.
+
+### Progressive Compaction — Don't Over-Compact Sparse Pages
+
+When pages have different content densities, apply compaction proportionally:
+- **>75% usage**: `compact tight xtight` (maximum compaction)
+- **50-75% usage**: `compact tight` (moderate compaction)
+- **<50% usage**: `compact` only (light compaction) or no class
+
+Check each page individually — never blanket-apply xtight to all pages. The user will notice and reject over-compacted pages with plenty of space.
+
+```python
+# Python check for per-page compaction
+table_rows = len(re.findall(r'<tr', page_content))
+text_len = len(page_content)
+svgs = len(re.findall(r'<svg', page_content))
+est_height = text_len * 0.03 + table_rows * 12 + svgs * 100
+available = 1972  # A4 usable px
+pct = est_height / available * 100
+
+if pct > 75:
+    classes = 'compact tight xtight'
+elif pct > 50:
+    classes = 'compact tight'
+else:
+    classes = 'compact'
+```
 
 ### Progressive Padding Cascade for Mixed-Content Pages
 

@@ -1,4 +1,4 @@
-# Aseer Museum Photo Replacement (Jun 2026) — Batch Workflow
+# Aseer Museum Photo Replacement (Jun/Jul 2026) — Batch Workflow
 
 ## Context
 Replaced all 16 basement gallery photos with updated DD submission renders (VIS001-VIS016) while preserving hotspot positions. Added 4 new LGF galleries with placeholder entries.
@@ -25,3 +25,27 @@ G4_View_1 → VIS001, G4_View_2 → VIS002, G6_View_3 → VIS003, G6_View_3B →
 
 ## New LGF Galleries (no hotspots yet)
 G1 – Welcome Gallery (lgf_vis017.jpg), G3 – Al Muftaha (lgf_vis018.jpg), LB2 – Lobby (lgf_vis019.jpg), TG – Temporary Gallery (lgf_vis020.jpg)
+
+## Jul 13 — Full Gallery Expansion
+
+Added 12 new galleries across all 3 floors with NRS VIS images. Tagged v1.0.
+
+### Ground Floor (GF) Image Mapping Correction
+
+The original mapping had VIS022 assigned to EC (Children's Education Centre). The user corrected: **VIS022 is LB1 (Al Bahar Main Entrance) Lobby**.
+
+| VIS Image | Gallery | Notes |
+|-----------|---------|-------|
+| gf_VIS21.jpg | LB1 – Al Bahar Main Entrance (View 1) | |
+| gf_VIS22.jpg | LB1 – Al Bahar Main Entrance (View 2) | Was incorrectly EC |
+| gf_VIS23.jpg | RT – Retail & Gift Shop | |
+| gf_VIS24.jpg | VI – VIP Reception | |
+| gf_VIS25.jpg | EC – Children's Education Centre | Was incorrectly LB1 |
+
+### Key Lesson
+When the user says a specific VIS number belongs to a different gallery, trust them — they have the floor plan open and can read the labels. The PDF text extraction is unreliable for VIS-to-gallery mapping on A0 drawings.
+
+### Deploy Pattern (Jul 13)
+- Images uploaded separately via scp, then permissions fixed to 644
+- Only `index.html` + `assets/` deployed (not full dist/ tarball)
+- Git tagged v1.0 after final corrections

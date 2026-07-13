@@ -6,6 +6,7 @@ triggers:
   - User says "update the POs report" or "update cashout report" for Samaya Factory
   - User asks about Factory POs, credit suppliers, or cash requirements
   - User provides a هام file to cross-check against Odoo
+  - User provides a supplier account statement PDF (Saba Najd, Mada Aljezera, etc.)
 ---
 
 # Samaya Factory — PO Reports & Cashout

@@ -66,6 +66,51 @@ When the task is to produce a structured CR Sheet mapping consultant comments to
 - **Column header:** Use "Response" not "Designer Response" or "NRS Response."
 - **Designer input is raw material only.** Extract the designer's technical position from their email, then rephrase it as the contractor's response. The designer's frustration ("this is pointless", "not what RIBA defines") stays in the source — do not carry it into the CR Sheet.
 
+### CRITICAL: No AI Fingerprints in CR Sheets
+
+The user explicitly rejects any machine-generated formatting. Follow these rules strictly:
+
+- **No emoji anywhere.** Not in status columns, not in summaries, not in legends. Use plain text: CLOSED, OPEN, PARTIAL, REQUESTED.
+- **No special/unicode characters.** Replace all:
+  - Em-dash (U+2014) -> plain hyphen
+  - En-dash (U+2013) -> plain hyphen
+  - Arrow (U+2192) -> plain >
+  - Bullet (U+2022) -> plain -
+  - Section symbol -> remove
+  - Smart quotes -> straight quotes
+  - Multiplication sign (U+00D7) -> lowercase x
+- **No AI-sounding phrasing.** Avoid: "demonstrates full compliance", "globally recognised", "museum-grade", "well-known manufacturer". Use plain engineer language: "meets spec", "datasheet attached", "submitted per schedule".
+- **No ALL-CAPS for emphasis.** Dont write SEPARATE, NOW, IN PROGRESS, LOOK AND FEEL. Use normal sentence case.
+- **No does NOT depend or is NOT a blocker.** Use lowercase: does not depend, is not a blocker.
+- **No spaced hyphens used as em-dash substitutes mid-sentence.** Use commas instead.
+- **No dot as bullet separator in summary lines.** Use semicolons or plain commas.
+- **Status labels only:** CLOSED, OPEN, PARTIAL, REQUESTED. No emoji prefixes, no colored dots.
+- **Verify before delivering.** Run a hex check: scan all cell values for any character with ord(c) > 127. If any found, replace them before saving.
+
+### CR Sheet: Stating Facts vs Claiming Closure
+
+When a CG comment references a related document or instruction (e.g. SI-007, a previous submittal):
+
+- **Do NOT claim the referenced item is closed or resolved** unless CG explicitly stamped it closed. The CR Sheet is not the authority on other documents status.
+- **Do state the facts:** what was submitted, when, and what CGs response was (if any).
+- **Example (wrong):** "SI-007 was closed at SI level on 27-Apr-2026 (R1)."
+- **Example (right):** "3D render (ZD-0033 Rev.01) and material board (ZD-0030 Rev.01) already submitted and approved by CG."
+- **The CR Sheet addresses the specific comment only.** Dont expand into other documents lifecycle status. If CG wants to know SI-007 status, they will ask separately.
+
+### CR Sheet: Compact to One Page
+
+- **Row heights:** 50px max per row. No verbose paragraphs.
+- **Column widths:** Tight. 35 chars for response column, 18 for status/remarks.
+- **Content:** Short sentences. One idea per cell. No multi-paragraph responses.
+- **Fit to page:** Set ws.page_setup.fitToWidth = 1 and ws.page_setup.orientation = landscape.
+- **Summary line:** One line at bottom, no line breaks. Use semicolons as separators.
+
+### CR Sheet: Email Thread References
+
+- **Do NOT include .txt files** of email threads in the support folder.
+- **Reference emails by date and sender only** in the CR Sheet cells. E.g. "Glasbau Hahn reply 29-Apr-2026" or "NRS Jim Richards 19-Jun-2026".
+- If the user wants the email content preserved, print the email to PDF from Outlook and include the PDF, not a .txt file.
+
 ### Submission Plan vs CR Sheet — Separation of Concerns
 
 **Critical distinction:** The submission plan and the CR sheet serve different purposes and must NOT mix content:

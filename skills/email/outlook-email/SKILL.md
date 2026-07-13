@@ -209,7 +209,7 @@ ORDER BY m.Message_TimeReceived;
 
 This searches ALL folders. The `f.Folder_Name` column in the result tells you which folder each match lives in.
 
-**macOS TCC may block direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` sometimes returns "authorization denied". **However, this is not universal** — in some sessions SQLite access works fine. **Always try SQLite first** (it's faster and supports proper filtering/joins). If it fails with "authorization denied", fall back to AppleScript's Outlook object model. The TCC block is intermittent and may depend on whether the terminal/agent process has been granted Automation permissions to Outlook.
+**macOS TCC blocks SQLite access intermittently.** `sqlite3` on the Outlook DB sometimes returns "authorization denied", sometimes works fine. **Always try SQLite first** — it's faster and supports proper filtering/joins. If it fails, fall back to AppleScript. Do NOT assume it's always blocked or always available — the TCC grant is session-dependent.
 
 **`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.
 

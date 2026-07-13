@@ -178,13 +178,14 @@ OneDrive sync may rename folders with numeric prefixes. The user may reference o
 When adding new galleries to the existing `galleryData` array, **ONLY append new entries**. Do NOT:
 
 - ❌ Restructure the component layout, rendering logic, or JSX
-- ❌ Add floor-based grouping, section headers, or new UI elements
+- ❌ Add floor-based grouping, section headers, or new UI elements (unless user explicitly asks)
 - ❌ Change the `GalleryData` interface (no `floor` field unless already present)
 - ❌ Modify the card grid, modal, sidebar, or any existing JSX
 - ❌ Remove or reorder existing imports, states, or hooks
 - ❌ Change gallery titles, descriptions, or hotspot data of existing entries
 - ❌ Change the static description text (e.g. "16 annotated 3D views across 8 galleries")
 - ❌ Add floor labels, badges, or any visual classification to gallery cards
+- ❌ Deploy the full app — only deploy changed `index.html` + `assets/` (images uploaded separately)
 
 **Correct approach — append only:**
 ```typescript
@@ -201,9 +202,22 @@ const galleryData: GalleryData[] = [
 ];
 ```
 
-The user's existing design is intentional. Adding data entries is the only change needed.
+The user's existing design is intentional. Adding data entries is the only change needed unless the user explicitly asks for layout changes.
 
-### Deploying — Only Changed Files
+**If the user later asks for floor section headers:** add them as a separate, explicit change — not bundled with the gallery addition. The user will tell you when they want visual organization.
+
+### ⚠ Image Permission Fix (Always Required After SCP)
+
+`scp` sets file permissions to `700` (owner-only). The web server needs `644` to serve images. **Always run this after uploading images:**
+
+```bash
+ssh -p 65002 u517606786@samaya-factory.com \
+  "chmod 644 /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/images/*.jpg"
+```
+
+Without this, images return HTTP 403. Verify with `curl -sI https://samaya-factory.com/aseer/images/bf_VIS13.jpg | head -3` — should return `HTTP/2 200`.
+
+### ⚠ Deploy Only Changed Files (Not the Full App)
 
 After adding new gallery entries and images:
 
@@ -212,10 +226,7 @@ After adding new gallery entries and images:
    ```bash
    scp -P 65002 /tmp/new-images/*.jpg u517606786@samaya-factory.com:/home/u517606786/domains/samaya-factory.com/public_html/build/aseer/images/
    ```
-3. **Fix permissions** — scp sets 700, server needs 644:
-   ```bash
-   ssh -p 65002 u517606786@samaya-factory.com "chmod 644 /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/images/*.jpg"
-   ```
+3. **Fix permissions** — scp sets 700, server needs 644 (see above)
 4. **Deploy only built assets** (not images, not the whole app):
    ```bash
    cd dist && tar czf /tmp/aseer-assets.tar.gz index.html assets/
@@ -229,6 +240,7 @@ After adding new gallery entries and images:
    ```
 
 **Pitfall:** Images get 700 permissions from scp → 403 Forbidden. Always chmod 644 after upload.
+**Pitfall:** Deploying the full `dist/` tarball (47MB+ with images) is wasteful and slow. Only `index.html` + `assets/` change between builds.
 
 ### Floor-Based Gallery Organization (for reference — only if user explicitly asks for floor grouping)
 

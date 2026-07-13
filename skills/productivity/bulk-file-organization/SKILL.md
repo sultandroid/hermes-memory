@@ -288,6 +288,44 @@ find "$BASE" -type f | wc -l                 # compare with initial count
 
 Rebuild and re-scan the register. Verify no new issues were introduced.
 
+## Stale Duplicate Directory Resolution
+
+When two folders with similar names exist side-by-side (e.g. `24_Subcontractors` and `Subcontractors`), they may have diverged — each containing unique files not present in the other. Never delete one without checking.
+
+### Detection workflow
+
+1. **List both**: compare their contents
+2. **Check for divergence** with rsync dry-run:
+   ```bash
+   rsync -avn --ignore-existing "$STALE/" "$PRIMARY/"  2>&1
+   ```
+   This shows every file in `$STALE` that doesn't exist in `$PRIMARY`. If nothing is listed, they're true duplicates.
+3. **Merge unique files** before deleting:
+   ```bash
+   rsync -av --ignore-existing "$STALE/" "$PRIMARY/"
+   ```
+   `--ignore-existing` is critical — it never overwrites the primary's files, only adds missing ones.
+4. **Verify** the merge completed (check counts match expectations).
+5. **Delete** the stale directory:
+   ```bash
+   rm -rf "$STALE"
+   ```
+
+### When to use which tool
+
+| Scenario | Tool | Why |
+|----------|------|-----|
+| Two similar directories, check for unique files | `rsync -avn --ignore-existing` | Dry-run, shows only files unique to source |
+| Merge unique files from one into another | `rsync -av --ignore-existing` | Does not overwrite existing files |
+| Merge and overwrite with latest | `rsync -av` (without `--ignore-existing`) | Overwrites if same filename |
+| Confirm folder removal worked | `ls -d "$STALE" 2>&1` | Returns error if gone |
+
+### Pitfalls
+
+- **Be sure which is primary and which is stale.** The numbered folder (e.g. `24_Subcontractors`) is typically the active one; an unnumbered or differently-named sibling is usually stale.
+- **OneDrive sync**: `rm -rf` on OneDrive paths can trigger sync contention. Only do this under explicit user direction. Check the folder has no remaining unique files before deleting.
+- **rsync trailing slash**: `"$STALE/"` (with slash) copies the *contents* of the stale directory into the primary; `"$STALE"` (no slash) would create a subdirectory inside primary. Always use trailing slash on source.
+
 ## Pitfalls
 
 - **OneDrive sync**: Bulk operations on OneDrive can trigger sync contention. Keep individual rename/move batches under 200 operations at a time. Python `os.rename` and `shutil.move` are safe on local OneDrive sync folders.

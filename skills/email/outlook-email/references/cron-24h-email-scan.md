@@ -4,17 +4,12 @@ Trigger: Scheduled cron job checking for project-critical emails in last 24 hour
 
 ## Key Constraints
 
-- **No TCC SQLite access** — `sqlite3` returns "authorization denied". Use AppleScript Outlook object model only.
-- **iCloud EDEADLK on register files** — `~/Documents/` files (iCloud-synced) return `OSError: [Errno 11] Resource deadlock avoided` on direct read/write. The `osascript -e 'do shell script "cat ..."'` bridge ALSO fails with EDEADLK on some macOS versions. **Proven workaround:**
-  - **Reading:** `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock.
-  ## Key Constraints
-
-  - **No TCC SQLite access** — `sqlite3` returns "authorization denied". Use AppleScript Outlook object model only.
-  - **iCloud EDEADLK on register files** — `~/Documents/` files (iCloud-synced) return `OSError: [Errno 11] Resource deadlock avoided` on direct read/write. The `osascript -e 'do shell script "cat ..."'` bridge ALSO fails with EDEADLK on some macOS versions. **Proven workaround:**
-    - **Reading:** `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock.
-    - **Writing:** Write a `.py` script to `/tmp/` with `write_file`, then `python3 /tmp/script.py` — writes trigger implicit iCloud download and succeed even when reads fail.
-    - **Do NOT use `cp`** to copy from iCloud — it uses `fcopyfile` which deadlocks on cloud stubs.
-    - **Do NOT use `osascript -e 'do shell script'`** as the primary bridge — it also fails with EDEADLK on some macOS versions.
+- **SQLite access is intermittent** — macOS TCC sometimes blocks `sqlite3` on the Outlook DB (authorization denied), sometimes allows it. **Always try SQLite first** (faster, supports proper filtering/joins). If it fails with "authorization denied", fall back to AppleScript. Do NOT assume it's always blocked.
+- **iCloud EDEADLK on register files** — `~/Documents/` files (iCloud-synced) return `OSError: [Errno 11] Resource deadlock avoided` on direct read/write. **Proven workaround:**
+  - **Reading:** `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock. This works even when `osascript -e 'do shell script'` also fails.
+  - **Writing:** Write a `.py` script to `/tmp/` with `write_file`, then `python3 /tmp/script.py` — writes trigger implicit iCloud download and succeed even when reads fail.
+  - **Do NOT use `cp`** to copy from iCloud — it uses `fcopyfile` which deadlocks on cloud stubs.
+  - **Do NOT use `osascript -e 'do shell script'`** as the primary bridge for reading — it also fails with EDEADLK on some macOS versions. Use `cat > /tmp/` for reads instead.
   - **`folder "Name" of inbox` may fail** with error -10006. **Reliable alternative:** discover the folder ID first, then use `mail folder id <N>` directly. To find IDs: `(name of f) & "|" & (id of f)` iterating over `every mail folder of mail folder id <INBOX_ID>`.
   - **`set X to every mail folder of Y` fails** with error -10006. But iterating directly works: `repeat with f in (every mail folder of Y)` — the `set` assignment triggers the error, not the access itself.
   - **Multiple Inbox folders exist** — `mail folder "Inbox"` or `mail folder id 1` may return the wrong (empty) Inbox. Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs, then check `unread count` to find the active one.
@@ -66,6 +61,10 @@ When the cron task is to update a submittal register from Aconex emails:
 ### Pitfall: iCloud EDEADLK on verification
 
 After writing, re-reading the same file for verification also hits EDEADLK. Use the same `osascript` bridge for verification, or rely on the write tool's success return and skip re-read verification.
+
+### Pitfall: `read_file` tool dedup quirk
+
+After writing to an iCloud-synced file via `python3 /tmp/script.py`, the `read_file` tool may return "unchanged" (cached from an earlier read in the same session). The file on disk IS actually updated — use `cat` or `terminal` to verify writes instead. The dedup cache does not reflect iCloud sync state changes.
 
 ### Pitfall: `cat > /tmp/` for reading, `python3 /tmp/script.py` for writing
 
