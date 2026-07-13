@@ -162,3 +162,60 @@ No explanation, no context paragraph, no quantity variance notes. Just the state
 - **Do NOT copy binary files to the repo** — the Excel is a working tool for procurement, the markdown is the repo source of truth
 - **The finishes schedule may have "Removed Items" and "Added Items" columns** — check for these to understand scope changes between revisions
 - **FF&E brands are mostly European** — &Tradition, Muuto, HAY, Kvadrat — lead times 8-12 weeks, order early
+
+## Resubmission Support Folder Pattern
+
+When a material submittal is rejected (Code C) and the supplier has already provided a technical rebuttal, build a structured support folder for the Rev.01 resubmission.
+
+### Folder structure
+
+```
+MA-NNNN_Rev01_Support/
+├── 01_CG_Rejection/              CG rejection letter (original)
+├── 02_Supplier_Reply/             Supplier's comments reply sheet
+├── 03_Manufacturer_Datasheet/     Manufacturer technical datasheet (e.g. Guardian Clarity)
+├── 04_Technical_Data_Sheets/      All supplier data sheets (Corian, fabric, silicone, etc.)
+├── 05_PQ_Approval/                Original prequalification approval
+├── 06_Sample_Board/               Sample board photo
+├── 07_Related_Submittal_Support/  Cross-referenced materials (e.g. brass patination for MA-0007)
+├── 08_Email_Thread/               Full email chain (Samaya → Supplier → NRS)
+└── 09_Checklist/                  What's ready vs what's still missing
+```
+
+### When to build
+
+- CG returns Code C with specific technical complaints
+- Supplier has already replied with technical justification (check Outlook email attachments)
+- The rejection is about material compliance, not supplier qualification
+- You need to demonstrate to CG that the technical issue is resolved
+
+### Email attachment extraction for supplier replies
+
+When checking if a supplier replied to a CG rejection:
+
+1. Search Outlook SQLite for the submittal ref (MA-NNNN) in subject lines
+2. Filter by sender — the supplier's project manager (e.g. Ahmed Metwally@glasbau-hahn.de)
+3. Extract attachments via AppleScript osascript (see outlook-email skill)
+4. Read with pdftotext — supplier reply sheets often contain verbatim technical rebuttals
+5. Cross-reference the supplier's claims against the CG's rejection points
+6. Build the support folder with the supplier's reply as the centrepiece
+
+### Key argument pattern
+
+When the supplier has already proven technical compliance but CG demanded "3 alternative suppliers":
+
+- The "3 suppliers" demand was based on the initial non-compliant submission
+- Since technical compliance is now proven (supplier datasheet + comments reply), request CG to accept single supplier with technical justification
+- If CG insists, then source 3 alternatives — but the supplier's existing reply is the strongest negotiating position
+
+### Checklist items for any resubmission
+
+- [ ] Conservation test certificates for ALL internal materials (PQ condition)
+- [ ] Integration shop drawings (HVAC/electrical/humidity)
+- [ ] Approved samples of contested materials
+- [ ] Preventive maintenance plan + spare parts
+- [ ] Full-scale on-site mock-up commitment
+- [ ] On-site technical team confirmation
+- [ ] SI compliance statement (if SI was cited in rejection)
+- [ ] Designer (NRS) stamp confirmation on drawings
+- [ ] Cover letter to CG: "Rev.01 resubmission addressing all comments"

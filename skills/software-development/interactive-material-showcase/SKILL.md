@@ -173,7 +173,64 @@ OneDrive sync may rename folders with numeric prefixes. The user may reference o
    ```
 4. **Copy via `cat` pipe, not `cp`** — `cp` on OneDrive FUSE can hang. Use `cat "source" > /tmp/target` instead.
 
-### Floor-Based Gallery Organization
+### ⚠ CRITICAL: Adding Galleries — Data Only, No Redesign
+
+When adding new galleries to the existing `galleryData` array, **ONLY append new entries**. Do NOT:
+
+- ❌ Restructure the component layout, rendering logic, or JSX
+- ❌ Add floor-based grouping, section headers, or new UI elements
+- ❌ Change the `GalleryData` interface (no `floor` field unless already present)
+- ❌ Modify the card grid, modal, sidebar, or any existing JSX
+- ❌ Remove or reorder existing imports, states, or hooks
+- ❌ Change gallery titles, descriptions, or hotspot data of existing entries
+- ❌ Change the static description text (e.g. "16 annotated 3D views across 8 galleries")
+- ❌ Add floor labels, badges, or any visual classification to gallery cards
+
+**Correct approach — append only:**
+```typescript
+const galleryData: GalleryData[] = [
+  // ... existing entries (untouched) ...
+  {id:'g5', title:"G5 – Children's Room", views:[...]},
+  // ── New galleries ──
+  {id:'g7', title:'G7 – Contemporary Art Commission: Reem Alnasser', views:[
+    {viewName:'G7_View_1', filename:'/aseer/images/bf_VIS13.jpg', desc:'View – Art commission installation', hotspots:[]},
+  ]},
+  {id:'g1', title:'G1 – Welcome Gallery', views:[
+    {viewName:'G1_View_1', filename:'/aseer/images/lgf_VIS17.jpg', desc:'Welcome Gallery – Orientation space', hotspots:[]},
+  ]},
+];
+```
+
+The user's existing design is intentional. Adding data entries is the only change needed.
+
+### Deploying — Only Changed Files
+
+After adding new gallery entries and images:
+
+1. **Build** — `npm run build` (or `npx vite build` if tsc hangs)
+2. **Upload new images** to server via scp (NOT the whole app):
+   ```bash
+   scp -P 65002 /tmp/new-images/*.jpg u517606786@samaya-factory.com:/home/u517606786/domains/samaya-factory.com/public_html/build/aseer/images/
+   ```
+3. **Fix permissions** — scp sets 700, server needs 644:
+   ```bash
+   ssh -p 65002 u517606786@samaya-factory.com "chmod 644 /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/images/*.jpg"
+   ```
+4. **Deploy only built assets** (not images, not the whole app):
+   ```bash
+   cd dist && tar czf /tmp/aseer-assets.tar.gz index.html assets/
+   scp -P 65002 /tmp/aseer-assets.tar.gz u517606786@samaya-factory.com:/home/u517606786/
+   ssh -p 65002 u517606786@samaya-factory.com "cd /home/u517606786/domains/samaya-factory.com/public_html/build/aseer && tar xzf /home/u517606786/aseer-assets.tar.gz && rm /home/u517606786/aseer-assets.tar.gz"
+   ```
+5. **Verify** — check both the app and a new image:
+   ```bash
+   curl -sI https://samaya-factory.com/aseer/ | head -3
+   curl -sI https://samaya-factory.com/aseer/images/bf_VIS13.jpg | head -3
+   ```
+
+**Pitfall:** Images get 700 permissions from scp → 403 Forbidden. Always chmod 644 after upload.
+
+### Floor-Based Gallery Organization (for reference — only if user explicitly asks for floor grouping)
 
 The user prefers galleries organized by floor (LGF/BF/GF) with the original dark styling. When adding new galleries from NRS visualization plans:
 

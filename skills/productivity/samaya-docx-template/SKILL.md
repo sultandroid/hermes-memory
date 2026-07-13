@@ -12,6 +12,8 @@ description: Use Samaya branded DOCX template for all formal documents. Import S
 
 Any time you generate a `.docx` file **for Samaya** — SOW, report, letter, transmittal, register, meeting minutes.
 
+**Style reference:** The canonical Samaya Stakeholder Management Plan HTML style is deployed at `https://samaya-factory.com/build/technical-office/stakeholder-management-plan.html`. When asked about document style or format, use this as the reference implementation for Samaya project plans.
+
 **DO NOT use SamayaDoc when generating documents FOR a subcontractor to submit TO Samaya.** Those are the subcontractor's own documents and must use their branding, not Samaya's. Use standalone python-docx with the subcontractor's logo and color scheme instead. The cover should say "Submitted to: Samaya Investment" and "Prepared by: [Subcontractor Name]".
 
 This includes **prequalification packages** (letter + RACI + risk register) prepared on behalf of a subcontractor who lacks museum experience — see `references/subcontractor-prequalification-package.md`.
@@ -281,7 +283,17 @@ Before showing the document to the user, do a quick self-audit:
 
 ## Pitfalls
 
+- **Revision history: only show actual CG submissions, not internal drafts.** The revision history table should reflect what was actually submitted to CG, not every internal draft iteration. If Rev 00 (Code C) and Rev 01 (Code C) were the only submissions before approval, the table should show Rev 00, Rev 01, Rev 02 (Approved), and the current Rev — not Rev 00, 01, 02, 03, 04 where 02 and 03 were internal drafts never submitted. User correction signal: "i think this Rev02 we submit 2 times only before." Verify against CG_STATUS.md and PROJECT_MEMORY.md before writing the revision table.
+
+- **Cover page: keep it brief for CG submittals.** CG reviewers do not need a verbose change log on the cover. The cover should show: document title, revision, date, superseded revs, and reference documents only. Do NOT list every stakeholder change, KPI count, or internal audit note on the cover. That information belongs in the revision history table inside the document. User correction signal: 'dont talk too much the cover page, dont tell information in general are dosnot important to cg to tell.'
+
+- **CG Comment Disposition: reference the CR sheet, do NOT repeat comments in the document body.** The full CG comment-by-comment disposition matrix (2+ pages of tables) does not belong in the plan body. Replace with a one-line summary: 'All 25 CG comments (R1+R2) closed in Rev 02. Full disposition per attached CR sheet.' The user explicitly said: 'we can refere to the attached CR sheet only no need to repeate here.' This saves 2 pages and avoids CG reviewers seeing their own comments re-listed.
+
 - **ALWAYS load this skill (`skill_view(name='samaya-docx-template')`) before generating any DOCX** — the SamayaDoc class name, style rules, import path, and table-width workaround are all here. Generating without this skill loaded risks missing the template entirely and falling back to hand-coded styles, which the user will reject. See the MANDATORY notice at the top of this skill.
+
+- **RUN symbol & AI-fingerprint cleanup AFTER EVERY DOCX edit — this is the #1 user correction signal.** The user will say "you forget dont use section symbol or any AI symbols or finger prints ... write like humman" if you skip it. The cleanup procedure is documented in the "Mandatory symbol & AI-fingerprint cleanup after EVERY DOCX edit" section above. Do not assume the previous edit pass already cleaned it — run the scan again. The user expects you to catch this yourself without being reminded.
+
+- **After bulk formatting edits (page breaks, cantSplit, column widths), run the image rendering fix.** python-docx edits that trigger Word re-layout can cause embedded PNGs to disappear. The fix is documented in `references/docx-image-rendering-fix.md`. Always check the zip contents before reporting images as "gone" — they are structurally intact, just missing rendering hints.
 
 - **SOW generation: use SamayaDoc, not raw python-docx.** Hand-coding styles with raw `python-docx` (setting fonts, fills, borders manually) produces a document that looks correct but misses the Samaya template's header/footer, color scheme, and document control block conventions. Always import `SamayaDoc` from the style guide. If the template path is blocked, use the Group Containers fallback path documented above. If both are blocked, generate the DOCX via the standalone SOW pattern in `references/standalone-sow-docx-pattern.md` (CV-pack color scheme) rather than raw hand-coded styles.
 
@@ -322,6 +334,19 @@ Before showing the document to the user, do a quick self-audit:
 - **DOCX close/reopen protocol (mandatory).** Before editing an existing DOCX via python-docx: (1) close Word first via `osascript -e 'tell application "Microsoft Word" to close every document saving yes'`, (2) make edits, (3) save, (4) reopen file via `open <path>`. Without step 1, Word holds a lock and python-docx can corrupt the file or produce a stale version the user cannot see. Without step 4, the user has to manually find and reopen the file.
 - **Strip AI fingerprints after every DOCX generation/edit pass.** Run a cleanup pass that removes: em/en dashes, smart quotes, bullet symbols, section symbol, degree symbol, accented characters. Rewrite AI-sounding openings ('This document outlines the technical methodology proposed by' -> concise name + verb like 'SDE proposes'; 'applies a three-phase assessment protocol' -> 'uses three phases'; 'SDE operates under a project-specific quality plan aligned with ISO 9001:2015 principles' -> 'SDE follows ISO 9001:2015 principles'). Remove meta-commentary, hedging ('arguably', 'it could be said'), and self-referential language ('this document was created by'). The user explicitly asked for 'like human written' - every sentence should carry information weight, no filler. **Checklist: scan for these exact characters before presenting - § • — – · → × ° " " ' ' é è ê ë à â ä ù û ü ô ö î ï ç.**
 - **Flowcharts in DOCX: prefer SVG for first gen, tables for later edits.** SVG via cairosvg renders cleanly. If the user wants editable charts, replace with styled tables using arrow characters (> v) as connectors. Do NOT use Word VML shapes — python-docx cannot build them reliably. See `references/standalone-subcontractor-docx-pattern.md` for both patterns.
+
+- **Word heading styles (Heading 1/2/3) must be applied after SamayaDoc generation.** SamayaDoc's `add_h1()`/`add_h2()`/`add_h3()` apply direct formatting (font size, bold, color) but do NOT set the Word paragraph style. The user will reject documents where all paragraphs show as "Normal" style in Word's style pane. After generating all content, apply Word heading styles by matching paragraph text patterns:
+  ```python
+  for p in doc.paragraphs:
+      t = p.text.strip()
+      if t == 'DOCUMENT TITLE':
+          p.style = doc.styles['Heading 1']
+      elif len(t) > 3 and t[0].isdigit() and '.0' in t[:4]:
+          p.style = doc.styles['Heading 2']
+      elif len(t) > 3 and t[0].isdigit() and '.' in t[:5] and '.0' not in t[:4]:
+          p.style = doc.styles['Heading 3']
+  ```
+  Also define heading style fonts to match Samaya branding (Calibri, 18/14/12pt, navy/dark gray). User correction signal: "all titles and pargarphs in normal style , doc not style base H1/H2."
 - **Removing table rows: always remove highest index first.** `tbl._tbl.remove(tbl.rows[2]._tr)` before `tbl.rows[1]._tr`, or the index shifts and you delete the wrong row.
 - **Table body cells: plain text only** — no `**bold**`, no emoji/icons (🔴🟠). User explicitly rejects these. Use plain severity labels like "Critical" vs "Moderate".
 - **Equipment list: verify with user before finalizing.** Never assume what equipment the team actually has. User will correct: "we use the built-in camera, not a separate 360 camera", "no field laptop — processing is at the office workstation". Default to listing only confirmed equipment. Mark uncertain items with a note or ask early.
@@ -357,7 +382,11 @@ Before showing the document to the user, do a quick self-audit:
       pPr.append(bidi)
   ```
   Call this on every paragraph that contains Arabic text. Also set `p.alignment = WD_ALIGN_PARAGRAPH.RIGHT` for Arabic paragraphs. For bilingual documents, English paragraphs stay left-aligned, Arabic paragraphs right-aligned with RTL.
-- **Personnel names in sign-off/tables: always verify against SMP + KPR first.** Do NOT use generic role titles, leave rows blank, or invent names from memory. Open and read the latest Stakeholder Management Plan (PL-0020 Rev03 HTML at `.../02.13_Stakeholder_Plan/01_Source_Files/01_HTML/`) and the email-derived Stakeholder_Register_Update_Findings.md before inserting any person's name. See `references/method-of-statement-pattern.md` Technical notes for exact extraction commands.
+- **Personnel names in sign-off/tables: verify against REPO sources, not just the SMP HTML.** The SMP HTML itself may contain outdated or wrong names (e.g. Adel Darwish instead of Eng. Waris Sultan as PD). Always cross-check against these authoritative repo sources in order:
+  1. `Technical_Office/Specialist_Management/specialist_register.md` — definitive role-to-person mapping
+  2. `03_Plans/10_Resource/resource_management_plan.md` — team roster with status
+  3. `99_Archive/00_Project_Overview/PROJECT_MEMORY.md` — latest project updates
+  Only after all three agree, use the name. If they disagree, flag the discrepancy. Do NOT trust the SMP HTML alone — it may be a draft with stale data.
 - **Reference drawings must match the subcontractor's scope.** Do NOT include interior architecture drawings (GA plans, sections, wall details, room elevations) for a landscape subcontractor. Only site/external/irrigation drawings are relevant. Verify each drawing against the SOW scope before copying. See `references/subcontractor-prequalification-package.md` for the drawing selection rules.
 - **Prequalification routing: procurement contacts the supplier, not you.** When preparing a prequalification package on behalf of a subcontractor, save to `00_Prequalification/` and email procurement to send it to the supplier. Procurement does NOT stamp the doc — the supplier stamps and signs it. The email should explain why you prepared it (sub lacks museum experience) and what the supplier must do (review, stamp, sign, return).
 
@@ -440,6 +469,56 @@ When the source HTML or spec includes charts (headcount curves, phase strips, or
 ```
 DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib python3 gen_script.py
 ```
+
+**RGBA->RGB conversion (critical for Word rendering):** cairosvg outputs RGBA PNGs. Word on macOS does NOT render RGBA PNGs reliably — they appear as broken images. Convert to RGB with white background immediately after generation:
+
+```python
+from PIL import Image
+import io
+
+def rgba_to_rgb(png_bytes):
+    img = Image.open(io.BytesIO(png_bytes))
+    if img.mode == 'RGBA':
+        bg = Image.new('RGB', img.size, (255, 255, 255))
+        bg.paste(img, mask=img.split()[3])
+        buf = io.BytesIO()
+        bg.save(buf, format='PNG')
+        return buf.getvalue()
+    return png_bytes
+```
+
+Then apply before writing to zip:
+```python
+png_data = rgba_to_rgb(cairosvg.svg2png(bytestring=svg_string.encode(), output_width=1740))
+```
+
+**cNvPr name fix:** After python-docx saves, the `pic:cNvPr` elements get temp filenames (`tmpXXXX.png`) instead of proper names like `"Picture 1"`. This also breaks Word rendering. Fix via lxml zip manipulation — match cNvPr to wp:docPr by position:
+
+```python
+import zipfile, os
+from lxml import etree
+
+with zipfile.ZipFile(docx_path, 'r') as zin:
+    doc_xml = zin.read('word/document.xml')
+    root = etree.fromstring(doc_xml)
+    NS = {'pic': 'http://schemas.openxmlformats.org/drawingml/2006/picture',
+          'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'}
+    docprs = root.findall('.//wp:docPr', NS)
+    cnvprs = root.findall('.//pic:cNvPr', NS)
+    for i, cnvpr in enumerate(cnvprs):
+        if i < len(docprs):
+            cnvpr.set('name', docprs[i].get('name', f'Picture {i+1}'))
+    fixed = etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)
+    with zipfile.ZipFile(docx_path + '.tmp', 'w', zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            if item.filename == 'word/document.xml':
+                zout.writestr(item, fixed)
+            else:
+                zout.writestr(item, zin.read(item.filename))
+    os.replace(docx_path + '.tmp', docx_path)
+```
+
+**Pitfall:** If you skip both the RGBA->RGB conversion AND the cNvPr name fix, the user will see "all images broken" in Word. The images are structurally valid (correct bytes, correct rels) but Word on macOS refuses to render them without these two fixes. Always verify by opening in Word, not just by checking the zip contents.
 
 See `references/svg-chart-embedding.md` for full implementation.
 
@@ -578,7 +657,46 @@ When the DOCX is the master (updated by a stakeholder) and the existing HTML mus
 
 See `references/docx-to-html-sync.md` for the full step-by-step workflow with exact delegation prompt structure and verification checklist.
 
-## Contract references: halftone style
+## Halftone remark paragraphs (descriptive text between headings and tables)
+
+Descriptive sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "9 attributes per stakeholder row...") must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
+
+Apply after all content is added:
+
+```python
+from docx.shared import Pt, RGBColor
+
+HALFTONE = RGBColor(0x64, 0x74, 0x8B)
+remark_keywords = [
+    'attributes per stakeholder', 'spheres of influence', 'graphical classification',
+    'tier escalation path', 'sets out how', 'R = Responsible', 'A = Accountable',
+    'C = Consulted', 'I = Informed', 'Stop-Authority', 'concurrent escalation',
+    'All durations are in', 'Live Stakeholder Register', 'This snapshot',
+    'Source: Live', 'baselined', 'This Stakeholder Management Plan',
+    '4 spheres of influence', '2x2 graphical classification'
+]
+
+for p in doc.paragraphs:
+    t = p.text.strip()
+    if not t:
+        continue
+    is_remark = any(kw.lower() in t.lower() for kw in remark_keywords)
+    if not is_remark and len(t) > 60 and not t[0].isdigit() \
+       and not t.startswith('STAKEHOLDER') and not t.startswith('Project:') \
+       and not t.startswith('Employer:') and not t.startswith('Contractor:') \
+       and not t.startswith('PMC:') and not t.startswith('Design Lead:') \
+       and not t.startswith('Revision:') and not t.startswith('Supersedes') \
+       and not t.startswith('Aligned'):
+        is_remark = True
+    if is_remark:
+        for run in p.runs:
+            run.font.size = Pt(9)
+            run.font.color.rgb = HALFTONE
+        p.paragraph_format.space_before = Pt(2)
+        p.paragraph_format.space_after = Pt(2)
+```
+
+User correction signal: "for any remarks santences should be in smaller font and halftone" — if you skip this, the user will call it out.
 
 Contractual references (SoW section numbers, ER clauses, code names, CG comments) in DOCX body text must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes the reference from the task statement.
 
@@ -648,13 +766,116 @@ When writing a SOW, R&R, or any document with coordination/reporting sections, *
 
 **Pitfall:** If you present a sustainability document with points-chasing language, the user will correct: "we didn't request for any target just to comply and apply codes, no need to collect points." The ER mandates code compliance, not a rating. A single comprehensive pass stripping all points language is faster than 3 fix rounds.
 
+## Mandatory symbol & AI-fingerprint cleanup after EVERY DOCX edit
+
+**This is the #1 avoidable user correction.** The user will say "you forget dont use section symbol or any AI symbols or finger prints ... write like humman" if you skip this. Run this cleanup pass on every DOCX after any edit — generation, reformatting, or revision bump.
+
+### Step 1: Scan for symbols
+
+```python
+symbols = ['\u00a7', '\u2022', '\u00b7', '\u2014', '\u2013', '\u2192', '\u00d7', '\u00b0',
+           '\u25cf', '\u25cb', '\u201c', '\u201d', '\u2018', '\u2019',
+           '\u00e9', '\u00e8', '\u00ea', '\u00eb', '\u00e0', '\u00e2', '\u00e4',
+           '\u00f9', '\u00fb', '\u00fc', '\u00f4', '\u00f6', '\u00ee', '\u00ef', '\u00e7']
+for i, p in enumerate(doc.paragraphs):
+    for ch in symbols:
+        if ch in p.text:
+            print(f"P{i}: symbol '{ch}'")
+# Also scan table cells
+for ti, t in enumerate(doc.tables):
+    for ri, row in enumerate(t.rows):
+        for ci, cell in enumerate(row.cells):
+            for ch in symbols:
+                if ch in cell.text:
+                    print(f"T{ti}R{ri}C{ci}: symbol '{ch}'")
+```
+
+### Step 2: Replace symbols with plain text
+
+| Symbol | Replace with |
+|--------|-------------|
+| em dash (\u2014) | ` - ` |
+| en dash (\u2013) | ` - ` |
+| middle dot / bullet (\u00b7, \u2022) | ` - ` |
+| section symbol (\u00a7) | `Sec. ` |
+| arrow (\u2192) | ` > ` |
+| filled/open circles (\u25cf, \u25cb) | `[P]` / `[V]` |
+| smart quotes (\u201c \u201d) | `"` (straight quote) |
+| smart apostrophe (\u2018 \u2019) | `'` (straight apostrophe) |
+| accented chars (\u00e9, \u00e8, etc.) | plain ASCII equivalent |
+
+Apply via run-level replacement to preserve formatting:
+```python
+replacements = {
+    '\u2014': ' - ', '\u2013': ' - ', '\u00b7': ' - ', '\u2022': ' - ',
+    '\u00a7': 'Sec. ', '\u2192': ' > ',
+    '\u25cf': '[P]', '\u25cb': '[V]',
+    '\u201c': '"', '\u201d': '"', '\u2018': "'", '\u2019': "'",
+}
+for p in doc.paragraphs:
+    for run in p.runs:
+        for old, new in replacements.items():
+            if old in run.text:
+                run.text = run.text.replace(old, new)
+# Same for all table cells
+for t in doc.tables:
+    for row in t.rows:
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                for run in p.runs:
+                    for old, new in replacements.items():
+                        if old in run.text:
+                            run.text = run.text.replace(old, new)
+```
+
+### Step 3: Rewrite AI-sounding phrases
+
+Scan for these patterns and rewrite to plain engineering English:
+
+| AI phrase | Rewrite to |
+|-----------|-----------|
+| "This plan sets out how" | "Samaya does X per this plan" |
+| "This document outlines" | Remove — start with the action |
+| "aligned to" | "per" |
+| "Hierarchical decomposition" | "Breakdown" |
+| "Defines how" | "Covers how" |
+| "are managed, tracked, maintained, and controlled" | "are managed and tracked" |
+| "etc." | "and others" |
+| "in accordance with" | "per" |
+| "in order to" | "to" |
+| "ensures that" | "makes sure" |
+| "comprehensive" | Remove (filler) |
+| "the following sections" | Remove — just present the sections |
+| "as shown above" | Remove — trust the reader |
+| "it should be noted" | Remove — state the fact directly |
+| "seamlessly", "synergistic", "cutting-edge", "state-of-the-art", "holistic", "leverage", "robust", "innovative", "bespoke" | Remove all — these are AI cliches |
+
+### Step 4: Verify zero symbols remain
+
+```python
+remaining = 0
+for i, p in enumerate(doc.paragraphs):
+    for ch in symbols:
+        if ch in p.text:
+            remaining += 1
+for ti, t in enumerate(doc.tables):
+    for ri, row in enumerate(t.rows):
+        for ci, cell in enumerate(row.cells):
+            for ch in symbols:
+                if ch in cell.text:
+                    remaining += 1
+assert remaining == 0, f"{remaining} symbols still present"
+```
+
+**Pitfall:** If you skip this cleanup, the user will correct you with "you forget dont use section symbol or any AI symbols or finger prints ... write like humman" — this is a known correction pattern. A single comprehensive pass is faster than 2 fix rounds. The user expects you to catch this yourself without being reminded.
+
 ## Comprehensive audit before presenting — do NOT wait for user to find issues
 
 **Rule: before presenting any deliverable to the user, do a full self-audit against all known user preferences and project standards.** The user will not point out issues one by one — they expect you to catch everything yourself. Letting the user find issues will cause frustration: "dont wait me to ask you one by one" is a signal that you should have been more thorough.
 
 **Mandatory audit checklist for any document (run every step before presenting):**
 1. **Contract scope:** Every task statement must be grounded in a specific SoW/ER clause. **Dispatch labors (Kimi/Codex/Claude) with the source PDFs for independent verification of scope claims** — this is not optional. See the "SOW contract-accuracy verification" section above.
-2. **Style rules:** No § symbol, no emoji/icons, halftone references (#64748B 9pt), SamayaDoc template used, correct margins/colors/fonts.
+2. **Style rules:** No section symbol, no emoji/icons, halftone references (#64748B 9pt), SamayaDoc template used, correct margins/colors/fonts.
 3. **Project plan alignment:** Communication Plan (02.7), Stakeholder Plan (02.13) — check before writing coordination/reporting sections. Never invent routing. Verify MoC is never direct.
 4. **Language:** Level 6 English, no AI fingerprints, no hedging, no meta-commentary.
 5. **File placement:** Correct subfolder under 04_Docs/, not old Docs/ path.
@@ -725,7 +946,9 @@ When the user asks to "fix tables", "don't split tables", "add page breaks", "fi
 
 ## Related reference files
 
+- `references/dc-submission-transmittal-pattern.md` — DC submission transmittal for submitting prequalification packages to CG via Aconex (cover document with attachments table)
 - `references/docx-formatting-fixes.md` — DOCX formatting fixes: page breaks before sections, prevent table splitting, set proportional column widths, RevC03→Rev00 reset pattern
+- `references/docx-image-rendering-fix.md` — Fix for images disappearing after bulk DOCX edits: empty cNvPr name, missing noChangeAspect, AND RGBA->RGB conversion (Word on macOS does not render RGBA PNGs). Run after any page-break/table-width/symbol-cleanup pass.
 - `references/cg-correspondence-best-practices.md` — CG correspondence strategy: don't ask logic questions, separate threads, align with NRS before sending, acknowledge without commitment, state commercial impact upfront. Derived from user corrections on email drafts to CG.
 - `references/contract-grounded-sow-methodology.md` — Verifying SOW scope against contract (SoW + ER) before writing. Every scope statement must map to a contract clause; never invent tasks. Dispatch labors (Kimi/Codex/Claude) for cross-verification. Copy PDFs from OneDrive via AppleScript first, then extract text with PyMuPDF. See the "SOW contract-accuracy verification" section above.
 - `references/onedrive-macos-workaround.md` — OneDrive macOS sandbox workaround via Finder AppleScript (essential when files lock after `mv`)
@@ -741,6 +964,7 @@ When the user asks to "fix tables", "don't split tables", "add page breaks", "fi
 - `references/method-of-statement-pattern.md` — MOS generation pattern: PMBOK 11-section structure, doc ref pattern, column width tables per section, gen script skeleton, dual DOCX+HTML tracks, personnel verification protocol
 - `references/comprehensive-mos-pattern.md` — Extended 15-section MOS for LiDAR scanning, heritage documentation — image-rich HTML-first with embedded photos, 4 scan rounds
 - `references/samaya-html-print-template.md` — **HTML print-ready document design system**: CSS classes, cover page pattern, page shell, photo embedding, project folder template, weasyprint/Surge workflow
+- `references/stakeholder-plan-docx-generation.md` — SMP DOCX generation: content extraction, SVG chart specs, personnel verification, revision history, common pitfalls
 - `references/standalone-subcontractor-docx-pattern.md` — Creating standalone DOCX for subcontractors to submit TO Samaya (not Samaya-branded). Includes: subcontractor's own logo + color palette, day-based Gantt charts (not calendar dates), DMP Gate + RACI columns, SVG vs table flowchart patterns, third-party report handling ("use as guide only"), Oddy scope boundary, BIM coordination ownership split, and all helper functions. See the `When to use` section for the distinction.
 - `references/sustainability-points-stripping.md` — Complete reference for stripping points-chasing / rating-tier language from sustainability documents. The ER mandates code compliance (Mostadam Manual + SBC 1001), not a rating tier. This reference documents every pattern to remove and what to replace it with, plus the verification checklist.
 - `references/subcontractor-prequalification-package.md` — Prequalification package for subs lacking museum experience: letter, RACI, risk register, procurement routing, email template, drawing selection rules

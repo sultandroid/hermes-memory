@@ -19,14 +19,138 @@ Choose the format based on the deliverable: HTML for self-contained digital view
 
 ## Quick Reference — DOCX Generation
 
-**DOCX generation is covered by the `samaya-docx-template` skill.** Load that skill for:
-- SamayaDoc class API (create_header, add_h1, add_body, add_table, etc.)
-- Table column widths (A4 16.5cm usable width)
-- Style rules (navy/gold, Calibri 11pt, A4 portrait)
-- Arabic RTL handling
-- OneDrive deployment via AppleScript
+DOCX generation uses the `samaya_doc_template.py` Python class (python-docx wrapper) at:
+```
+/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/_Style-Guides/Doc Style Guide/samaya_doc_template.py
+```
 
-This skill covers **HTML/SVG** and **Review** only. For DOCX, use `skill_view(name='samaya-docx-template')`.
+### SamayaDoc Class API
+
+| Method | Purpose |
+|--------|---------|
+| `create_header(project_name, doc_ref, doc_type, revision, date)` | Standard Samaya header with logo + doc info strip |
+| `create_footer(doc_number, confidential=True)` | Footer with page numbers, confidentiality notice |
+| `add_h1(text)` | Document title — 18pt Bold Navy, bottom border |
+| `add_h2(number, text)` | Section heading — 14pt Bold Navy, numbered, bottom border |
+| `add_h2_u(text)` | Unnumbered H2 (front matter) |
+| `add_h3(number, text)` | Subsection heading — 12pt Bold Dark Gray, bottom border |
+| `add_body(text, bold=False, italic=False, size=11, color=None, align=None)` | Standard body paragraph |
+| `add_rich_body(segments)` | Mixed-format body paragraph |
+| `add_table(headers, rows, col_widths_cm=None)` | Styled table with navy header + alternating rows |
+| `line()` | Small spacer paragraph |
+| `save(path)` | Save to file |
+| `save_temp(prefix='samaya_doc_')` | Save to /tmp with timestamp |
+
+### Table Column Widths (A4, 16.5cm usable)
+
+See `references/docx-proposal-structure.md` for the full width catalog. Common patterns:
+- 2-col key-value: [4.0, 12.5]
+- 3-col: [1.0, 12.0, 3.5] (TOC), [3.0, 8.0, 5.5] (descriptions)
+- 4-col: [1.0, 5.0, 5.0, 5.5] (numbered lists)
+- 9-col stakeholder register: [1.2, 3.5, 1.5, 3.5, 0.6, 0.6, 2.5, 1.5, 1.6]
+
+### SVG → DOCX Image Rendering (CRITICAL)
+
+cairosvg outputs RGBA PNGs, but Word on macOS does NOT render RGBA properly. Always convert to RGB:
+
+```python
+from PIL import Image
+import io
+
+def render_svg_to_rgb_png(svg_content, width=1600):
+    import cairosvg
+    png_data = cairosvg.svg2png(bytestring=svg_content.encode('utf-8'), output_width=width)
+    img = Image.open(io.BytesIO(png_data))
+    if img.mode == 'RGBA':
+        bg = Image.new('RGB', img.size, (255, 255, 255))
+        bg.paste(img, mask=img.split()[3])
+        buf = io.BytesIO()
+        bg.save(buf, format='PNG', optimize=True)
+        return buf.getvalue()
+    return png_data
+```
+
+**SVG XML pitfall**: Unescaped `&` in SVG text content (e.g. `T&C`, `O&M`, `D&B`) causes cairosvg XML parse errors. Always use `&amp;` in SVG text nodes.
+
+**cairo library path**: On macOS with Homebrew, cairosvg needs `DYLD_LIBRARY_PATH=/opt/homebrew/lib` in the environment. Set it before running the script or wrap in a shell alias.
+
+### Post-Processing Formatting Fixes
+
+After generating content, apply these fixes for professional output:
+
+```python
+def apply_formatting_fixes(doc):
+    # 1. pageBreakBefore on all H2 headings (14pt bold navy paragraphs)
+    for p in doc.doc.paragraphs:
+        runs = p.runs
+        if runs and runs[0].font.size and runs[0].font.size == Pt(14) and runs[0].font.bold:
+            pPr = p._p.get_or_add_pPr()
+            pPr.append(OxmlElement('w:pageBreakBefore'))
+
+    # 2. cantSplit on all table rows + compact cell margins
+    for table in doc.doc.tables:
+        for row in table.rows:
+            trPr = row._tr.get_or_add_trPr()
+            trPr.append(OxmlElement('w:cantSplit'))
+            for cell in row.cells:
+                tcPr = cell._tc.get_or_add_tcPr()
+                tcMar = parse_xml(
+                    f'<w:tcMar {nsdecls("w")}>'
+                    f'  <w:top w:w="14" w:type="dxa"/>'
+                    f'  <w:bottom w:w="14" w:type="dxa"/>'
+                    f'  <w:start w:w="28" w:type="dxa"/>'
+                    f'  <w:end w:w="28" w:type="dxa"/>'
+                    f'</w:tcMar>'
+                )
+                tcPr.append(tcMar)
+
+    # 3. 9pt halftone on descriptive/remark paragraphs
+    remark_keywords = ["4 spheres of influence", "2x2 graphical classification",
+                       "Project organisational structure", "5-tier escalation path"]
+    for p in doc.doc.paragraphs:
+        text = p.text.strip()
+        if any(kw.lower() in text.lower() for kw in remark_keywords):
+            for run in p.runs:
+                run.font.size = Pt(9)
+                run.font.color.rgb = SamayaColors.MEDIUM_GRAY
+```
+
+### Symbol Cleanup
+
+Always run `clean_symbols(doc)` before saving to remove decorative Unicode characters and AI fingerprints:
+
+```python
+replacements = {
+    '\u2014': ' - ', '\u2013': ' - ', '\u00b7': ' - ', '\u2022': ' - ',
+    '\u00a7': 'Sec. ', '\u2192': ' > ', '\u25cf': '[P]', '\u25cb': '[V]',
+    '\u201c': '"', '\u201d': '"', '\u2018': "'", '\u2019': "'",
+    '\u00e9': 'e', '\u00e8': 'e', '\u00ea': 'e', '\u00eb': 'e',
+    '\u00e0': 'a', '\u00e2': 'a', '\u00e4': 'a',
+    '\u00f9': 'u', '\u00fb': 'u', '\u00fc': 'u',
+    '\u00f4': 'o', '\u00f6': 'o', '\u00ee': 'i', '\u00ef': 'i',
+    '\u00e7': 'c', '\u00b0': ' deg',
+}
+```
+
+### Template Import Pattern
+
+```python
+_template_dir = "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/_Style-Guides/Doc Style Guide"
+if not os.path.exists(_template_dir):
+    _template_dir = "/Users/mohamedessa/Library/Group Containers/UBF8T346G9.OneDriveStandaloneSuite/OneDrive - SAMAYA INVESTMENT.noindex/OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/_Style-Guides/Doc Style Guide"
+sys.path.insert(0, _template_dir)
+from samaya_doc_template import SamayaDoc, SamayaColors
+```
+
+### DOCX Generation Script Structure
+
+1. Import template + SVG constants
+2. Define SVG rendering helper (with RGBA→RGB fix)
+3. Define symbol cleanup function
+4. Define post-processing formatting function
+5. `main()`: create SamayaDoc → header/footer → add_h1 → add_h2/add_h3 → add_body/add_table → add_svg_to_doc → clean_symbols → apply_formatting_fixes → save
+
+See `references/docx-proposal-structure.md` for the full section inventory and table width catalog.
 
 #### Page Template
 

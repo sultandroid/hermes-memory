@@ -24,11 +24,31 @@ domains/samaya-factory.com/public_html/build/Samples/{CODE}/
 
 Not `public_html/` directly — that's a catch-all default area, not the domain-specific document root.
 
+## Incremental Deploy (data-only changes)
+
+When only `Gallery.tsx` data changes (no CSS, no new components):
+
+```bash
+cd /path/to/repo
+npm run build
+cd dist
+tar czf /tmp/aseer-assets.tar.gz index.html assets/
+scp -P 65002 -o StrictHostKeyChecking=no /tmp/aseer-assets.tar.gz u517606786@samaya-factory.com:/home/u517606786/
+ssh -p 65002 -o StrictHostKeyChecking=no u517606786@samaya-factory.com "cd /home/u517606786/domains/samaya-factory.com/public_html/build/aseer && tar xzf /home/u517606786/aseer-assets.tar.gz && rm /home/u517606786/aseer-assets.tar.gz"
+```
+
+This avoids re-uploading all images (115MB) when only JS/CSS changed.
+
 ## Permissions
 
 After uploading, fix file permissions so the web server can read them:
 ```bash
 ssh -p 65002 u517606786@samaya-factory.com 'chmod 644 domains/samaya-factory.com/public_html/build/aseer/index.html domains/samaya-factory.com/public_html/build/aseer/assets/*'
+```
+
+**New images uploaded via SCP start with 700 permissions** (macOS SCP default). The web server returns 403. Always fix:
+```bash
+ssh -p 65002 u517606786@samaya-factory.com 'chmod 644 domains/samaya-factory.com/public_html/build/aseer/images/*.jpg'
 ```
 
 ## Technical Proposal Deploy (RCRC-Exhibition)
@@ -199,10 +219,14 @@ When specialist deployment data changes, plan documents are interdependent. For 
 ## Related References
 
 - `references/html-css-audit-repair.md` — Systematic workflow for auditing and fixing HTML/CSS issues (tag balance, section numbering, page numbers, CSS fixes) on deployed production documents.
+- `references/aseer-gallery-data-structure.md` — Gallery entry format, floor classification, VIS-to-gallery mapping, image naming conventions, and server paths for the Aseer Museum viz app.
 
 ## Pitfalls
 - `npm run build` times out — always use the direct `vite.js` path
 - **Never stage work in /tmp** — the user's project files belong in `~/Documents/`. Copy/download files to `~/Documents/{project}/` not `/tmp/`. The user explicitly corrected this.
+- **Data-only changes only** — when user says "just add sections, add new photos", do NOT change design/layout/CSS/JSX structure. Only append to the `galleryData` array. Changing the design triggers user frustration ("you changed the design totally").
+- **Deploy incrementally** — when only JS/CSS changed, deploy only `index.html` + `assets/`, not the full app (avoids re-uploading 115MB of images).
+- **New images get 700 permissions** — macOS SCP sets 700 on uploaded files. Always `chmod 644` new images or they return 403.
 - When converting a monolithic HTML to page-split, work in the project directory from the start (`~/Documents/{project-name}/`). Do not create the project in /tmp and copy later.
 - OneDrive macOS can corrupt files if written directly — stage build output to the project folder and use AppleScript `duplicate` via Finder if writing to OneDrive paths
 - The images symlink at `public/aseer/images` gets reset when OneDrive syncs — check after every deploy

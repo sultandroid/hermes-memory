@@ -201,3 +201,183 @@ When the designer responds with their position (e.g., "scenography already in St
 - Cross-reference the final register against the original scope docs to ensure 100% coverage.
 - Verify all items have proper codes, realistic dates, and assigned responsibility.
 - Confirm the file opens correctly and preserves the original's formatting.
+
+## Bank-vs-mirror execution mechanics
+
+The framework above describes what to do. This section describes **how** — the step-by-step mechanics for actually extracting text from PDFs, dating the documents, and writing back to the repo. The agent who gets asked "go read Adel Darwish's bank and tell me if there's new info" should follow this without re-deriving the approach.
+
+### Hard rule — no binaries in the repo
+
+> **The repo is a coordination hub, not an archive. Never copy PDF/Excel/Word files from any external bank into the repo. Extract text + metadata into markdown registers and reference the OneDrive path.**
+
+The user repeated this preference verbatim in 2026-07-13 ("don't upload binary files you have to read files and understand and update info to the repo one by one"). Treat it as a session-level hard rule. If the repo AGENTS.md already states this (it does in `aseer-museum-pm/AGENTS.md`), the skill reinforces it; if not, restate it in the register frontmatter under `source:`.
+
+### Read path — temp scratch on /Volumes/MIcro
+
+For any session involving reading dozens of large bank PDFs:
+
+1. Create a scratch directory: `mkdir -p /Volumes/MIcro/.aseer-tmp/text_extracts/<topic>/`
+2. Use **Python `os.listdir` / `subprocess.run(['pdftotext', ...])`** — NOT bash `for` loops. OneDrive paths on this Mac contain spaces, parentheses, em-dashes, and apostrophes that break bash quoting even when the literal looks clean. The bash quibble tool will silently produce empty output or "ambiguous redirect" errors.
+3. **Copy first, never `mv`**. OneDrive won't let you move files (Operation not permitted); use `cp`, but accept that the binary stays in OneDrive.
+4. **Extract per known primary doc**, not per-folder. For each SI/MS/MA folder, identify the file whose name matches the doc ref (e.g., `MOC-MUS-CG-ASE-1KN-MA-008.pdf`); ignore Response/, Rev.01/, Closing/, etc. unless the primary is wrong.
+5. **Read the extracted `.txt` with `read_file`** — never embed PDFs in the conversation.
+6. **Delete the scratch directory after the session** if it contains large files (`rm -rf /Volumes/MIcro/.aseer-tmp/text_extracts/<topic>/`).
+
+### Text extraction patterns to use
+
+| Goal | Pattern |
+|------|---------|
+| Get ISO YYYY-MM-DD date | `re.findall(r'(20\d{2}-\d{2}-\d{2})', text[:6000])` |
+| Get D/M/Y or M/D/Y | `re.findall(r'(\d{1,2}[-/]\d{1,2}[-/]20\d{2})', text[:6000])` |
+| Get doc ref | `re.findall(r'MOC-MUS-CG-ASE-1KN-[A-Z0-9]+-\d+', text)` plus `re.findall(r'SI-CG-\d+', text)` |
+| Get approval status | look for "Approved", "Approved as Noted", "Not Approved" keywords near "Acceptance of Action" |
+| Topic signal | first 2-3 sentences after "Description of Site Instruction" or "Subject:" if layout is bilingual (English + Arabic noise) |
+
+**Bilingual PDFs (Arabic embedded)**: keep both English and Arabic script in the extracted text. pdftotext will preserve Arabic glyphs but the layout garbles them. Match English phrases and ignore Arabic lines unless the doc has a clear English block after the Arabic header.
+
+### Bank inventory script (reference implementation)
+
+```python
+import os, subprocess
+out = '/Volumes/MIcro/.aseer-tmp/text_extracts/<topic>'
+os.makedirs(out, exist_ok=True)
+
+src = '<OneDrive bank root>'  # contains spaces — keep raw
+
+# Build list of {folder_name → primary_docl} mapping
+for folder_name in sorted(os.listdir(src)):
+    folder = os.path.join(src, folder_name)
+    if not os.path.isdir(folder): continue
+    # filter out non-doc folders
+    pdfs = [f for f in sorted(os.listdir(folder))
+            if f.lower().endswith('.pdf')
+            and not any(k in f.lower() for k in ['response','reply','rev.','closing'])]
+    if not pdfs: continue
+    primary = pdfs[0]
+    primary_path = os.path.join(folder, primary)
+    subprocess.run(['pdftotext', '-layout', primary_path, f'{out}/{folder_name}.txt'])
+    print(f"  {folder_name} -> {primary} ({sum(1 for _ in open(f'{out}/{folder_name}.txt'))} lines)")
+```
+
+Same script structure handles MA/MS/SI/MoM/Letter banks.
+
+### Date-typo hunting
+
+Source PDFs frequently have wrong/random dates — do **not** trust the first regex hit blindly. Common typos on Aseer Museum docs:
+- "18/5/2027" → should be 2026 (off-by-100 year)
+- "22-Jun-2026" → 22-Feb-2026 (wrong month — was a copy/paste from another row)
+- "02-Sep-2026" → 02-Mar-2026 (wrong month)
+- "29/12/2026" → text-format D/M/Y, normalize to ISO when comparing
+
+Always cross-verify against the register log date before quoting in commit messages or memos. If the PDF date disagrees with the register, log both values in the register enrichment row and flag the discrepancy — do not silently overwrite.
+
+### Assessment file format (corrected)
+
+The 2026-07-13 assessment at `~/aseer-museum-pm/09_Agent_Workspace/adel_execution_bank_assessment.md` follows the canonical structure:
+
+1. **YAML frontmatter** (last_updated, owner_agent, status, source path)
+2. **Bank inventory table** — every sub-folder + root file, with count + mirror status
+3. **What is genuinely new** (ranked by value)
+4. **What's already mirrored** (so user verifies completeness)
+5. **Summary actionable updates** — file path + 1-line change for each proposed commit
+
+Future agents should clone this structure when writing their own bank-vs-mirror survey output.
+
+### Verification
+- Re-confirm mirror after each register enrichment by reading the register frontmatter `last_updated` date — should be 2026-07-13 or later after a bank audit session.
+- Re-list the bank's top-level layout to ensure no new folders were added during the audit.
+- Confirm no PDFs from the bank were committed to the repo: `git log --stat | grep '.pdf$' | wc -l` should return 0 for any bank audit commit.
+
+### Pitfalls specific to the execution mechanics
+- **Bash path escaping breaks silently.** When bash escapes fail, you'll see "ambiguous redirect" or empty files. Switch to Python `os.listdir` + `subprocess.run` immediately. Don't spend iterations debugging shell quoting.
+- **`mv` fails on OneDrive with "Operation not permitted."** Always use `cp`. The original stays in OneDrive — that's fine, redundancy is by design.
+- **`pdftotext` with `-layout` is the right flag.** Without it, column alignment is destroyed and finding dates/regex patterns becomes harder.
+- **Date-only filter (`grep -c '2026'`) is unreliable.** PDFs without dates default to ISO build dates or footer page numbers which look like dates. Always use combination patterns.
+- **OneDrive files have hidden macOS `.DS_Store` and `._filename` duplicates** at folder roots. Filter these out before listing.
+- **Reserve judgement on Date discrepancies until you have the register row + register frontmatter both open** — both can be stale; only the Aconex CDE is authoritative, and Aconex dates may also be stale if the doc was re-submitted but the CDE wasn't updated.
+
+### Cross-skill linkage
+- `materials-register-management` — for the MA enrichment pattern when bank has material submittal folders
+- `aseer-document-control` — for bilingual PDF routing table and QiD/OneDrive doc code conventions
+- `compliance-system` — if the bank audit surfaces approved-spec changes, feed them directly into compliance matrix updates
+
+## Bank-vs-Mirror Survey (External Document Bank Audit)
+
+Use when a user hands over a OneDrive document bank (someone's personal folder, a subcontractor's drop, an inherited archive) and asks "is there anything new I need to push to the repo?"
+
+**Terminology:**
+- **Bank** = the external folder tree being audited (e.g., "Adel Darwish's files - 01- Execution Documents")
+- **Mirror** = the repo's existing register/log of the same documents
+
+### Phase 1 — Bank inventory
+
+1. List the bank's top-level layout: sub-folders + any loose root files. **Master schedules named after the project abbreviation often live at root, NOT inside a sub-folder** — don't miss them. Use `cp` to `/tmp/` before opening (NEVER `mv` on OneDrive files — corrupts sync).
+2. For each sub-folder: count folders/files, capture chronology if dates are in names (e.g., `02- WEEKLY MEETING 02 (05-01-2026).pdf`).
+3. Note "control" sub-folders: Letters (IN/OUT), SI (Site Instructions), NCR, IR, SNA, SOR, MIR. Missing mirrors here are usually a register gap, not dead files.
+
+### Phase 2 — Build the bank × mirror matrix
+
+For each bank item answer four questions:
+
+| Question | Where to check |
+|----------|----------------|
+| Does the mirror have a register for this document type? | `01_Registers/` repo folder |
+| Is the mirror back-filled to current count? | Compare last ref in mirror vs last folder number in bank |
+| Are dates/statuses current in the mirror? | `last_updated` frontmatter vs bank file dates |
+| Are there structural columns/data the mirror doesn't capture? | Bank doc columns vs mirror table columns |
+
+Output as a table:
+
+| # | Bank folder | Count | Mirror register | Last ref match? | Action |
+|---|-------------|------:|-----------------|-----------------|--------|
+| 05 | RFI/TQ | 19 | `rfi_register.md` | ✓ | none |
+| 06 | Weekly Meeting MOM | 12 | `meeting_minutes.md` | ✗ (14 vs 02-13) | back-fill |
+| 10 | CG SI | 20 | `si_register.md` (empty) | ✗ | populate |
+
+### Phase 3 — Value-add signal mining
+
+When scanning working files in the bank, look for:
+
+1. **Target-date sanity check.** Schedules with delivery columns must be checked against the contractual handover date. **Dates past handover are mis-labeled** — either "for-installation" (Excel tracks installation, not contract) or the schedule drifted and needs a red flag. Don't silently pass 2027 dates in a contract ending 2026.
+
+2. **Rejected/Not-Submitted concentrations.** Group counts of `Rejected` and `Not Submitted` in a single column usually reveal a **package with a known problem** (e.g., 13 of 14 rejected rows on one MA ref = a single CG rejection cascading through a package). Hunt the master register for the root cause before logging each rejected item individually.
+
+3. **Submittal-ref gaps.** Working files often show items with NO submittal reference column filled. Count them. If >50% lack a submittal ref, **the pipeline isn't flowing yet** — this is a procurement warning, not a data quality issue.
+
+4. **Status columns uniformly empty.** If the rightmost "actual status" column is None across the file, the Excel is **planning/structural only** — declare it as a working file, NOT the register of record. Reference the proper register in the repo.
+
+5. **Naming-consistency drift.** Code prefixes diverge across the project lifecycle: bank uses older `MOC-Asser-SIC-1A0-…` while repo/Aconex uses current `MOC-MUS-ASE-1A0-…`. Both are valid historical refs; cross-check ref numbering against the official scheme.
+
+### Phase 4 — Write the assessment
+
+Deliver a single assessment file in `09_Agent_Workspace/` (NOT in the registers themselves — this is scratch output):
+
+1. **Bank inventory table** (sub-folders + root files).
+2. **What's NEW** — genuine gaps in the mirror, ranked by priority.
+3. **What's already mirrored** — list explicitly so the user can verify build completeness.
+4. **Actionable updates table** — file path + one-line change description.
+
+**Format constraints:**
+- Source traceability: every claim cites the bank path or the repo path (matches the project's `AGENTS.md` rule).
+- Do NOT modify repo registers from the assessment file alone. Propose the change; let the user confirm scope.
+- Use Code C / Code A conventions per `cg-response-protocol` skill when reviewing MA/MS items surfaced in a bank.
+
+### Bank-vs-mirror pitfall — don't conflate working file with register
+
+A common mistake: treating the bank's working Excel as the source of truth and overwriting the repo's register on first inspection. The bank's working file is usually **one person's planning view**; the repo's mirror is the consolidated team view. **Confirm with the user before any overwrite.**
+
+## Bank Survey — Aseer Museum Reference
+
+A worked example from 2026-07-13 lives at:
+`~/aseer-museum-pm/09_Agent_Workspace/adel_execution_bank_assessment.md`
+
+Common findings on Aseer Museum surveys:
+- Working schedule delivery dates land in 2027 vs contract handover 30-Sep-2026 — flag as planning-vs-contract ambiguity.
+- 85%+ of architectural items have no MA submittal ref — door & ceiling packages typically unsubmitted.
+- Historical Weekly Meeting MOMs back-fill one PDF at a time from a steady MoM cadence (02 → 13 → 14).
+- CG Site Instruction register is most often the missing mirror — populate before pursuing action items.
+
+## Cross-Skill Linkage
+
+- `consultant-comment-response` — for handling CG comments on items the bank survey surfaces.
+- `cg-response-protocol` — for code status conventions (Code A/B/C/D/E/F/U) on MA/MS items found in a bank.

@@ -200,6 +200,92 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 - **Status badges** must be consistent: CLOSED (green), SUBMITTAL-PENDING (amber), IN-PROGRESS (blue), RE-OPENED (red). Don't invent new badge types mid-document.
 - **Round column** must include both date and round number (e.g., "R2 · 2-Jun") for traceability across revisions.
 
+### Supplier Technical Rebuttal — When CG Demands Alternatives
+
+When CG rejects a material submittal (Code C) and demands "3 alternative suppliers" but the supplier has already provided a technical rebuttal:
+
+#### Check Outlook first
+
+The supplier's reply often sits in an Outlook folder (not the project submittal folder). Search by:
+- Submittal ref (MA-NNNN) in subject
+- Supplier PM's email address
+- Date range around the CG rejection date
+
+**SQLite query pattern:**
+```sql
+SELECT m.Record_RecordID, datetime(m.Message_TimeReceived, 'unixepoch', 'localtime'),
+       m.Message_SenderList, m.Message_NormalizedSubject, substr(m.Message_Preview, 1, 500)
+FROM Mail m JOIN folders f ON m.Record_FolderID = f.Record_RecordID
+WHERE m.Message_NormalizedSubject LIKE '%MA-0006%'
+   OR m.Message_NormalizedSubject LIKE '%Glasbau%'
+ORDER BY m.Message_TimeReceived DESC;
+```
+
+#### Extract attachments
+
+Use AppleScript `osascript` to extract the supplier's reply sheet + manufacturer datasheet from the email. These are the two key documents.
+
+#### Build the argument
+
+1. The "3 suppliers" demand was based on the initial non-compliant submission
+2. The supplier has now proven technical compliance (datasheet + comments reply)
+3. Request CG to accept single supplier with technical justification
+4. If CG insists, then source 3 alternatives — but the supplier's existing reply is the strongest negotiating position
+
+#### Email evidence in CR Sheets — reference only, no .txt files
+
+When citing email correspondence in a CR Sheet:
+- **Do NOT include .txt files** of email threads in the support folder
+- **Do NOT include raw email text** in the CR Sheet body
+- **Reference by date and sender only** — e.g. "Glasbau Hahn reply 29-Apr-2026", "NRS Jim Richards 19-Jun-2026"
+- If a printed PDF of the email exists (e.g. from Outlook print-to-PDF), include that in the support folder instead
+- The CR Sheet is a formal document — email body text is not appropriate content
+
+#### Resubmission support folder
+
+Build a structured folder at the subcontractor's submittal directory:
+
+```
+MA-NNNN_Rev01_Support/
+├── 01_CG_Rejection_Code_C/
+├── 02_Supplier_Technical_Reply/
+├── 03_Manufacturer_Datasheet/
+├── 04_Supporting_Data_Sheets/     (flat — no subdirs)
+├── 05_PQ_Approval/
+├── 06_Sample_Board/
+├── 07_Related_Submittal_Support/
+├── 08_Email_Thread/               (outside support folder — for CG)
+└── 09_Resubmission_Checklist/     (outside support folder — for CG)
+```
+
+### CR Sheet structure for material resubmission
+
+| # | CG Comment | Reference | Response | Supporting Doc | Status | Remarks |
+|---|-----------|-----------|----------|---------------|--------|---------|
+| 1 | Materials don't comply | Rejection letter | Supplier reply + data sheets | 02_Supplier_Reply/ + 04_Data_Sheets/ | CLOSED | All materials match finishes schedule |
+| 2 | AR glass non-compliant | Rejection letter | Manufacturer datasheet proves spec | 03_Manufacturer_Datasheet/ | CLOSED | Tvis > 97%, Rvis < 1% |
+| 3 | Comply with SI-007 | Rejection letter | NRS approved drawings | 08_Email_Thread/ | CLOSED | SI closed |
+| 4 | Brass patinated | Rejection letter | Separate submittal | 07_Related_Submittal_Support/ | PARTIAL | Look & feel request sent to CG |
+| 5 | 3 alternative suppliers | Rejection action | Request single-source acceptance | 02_Supplier_Reply/ + 05_PQ_Approval/ | OPEN | Awaiting CG decision |
+
+### Look & Feel Approval Strategy
+
+When supplier test reports/certifications take time (supplier lead time), but the visual sample is ready:
+
+1. **Request CG to approve LOOK AND FEEL now** — visual appearance, colour, texture
+2. Test reports & certifications to follow once received from supplier
+3. Alternative samples from local suppliers in parallel
+4. Submit outstanding docs as Rev.01 addendum within 30 days
+
+### Separate Submittal Principle
+
+**Do not block one submittal because a related submittal is pending.** Example:
+- MA-0006 (showcase materials: glass, silicone, fabric, Corian, lighting, powder coating) — independent of brass
+- MA-0007 (patinated brass) — separate submittal, separate rejection
+- MA-0006 Rev.01 can proceed without MA-0007 approval
+
+See `references/ma-0006-showcase-resubmission-case.md` for the full worked example.
+
 ## File Organization
 
 ```

@@ -521,6 +521,209 @@ CR registers for consultant review must be **Excel files**, not Markdown:
 - Update `CG_STATUS.md` in the OneDrive folder to reflect current status
 - Log the work in Odoo task 2947 (Sustainability) with progress update
 
+## 6.6 Post-Approval Plan Audit — Checking Against Latest Project Data
+
+When a plan has been approved (Code A/B) but time has passed, new stakeholders, roles, and requirements emerge that the approved plan doesn't reflect. Before reporting on a plan's accuracy, always audit it against the latest project data.
+
+### Trigger
+
+- User asks "check the [Plan Name] according to latest information"
+- A plan was approved weeks/months ago and you need to verify it's still current
+- New subcontractors, consultants, or team members have been appointed since plan approval
+
+### Audit Sources (in order)
+
+| Source | What to Check | Location |
+|--------|---------------|----------|
+| **PROJECT_MEMORY.md** | Latest status updates section — new appointments, role changes, new requirements | `99_Archive/00_Project_Overview/PROJECT_MEMORY.md` |
+| **CG_STATUS.md** (plan folder) | Latest CG response, open comments, resubmission status | `03_Plans/<NN_Plan>/CG_STATUS.md` |
+| **Plan audit files** | PMBOK/RIBA gap analysis, residual open gaps | `03_Plans/<NN_Plan>/` — audit `.md` files |
+| **Plan source files** | The actual plan document (HTML/DOCX/PDF) | `03_Plans/<NN_Plan>/01_Source_Files/` |
+| **Submittal dashboard** | Code C/D items, recently approved items | PROJECT_MEMORY.md submittals section |
+| **specialist_register.md** | Tier 1-2 specialist register with MoC approval status | `Technical_Office/Specialist_Management/specialist_register.md` |
+| **resource_management_plan.md** | Full team org chart with names, statuses, reporting lines | `03_Plans/10_Resource/resource_management_plan.md` |
+| **Review_Email_to_Fida.md** | Adel Darwish's instructions on role naming/titles | `03_Plans/12_SMP/Review_Email_to_Fida.md` |
+
+**CRITICAL: Cross-reference every name against at least two repo sources.** PROJECT_MEMORY.md is a high-level summary and can be wrong on titles, names, and role distinctions (e.g., "Sustainability Manager" vs "Sustainability Specialist", "Adel Darwish" vs "Waris Sultan" as PD).
+
+### Audit Dimensions
+
+#### 1. New Stakeholders / Roles
+
+Cross-reference the plan's stakeholder register against PROJECT_MEMORY.md's latest updates. Look for:
+
+| Signal | What It Means |
+|--------|---------------|
+| "APPOINTED" | New role exists — add to register, define engagement cadence |
+| "REPLACED" | Role holder changed — update org chart, role description |
+| "CONTRACT EXECUTED" | New subcontractor — add as T1/T2 specialist |
+| "CRITICAL GAP" | Role vacant — add placeholder with TBC status |
+| "LEFT" | Role departed — remove or mark as vacated |
+
+#### 2. New Engagement Requirements
+
+Check for new mandates from CG, PMC, or MOC:
+
+| Signal | Impact on Plan |
+|--------|----------------|
+| "PMC mandates weekly submission" | Add new deliverable to Communication Plan section |
+| "CG new numbering system" | Update document control references |
+| "CVs requested" | Recruitment in progress — update role status |
+| "New reporting format" | Update report templates and cadence |
+
+#### 3. Residual Audit Gaps
+
+Check the plan's PMBOK/RIBA audit file for open gaps. These are non-blocking but should be tracked:
+
+| Severity | Action |
+|----------|--------|
+| Medium | Note as improvement opportunity for next revision |
+| Low | Note as nice-to-have; not urgent |
+
+### Output Format
+
+Present findings as a structured table with:
+
+| Category | Finding | Impact | Action Required |
+|----------|---------|--------|-----------------|
+| New Stakeholder | AD Engineering (MEP Designer) appointed Jun 21 | Add to register as T1/T2 | Update register, define engagement |
+| New Requirement | PMC weekly status presentations mandated | Add to Communication Plan | Add new weekly deliverable |
+| Org Change | Project Director replaced | Update org chart | Replace name, update role |
+| Residual Gap | Value-Proposition Map missing | Medium | Add in next revision |
+
+### Verdict
+
+| Verdict | Criteria |
+|---------|----------|
+| Current | No new stakeholders/requirements since approval |
+| Needs Minor Update | 1-3 new stakeholders/requirements — register update only |
+| Needs Revision | 4+ new stakeholders/requirements, or org chart change, or new CG comments |
+
+### Pitfalls
+
+- **Don't assume the plan is stale just because it's old.** Check actual changes against the plan's content — some plans are comprehensive enough to absorb new roles without structural changes.
+- **Don't miss the "LEFT" signal.** When a key person departs (e.g., Project Director), the org chart and RACI need updating even if a replacement is named.
+- **Don't forget the Interactive Specialist gap.** A critical vacancy (e.g., Interactive Designer with no replacement) needs a placeholder in the register even if the role isn't filled yet.
+- **CG_STATUS.md may be outdated.** The plan's CG status file may not reflect the latest approval. Cross-check against PROJECT_MEMORY.md's submittals dashboard.
+- **The plan may have been approved under a different doc code.** Check both PL-0020 and ZD-0020 variants — the numbering scheme may have changed between submission rounds.
+- **PROJECT_MEMORY.md is NOT authoritative for personnel names/titles.** It's a high-level summary and can be wrong. Every name must be verified against at least two repo sources:
+  - `Technical_Office/Specialist_Management/specialist_register.md` — authoritative for specialist roles
+  - `03_Plans/10_Resource/resource_management_plan.md` — authoritative for management roles
+  - `03_Plans/12_SMP/Review_Email_to_Fida.md` — contains Adel Darwish's title corrections (e.g., "Sustainability Specialist" not "Manager")
+- **"Sustainability Manager" vs "Sustainability Specialist"** — Adel Darwish explicitly instructed "Sustainability Specialist" to avoid creating a dedicated Key Personnel position. PROJECT_MEMORY.md still says "Manager" — don't trust it.
+- **Project Director vs Projects Director** — Waris Sultan is project-level PD (Exhibitions). Adel Darwish is Samaya-level Projects Director. They are different roles. The plan should show Waris as PD.
+- **Sub-agent output must be verified against repo sources.** Sub-agents don't have access to specialist_register.md or resource_management_plan.md unless you pass them in context. After the sub-agent produces the Rev N+1 HTML, grep for every name and verify against the authoritative sources above.
+
+### Reference
+
+See `references/stakeholder-plan-post-approval-audit.md` for a worked example (Aseer Museum Stakeholder Plan ZD-0020 Rev.02, approved Jun 18-24, audited Jul 13 with 6 new stakeholders identified).
+
+## 6.7 Producing a Plan Revision (Rev N+1)
+
+After the post-approval audit identifies changes needed, produce the revision systematically.
+
+### Workflow
+
+1. **Audit first** — run §6.6 audit to identify all changes needed
+2. **Build the revision** — choose the right approach based on scope:
+
+   **Option A: Manual patching (preferred for targeted revisions)**
+   
+   For revisions that add/update specific rows, counts, and sections without restructuring the whole document:
+   
+   a. Copy the source Rev N HTML to the target Rev N+1 path
+   b. Apply patches in this order (minimizes conflicts):
+      - **Phase 1 — Global**: Title, all page headers (`SMP Rev N` → `SMP Rev N+1`), all footers (`Rev N` → `Rev N+1`), date stamps — use `replace_all=true`
+      - **Phase 2 — Cover page**: Revision number, description, date
+      - **Phase 3 — TOC**: Snapshot card values (role counts, page counts), section descriptions, compliance notice
+      - **Phase 4 — Revision history**: Add new Rev N+1 row
+      - **Phase 5 — CG Comment Disposition**: Update disposition chip, add new round rows in the **same table** (never split rounds across separate tables)
+      - **Phase 6 — Content sections**: Update counts, add new stakeholders to registers, add new interfaces, add new KPIs, add governance notes
+      - **Phase 7 — Communication Plan**: Add new reports/meetings, update report counts
+      - **Phase 8 — Final verification**: All page numbers sequential, TOC references match, no orphaned sections
+   
+   **Pitfall — nested `<section>` tags**: When patching page content, verify the replacement doesn't create nested `<section class="page">`. The old content already opens a `<section>`, and if your replacement also starts with `<section>`, you get invalid nesting. Verify with `grep -n '<section class="page"' file.html`.
+   
+   **Pitfall — replace_all on common numbers**: `replace_all=True` on `/ 23` can hit unintended targets (table cells, SVG text). Verify after.
+   
+   **Pitfall — TBC status suffix creep**: After adding new TBC stakeholders, verify no status commentary (`— pending`, `⚠ CRITICAL`) was appended. TBC = just TBC.
+   
+   **Pitfall — page overflow**: Adding 3+ new table rows can push content past A4 height. Check with `grep -n '<section class="page"'` to count pages, then compare content density.
+
+   **Option B: Delegate to sub-agent (for major restructures)**
+   
+   For revisions that restructure sections, merge/split pages, or rewrite large portions:
+   
+   - Pass the full audit findings as context
+   - The sub-agent reads the current Rev N HTML, applies all changes, writes Rev N+1 HTML
+   - The sub-agent also writes a change log
+
+3. **Update supporting files in parallel** while the HTML build runs:
+   - `CG_STATUS.md` — update status from Code C/D to ✅ Approved or new status
+   - `PROJECT_MEMORY.md` — update the Code C/D item row to reflect resolution
+   - `PMBOK_Structure_Audit.md` — update revision number, close any gaps that were addressed
+   - Create `RevNN_Change_Log.md` — document every change with rationale
+4. **Verify** — check the output for:
+   - All new stakeholders added to register
+   - Org chart updated
+   - Communication plan updated with new requirements
+   - Document control updated (rev number, date, revision history)
+   - Stakeholder count updated
+   - Any gaps from audit that were closed
+   - All page numbers sequential and total correct
+   - No AI fingerprints (see §6.3)
+   - **CRITICAL: Verify every name against repo sources.** Grep the output for every person's name and cross-check against specialist_register.md and resource_management_plan.md. The sub-agent may have used wrong names/titles from PROJECT_MEMORY.md.
+
+### Change Log Format
+
+```markdown
+# Rev NN Change Log — [Plan Name]
+
+**Document:** [Doc Code] Rev NN
+**Date:** YYYY-MM-DD
+**Status:** [Internal update / CG Resubmission / etc.]
+
+## Changes Made
+
+### 1. Document Control
+- Rev: NN-1 → **NN**
+- Date: [old] → **[new]**
+- Added Rev NN row to revision history
+
+### 2. New Stakeholders Added
+| Stakeholder | Tier | Reason |
+|-------------|------|--------|
+| ... | ... | ... |
+
+### 3. Updated Stakeholders
+| Previous | Updated | Reason |
+|----------|---------|--------|
+
+### 4. [Other section changes]
+...
+
+### 5. Supporting Files Updated
+- `CG_STATUS.md` — ...
+- `PROJECT_MEMORY.md` — ...
+- `PMBOK_Structure_Audit.md` — ...
+
+## Remaining Open Gaps
+| Gap | Severity | Notes |
+|-----|----------|-------|
+```
+
+### Pitfalls
+
+- **The sub-agent may take time** — the HTML is large (2000-3000 lines). Don't wait; update supporting files in parallel.
+- **The sub-agent may fail silently** — check for the output file. If it doesn't appear, rebuild manually.
+- **Don't forget the change log** — it's the audit trail for the next revision.
+- **CG_STATUS.md and PROJECT_MEMORY.md must stay in sync** — if the plan was approved, both files need updating. If one says Code C and the other says Approved, that's a contradiction.
+- **The plan may have been approved under a different doc code** — check both PL-XXXX and ZD-XXXX variants. The CG may have renumbered between submission rounds.
+- **Sub-agents produce wrong revision tables despite existing instructions** — Even when the workflow says "actual submissions only", sub-agents may copy the old revision table with internal drafts. After the sub-agent finishes, grep the revision table and verify: Rev 00 (Code C), Rev 01 (Code C), Rev 02 (Approved), Rev 03 (this submission). No extra rows. If wrong, fix manually.
+- **Sub-agents use wrong personnel names from PROJECT_MEMORY.md** — Sub-agents don't have access to specialist_register.md or resource_management_plan.md unless you pass them in context. Even when you do, they may still use PROJECT_MEMORY.md's wrong names. After sub-agent output, grep for every person's name and cross-check against the authoritative sources. Fix any mismatches.
+- **Sub-agents add broken asset references** — When versioning an HTML file (Rev N → Rev N+1), the sub-agent copies the old file including `<img src="assets/...">` references. These assets may not exist in the new location. After sub-agent output, grep for `src="assets/` and verify each path exists. If not, either copy the assets or remove the broken image tags.
+- **Cover page still verbose after sub-agent** — The sub-agent may add a long change list to the cover page despite instructions. After sub-agent output, check the cover page description. It should only state which revisions it supersedes and which reference docs it aligns with. No change listing. Fix if needed.
+
 ## 7. Pitfalls
 
 - **OneDrive placeholder files (0 bytes)**: PDFs in OneDrive may appear as 0-byte files when accessed via the local filesystem. Always check file size before attempting to read. Use the repo's `99_Archive/` copies or download from OneDrive web.
@@ -529,3 +732,5 @@ CR registers for consultant review must be **Excel files**, not Markdown:
 - **Cross-plan consistency**: When one plan references another (e.g., DMP references BEP), ensure the referenced plan exists and the section numbers match.
 - **Sub-agent context limits**: Each sub-agent gets its own context. Pass all relevant project context (AGENTS.md rules, project data, source paths) explicitly — don't assume the sub-agent knows the project.
 - **File size from embedded images**: Don't embed base64 images in Markdown. Use `[Image: description](path)` references instead.
+- **Cover page verbosity**: The cover page description should only state which revisions it supersedes and which reference docs it aligns with. Do NOT list every change (new stakeholders, new requirements, count changes) on the cover — that information belongs in the revision history table and the change log. CG reviewers don't need internal change details on the cover.
+- **Revision history — actual submissions only**: The revision history table must show only actual submissions to CG, not internal drafts. If Rev 00 was submitted (Code C), Rev 01 was submitted (Code C), and Rev 02 was submitted (Approved), the table should show exactly those 3 rows. Internal working drafts (e.g., an 11-May draft that was never submitted) must not appear as separate rows. The revision number in the table must match the actual submission count, not the internal draft count.

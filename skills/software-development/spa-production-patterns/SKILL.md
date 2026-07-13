@@ -176,6 +176,23 @@ When hotspot data isn't ready yet, create gallery entries with `hotspots:[]`. Th
 
 The gallery card will show "0 materials" and the view opens with no pins visible.
 
+### Data-Only Edits: Never Touch Design
+
+**Critical rule:** When adding new gallery entries, edit ONLY the `galleryData` array. Do NOT change:
+- The `GalleryData` interface
+- The component function body (JSX, styles, hooks, state)
+- Imports, CSS, or any layout code
+- The `export default function Gallery()` block
+
+**Why:** The user's app has a specific dark-theme design. Any change outside the data array — even well-intentioned refactoring like adding floor grouping, changing card styles, or restructuring the component — breaks the design and frustrates the user.
+
+**Workflow:**
+1. `git checkout <init-commit> -- src/sections/Gallery.tsx` to restore the original
+2. Append new entries to `galleryData` only
+3. Build and deploy — nothing else changes
+
+**Verification:** After deploy, the gallery should look identical to before — same card style, same background, same navigation — just with new cards at the bottom.
+
 ### Summary
 
 | Pattern | When | Key Line |

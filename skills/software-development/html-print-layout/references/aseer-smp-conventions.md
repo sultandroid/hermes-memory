@@ -71,6 +71,15 @@ CG comment text must be **preserved verbatim** — never summarize, shorten, or 
 - **IN-PROGRESS** = Action underway
 - **RE-OPENED** = Closure withdrawn by CG
 
+### Reference Attached CR Sheet for Approved Rounds
+When a CG comment disposition matrix has been previously approved (e.g. ZD-0020 Rev.02 approved by CG), do NOT repeat the full comment-by-comment table in the new revision. Replace with a summary box:
+- Round 1: N comments, closure status
+- Round 2 (CRS): N comments, closure status
+- CG Approval: document reference and date
+- Reference: "Full CG Comment Disposition Matrix is attached as separate CR sheet."
+
+This saves 2+ pages and avoids stale comment text that drifts from the approved CRS spreadsheet.
+
 ### No Legend Blocks
 Do NOT include Status Legend, Route/Scope definitions, Outstanding Submittals, or Notes below the CG disposition matrix. Column headers are self-explanatory.
 

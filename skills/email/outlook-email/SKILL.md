@@ -196,6 +196,19 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 ### Pitfalls
 
+**Cross-folder search for supplier replies.** When searching for a supplier's technical response to a CG rejection, do NOT limit the search to the project's main folder (e.g., "Asher Regional Museum"). Supplier replies may be filed under a DIFFERENT project folder (e.g., "Zamzam Projects") because the supplier works across multiple projects. Always use a cross-folder SQL query:
+
+```sql
+SELECT m.Record_RecordID, datetime(m.Message_TimeReceived, 'unixepoch', 'localtime') as received,
+       f.Folder_Name, m.Message_SenderList, m.Message_NormalizedSubject,
+       substr(m.Message_Preview, 1, 300) as preview
+FROM Mail m JOIN folders f ON m.Record_FolderID = f.Record_RecordID
+WHERE m.Message_NormalizedSubject LIKE '%MA-0006%'
+ORDER BY m.Message_TimeReceived;
+```
+
+This searches ALL folders. The `f.Folder_Name` column in the result tells you which folder each match lives in.
+
 **macOS TCC may block direct SQLite access.** Since macOS SIP + Transparency Consent & Control, `sqlite3` on `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite` sometimes returns "authorization denied". **However, this is not universal** — in some sessions SQLite access works fine. **Always try SQLite first** (it's faster and supports proper filtering/joins). If it fails with "authorization denied", fall back to AppleScript's Outlook object model. The TCC block is intermittent and may depend on whether the terminal/agent process has been granted Automation permissions to Outlook.
 
 **`every folder` AppleScript command fails.** `every folder` at the top level returns error -1728 ("Can't get every folder"). Use `(every message of inbox)` for Inbox scanning, or target specific project folders by name: `folder "Asher Regional Museum" of inbox` (the `of inbox` suffix is required). Do NOT attempt `(every folder)` iteration or `folder "Name"` standalone — both fail.

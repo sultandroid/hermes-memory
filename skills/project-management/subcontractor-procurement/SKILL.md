@@ -109,7 +109,19 @@ After RFP generation and conflict audit:
 3. Save conflict audit to `_MANAGER_DASHBOARD/ACOUSTIC_CEILING_CONFLICT_AUDIT.md`
 4. Create `08_RFP_and_Proposals/` folder if it doesn't exist
 
-### Step 6: Proposal Compliance Audit (Vendor Proposals vs SOW)
+### Prequalification Compliance Assessment (Design-Build Subcontractors)
+
+For design-build subcontractors (landscape, AV, setworks — any firm with in-house design + execution capability), follow the detailed workflow in `references/prequalification-review-landscape.md`.
+
+Key differences from product/equipment prequal (`references/prequalification-review.md`):
+- **Design+build** entities need dual assessment: design capability (org chart, portfolio, CVs) AND execution capability (equipment, bonding, crew)
+- **Do NOT assume execution-only** — always check the org chart for in-house designers before concluding on capability
+- **SPEC.md** and **SCOPE_REQUEST.md** are the compliance baseline, not ER/SoW directly at prequal stage
+- **MoC portfolio** is the strongest signal for museum projects — weight it higher than general residential work
+- **Deadline feasibility** (e.g. can they deliver 50% design in 3 weeks?) is the critical path question, often more important than technical compliance at prequal stage
+- Output: `01_Registers/##_Subcontractor_Prequal_Compliance.md` with 7-domain scoring, verdict, and conditions-to-resolve table
+
+### Proposal Compliance Audit (Vendor Proposals vs SOW)
 
 After receiving vendor proposals and before award, audit each proposal against the SOW / governing design report.
 
@@ -156,6 +168,10 @@ After receiving vendor proposals and before award, audit each proposal against t
 - `pdfgrep` fails on binary/encoded PDFs — use `pdftotext -layout` instead
 - Large PDFs (>10 MB) may need chunked reading via `offset`/`limit`
 - Some PDFs have embedded fonts that cause `Syntax Warning: Invalid Font Weight` — ignore these, text still extracts
+
+### Subcontractor type assumption
+- **Do NOT assume a landscaping/AV/setworks firm is execution-only** — many KSA firms have in-house design teams. Before concluding on design capability, check the company profile's org chart and services list. The user will correct you if you assume "contractor only" when they're also designers.
+- A signed PQ letter without a portfolio or CVs may still be a pass at prequal stage — missing BOQ and plant schedule is normal until BOQ/design is provided by Samaya
 
 ### RFP generation
 - Always leave unit rates as TBD for bidder pricing — never populate with received quotation rates

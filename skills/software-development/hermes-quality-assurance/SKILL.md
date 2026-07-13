@@ -256,7 +256,10 @@ for row in sheet.iter_rows(min_row=2, max_row=20):
 
 **User correction signal:** If you find PDFs with Rev numbers and Issued stamps and report them as "sent" — and the user says "they didnt send" — you fell for metadata vs reality. The file system has both the *prepared submittal package* and the *tracking register*. Check the register first.
 
-- **Asset path verification:** When cloning/versioning an existing HTML file (e.g. Rev C01 → C02), check ALL `src="..."` and `href="..."` paths resolve relative to the new file's location. Assets may live in a sibling folder (`01_HTML/` → `04_Assets/`), not `assets/`. Grep for `src="` and `href="` and verify each path with `ls` or `test -f`.
+- **Asset path verification:** When cloning/versioning an existing HTML file (e.g. Rev C01 → C02), check ALL `src="..."` and `href="..."` paths resolve relative to the new file's location. Assets may live in a sibling folder (`01_HTML/` → `04_Assets/`), not `assets/`. Grep for `src="` and `href="` and verify each path with `ls` or `test -f`. **Pitfall: sub-agents copy old `<img src="assets/...">` references that don't exist in the new location. After any sub-agent HTML output, grep for `src="assets/` and either copy the assets or remove the broken tags.**
+- **Cover page conciseness check:** Cover page must only contain CG-relevant info — document ref, revision, date, supersedes statement, reference docs. No verbose change descriptions, no internal audit notes, no gap analysis commentary. The user will reject cover pages that list every change made.
+- **Revision history = actual submissions only:** The revision history table must show only actual CG submissions, not internal drafts. For SMP: Rev 00 (1-Mar Code C), Rev 01 (21-May Code C), Rev 02 (5-Jun Approved), Rev 03 (3-Jul this submission). Internal working revisions between submissions are not listed.
+- **Personnel name verification against repo:** Before writing any person's name in a document, cross-check against ALL of: specialist_register.md, resource_management_plan.md, PROJECT_MEMORY.md. A name that appears in only one source may be stale. The user will correct wrong names or mislabeled roles.
 - **Browser preview:** Open the file in browser (via `terminal open` or `browser_navigate`) and visually confirm:
   - Images/logo load (no broken image icons)
   - Page structure renders without visible layout breaks
@@ -300,6 +303,160 @@ When creating/updating skills:
 - Test any referenced file paths exist
 - Check that numbered steps are sequential
 - Ensure pitfalls section reflects actual failures from this session
+
+## Document Content QA Audit
+
+When performing a comprehensive QA audit of a project management plan HTML (or any formal document), run these checks beyond the HTML/CSS layer:
+
+### 1. Personnel Name Verification
+
+Cross-check every named person in the document against **all available authoritative sources** — not just one:
+
+| Source Type | Examples |
+|-------------|---------|
+| Specialist register | `specialist_register.md` (Tier 1-3 tables) |
+| Resource/team plans | `resource_management_plan.md` (Key Personnel tables) |
+| Project memory | `PROJECT_MEMORY.md` (org chart, latest updates) |
+| Key Personnel Register | `KP-0001` or similar (Aconex) |
+
+**Method:**
+1. Extract all named individuals from the document (grep for `Eng\.`, `Dr\.`, full names in tables)
+2. For each person, check role assignment against each source
+3. Flag mismatches: same person in different roles, wrong role label, missing roles
+4. Flag missing roles: roles that exist in authoritative sources but are absent from the document
+
+**Common mismatches found in practice:**
+- "Eng. Mohamed Sultan" listed as **Project Manager** in QC block but is **Technical Office Manager** per all authoritative sources
+- T1 register missing **Project Manager** and **Technical Office Manager** roles that exist in the Key Personnel Register
+
+### 2. Forbidden Reference Check (Zero-Tolerance)
+
+Maintain a list of known-wrong references that must NOT appear in the document:
+
+| Forbidden Reference | Why | Correct Alternative |
+|---------------------|-----|-------------------|
+| Adel Darwish (as PD) | Departed/restructured | Eng. Waris Sultan (current PD) |
+| "Sustainability Manager" | Wrong title | "Sustainability Specialist" |
+| Abdelmohaimen Medhat (as current QA/QC) | Departed 15-Jun | "Vacant (Samir acting)" |
+| Ahmed Albahrawi | Left Jun 2026 | Must not appear |
+
+**Method:** `grep` for each forbidden string. Zero matches = pass. Any match = flag with line number and severity.
+
+### 3. Internal Note Leakage Check
+
+Scan for content that belongs in internal tracking, not in a CG-submitted document:
+
+| Pattern | Example | Action |
+|---------|---------|--------|
+| Departure notes | "Medhat left 15-Jun" | Remove name/date, keep vacancy status |
+| Revision tracking labels | "Gap (Rev 00)", "Closure (Rev 02)" | Remove or replace with current-state labels |
+| TODO/FIXME markers | "TO DO", "FIXME", "NOTE:" | Remove entirely |
+| Internal process notes | "per internal review" | Rewrite as formal statement |
+
+### 4. Revision History Verification
+
+Check the revision history table against known project facts:
+
+| Check | What to Verify |
+|-------|---------------|
+| Rev 00 date | Matches first submission date |
+| Rev 00 status | Should be CODE C or CODE D (initial submissions rarely pass) |
+| Rev 01 date | Matches first resubmission date |
+| Rev 01 status | Should be CODE C if CG returned comments |
+| Rev 02 date | Matches second resubmission date |
+| Rev 02 status | Should be APPROVED if CG cleared it |
+| Rev 03 date | Matches current submission date |
+| Rev 03 status | Should be RESUBMIT (not APPROVED — not yet reviewed) |
+| Approver name | Consistent across all revisions |
+| Description | Accurately describes what changed in each revision |
+
+### 5. Cover Page vs Internal Revision Consistency
+
+The cover page, TOC, section headers, and footers must all agree on the revision number:
+
+| Location | What to Check |
+|----------|--------------|
+| Cover page title | "REV 03" or "Rev 03" |
+| Cover page subtitle | "Issued for CG Resubmission" or similar |
+| TOC header | Revision number in header |
+| TOC snapshot card | "REVISION: 03" (not 04) |
+| Section 1 disposition chip | "REV 03" (not "REV 04") |
+| Every page footer | "Rev 03" in document code |
+| Filename | Matches revision number |
+
+**Common pitfall:** Copy-paste from a later revision draft leaves "REV 04" in the TOC snapshot card and Section 1 chip while everything else says Rev 03. This is an immediate CG rejection signal.
+
+### 6. Page Count Consistency
+
+The TOC, page 02 footer, and all subsequent page footers must agree on total page count:
+
+| Location | Check |
+|----------|-------|
+| TOC header | "N PAGES" or "N pages" |
+| Page 02 footer | "PAGE 02 / N" |
+| All subsequent footers | "PAGE M / N" (same N throughout) |
+| Last page footer | "PAGE N / N" |
+
+**Method:** Extract all `PAGE X / Y` strings. If Y varies between pages, flag as mismatch. If TOC says a different Y than footers, flag as mismatch.
+
+### 7. Cross-Reference Integrity
+
+Verify that internal references (section numbers, page numbers, table numbers) are consistent:
+
+| Check | Method |
+|-------|--------|
+| TOC section list matches actual sections | Count `<h2>` or section headers vs TOC entries |
+| TOC page numbers match footer page numbers | Compare TOC page ranges to actual footer positions |
+| CG comment count in TOC matches disposition table | Sum of R1 + R2 comments |
+| Role count in TOC matches register | Count rows in stakeholder register table |
+
+### 8. Authoritative Source Hierarchy
+
+When resolving conflicts between the document and reference sources, use this priority:
+
+1. **Key Personnel Register** (Aconex / live register) — highest authority for who fills which role
+2. **Specialist Register** (`.md` in repo) — next, reflects current appointments
+3. **Resource Management Plan** — reflects planned team structure
+4. **PROJECT_MEMORY.md** — reflects latest known state but may lag behind registers
+5. **The document being audited** — lowest priority; this is what we're checking
+
+### 9. Audit Report Format
+
+Write findings to a structured markdown report with:
+
+```markdown
+# QA Audit Report — [Document Title]
+
+**Severity levels:** Critical, Major, Minor
+
+## Executive Summary
+| Severity | Count |
+|----------|-------|
+
+## Critical Issues
+### C-01: [Title]
+**Lines:** N, M
+**Description:** ...
+**Recommended Fix:** ...
+
+## Major Issues
+...
+
+## Minor Issues
+...
+
+## Personnel Name Verification Summary
+| Name in Doc | Role in Doc | Source Match | Verdict |
+
+## Forbidden Reference Check
+| Forbidden Ref | Found? | Verdict |
+
+## Revision History Verification
+| Expected | Found | Verdict |
+
+## Priority Remediation Order
+1. ...
+```
 
 ## Report Writing Standards for Stakeholders
 
@@ -426,6 +583,50 @@ When a humanization pass is requested, apply these specific changes:
 - **Active voice:** prefer active over passive
 - **Paragraph length:** max 3-4 sentences
 - **Number presentation:** plain without dramatic lead-ins ("CV = -218K" not "a troubling variance of")
+
+### AI Fingerprint Symbols — Zero Tolerance
+
+The user explicitly corrected these as AI fingerprints. They must NEVER appear in formal documents, CR sheets, registers, or any deliverable:
+
+| Symbol | Name | Replace With |
+|--------|------|-------------|
+| `—` | Em dash | ` - ` (space hyphen space) |
+| `–` | En dash | ` - ` or `to` |
+| `→` | Right arrow | `to`, `through`, or ` - ` |
+| `§` | Section symbol | `Section` or `Clause` (e.g. `Section 4`, not `§4`) |
+| `·` | Middle dot | ` - ` or remove |
+| `"` `"` | Curly quotes | Straight `"` quotes |
+| `'` `'` | Curly apostrophes | Straight `'` apostrophes |
+| `•` | Bullet | `-` (hyphen) or numbered list |
+| `✓` `✅` `🟢` `🔴` `⚠️` `⏳` | Emoji/icon status | Plain text: `CLOSED`, `OPEN`, `PARTIAL`, `REQUESTED`, `APPROVED`, `REJECTED` |
+| `▲` `■` `◆` `★` `✀` `➤` | Decorative symbols | Remove entirely |
+
+**Rule:** If a symbol is not on a standard US keyboard and not in a code block / file path / technical identifier, it's likely an AI fingerprint. Strip it.
+
+**HARD RULE — Verify BEFORE delivery, not after user complains.** Run the verification script on every generated file before presenting it to the user. The user will notice symbols you missed and will call it out.
+
+**Verification after any document/CR sheet/register generation:**
+```python
+import re
+ai_symbols = re.compile(r'[\u2013\u2014\u2018\u2019\u201c\u201d\u2022\u2026\u2190-\u21FF\u25A0-\u25FF\u2600-\u27BF\u2B00-\u2BFF\uFE00-\uFE0F\u200D]')
+with open(path) as f:
+    content = f.read()
+matches = ai_symbols.findall(content)
+# matches should be 0 for clean output
+```
+
+**Double-check after replacement pass:** A simple `str.replace()` may miss symbols embedded in cells that were written with typographic characters. After the first pass, dump every cell value as `repr()` and scan for any `\uXXXX` escape sequences above U+007F. Only when `repr()` shows no non-ASCII escapes is the file truly clean.
+
+### CR Sheet Content Rules
+
+When writing Comment Response Sheets (CR Sheets) for CG resubmission:
+
+1. **State deliverables, not process arguments.** Don't argue about whether an SI is formally closed or not. Just state what was submitted and approved: "3D render (ZD-0033 Rev.01) and material board (ZD-0030 Rev.01) already submitted and approved by CG. No block here."
+2. **No AI fingerprints** — see symbol table above. Every cell must be plain ASCII.
+3. **Engineer voice** — short declarative sentences. No marketing language, no hedging, no corporate padding.
+4. **Reference document codes** — cite actual submittal refs (ZD-0033, MA-0006, etc.) not vague descriptions.
+5. **Status labels** — use plain text: `CLOSED`, `OPEN`, `PARTIAL`, `REQUESTED`. No emoji, no icons, no colored dots.
+6. **Separate submittals stay separate** — if an item (e.g. patinated brass) is under a different MA number, say so clearly and state that the current submittal does not depend on it.
 
 ### Document Humanization Pass (Symbol Stripping + Engineer Voice + Typos)
 

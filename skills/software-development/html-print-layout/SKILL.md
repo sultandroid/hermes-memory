@@ -456,6 +456,7 @@ Only after this gate prints `ALL N SHEETS FIT A4` may you report the task comple
 | **Pre-existing h2-row split across page boundary** | Original HTML has `<div class="h2-row"><div class="h2-bar"></div>` opening on page N but `<h2>...</h2><span>chip</span></div>` closing on page N+1 outside any `<section>` tag. Mechanical splitting by `<section>` boundaries produces: page N = empty with orphaned div start; page N+1 = bare `</div>` + h2 with no section wrapper. | Before splitting, scan for incomplete structural divs near `</section>` boundaries. Reconstruct: page N gets its own complete h2-row with a proper title; page N+1 gets a fresh `<section class="page">` wrapper with its own header + h2-row. |
 | **SECTION comment numbering drift survives splitting** | Source HTML has `<!-- SECTION 17: ... -->` comment but the matching `<h2>` says `16. Title`. The comment-to-h2 mapping is off-by-N due to earlier edits or skipped section numbers. Splitting by `<section>` boundaries preserves the drift — the comment number stays wrong in the partial. | After splitting, renumber all SECTION comments to match the h2 text number before writing partials. Find each `<!-- SECTION N: -->`, check the next `<h2>M.` — if M != N, fix the comment to read M. |
 | **SVG `width="auto"` causes browser console error** | `<svg width="auto" height="40">` — SVG `width` attribute expects a length (e.g. `100%`, `40px`), not `auto`. Chrome logs: `Error: <svg> attribute width: Expected length, "auto".` The attribute has no effect; the browser defaults to 300x150. | Remove `width="auto"` entirely. Use CSS for sizing: `style="width:auto;height:40px"` or a numeric width value. Grep for `width="auto"` before final validation — expect zero occurrences. |
+| **Literal `§` in SVG `<text>` elements survives `&sect;` replacement** | Python `str.replace('&sect;', 'Sec.')` only catches HTML entity `&sect;`. Literal Unicode `§` characters inside SVG `<text>` elements (e.g. `SoW §5.5`) are NOT caught because they are raw Unicode, not HTML entities. After bulk replacement, 5+ literal `§` can remain in SVG text nodes, producing mixed output like `SoW Sec.5.1.2 - ER §2.6.B`. | After `&sect;` → `Sec.` replacement, grep for literal `§` (Unicode U+00A7) in the file. These are typically in SVG `<text>` elements. Replace each with `Sec.` individually. Verify with `grep -c '§' file.html` — must be 0. |
 
 ## Merging Pages and Compacting Content
 
@@ -559,18 +560,37 @@ Example — CG CRS Table:
 - P4: 8 Round 1 + CRS-01 to CRS-08 (cramped) → Move CRS-07/08 to P5
 - P5: CRS-09 to CRS-17 (light) → Becomes CRS-07 to CRS-17 (balanced)
 
-## Compact + Tight CSS Class Pattern
+## Compact + Tight + XTight CSS Class Pattern
 
-For dense register/specification pages, cascade two classes:
-<section class="page compact tight">
+For dense register/specification pages, cascade three classes:
+<section class="page compact tight xtight">
 
 - compact = reduces internal padding/margins (~15% height save)
 - tight = further reduces font size: 0.34rem on register tables
+- xtight = maximum compaction: 0.38rem table font, 1px cell padding, 0.7rem h2, 20px h2-bar, 3px header margin
 
 Font reduction ladder:
-- (none) 0.42rem → compact 0.39rem → compact tight 0.37-0.34rem
+- (none) 0.42rem → compact 0.39rem → compact tight 0.37-0.34rem → xtight 0.38rem (table) + 0.7rem (h2)
 
 For 20+ rows, also reduce the role/scope column font.
+
+### xtight CSS definition
+```css
+.xtight .sec-banner { margin: 2px 0 1px 0; }
+.xtight .sec-banner b { font-size: 0.48rem; }
+.xtight .eng-table td { padding: 1px 3px; font-size: 0.38rem; line-height: 1.2; }
+.xtight .eng-table th { padding: 1px 3px; font-size: 0.38rem; }
+.xtight .spec-strip { padding: 1px 4px; margin: 0 0 2px 0; }
+.xtight .snapshot-card { padding: 2px 4px; }
+.xtight .snapshot-val { font-size: 0.55rem; }
+.xtight h2 { font-size: 0.7rem; }
+.xtight .h2-bar { height: 20px; }
+.xtight .page-header { margin-bottom: 3px; padding-bottom: 2px; }
+.xtight .h2-row { margin-bottom: 2px; margin-top: 0; }
+.xtight .sec-banner svg { width: 12px; height: 12px; }
+```
+
+Apply to pages with 25+ table rows or heavy content that overflows even with compact+tight. Place the CSS in the document's `<style>` block and add the class to the `<section>` tag.
 
 ### Progressive Padding Cascade for Mixed-Content Pages
 
@@ -648,7 +668,10 @@ The comment column must be the widest since it carries the longest text:
 - Route / Scope: 90px
 
 ### Never Rewrite Sourced Text
-The comment/requirement column must be preserved verbatim — even typos ("Structrual", "seperatly", "experianced") are part of the original CG record. Only update the disposition/action, status, or ref columns.
+The comment/requirement column must be preserved verbatim - even typos are part of the original CG record. Only update the disposition/action, status, or ref columns.
+
+### Reference Attached CR Sheet for Approved Rounds
+When a CG comment disposition matrix has been previously approved, do NOT repeat the full comment-by-comment table in the new revision. Replace with a summary box showing round count, closure status, CG approval reference, and a note that the full CRS spreadsheet is attached. This saves 2+ pages and avoids stale comment text.
 
 ### Remove Explanatory Blocks
 Do NOT include Status Legend, Route/Scope definitions, Outstanding Submittals, or Notes blocks below the CG disposition matrix. The column headers and status badges are self-explanatory. These blocks add clutter and risk page overflow.
@@ -1440,3 +1463,4 @@ When the current file has undergone multiple rounds of patching and the HTML str
 - `references/aseer-riba-overflow-fix.md` — full split strategy, measurements, and Python rebuild pattern from the Aseer Museum RIBA tree (279 rows to 22 sheets)\n- `references/aseer-plan-content-conventions.md` — Content rules for Aseer Museum plan HTML deliverables: no brand names, no unapproved consultants, no self-incriminating language, staff role mappings, cover page rules. Read before creating or updating any Aseer Museum plan document.\n- `references/samaya-html-proposal-branding.md` — Samaya brand conventions for HTML proposals: official logo URLs, header wordmark pattern, brand colors, timeline chart design.
 - `references/lidar-mos-conventions.md` — LiDAR / reality-capture Method of Statement conventions for the Aseer Museum and similar projects: Faro Focus Premium settings, scan-station overlap vs registration confidence, spherical targets, client-facing wording, and source-attribution cleanup.
 - `references/2026-06-28-rcrc-restructure-lessons.md` — lessons from the RCRC Exhibition Technical Proposal restructuring: simple Python concat vs two-pass build, flexbox content stretching for sparse A4 pages, divider-to-banner merging, regex >> bug, filesystem slowness on macOS.
+- `references/html-audit-workflow.md` — systematic QA workflow for auditing A4 HTML plan documents: page overflow measurement, data accuracy checks, style error detection, bulk fix patterns, and verification steps. Use when performing a comprehensive audit of any formal project plan HTML.

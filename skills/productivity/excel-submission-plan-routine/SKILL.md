@@ -22,7 +22,7 @@ tags:
 7. **Response framing is from Samaya always.** Never say "NRS scope" or "by others" — say "to be coordinated" or "to be included in subsequent stages". Frustration on framing = immediate skill update signal.
 8. **Section rows** are full-width merged: gates blue (`#D6E4F0`), floors grey (`#E8E8E8`).
 9. **IFC descriptions** short — avoid repeating boilerplate.
-10. **Linked Activity ID** — map to schedule (EN108, EN102, etc.).
+10. **Linked Activity ID (col K)** — leave EMPTY until programme activity codes are confirmed. Do not invent codes. The user explicitly rejected fabricated activity IDs.
 11. **Submitted rows** get very light green (`#F0F8F0`).
 12. **Response Code and Resubmit Date columns** after Status for CG codes.
 13. **Remarks** minimal. C:Resubmit caveman style: "CG want: X, Y. Need to fix and resubmit."
@@ -33,6 +33,13 @@ tags:
 18. **OneDrive** = copy to `/tmp/`, work there, delete target before copy-back.
 19. **Discipline naming.** "1F" for structural, "First Floor" for arch.
 20. **CG response PDFs** filed to `02_CG_Responses/{Discipline}/`.
+21. **Scope boundary check — MANDATORY before assigning deliverables.** Before putting a deliverable under a discipline's submission plan, read that specialist's SoW first. Do not assume. Common traps:
+    - Landscape Lighting Layout → Landscape specialist, NOT Studio ZNA. ZNA SoW covers interior only (exhibition, galleries, showcases, public areas) — no external/terrace/landscape lighting.
+    - Graphics panel production → Graphics specialist (Graphit), NOT the Architect
+    - Showcase electrical integration → Showcase manufacturer (Glasbau Hahn), NOT MEP
+    - AV hardware mounting details → AV specialist (Rawasin), NOT Structural
+    - If unsure, list as a coordination interface in the plan rather than assigning it to the wrong discipline.
+    - **When you get it wrong and the user corrects you, read the actual SoW PDF before reverting.**
 
 ## Project Repo Convention
 
@@ -144,16 +151,43 @@ All CR sheet responses must be in caveman style — short direct sentences, no a
 ## Section Structure (any submission register)
 
 ```
-Gate 1 - Detailed Design
-  ├── DD - [Floor Name]        (e.g. DD - Basement Floor)
-  ├── DD - [Floor Name]
-  ├── DD - General (All Levels)
-Gate 2 - Material Approval
-  ├── Material List - All Levels
-Gate 3 - IFC (Issued for Construction)
-  ├── IFC - All Floors
-  ├── General - All Levels
+Row 1: Header row (navy #1F3864 fill, white bold 11pt) — 15 columns
+Row 2: Gate name merged full-width (light blue #D6E4F0, navy bold 11pt)
+  ├── Row 3: Level name merged full-width (gray #E8E8E8, navy bold 10pt)
+  ├── Rows 4+: Data rows (light green #F0F8F0, Calibri 10pt)
+  ├── Next level...
+Next gate...
 ```
+
+**Canonical reference file:** `Aseer_Arch_Submission_Plan_Rev02.xlsx` in the Arch Submittal Register folder. Always match this format exactly for new discipline plans.
+
+### Section header hierarchy (3 levels)
+
+| Level | Fill | Font | Merge |
+|-------|------|------|-------|
+| Gate (e.g. "Gate 1 - Detailed Design") | Light blue `#D6E4F0` | Navy `#1F3864` bold 11pt | Full-width (all 15 cols) |
+| Level (e.g. "DD - Basement Floor") | Gray `#E8E8E8` | Navy `#1F3864` bold 10pt | Full-width (all 15 cols) |
+| Data rows | Light green `#F0F8F0` | Calibri 10pt | Per-cell (no merge) |
+
+### Column widths (from Arch plan)
+
+| Col | Width | Notes |
+|-----|-------|-------|
+| A | 18 | Gate |
+| B | 18 (default) | Level / Zone |
+| C | 16 | Discipline |
+| D | 20 | Submission Category |
+| E | 30 | Drawing Package / Item |
+| F | 55 | Submission Description |
+| G | 12 | Responsibility |
+| H | 16 | Planned Submission Date |
+| I | 12 | Review Duration (Days) |
+| J | 10 | Approval Authority |
+| K | 20 | Linked Activity ID (Program) |
+| L | 14 | Status |
+| M | 12 | Response Code |
+| N | 14 | Resubmit Date |
+| O | 22 | Remarks |
 
 ## Column Layout
 
@@ -267,3 +301,12 @@ thin_border = Border(
 wrap_align = Alignment(wrap_text=True, vertical='top')
 center_align = Alignment(wrap_text=True, vertical='center', horizontal='center')
 ```
+
+## Related Reference Files
+
+- `references/scope-boundary-checklist.md` — Verified scope ownership for common cross-discipline deliverables (Landscape Lighting, Emergency Lighting, BMS integration, etc.). Read before assigning deliverables between disciplines.
+- `references/landscape-submission-plan-example.md` — Worked example of creating a Landscape submission plan from scratch following the Arch plan format. Covers source data mapping, structure decisions, date logic, and save pattern.
+- `references/merged-cg-sources-example.md` — Example of merging multiple CG reviewer comments into one CR sheet
+- `references/schedule-activity-mapping.md` — Activity ID mapping from programme schedule
+- `references/cr-sheet-structure.md` — CR sheet column layout and response patterns
+- `references/cg-response-handling.md` — CG response handling workflow

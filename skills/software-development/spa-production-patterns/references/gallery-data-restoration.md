@@ -51,3 +51,11 @@ After deploy, check the live page for:
 - No Table of Contents section
 - No Executive Summary section
 - New gallery cards appear at the bottom of the grid
+
+## Session-Specific Lesson (2026-07-13)
+
+**What went wrong:** Added floor grouping, section headers, and restructured the Gallery component JSX when the user only wanted new gallery entries appended. The user explicitly said "no you change the design totally why? I just ask to update the new section with new photos."
+
+**Fix applied:** `git reset --hard 073ac72` (the init commit), then re-applied only the `galleryData` array additions. No JSX, no CSS, no interface changes.
+
+**Rule for future:** When the task is "add new gallery entries", the ONLY file change is appending objects to the `galleryData` array. Nothing else. If you feel the urge to refactor, add floor grouping, or improve the layout — stop. That's a separate task the user didn't ask for.

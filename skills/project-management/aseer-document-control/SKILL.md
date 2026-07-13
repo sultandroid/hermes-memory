@@ -255,6 +255,67 @@ What they want: Technical Office assessment on NRS's proposed switch from blockw
 - **Not being on original distribution is the key signal** — if the user was on the original distro, the document was sent to them at the time. If forwarded later, someone specifically wants their input on it now
 - **Don't assume a single ask** — the forward may have multiple purposes (review + coordinate + respond). Separate them
 
+## 1aa. Material Submittal Rejection (Code C) — Handling Supplier Technical Rebuttals
+
+**Trigger:** A material submittal (MA-XXXX) is returned Code C. The supplier has already provided a technical rebuttal (comments reply sheet + datasheets) that addresses the CG's rejection reasons. User asks "do I need 3 alternative suppliers or can I resubmit the same?"
+
+### Core Pattern
+
+CG's "3 alternative suppliers" demand is often a **default response to a non-compliant submission**, not a genuine requirement for 3 sources. If the supplier can prove technical compliance with the spec, the correct response is:
+
+1. **Re-submit as Rev.01** with the supplier's technical rebuttal + datasheets
+2. **Ask CG to accept the single supplier** with technical justification
+3. **Only source 3 alternatives if CG explicitly rejects the rebuttal**
+
+### Workflow
+
+1. **Search Outlook for the supplier's reply** — Do NOT assume the reply is in the project's folder. In this session, Glasbau Hahn's reply was filed under "Zamzam Projects" (a different project), not "Asher Regional Museum". Search by:
+   - Subject keywords: `MA-XXXX`, supplier name, material name
+   - Sender: supplier's project manager email
+   - Cross-folder: `SELECT ... FROM Mail m JOIN folders f ON ... WHERE m.Message_NormalizedSubject LIKE '%MA-0006%'` — this searches ALL folders
+
+2. **Extract the supplier's reply** — Use AppleScript to extract attachments from the email thread:
+   - Comments reply sheet (supplier's formal response to each CG comment)
+   - Manufacturer datasheet (e.g., Guardian Clarity for anti-reflective glass)
+   - Any test certificates or compliance documents
+
+3. **Verify the supplier's claim against the spec** — Check the approved finishes schedule (JSON files or Excel) for the material code CG rejected. If the supplier's product matches the spec (e.g., Guardian Clarity = FI_GL_04 with Tvis > 97%, Rvis < 1%), the rebuttal is valid.
+
+4. **Build a support folder** with 9 sub-directories:
+   ```
+   MA-XXXX_Rev01_Support/
+   ├── 01_CG_Rejection/              Original CG rejection letter
+   ├── 02_Supplier_Reply/            Supplier's comments reply sheet
+   ├── 03_Manufacturer_Datasheet/    Technical datasheet (e.g., Guardian Clarity)
+   ├── 04_Technical_Data_Sheets/     All supplier data sheets (silicones, fabric, brass, etc.)
+   ├── 05_PQ_Approval/               Prequalification approval (PQ-XXXX)
+   ├── 06_Sample_Board/              Sample board photo
+   ├── 07_Related_Submittals/        Cross-linked submittals (e.g., MA-0007 brass)
+   ├── 08_Email_Thread/              Full email thread text
+   └── 09_Checklist/                 Resubmission checklist with gaps
+   ```
+
+5. **Identify what's still missing** — The prequal approval (PQ-XXXX) often has conditions that were never fulfilled before the MA was submitted. Common gaps:
+   - Conservation test certificates (Oddy 14-day) for ALL internal materials
+   - HVAC/electrical/humidity integration shop drawings
+   - Preventive maintenance plan + spare parts list
+   - Full-scale on-site mock-up commitment
+   - On-site technical team confirmation
+   - SI compliance statement (e.g., SI-007: 3D render → material board → IFC sequence)
+
+6. **Draft the Rev.01 cover letter** — Frame the argument:
+   - "Supplier has provided technical justification demonstrating compliance with spec [code]"
+   - "Request CG accept single supplier with attached technical evidence"
+   - "Remaining conditions (conservation tests, integration drawings, mock-up) will be fulfilled per PQ-XXXX conditions"
+
+### Pitfalls
+
+- **Supplier reply may be in a DIFFERENT project's email folder** — Glasbau Hahn's MA-0006 reply was under "Zamzam Projects", not "Asher Regional Museum". Always search ALL folders with `SELECT ... FROM Mail m JOIN folders f ON ... WHERE m.Message_NormalizedSubject LIKE '%MA-XXXX%'` — this crosses folder boundaries.
+- **PQ conditions are NOT automatically satisfied by MA submission** — The prequal approval (Code B) often has conditions that must be fulfilled before the material submittal is submitted. If they weren't, the MA will be rejected. Track PQ conditions separately.
+- **"3 alternative suppliers" is a default CG response** — Not always mandatory. If the supplier proves compliance, push back with technical evidence.
+- **Sample board may exist but not be referenced** — Check the MA folder for `sample board.pdf` or `sample board.jpg` before claiming it's missing.
+- **The supplier's reply may be sufficient for CG** — In this session, Glasbau Hahn's 29-Apr-2026 reply + Guardian Clarity datasheet (Tvis > 97%, Rvis < 1%) was a complete technical rebuttal. The CG's "3 suppliers" demand was based on the initial non-compliant submission, not the corrected one.
+
 ## 1b. CG Comment Reasonableness Assessment & Response Strategy
 
 **Trigger:** A CG review response arrives with comments. Before filing or updating the disposition table, assess each comment against the project stage, contractual scope, and existing deliverables.

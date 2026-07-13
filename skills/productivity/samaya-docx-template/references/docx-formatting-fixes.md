@@ -9,7 +9,7 @@
 | "dont split the tables in two tables" | Set `cantSplit` on every table row |
 | "always break pages in the new sections" | Add `pageBreakBefore` to all H2 section headings |
 | "fix tables column width" | Set proportional percentage widths on all table cells |
-| "make version Rev00" | Copy RevC03 → Rev00, apply formatting fixes, update revision metadata |
+| "make version Rev00" | Copy RevC03 to Rev00, apply formatting fixes, update revision metadata |
 
 ## Runtime: terminal heredoc
 
@@ -69,9 +69,50 @@ for p in doc.paragraphs:
 
 **Pitfall:** Only add page breaks to section-level headings (H2), not sub-headings (H3 like "1.1", "2.1"). Sub-headings should flow naturally after their parent section content. The divider paragraphs (all-caps section labels like "ADMINISTRATIVE GOVERNANCE") also need breaks.
 
-## 2. Prevent table splitting across pages
+## 2. Prevent table splitting across pages + compact cells
 
-Set `cantSplit` on every table row. Also set table-level width to 100%:
+Set `cantSplit` on every table row. Also compact cell margins and reduce font size to fit more content per page:
+
+```python
+for table in doc.tables:
+    for row in table.rows:
+        tr = row._tr
+        trPr = tr.find(qn('w:trPr'))
+        if trPr is None:
+            trPr = OxmlElement('w:trPr')
+            tr.insert(0, trPr)
+        cantSplit = trPr.find(qn('w:cantSplit'))
+        if cantSplit is None:
+            trPr.append(OxmlElement('w:cantSplit'))
+        
+        # Compact each cell: reduce margins, font size, line spacing
+        for cell in row.cells:
+            tc = cell._tc
+            tcPr = tc.find(qn('w:tcPr'))
+            if tcPr is None:
+                tcPr = OxmlElement('w:tcPr')
+                tc.insert(0, tcPr)
+            tcMar = tcPr.find(qn('w:tcMar'))
+            if tcMar is None:
+                tcMar = OxmlElement('w:tcMar')
+                tcPr.append(tcMar)
+            # Set top/bottom=0, left/right=28dxa (~0.5mm)
+            for edge, val in [('top', '0'), ('bottom', '0'), ('left', '28'), ('right', '28')]:
+                el = tcMar.find(qn(f'w:{edge}'))
+                if el is None:
+                    el = OxmlElement(f'w:{edge}')
+                    tcMar.append(el)
+                el.set(qn('w:w'), val)
+                el.set(qn('w:type'), 'dxa')
+            
+            for p in cell.paragraphs:
+                for run in p.runs:
+                    if run.font.size is None or run.font.size > Pt(8):
+                        run.font.size = Pt(8)
+                p.paragraph_format.space_before = Pt(0)
+                p.paragraph_format.space_after = Pt(0)
+                p.paragraph_format.line_spacing = Pt(10)
+```
 
 ```python
 for ti, t in enumerate(doc.tables):
@@ -153,7 +194,7 @@ for ti, t in enumerate(doc.tables):
 
 **Pitfall:** Percentage widths (`type='pct'`) are relative to the table's total width. If the table itself has `type='dxa'` (fixed), the percentages won't scale. Always set table-level width to `type='pct'` first (see step 2).
 
-## 4. RevC03 → Rev00 reset pattern
+## 4. RevC03 to Rev00 reset pattern
 
 When the user asks to "make Rev00" from a RevC03 (or any Cxx revision), this is a revision reset — not an increment. The file is copied as-is with formatting fixes applied, and the revision label in the filename changes to Rev00. Do NOT update revision metadata inside the document (the content stays at C03 level; only the filename changes to Rev00 for the formatting-fix baseline).
 
@@ -203,7 +244,184 @@ for ti, t in enumerate(doc2.tables):
         print(f"  T{ti} widths: {widths}")
 ```
 
-## 6. Charts check
+## 6. Halftone remark/descriptive paragraphs
+
+Descriptive sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "9 attributes per stakeholder row...") should render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
+
+```python
+from docx.shared import Pt, RGBColor
+
+HALFTONE = RGBColor(0x64, 0x74, 0x8B)
+remark_keywords = [
+    'attributes per stakeholder', 'spheres of influence', 'graphical classification',
+    'tier escalation path', 'sets out how', 'R = Responsible', 'A = Accountable',
+    'C = Consulted', 'I = Informed', 'Stop-Authority', 'concurrent escalation',
+    'All durations are in', 'Live Stakeholder Register', 'This snapshot',
+    'Source: Live', 'baselined', 'This Stakeholder Management Plan',
+    '4 spheres of influence', '2x2 graphical classification'
+]
+
+for p in doc.paragraphs:
+    t = p.text.strip()
+    if not t:
+        continue
+    is_remark = any(kw.lower() in t.lower() for kw in remark_keywords)
+    # Also catch long descriptive sentences that aren't headings
+    if not is_remark and len(t) > 60 and not t[0].isdigit() \
+       and not t.startswith('STAKEHOLDER') and not t.startswith('Project:') \
+       and not t.startswith('Employer:') and not t.startswith('Contractor:') \
+       and not t.startswith('PMC:') and not t.startswith('Design Lead:') \
+       and not t.startswith('Revision:') and not t.startswith('Supersedes') \
+       and not t.startswith('Aligned'):
+        is_remark = True
+    if is_remark:
+        for run in p.runs:
+            run.font.size = Pt(9)
+            run.font.color.rgb = HALFTONE
+        p.paragraph_format.space_before = Pt(2)
+        p.paragraph_format.space_after = Pt(2)
+```
+
+## 7. Image rendering fix (empty cNvPr names)
+
+After python-docx edits, embedded PNG images may not render in Word. The root cause is **empty `pic:cNvPr name=""` attributes**. Fix via zip manipulation:
+
+```python
+import zipfile
+from lxml import etree
+
+with zipfile.ZipFile(docx_path, 'r') as zin:
+    doc_xml = zin.read('word/document.xml')
+    root = etree.fromstring(doc_xml)
+    
+    NS = {
+        'pic': 'http://schemas.openxmlformats.org/drawingml/2006/picture',
+        'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+    }
+    
+    # Fix empty cNvPr names
+    for cnvpr in root.findall('.//pic:cNvPr', NS):
+        name = cnvpr.get('name', '')
+        if not name or name.strip() == '':
+            cnvpr_id = cnvpr.get('id', '')
+            docprs = root.findall(f'.//wp:docPr[@id="{cnvpr_id}"]', NS)
+            if docprs and docprs[0].get('name', ''):
+                cnvpr.set('name', docprs[0].get('name'))
+            else:
+                cnvpr.set('name', f'Image_{cnvpr_id}')
+    
+    # Add noChangeAspect to graphicFrameLocks
+    for lock in root.findall('.//a:graphicFrameLocks', NS):
+        if lock.get('noChangeAspect') is None:
+            lock.set('noChangeAspect', '1')
+    
+    fixed_xml = etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)
+    
+    with zipfile.ZipFile(docx_path + '.tmp', 'w', zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            if item.filename == 'word/document.xml':
+                zout.writestr(item, fixed_xml)
+            else:
+                zout.writestr(item, zin.read(item.filename))
+
+os.replace(docx_path + '.tmp', docx_path)
+```
+
+Also remove orphaned media files (images in `word/media/` not referenced in `word/_rels/document.xml.rels`):
+
+```python
+with zipfile.ZipFile(docx_path, 'r') as zin:
+    rels = zin.read('word/_rels/document.xml.rels').decode('utf-8')
+    refs = re.findall(r'Target="([^"]*media[^"]*)"', rels)
+    
+    with zipfile.ZipFile(docx_path + '.tmp', 'w', zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            if item.filename.startswith('word/media/'):
+                short = item.filename.split('/')[-1]
+                if not any(short in r for r in refs):
+                    continue  # skip orphan
+            zout.writestr(item, zin.read(item.filename))
+    os.replace(docx_path + '.tmp', docx_path)
+```
+
+## 8. Section page breaks for sub-sections
+
+Add `pageBreakBefore` to sub-section headings (4.2, 4.3, 8.4 etc.) when they start a major new content block:
+
+```python
+for p in doc.paragraphs:
+    t = p.text.strip()
+    if t in ['4.2  TIER 2 - DESIGN SPECIALISTS', '4.3  TIER 3 - AUTHORITIES + CONDITIONAL SPECIALISTS', '8.4  BIM FEDERATION CADENCE']:
+        pPr = p._p.get_or_add_pPr()
+        existing = pPr.find(qn('w:pageBreakBefore'))
+        if existing is None:
+            pPr.append(parse_xml(f'<w:pageBreakBefore {nsdecls("w")} w:val="1"/>'))
+```
+
+## 9. Apply Word heading styles after SamayaDoc generation
+
+SamayaDoc's `add_h1()`/`add_h2()`/`add_h3()` apply direct formatting (font size, bold, color) but do NOT set the Word paragraph style. The user will reject documents where all paragraphs show as "Normal" style. Apply after all content is generated:
+
+```python
+for p in doc.paragraphs:
+    t = p.text.strip()
+    if not t:
+        continue
+    if t == 'STAKEHOLDER MANAGEMENT PLAN':  # or whatever the doc title is
+        p.style = doc.styles['Heading 1']
+    elif len(t) > 3 and t[0].isdigit() and '.0' in t[:4]:
+        p.style = doc.styles['Heading 2']
+    elif len(t) > 3 and t[0].isdigit() and '.' in t[:5] and '.0' not in t[:4]:
+        p.style = doc.styles['Heading 3']
+```
+
+## 10. SVG chart fallback: replace with styled tables
+
+When SVG→PNG images don't render in Word (common on macOS with RGBA PNGs), replace the chart with a styled table. Use navy header, alternating rows, compact 8pt font:
+
+```python
+table = doc.add_table(rows=N, cols=M)
+table.style = 'Table Grid'
+# Header row
+for ci, h in enumerate(headers):
+    cell = table.rows[0].cells[ci]
+    cell.text = h
+    for p in cell.paragraphs:
+        for run in p.runs:
+            run.font.bold = True
+            run.font.size = Pt(8)
+            run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="1E293B" w:val="clear"/>')
+    cell._tc.get_or_add_tcPr().append(shading)
+# Data rows with alternating shading
+for ri, row_data in enumerate(data):
+    for ci, val in enumerate(row_data):
+        cell = table.rows[ri+1].cells[ci]
+        cell.text = val
+        for p in cell.paragraphs:
+            for run in p.runs:
+                run.font.size = Pt(8)
+        if ri % 2 == 0:
+            shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F1F5F9" w:val="clear"/>')
+            cell._tc.get_or_add_tcPr().append(shading)
+# Set column widths
+for row in table.rows:
+    for ci, cell in enumerate(row.cells):
+        tc = cell._tc
+        tcPr = tc.find(qn('w:tcPr'))
+        if tcPr is None:
+            tcPr = OxmlElement('w:tcPr')
+            tc.insert(0, tcPr)
+        tcW = tcPr.find(qn('w:tcW'))
+        if tcW is None:
+            tcW = OxmlElement('w:tcW')
+            tcPr.append(tcW)
+        tcW.set(qn('w:w'), str(int(widths_cm[ci] * 567)))  # cm to twips
+        tcW.set(qn('w:type'), 'dxa')
+```
+
+Also remove orphaned media files (images in `word/media/` not referenced in any rels file) to keep the DOCX clean.
 
 Before claiming "charts fixed", verify what's actually in the DOCX:
 
@@ -217,3 +435,97 @@ with zipfile.ZipFile(path) as z:
 ```
 
 Most DOCX files from this project have PNG images (org charts, phase strips, headcount curves), not OLE chart objects. If there are no chart files, report that to the user rather than pretending to fix them.
+
+### Chart/image disappearance after python-docx edits
+
+**Known issue:** After editing a DOCX with python-docx (adding page breaks, cantSplit, column widths), embedded PNG images may appear to "disappear" in Word. Investigation shows:
+
+- The PNG files are still in the zip (same bytes, same dimensions)
+- The drawing XML is intact (inline, correct extents, valid blip embed IDs)
+- The relationships are intact (rId -> media/image.png)
+- The Content_Types are correct
+
+**Root cause (two factors):**
+
+1. **Empty `pic:cNvPr name=""` attribute** — The `wp:docPr` elements have proper names (e.g., `"Picture 4"`), but the inner `pic:cNvPr` elements (which Word also reads for display) have **empty name attributes**. This mismatch can cause Word to fail rendering the image, especially after bulk edits that trigger re-layout. This is the primary cause.
+
+2. **Missing `noChangeAspect` on `a:graphicFrameLocks`** — If one image has `noChangeAspect="1"` and another doesn't, Word may mis-scale the second image during re-layout, making it appear as a zero-height element.
+
+**Fix script (reusable):**
+
+```python
+import zipfile
+import xml.etree.ElementTree as ET
+
+NS = {
+    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+    'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+    'pic': 'http://schemas.openxmlformats.org/drawingml/2006/picture',
+}
+
+def fix_docx_images(src_path, dst_path):
+    """Fix empty cNvPr names and missing noChangeAspect in a DOCX."""
+    # Register all namespaces
+    for prefix, uri in NS.items():
+        ET.register_namespace(prefix, uri)
+    ET.register_namespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+    ET.register_namespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+    ET.register_namespace('w14', 'http://schemas.microsoft.com/office/word/2010/wordml')
+    ET.register_namespace('wpg', 'http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing')
+    ET.register_namespace('mc', 'http://schemas.openxmlformats.org/markup-compatibility/2006')
+    ET.register_namespace('wps', 'http://schemas.microsoft.com/office/word/2010/wordprocessingShape')
+    
+    with zipfile.ZipFile(src_path, 'r') as zin:
+        doc_xml = zin.read('word/document.xml').decode('utf-8')
+        root = ET.fromstring(doc_xml)
+        
+        # Fix 1: Set empty pic:cNvPr names from matching wp:docPr names
+        for cnvpr in root.findall('.//pic:cNvPr', NS):
+            name = cnvpr.get('name', '')
+            if not name or name.strip() == '':
+                cnvpr_id = cnvpr.get('id', '')
+                docprs = root.findall(f'.//wp:docPr[@id="{cnvpr_id}"]', NS)
+                if docprs and docprs[0].get('name', ''):
+                    cnvpr.set('name', docprs[0].get('name'))
+                else:
+                    cnvpr.set('name', f'Image_{cnvpr_id}')
+        
+        # Fix 2: Add noChangeAspect to any graphicFrameLocks missing it
+        for lock in root.findall('.//a:graphicFrameLocks', NS):
+            if lock.get('noChangeAspect') is None:
+                lock.set('noChangeAspect', '1')
+        
+        # Write fixed DOCX
+        fixed_xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n' + \
+                    ET.tostring(root, encoding='unicode', xml_declaration=False)
+        
+        with zipfile.ZipFile(dst_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+            for item in zin.infolist():
+                if item.filename == 'word/document.xml':
+                    zout.writestr(item, fixed_xml.encode('utf-8'))
+                else:
+                    zout.writestr(item, zin.read(item.filename))
+```
+
+**Verification after fix:**
+
+```python
+with zipfile.ZipFile(dst_path, 'r') as z:
+    verify_root = ET.fromstring(z.read('word/document.xml'))
+    for c in verify_root.findall('.//pic:cNvPr', NS):
+        name = c.get('name', '')
+        assert name and name.strip(), f"cNvPr id={c.get('id')} still empty"
+    for l in verify_root.findall('.//a:graphicFrameLocks', NS):
+        assert l.get('noChangeAspect') == '1', "Missing noChangeAspect"
+```
+
+**Investigation checklist (before fixing):**
+
+1. Verify images are still in the zip: `z.namelist()` → check `word/media/` files exist with non-zero sizes
+2. Verify relationships: read `word/_rels/document.xml.rels` → confirm `rIdX` → `media/imageN.png` entries exist
+3. Verify drawing XML: find `w:drawing` elements → check `a:blip` has valid `r:embed` attribute
+4. Check `pic:cNvPr name=""` — this is the smoking gun
+5. Check `a:graphicFrameLocks` for missing `noChangeAspect`
+6. Check Content_Types: `[Content_Types].xml` must have `<Default Extension="png" ContentType="image/png"/>`
+
+**Pitfall:** Do NOT tell the user "the charts are gone" without first verifying the zip contents. The images are almost certainly still there — the rendering issue is caused by the empty cNvPr name attribute, not data loss. Always check the zip before reporting. The fix is structural (XML attribute repair), not a re-embed.

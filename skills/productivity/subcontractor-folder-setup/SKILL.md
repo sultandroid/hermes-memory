@@ -14,6 +14,17 @@ description: Full workflow for creating, auditing, and populating subcontractor 
 
 Subcontractors live under `Subcontractors/NN_Name/` where NN = sequential number.
 
+**Two co-existing Aseer patterns — pick by location:**
+
+| Location | Pattern | Filename | Naming |
+|----------|---------|----------|--------|
+| **Repo** (`~/aseer-museum-pm/Subcontractors/...`) | Sub-per-vendor tree | `NN_<Vendor>/00_Prequalification/...` | NN = sequential sub number; vendor name as folder |
+| **OneDrive — CG/CDE submittal copy** (`Adel Darwish's files - 01- Execution Documents/07- Pre-Qualification Submittal/`) | Flat by PQ ref | `NN- MOC-...PQ-XXXX/...` with `Approval/` subfolder | NN = PQ number; flat — no sub-per-vendor wrapping |
+
+The OneDrive copy is what goes to CG via Aconex. The repo copy is the coordination
+mirror. They must agree. When a new vendor PQ lands, mirror it in both: create
+`00_Prequalification/<Vendor>/` in the repo AND `NN- MOC-...PQ-XXXX/` in OneDrive.
+
 ```\\nNN_Subcontractor_Name/\\n├── SCOPE_REQUEST.docx                 (generated from SamayaDoc template)\\n├── 00_Prequalification/              Prequalification dossiers, company profiles, qualifications docs, support docs for supplier to stamp\\n├── 01_Schedule_and_BOQ/               BOQs, schedules, cost data\\n├── 02_Reference_Drawings/             IFC drawings, reference CAD/PDF\\n├── 03_Specifications_and_Standards/   ER, SoW, Division specs, codes, TDS/SDS\\n├── 04_Reference_Imagery/             Photos, reference images\\n├── 05_Returned_Submittals/           Submittals returned from review\\n├── 06_RFIs/                          RFI register and correspondence\\n├── 07_Approvals/                     Approved documents, certificates\\n├── 09_Offers/                        Commercial proposals, quotations per company — each company gets its own subfolder (e.g., `AD_Engineering/`, `SG_Group/`)\\n├── Email_Data_Extraction/            Extracted email threads\\n└── _MANAGER_DASHBOARD/               All .md management files live here (NO Excel files, NO draft email .md files, NO .docx)\\n    ├── SCOPE_REQUEST.md               Source markdown (editing copy)\\n    ├── SITUATION_REPORT.md            Status tracking\\n    └── SPEC.md                        Package specification (scope, deliverables by stage, long-lead items)\\n\\n**Note:** Draft email .md files (`_Email_to_*.md`, `DRAFT_EMAIL_*.md`) are deleted — do not keep them. Send the email directly instead.\\n```
 
 ## File placement rules (hard conventions)
@@ -213,10 +224,42 @@ Produce a structured verdict: recommended for sole appointment, keep as executio
 
 Generate a DOCX for the supplier to complete and stamp. This is Samaya's document sent TO the supplier — NOT the supplier's own methodology doc. See "Prequalification Support Document" below.
 
-### 4. Organize folder
+### 4. Generate compliance Excel sheet
+
+Create a companion compliance matrix as an Excel file alongside the prequalification documents. This is the structured audit record of the supplier against project requirements. Save as `00_Prequalification/<Supplier>_Compliance_Sheet.xlsx`.
+
+**Required sheets (5):**
+
+| Sheet | Content |
+|-------|---------|
+| Overview | Sub info, assessment date, overall verdict, score summary table (5 domains) |
+| Compliance Matrix | Line-by-line against SCOPE_REQUEST submission requirements (Yes/Partial/Missing with severity) |
+| Technical | Technical requirements mapped to source docs (ER, SOW, SPEC) with status |
+| Risk Assessment | 7+ risks with likelihood, impact, severity, mitigation, owner |
+| Actions | Prioritized next actions with owner and target date |
+
+**Excel formatting rules:**
+- Navy header row (#1E293B), white bold text, 10pt Calibri
+- Body cells: 10pt Calibri, wrap text on description columns
+- Status cells: color-coded fill (green=met, amber=partial, red=missing)
+- Risk severity: red fill for CRITICAL/HIGH, amber for MEDIUM
+- Borders: thin gray (#D0D0D0) on all cells
+- Column widths: proportional to content (description columns widest)
+
+**Data sources to check per row:**
+- `_MANAGER_DASHBOARD/SCOPE_REQUEST.md` — submission requirements (Section 5), technical requirements, programme
+- `_MANAGER_DASHBOARD/SPEC.md` — deliverables by stage, standards, long-lead items
+- Supplier profile PDF — company credentials, portfolio, team
+- Signed PQ letter — RACI matrix, risk register, compliance statements
+- ER / SoW documents — specific code references, sustainability requirements
+
+**Pitfall — do not mark items as "Missing" that are Samaya dependencies.** If the supplier cannot provide a priced BOQ because Samaya has not provided the design yet, mark severity as "Low (Samaya dep.)" not "Critical".
+
+### 5. Organize folder
 
 - Create `00_Prequalification/` at sub root if not exists
 - Move supplier profile PDF into `00_Prequalification/`
+- Move the compliance Excel sheet into `00_Prequalification/`
 - Move the support document into `00_Prequalification/`
 - Clean up any Word temp files (`~$*.tmp`)
 - Remove duplicate SCOPE_REQUEST.docx from `_MANAGER_DASHBOARD/` (keep only .md there)
@@ -342,6 +385,31 @@ From `10_Oddy_Testing_Lab/03_Specifications_and_Standards/`:
 - `Division 00 GENERAL PROJECT REQUIREMENTS.pdf`
 - `Division 01 GENERAL REQUIREMENTS.pdf`
 - `1.5 APPLICABLE CODES.pdf`
+
+## Pitfall — OneDrive cache blocks `mkdir` from this terminal
+
+The OneDrive tree at
+`/Users/mohamedessa/OneDrive - SAMAYA INVESTMENT/Adel  Darwish's files - 01- Execution Documents/`
+(and likely the whole `Adel Darwish's files` subtree) shows
+`drwx------ 114 mohamedessa staff` in `ls` and the shell reports `uid=501`, but
+`mkdir` returns "Operation not permitted" anyway. Cause: OneDrive placeholder
+ownership mismatch between the cached copy and the source-of-truth on the
+sharepoint server. This is environmental, not a permissions bug you can fix.
+
+**Workaround pattern (Aseer-proven):**
+1. Write a `_FILE_PLAN.md` next to the source files (in `~/Downloads` or
+   wherever the submittal arrived) naming: (a) the target OneDrive subfolders
+   (mirror the `NN- MOC-MUS-ASE-1E0-PQ-XXXX/` pattern with an `Approval/`
+   subfolder), (b) which source file goes in which folder, (c) exact `cp`
+   commands.
+2. The user creates the new subfolders via onedrive.live.com web UI and waits
+   for sync to reach this Mac (~5–15 min).
+3. The user (or a follow-up session) runs the `cp` commands.
+4. The compliance / register update is finalised only after the files have
+   been verified on disk — leave PQ Ref cells as `—` until then.
+
+Do not waste a tool call trying to `mkdir` directly — the failure is
+deterministic.
 
 ## Sample generation script (DOCX)
 

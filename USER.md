@@ -1,7 +1,19 @@
-Eng. Mohamed Sultan Abbas — Tech Office Mgr, Samaya. Aseer Museum. Prefers concise actionable deliverables, direct instructions. Repo (~/aseer-museum-pm) is single source of truth. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed. Documents: no AI fingerprints, write like engineer, use stakeholder names not 'the Contractor'. Fix others' work by telling them what to fix, not rewriting.
+No AI fingerprints, write like engineer, use stakeholder names not generic terms. No emoji/icons/symbols (including section sign) in deliverables — plain professional formatting only.
 §
-Very sensitive about design changes — only add data, never modify styling/layout. When adding new gallery entries, study source PDF plans carefully to get correct names before assigning. Prefers floor-organized gallery sections (LGF/BF/GF) with original dark styling.
+Gallery viz: data-only edits only (append to galleryData array). Never change JSX/CSS/layout/imports. Deploy incrementally (index.html + assets/ only). User frustration signal: "you changed the design totally". Study source PDFs for correct gallery names.
 §
-Email drafts: provide as plain text in the response, not as Outlook drafts. User copies and sends manually. Keep drafts short — no preamble, no explanations of what the email contains.
+Email drafts: plain text in response, not Outlook drafts. Short, no preamble.
 §
-RMP (Risk Management Plan) is a contractual deliverable (MOC-MUS-ASE-1KH-PL-02.17) requested by CG/MoC. The RMP must match the Excel consolidated risk register methodology — not the other way around. Scoring scale: 1-4 P×S (not 1-5). Risk IDs: PRR-XXX-XX format (not PRR-XXX). Risk count: 33 Master risks (not 29). 4-register architecture: Master, DRR, HSE, AV. SOW-Protect is a formal response strategy. HSE uses separate 5×5 scoring.
+RMP: 4-register (Master/DRR/HSE/AV), 1-4 PxS scoring, PRR-XXX-XX IDs. Excel is source.
+§
+DC submissions: text for Aconex cover form, not separate DOCX transmittal.
+§
+Personnel names: verify every name against repo (specialist_register.md, resource_plan.md, PROJECT_MEMORY.md) before writing.
+§
+DOCX: cantSplit on all table rows, compact cells (small margins, 8pt body), page break before H2 sections.
+§
+Cover/revision history: only CG-relevant info. No verbose descriptions, no internal notes. Revision history = actual CG submissions only.
+§
+Self-QA before presenting: check broken assets, verify names, run subagent audit. Don't let user find obvious issues.
+§
+Prefers concise cover pages — only what CG needs to see (superseded revs + reference docs), no verbose change listings.
