@@ -31,7 +31,8 @@ The Aseer Museum Risk Management System (RMS) has four synchronized documents:
 | Risk Register (formal) | Excel (OneDrive) | `04_Docs/09_Registers/23_Project_Risk_Register/` | External submission package |
 | Risk Management Plan (MD) | Markdown | `03_Plans/08_Risk/risk_management_plan.md` | Methodology, scale, RBS, governance |
 | Risk Management Plan (DOCX) | Word (OneDrive) | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/03_Word/` | Formal CG submittal version |
-| Design Risk Register (DRR) | Excel (OneDrive) | `04_Docs/09_Registers/06_Design_Risk_Register/` | Design-phase risks (linked from DMP) |
+| Design Risk Register (DRR, live) | Markdown | `01_Registers/design_discipline_risk_register.md` | Design-phase child risks, agent source of truth, 20+ disciplines, Stage 3 Audit overlay |
+| Design Risk Register (DRR, formal) | Excel (OneDrive) | `04_Docs/09_Registers/06_Design_Risk_Register/` | Design-phase risks (linked from DMP), PxI 1-5 scoring, Cover sheet + data + RBS tabs |
 | HSE Risk Register | Excel (OneDrive) | Internal | Task-level HSE risks |
 | AV Risk Register | Excel (OneDrive) | Internal | AV/multimedia risks |
 
@@ -123,6 +124,27 @@ The RMP MD has these sections that may need updating after a register change:
 | Document Control | Add new version row |
 
 Use `patch()` for each section with unique context lines to ensure correct matching.
+
+### Step 2a: Add New Risks from External Intel (User Input / Supplier Data / Project Update)
+
+When the user provides new risk intel (supplier datasheet, new object list, fabrication insight, site observation), do NOT add directly to any single register. Follow this cross-check flow:
+
+1. **Cross-check existing PRR + DDR first** — search both registers for related risks. The intel may upgrade an existing risk (score change, new evidence) rather than create a new one.
+
+2. **Determine where the risk belongs:**
+   - Design-phase risk (material selection, coordination, authority interface, gallery layout) → **DDR** first
+   - Executive/portfolio-level risk (schedule, commercial, procurement, stakeholder) → **PRR** first
+   - Both — if the risk has a design root cause AND executive consequence, add to BOTH and cross-link them
+
+3. **DDR entries** use 1-5 scoring (PxI): Critical ≥20, High 12-19, Medium 8-11, Low 4-7, Very Low 1-3. Risk IDs follow `DDR-CAT-NNN` (e.g. DDR-MAT-001). Owners use DSN-X codes from the Excel Cover sheet.
+
+4. **PRR entries** use 1-4 scoring (PxS): Critical ≥12, High 8-11, Medium 4-7, Low ≤3. Risk IDs follow `PRR-CAT-NN` (e.g. PRR-PRC-05).
+
+5. **Link DDR ↔ PRR** — each DDR row has a "Linked Risks" column referencing PRR IDs. Each PRR row should reference the relevant DDR ID in its evidence column. This enables traceability from design risk → executive impact.
+
+6. **Sync to DDR Excel** after updating the repo markdown — the Excel is the formal record. Update Cover sheet revision (label in column B, value in column C) and the title row on the Design Risk Register sheet.
+
+7. **Update all counts** — snapshot table, RBS counts, dashboard cross-references, version control table.
 
 ### Step 3: Update RMP DOCX (Word)
 
@@ -221,19 +243,20 @@ The register's **Risk Breakdown Structure** table at the top must match the actu
 Check these specific data points across all three documents:
 
 ```python
+# READ the actual register first — these values are examples only
 alignment_checks = [
-    ("Total risks", 28),
-    ("Open risks", 25),
-    ("Critical risks", 8),
-    ("High risks", 10),
-    ("Medium risks", 8),
-    ("Low risks", 2),
-    ("Scoring scale", "1-4"),
-    ("Excel row count", 28),
-    ("RMP §1.2 count", 28),
-    ("RMP §2.0 total", 28),
-    ("RMP §4.2 total", 28),
-    ("RBS SCH count", 3),
+    ("Total risks", "<read from register>"),
+    ("Open risks", "<read from register>"),
+    ("Critical risks", "<read from register>"),
+    ("High risks", "<read from register>"),
+    ("Medium risks", "<read from register>"),
+    ("Low risks", "<read from register>"),
+    ("PRR scoring scale", "1-4"),
+    ("DDR scoring scale", "1-5"),
+    ("PRR Excel row count", "<read from xlsx>"),
+    ("DDR Excel row count", "<read from xlsx>"),
+    ("RMP section counts", "<verify each>"),
+    ("RBS per-category counts", "<verify each>"),
 ]
 ```
 
@@ -241,19 +264,46 @@ alignment_checks = [
 
 | Document | Pattern |
 |----------|---------|
-| Excel title | `Rev XX · YYYY-MM-DD` |
-| Register MD | `revision: C03` in frontmatter |
-| RMP MD | `revision: C02` in frontmatter |
-| Register control table | Append row in `## Register control` |
+| DDR Excel Cover sheet | Label "Revision" in col B, value `Rev P0X` in col C. Also update the title row text (row 1) on the Design Risk Register sheet. |
+| DDR Excel Issue Date | Label "Issue Date" in col B, value `YYYY-MM-DD` in col C. |
+| PRR register MD | `revision: C0X` in frontmatter + `|| **C0X** | YYYY-MM-DD | Agent | Description |` in Register control table |
+| DDR markdown | `revision: D0X` in frontmatter (D = Design risk register, distinct from PRR's C-series) |
+| RMP MD | `revision: C0X` in frontmatter |
 | RMP Document Control | Append row |
 
-## Pitfalls
+### Verification Command
 
 ### MergedCell write error
 Unmerge ALL cells before any structural writes. `ws.unmerge_cells(str(mc))` for each merged range. Re-merge section headers after data is written.
 
-### Extra pipe prefix in markdown tables
-When using `patch()` to fix markdown tables, the tool sometimes adds an extra `|` at the start of each line. Always verify the patch result and fix with a follow-up patch if needed.
+### Risk ID number-shift hazard when inserting rows
+
+Inserting a new risk in the MIDDLE of a sequential table (e.g. PRR #13 between #12 and #14) shifts ALL subsequent row numbers by +1. The PRR markdown uses sequential numbering `| 13 |`, `| 14 |`, etc. — these are NOT auto-incrementing in Markdown.
+
+**Workflow:**
+1. Note the exact last-number-before-insertion and first-number-after-insertion
+2. After inserting the new row, fix all downstream numbers: `old_N + 1` for every subsequent row
+3. Use targeted `patch()` calls per line, or use `sed -i '' 's/^| 14 |/| 15 |/'` if all downstream lines have the same leading pipe format
+4. Verify the full table is sequential after fixing — no gaps, no duplicates (e.g. two rows both showing `| 14 |`)
+5. Update the **RBS count** for the affected category (e.g. DES 4→5)
+6. Update the **Risk Snapshot** header (total, critical, high, medium counts)
+7. Update the **Dashboard cross-reference** if the new risk introduces a new theme
+
+**Pitfall: cascading renumbering errors.** If you fix only the immediate next row but miss rows further down, the table has duplicate numbers (two #14s) plus a gap at the end. Always scan the full table after fixing.
+
+### Extra pipe prefix (`|||`) in markdown tables
+
+When using `patch()` to fix markdown tables, the tool sometimes adds an extra `|` at the start of each line, turning `|| 14 |` into `||| 14 |`. This can happen when patches are applied to lines that already had formatting adjustments.
+
+**Fix:** After all patches are done, verify and clean:
+```bash
+# Check for triple-pipe artifacts
+rg '^\|\|\|' path/to/register.md
+# Fix them
+sed -i '' 's/^||| /|| /' path/to/register.md
+sed -i '' 's/^||/|/' path/to/register.md  # if needed for specific table sections
+```
+Check each table section individually — some tables use single-pipe starts (`| col |`), others use double-pipe (`|| col |`). A blanket fix may break correct formatting.
 
 ### Onedrive Excel write safety
 If the Excel file is open in Excel when openpyxl tries to save, the write may silently corrupt the file. Ask the user to close the file first, or use a temp copy and replace after confirming.
@@ -276,8 +326,86 @@ When rebuilding a table with `rebuild_table()`, if the new data has fewer column
 ### Text split across multiple runs in DOCX
 In OOXML, text like "0010003521 -- Design & Build" may be split across separate `<w:r>` elements. Always iterate ALL runs in a paragraph's runs list and clear each, then set only the first run's text. Never assume a paragraph's text is in a single run.
 
+### DDR Excel Cover sheet column layout
+
+The DRR Excel "Cover" sheet uses a non-standard layout:
+- **Column B** holds labels (e.g. "Revision", "Issue Date", "Document No.")
+- **Column C** holds values (e.g. "Rev P04", "2026-07-14")
+- **Column A** is empty/merged from the title graphic
+
+This means `ws.cell(row=row, column=2).value` searches labels, and `column=3` updates values. The typical A/B label-value assumption will silently find nothing.
+
+Additionally, the Design Risk Register sheet (the data sheet) has the revision in **row 1, column 1** as part of the title text. Update both locations when bumping revision.
+
 ### DRR count in RMP is often stale
 The RMP (repo) says DRR has 37 risks. The actual DRR Excel (P03) has 76 risks. Always open the DRR Excel directly and count, rather than trusting the RMP's stated number.
+
+## Samaya Style — Excel Risk Register Formatting
+
+When creating or updating an Excel risk register (DRR or PRR), apply these formatting rules to match Samaya Technical Office document standards:
+
+### Header Row (row 3 in DRR Excel)
+- Fill: navy `#0F172A` (Samaya primary)
+- Font: Inter 8pt, white (`#FFFFFF`), bold
+- Center aligned, no wrap
+- Thin borders `#D1D5DB` on all sides
+
+### Data Rows
+- Font: Inter 8pt (bold for Risk ID column only)
+- Alignment:
+  - Center: `#`, Risk ID, RBS Category, Probability, Impact, PxI, Severity, Strategy, Status
+  - Left + wrap text: Risk Event, Cause, Impact description, Response Action, Owner, Contingency, Trigger, Linked Risks, Evidence Source
+- Borders: thin `#D1D5DB` on all cells
+- Row heights: auto (None) — Excel auto-fits wrapped text
+- Zebra stripping: alternating rows with `#F8FAFC` background (light gray)
+
+### Severity Column Fill
+- Critical: `#FEF2F2` (light red)
+- High: `#FFFBEB` (light amber) or inline `#92400E` text
+- Medium: `#FEF9C3` (light yellow)
+- Low: `#F1F5F9` (light gray)
+
+### RBS Category Column Fill
+- TEC (Technical): `#D1FAE5` (light green)
+- SCH (Schedule): `#DBEAFE` (light blue)
+- PRO (Procurement): `#FEF3C7` (light amber)
+- Other categories: default white or light gray
+
+### Column Widths (for design risk register — 24 columns A-X)
+
+| Column | Content | Width |
+|--------|---------|-------|
+| A | # (risk number) | 5 |
+| B | Risk ID | 14 |
+| C | RBS Category | 9 |
+| D | Risk Event | 55 |
+| E | Cause | 45 |
+| F | Impact | 48 |
+| G | Prob | 7 |
+| H | Impact (score) | 7 |
+| I | PxI | 6 |
+| J | Severity | 10 |
+| K | Strategy | 12 |
+| L | Response Action | 55 |
+| M | Owner | 22 |
+| N | Status | 9 |
+| O-X | Dates, residual scores, contingency, triggers, links, evidence | 12-50 |
+
+### Auto Filter
+- Must extend to cover ALL data rows (not just the original range)
+- Set via `ws.auto_filter.ref = "A3:X{last_row}"`
+- When adding rows, update the auto filter range
+
+### Cover Sheet (DRR Excel)
+- Revision label in column B, value in column C
+- Issue Date label in column B, value in column C
+- Design Risk Register sheet row 1 has the revision in the title text — update both locations
+
+### Pitfalls
+- **Autofilter doesn't auto-extend** when rows are added below the original range. Always update it explicitly.
+- **Conditional formatting** (if any) may have hardcoded ranges. Check and extend when adding rows.
+- **Merged cells** in the Cover sheet (row 1-2) break openpyxl writes. Unmerge first, write, then re-merge.
+- **Row heights remain "None"** (auto) even with long wrapped text — Excel calculates them. Don't set fixed heights on text-heavy rows.
 
 ## Excel Generation Pattern
 
@@ -315,24 +443,210 @@ for i, r in enumerate(risks):
     # write each cell...
 ```
 
-## Verification Command
+## Discipline Design Risk Study — Front-End Risk Identification
 
-After all updates, verify alignment with:
+The skills above cover **back-end** register maintenance. This section covers the **front-end**: studying a specific discipline's design documentation to identify risks before they land in the register.
 
+### When to Use
+
+- User asks to "study" or "audit" a discipline's design documentation for risks
+- A new set of design docs arrives (schedules, specs, drawings, control strategies) and needs risk evaluation
+- Pre-submission QA: before a discipline package goes to CG, assess what risks it carries
+- A new subcontractor/consultant (like Studio ZNA) has been appointed — assess scope gaps vs design docs
+- User asks to "do a lighting risk study" or similar discipline-specific review
+
+### Pattern: Design Documentation Risk Analysis
+
+#### Step 1: Inventory Available Documentation
+
+Read ALL documentation for the discipline, not just summary files:
+
+| Document Type | What to Extract | Risk Signal |
+|---------------|----------------|-------------|
+| Luminaire/equipment schedule | Quantities, manufacturers, unit power, beam angles, CCT, CRI | Single-source dependency, lead-time risk |
+| Technical specifications | IP/IK ratings, dimming protocol, emergency compatibility | Spec gaps vs conservation/authority requirements |
+| Control strategy document | DALI/DMX architecture, scene zoning, BMS integration | Multi-protocol complexity, integration gateway risk |
+| Power/heat load study | W per zone, total heat gain, contingency % | HVAC mismatch, chiller capacity risk |
+| RCP drawings | Fixture placement vs structure/MEP | Ceiling void clash risk (sprinkler, duct, acoustic) |
+| Installation detail drawings | Mounting method, ceiling cut-outs, driver location | Structural suspension point risk |
+| Submittal register | Deliverable dates, review durations, gate alignment | Programme risk (late submissions, inadequate review buffer) |
+| Consultancy agreement / SOW | Scope boundaries, exclusions, CG comments | Uncovered scope, contract gap risk |
+| Fee proposal | Resource days, duration, optional stages | Inadequate resource for scope, additional-cost risk |
+
+**For PDFs on macOS local volumes**, extract with:
 ```bash
-# Excel row count
-python3 -c "from openpyxl import load_workbook; wb=load_workbook('path.xlsx'); print(f'Excel rows: {wb.active.max_row - 3}')"
-
-# RMP § references
-grep -n "Master Risk Register |" risk_management_plan.md | grep -oP '\d+'
-grep -n "**Total**" risk_management_plan.md
-
-# Register RBS counts
-grep -E "^\| (SCH|SIT|DES|FLS|MEP|APP|COM|PRC|CON|STK|HSE) " risk_register.md
-
-# Revision
-grep "revision:" risk_register.md risk_management_plan.md
+pdftotext "/path/to/document.pdf" - 2>/dev/null | head -200
+# Always check text exists (some PDFs have no text layer)
+python3 -c "import pymupdf; d=pymupdf.open('path.pdf'); print(len(d[0].get_text()))"
 ```
+
+If `web_extract` fails on `file://` URLs (common for external drives / network volumes), fall back to `pdftotext` (available via Homebrew `poppler` on macOS).
+
+#### Step 2: Cross-Reference Against Existing Risk Register
+
+Read the existing DDR and PRR entries. For each design document finding, search the register for related IDs:
+
+```python
+# Pattern: map each finding to DDR/PRR IDs
+findings = [
+    {"finding": "No UV/lux caps in spec", "existing_risk": "DDR-LGT-002", "status": "confirmed, gap persists"},
+    {"finding": "iGuzzini sole source for 735+ fittings", "existing_risk": "DDR-LGT-003", "status": "confirmed, no approved equals"},
+    {"finding": "Heat gain 7.83 kW additive", "existing_risk": "DDR-MEP-003", "status": "confirmed, needs HVAC check"},
+    {"finding": "Sprinkler overlap with track positions", "existing_risk": "DDR-FLS-005", "status": "confirmed, needs RCP overlay"},
+]
+```
+
+For each existing risk:
+- **Confirm** — the finding validates an existing risk (update evidence)
+- **Upgrade** — the finding increases severity (new data point)
+- **Downgrade** — the finding mitigates it (note in remarks)
+- **Gap** — no existing risk covers this → **new DDR item needed**
+
+#### Step 3: Identify New Risks Not Yet in Register
+
+Look for these common risk archetypes across disciplines:
+
+| Risk Class | What to Look For | Typical Severity |
+|------------|-----------------|------------------|
+| **Single-source dependency** | Only one manufacturer specified, no approved equals clause | Medium (low probability but high impact if supply fails) |
+| **Conservation compliance gap** | No lux/UV/CRI limits stated in spec — relies on downstream operational setting | Medium-High (MoC rejection risk) |
+| **Ceiling coordination clash** | RCP shows fixture positions but no structural/MEP/sprinkler/acoustic overlay | Medium-Critical |
+| **Programme / resource mismatch** | Fixed-fee contract but scope broader than resource-days allow | High (Variation Order likelihood) |
+| **External/Stramp coordination orphan** | Design intent exists but D&B MEP contractor not appointed who executes | High (LG-024 deliverable without execution pathway) |
+| **Object-list dependency cascade** | Design relies on client data (object list) that hasn't been frozen | Critical (cascading redesign) |
+| **Dual-protocol control complexity** | Two control protocols (e.g. DALI + DMX/Casambi) requiring integration gateway | Medium (integration point failure) |
+| **Emergency lighting dual-function** | House + emergency in same fitting — generator dependency must be confirmed | Medium (FLS coordination) |
+
+#### Step 4: Quantify Where Possible
+
+Add numerical evidence to risk assessments:
+
+```markdown
+| Metric | Value | Risk Implication |
+|--------|-------|-----------------|
+| Total lighting power | 71,159 W (+10% = 78,275 W) | HVAC sizing — confirm chiller capacity |
+| Lighting heat gain | 7.83 kW (~26,700 BTU/hr) | Additive to cooling load — DDR-MEP-003 |
+| Most loaded zone | G3 Al Muftaha = 6,824 W | Single zone cooling check |
+| Highest single-source | iGuzzini = 735+ SP1 fittings | Supply disruption = whole-gallery delay |
+| Control zones | ~250+ total | Commissioning programme risk |
+| ZNA resource | 32.5 days, 8 weeks, £28,227 fixed | Scope creep threshold — any redesign = VO |
+```
+
+#### Step 5: Structure the Risk Study Report
+
+Use this format for the output:
+
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: Hermes
+status: active
+source: >-
+  Paths or references to all documents studied
+---
+
+# [Discipline] Design Risk Study — [Project]
+
+## 1. What Was Reviewed
+
+Table of documents studied with contents summary.
+
+## 2. [Discipline] Design Philosophy
+
+Key parameters (CCT, CRI, control architecture, fixture mix, layers).
+
+## 3. Conservation Compliance / Standards Compliance
+
+What the docs say vs what standards require. Gaps identified.
+
+## 4. Supplier / Procurement Exposure
+
+Manufacturers, quantities, single-source status, lead-time risk.
+
+## 5. Coordination Interfaces
+
+RCP clashes, structural conflicts, MEP overlaps, AV integration, FLS overlap.
+
+## 6. Scope Gaps / External Interfaces
+
+Scope boundaries that are unclear or unassigned.
+
+## 7. Emergency / Life-Safety Strategy
+
+Where applicable.
+
+## 8. Key Risks Summary Table
+
+| Risk ID | Description | Severity | Owner | Status |
+|---------|-------------|----------|-------|--------|
+| DDR-XXX-XXX | Clear one-liner | Critical/High/Medium/Low | Party | Open/Mitigated/Closed |
+
+## 9. Immediate Actions Recommended
+
+Numbered, prioritised actions with rationale.
+```
+
+#### Step 6: Determine Next Action
+
+End the report with a clear recommendation:
+
+- **Update existing DDR** — patch existing entries with new evidence or upgrade scores
+- **Add new DDR entries** — for newly identified risks not yet covered
+- **Escalate to PRR** — if a discipline risk has project-level consequence
+- **Flag for Technical Office** — for resourcing, procurement, or authority decisions
+
+#### Step 7: Deliver to DDR
+
+If the user confirms, update the DDR markdown with the new findings. Follow the same cross-check rules from [Step 2a](#step-2a-add-new-risks-from-external-intel-user-input--supplier-data--project-update) — search existing DDR first, link to PRR if applicable, use correct scoring scales.
+
+#### Parallel Multi-Discipline Study via Sub-Agents
+
+For large design packages spanning many disciplines (e.g. full museum fit-out with 8-15 trades), studying every discipline linearly burns too many turns. Use parallel sub-agent delegation instead:
+
+**When to use:** The design package covers 3+ distinct disciplines (lighting, AV, structural, acoustics, FLS, showcases, MEP) and each has its own folder or document set.
+
+**Pattern:**
+
+1. **Create one sub-agent per discipline group** (up to 3 concurrent per Hermes limit). Each receives:
+   - The exact file paths to study
+   - Discipline-specific questions (per the archetypes in `references/risk-archetypes-cheat-sheet.md`)
+   - The existing DDR/PRR risk IDs to cross-reference (so they don't duplicate known entries)
+   - Explicit instruction to return findings in structured format
+
+2. **Example delegation structure** (Aseer Museum case):
+   ```
+   Sub-agent 1: Architecture / Exhibition Layout + Showcases + Setworks
+   Sub-agent 2: AV/IT/Electrical + Lighting
+   Sub-agent 3: Structural / FLS / Acoustics / Accessibility
+   Sub-agent 4: MEP submittal status + ZNA contractual + procurement registers
+   ```
+
+3. **Each sub-agent returns** structured risk findings with:
+   - Findings that CONFIRM existing DDR entries (update evidence)
+   - Findings that UPGRADE existing DDR entries (update score)
+   - NEW findings not in any register (proposed new DDR entries)
+   - Key design parameters extracted (quantities, loads, specs)
+
+4. **Integrate results:** Cross-reference sub-agent reports for conflicts (e.g. Agent 2 says "lighting track positions conflict with ducts" while Agent 3 says "acoustic baffles also in same ceiling zone" — that is a 3-way clash).
+
+5. **Save individual reports** to `09_Agent_Workspace/<discipline>_risk_study_report.md` for traceability.
+
+6. **Update registers in one pass:** compile all new DDR entries + PRR escalations from the integrated results, then update files.
+
+**Pitfalls:**
+- Sub-agents may give conflicting scope boundaries (e.g. both lighting agent and AV agent claim the same interface issue) — deduplicate during integration
+- Sub-agents may not find existing DDR/PRR entries if the files are large — include specific risk IDs in the context
+- Sub-agents may use the wrong scoring scale — explicitly state DDR uses 1-5 PxI and PRR uses 1-4 PxS
+- Always verify sub-agent claims against actual design docs before adding to the register — sub-agents can hallucinate risks
+- **Sub-agents frequently get appointment status wrong.** A sub-agent studying pre-appointment design drawings may conclude "Glasbau Hahn not appointed" or "AD Engineering not appointed" because the drawings were produced before the specialist was contracted. Always cross-check appointment status against the repo's procurement and submittal registers (`procurement_package_register.md`, `submittal_register.md`, Odoo mapping) before treating a "not appointed" finding as a risk. The repo is the single source of truth for contractual status; design drawings are not.
+- Up to 3 concurrent sub-agents only (Hermes limit); queue additional batches sequentially
+
+**Proven instance (2026-07-14):** 6 sub-agents studied Aseer Museum pre-appointment design docs across 11 disciplines. Result: 17 cross-interface risks (9 HIGH) identified, 10 lighting-specific risks, and confirmation of 6 existing DDR entries. Report in `09_Agent_Workspace/Aseer_Museum_Cross-Interface_Risks.md`.
+
+### Reference Files
+
+- `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
+- `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
 
 ## Related Skills
 

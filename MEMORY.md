@@ -6,8 +6,10 @@ DOCX: use Word heading styles (H1/H2/H3), RGB PNG images (not RGBA), cantSplit o
 §
 When determining scope boundaries between specialists, always check BOTH the SoW text AND the specialist's own submittal register. The SoW may list a narrow scope, but the CG-approved scope or the specialist's own deliverable schedule may extend it. Example: ZNA's SoW lists interior areas only, but CG comment #1 requires "all project different lighting systems, spaces" and ZNA's submittal register includes LG-024 "Exterior lighting design" under SoW §8.8. Never assume scope from the SoW alone.
 §
-HTML page overflow fix: use CSS classes compact/tight/xtight on .page sections. xtight only for pages >75% density. Measure with table_rows*10 + svgs*100 + text*0.03 vs ~1972px available.
-§
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 §
 DOCX: Word heading styles, cantSplit on tables, RGB PNGs. Remarks = add_remark() halftone #64748B 9pt (not add_body). Fix empty cNvPr + noChangeAspect for Word image compat.
+§
+Aseer lane routing: classify task → master_dashboard.md → lane dashboard. Lane map: Design/NRS/RIBA→02, Submittals/SI→10, Procurement/PQ→07, Subcontractor→11, Materials→06, Risk/PRR→04, Sustainability/SMP→05, Quality/NCR→03, HSE→09, BIM→08, PM/decisions→01, Escalation→escalation_board.md. Always check plan CG status in plan_tracker.md first.
+§
+Delegate complex Excel/style fixes to Codex/Claude via claude -p. Samaya Excel style: base #F8FAFC, borders #CBD5E1 thin, severity fills per value, navy #0F172A header.

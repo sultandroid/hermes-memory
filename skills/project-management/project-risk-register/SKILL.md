@@ -377,6 +377,7 @@ Charts need data references in the worksheet. Place chart data in a hidden area 
 
 ## Reference Files
 
+- `references/design-coordination-risk-identification.md` — 7-phase methodology for extracting coordination risks between AV/IT/ELV specialist submissions and base build MEP infrastructure. Covers BOQ power load extraction, rack room heat analysis, projection path spatial conflicts, containment segregation, UPS strategy gaps, and scope boundary risks. Use when reviewing a specialist design submission (AV, IT, Security, ELV) before IFC or before D&B tender.
 - `references/template-application-pattern.md` — Apply one existing register's column layout, styling, sheets, and dashboard structure to another existing register. Covers data column mapping, scoring scale bridging, source styling capture, Cover preservation, and verification.
 - `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.
 - `references/risk-register-audit-methodology.md` — 9-step audit checklist for QA-checking an existing risk register. Covers scoring integrity, cross-referencing, lifecycle gaps, residual risk, mitigation quality, and dashboard verification. Use when the user sends an existing XLSX and asks "check this" or "audit this."

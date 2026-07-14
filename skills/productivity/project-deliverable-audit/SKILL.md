@@ -1,13 +1,13 @@
 ---
 name: project-deliverable-audit
-description: "Audit project deliverables (drawings, documents) against filesystem by extracting register entries, scanning files, cross-referencing, and updating HTML status reports with targeted patches — never full regeneration. Covers drawing register audit, designer scope-vs-deliverables workflow reports, file boundary cross-contamination detection, RIBA stage mapping, and payment tracking."
-version: 2.0.0
+description: "Audit project deliverables (drawings, documents) against filesystem by extracting register entries, scanning files, cross-referencing, and updating HTML status reports with targeted patches — never full regeneration. Covers drawing register audit, designer scope-vs-deliverables workflow reports, cross-discipline coordination risk review, file boundary cross-contamination detection, RIBA stage mapping, and payment tracking."
+version: 2.1.0
 author: Hermes Agent
 platforms: [macos]
 metadata:
   hermes:
-    tags: [BIM, Drawing-Register, Audit, HTML-Report, Samaya, File-Boundary, NRS, RIBA]
-    related_skills: [bim-project-register, project-register-manager, evm-analysis-chart]
+    tags: [BIM, Drawing-Register, Audit, HTML-Report, Samaya, File-Boundary, NRS, RIBA, Coordination-Review]
+    related_skills: [bim-project-register, project-register-manager, evm-analysis-chart, document-gap-analysis]
 ---
 
 # Project Deliverable Audit — Drawing Status & File Tree
@@ -15,6 +15,210 @@ metadata:
 Audit a project's deliverables (drawings, documents) against actual files on disk and update HTML status reports. Used for the Aseer Museum Drawing Status Tree and similar deliverable-tracking HTML reports.
 
 See `references/drawing-scan-methodology.md` for detailed scan methodology, naming conventions, regex patterns, and cross-reference logic.
+
+## Cross-Discipline Coordination Risk Review (Pre-Appointment Drawings)
+
+When reviewing a set of pre-appointment / Stage 2-3 design drawings (typically a PDF/DWG set with gallery-level README transcriptions) to identify cross-discipline risks before IFC — covering architecture vs MEP vs structural vs AV vs accessibility vs fire.
+
+### Trigger Conditions
+- A drawing submission package arrives at Stage 2-3 (Concept/Developed Design) and needs pre-IFC coordination review
+- Multiple discipline drawings exist (architecture overall GAs, AV location GAs, reflected ceiling plans, power/data GAs, accessibility GAs, fire strategy GAs, extreme load GAs) and need cross-referencing
+- The exhibition layout set needs to be assessed for spatial conflicts with MEP, structure, and fire/accessibility
+
+### Methodology — 7-Step Risk Identification
+
+**Step 1 — Map the full drawing set by discipline and floor:**
+
+First, enumerate all files across the drawing tree to understand what exists per gallery. Look for **repeating drawing codes** that reveal discipline layers:
+
+| Code | Discipline | What it contains |
+|------|-----------|-----------------|
+| `_0000` | GA Plan | Overall gallery layout |
+| `_0001` | Key Dimensions | Spatial extents |
+| `_0004` | Setwork / FF&E | Furniture, setwork placement |
+| `_0005` | Showcase Locations | Case footprints |
+| `_0006` | Graphics Locations | Graphic panel placement |
+| `_0007` | AV Locations | AV equipment positions |
+| `_0008` | DI/HI Interactives | Digital/hard interactives |
+| `_0009` | MI/TI Interactives | Mechanical/tactile interactives |
+| `_0010` | Models & Replicas | Physical model locations |
+| `_0011` | Art Commissions | Art placement |
+| `_0012` | Open Display | Unenclosed object positions |
+| `_0030` | LL Power & Data | Low-level power/data |
+| `_0031` | HL Power & Data | High-level power/data |
+| `_0032` | Reflected Ceiling Plan | Ceiling grid, lights, sprinklers |
+| `_0033` | Building Grid | Structural grid lines |
+| `_1000+` | Sections | Section cuts through gallery |
+
+**Step 2 — Identify confirmed cross-discipline conflicts:**
+
+Read ALL gallery-level `_README.md` transcriptions + overall floor plan transcriptions (XX_GF_0000, etc.) + any standalone discipline transcriptions (AV rack room, stair-ramp, showcase types). Look for:
+
+- **Numerical contradictions**: Same element described differently in two drawings (e.g., architecture overall says "24U rack 1.1m" but AV pack says "45U 2105mm" — this is a **confirmed conflict**)
+- **Location TBD flags**: Any "Location TBD after 100% submission" notes — these block downstream MEP routing
+- **Deferred design**: "By D&B contractor in next stage" notes on structural/MEP elements — these create programme risk
+- **Site survey gates**: References to unresolved site conditions
+
+**Step 3 — Check MEP/AV coordination:**
+
+Cross-reference per gallery:
+- AV Locations GA vs Reflected Ceiling Plan: Do AV positions align with ceiling grid, lighting zones, sprinkler heads?
+- Showcase locations vs Power & Data GAs: Does each showcase zone have nearby floor boxes / wall outlets?
+- AV rack rooms: Verify environmental spec (24/7 HVAC, RH 40-60%, raised floor, pre-action sprinkler) fits within room dimensions. ALL rack rooms must be checked — the spec is the same per rack but room sizes vary per floor.
+- TG (Temporary Gallery): If present, flag that reconfigurable MEP (grid-based power drops, track lighting, demountable AV) is needed — not fixed infrastructure.
+- Showcase height vs ceiling clearance: Check tallest showcase height against likely slab-to-soffit per floor (BF basements are especially tight).
+
+**Step 4 — Check structural coordination:**
+
+- Look for **Extreme Load GA** drawings (code `_0013`) — these flag art commissions, floor-mounted sculptures, and ceiling-suspended elements
+- Note any "refer to structural engineers drawings" annotations — these are unresolved structural dependencies
+- Complex section geometry: Galleries with many section drawings (e.g., 14 sections for G6 vs 2-4 for most) indicate stepped ceilings, mezzanines, or multi-height zones — higher MEP/structural clash risk
+- CL1 staircase if proposed — the structural connection between floors is a separate design responsibility
+
+**Step 5 — Check spatial adjacency & noise:**
+
+Read the floor GA plan transcriptions to map zone adjacencies, then flag:
+- **Noise-sensitive zone next to high-footfall zone** (e.g., Children's Educational Centre next to Main Lobby)
+- **Temporary gallery events next to permanent galleries** (noise cross-talk during openings/performances)
+- **Retail queue zone encroaching on lobby circulation** (bottleneck risk at main entrance)
+- **VIP zone proximity** — needs discrete access route independent of main flow
+
+**Step 6 — Check accessibility & egress:**
+
+For each floor, cross-reference:
+- Fire Strategy GAs (LL and HL drawings) → count galleries per basement floor → verify egress distance
+- Accessibility GAs → verify exhibition fit-out (showcases, setwork, open displays) doesn't obstruct accessible routes
+- Stair-Ramp / Stramp design: Check gradient (≥1:12 may be non-compliant), handrail heights (900mm typical may need dual-height for wheelchair users + children), landing lengths (4100mm typical vs turning circle requirements)
+- MEWP Access plans: For tall showcases (T2 at 2950mm, T6A/T6B at 2450mm), maintenance access matters
+- All floors have Accessibility GAs — cross-check every gallery's Setwork_FF&E and Open Display Locations against these
+
+**Step 7 — Assess MoC object-change sensitivity per gallery:**
+
+Classify each gallery into sensitivity tiers based on content complexity:
+
+| Tier | Indicator | Galleries |
+|------|-----------|-----------|
+| **High** | Many section drawings (≥5) AND all 6 content layers (showcase, AV, interactives, models, art, open display) | G6, G8, G12, G1 |
+| **Moderate** | Standard 6-layer set, 2-4 sections | G4, G5, G7, G9, G10, G11, G13, G14, G2, G3 |
+| **Low** | Amenity/flexible spaces | TG, LB spaces, EC, RT, VI, CA&TA, LR |
+
+Object changes in High-tier galleries cascade through sections, AV positions, and interactive layouts — require full spatial re-coordination.
+
+### Report Structure
+
+Always produce a risk register with:
+
+1. **Confirmed Conflicts** — direct contradictions between two drawings (e.g., 24U vs 45U rack)
+2. **MEP/AV Coordination Risks** — ceiling clearance, rack room fit, TG flexibility, showcase climate
+3. **Structural Risks** — extreme loads, CL1 staircase, complex-section galleries, deferred engineering
+4. **Spatial Adjacency Risks** — noise cross-talk, circulation bottlenecks, VIP routing
+5. **Accessibility & Egress Risks** — basement gallery density, Stramp gradient compliance, route conflict with fit-out
+6. **MoC Object Sensitivity** — per-gallery impact of object list changes
+7. **Risk Matrix** — severity × likelihood × priority per item
+8. **Key Recommendations** — actionable items ranked by criticality
+
+### Pitfalls
+
+- **AV vs Architecture contradictions are the most common finding.** Always compare the drawing sets across disciplines — they often disagree on rack models, quantities, or positions.
+- **"Location TBD" is a blocker, not a minor note.** Any unplaced room (especially AV rack rooms) blocks all MEP distribution for that floor.
+- **"By D&B contractor" is a programme risk flag.** When structural/MEP design is explicitly deferred to the D&B stage, there is no engineering at Stage 2-3 to validate the architectural concept.
+- **TG (Temporary Gallery) needs special treatment.** It is NOT a permanent gallery — it needs modular MEP, but the drawing set often treats it identically to permanent galleries. Flag this explicitly.
+- **Showcase Type 2 (2950mm tall) may not fit in BF.** Basement slab-to-soffit heights are typically lower. Verify ceiling clearance before placing these cases.
+- **Not all "Open" audit items need Stage 4 resolution.** Some items (structural clashes, ceiling heights) are design-wide and may only be resolved at IFC or coordination stage.
+- **The DMP defines the real stage split**, not the drawing title block. A drawing may say "IFC Package" but be actually Stage 4-A DD according to the DMP.
+
+### Reference Files
+
+- `references/aseer-architecture-exhibition-risk-review.md` — Worked example: Aseer Museum pre-appointment drawing set (Stage 2-3), full risk register with 8 categories, 20+ risks, sensitivity analysis per gallery.
+- `references/showcase-setworks-procurement-risk.md` — Worked example: Aseer Museum showcase & setworks procurement risk assessment (12 risks, gallery mapping, Glasbau Hahn/G4/EX2 findings).
+
+## Showcase & Setworks Procurement Readiness Assessment
+
+When the review focuses on **showcase types** (manufactured display cases) and **setworks** (architectural exhibition structures, furniture, FF&E) — a specialised procurement-readiness view within the broader coordination risk review.
+
+### Trigger Conditions
+- The review package contains dedicated Showcase Types drawings (DT_4000 series or equivalent) and per-gallery Showcase/Setwork Location GAs (*_0004 / *_0005)
+- The drawing register lists a specialist manufacturer (e.g., Glasbau Hahn, Goppion) but no scope/appointment documents exist
+- Oversized showcases (8m+ lengths, 2.9m+ heights) are specified and need delivery/logistics verification
+- The user needs to know: "can we procure this design as-is, or are there pre-appointment blockers?"
+
+### Methodology — 8-Question Assessment
+
+**Q1 — Manufacturer appointment status** — Search all documentation for the manufacturer name. Determine if:
+- A formal appointment document exists (SOW, PO, contract)
+- The manufacturer's standard range is confirmed to cover the designed types
+- Any manufacturer-specific design input (glass spec, hinges, locks, climate) is evidenced in the drawing set
+- The drawing register shows who drew each sheet (architect "AV" vs manufacturer "GBH" vs specialist "ZNA") — architect-drawn = indicative only
+
+**Q2 — Drawing revision status** — Check the drawing register for REV codes:
+- Rev "/" (information only) = not issuable for procurement
+- Rev "A"/"B" (tender/approval) = usable with caveats
+- Rev "C" (construction) = procurement-ready
+- If ALL showcase drawings are Rev "/", full re-issue required before procurement
+
+**Q3 — Per-gallery Showcase Locations GA existence** — Cross-reference the drawing register against actual filesystem files. Every gallery with objects/artefacts should have a Showcase Locations GA. Flag:
+- Galleries where _0005 drawing exists in register but PDF is missing from filesystem
+- Galleries using _0006 (Graphics) instead of _0005 — confirms no showcase location drawing exists
+- Auxiliary spaces (lobbies, education, VIP, retail) normally have no _0005 — this is expected
+
+**Q4 — Size/delivery logistics** — For each showcase type, compare dimensions against building constraints:
+- Standard door openings ~2100mm H x 900-1800mm W
+- Goods lift sizes and capacities per floor
+- Corridor widths along delivery route
+- On-site assembly requirement: any showcase exceeding 3000mm in any dimension likely needs in-situ assembly
+- Basement-floor delivery: check if a goods hoist or temporary opening exists
+- Verify by reading structural/interface reports — study the CL1 stair/escalator replacement if basements are involved
+
+**Q5 — Power/data/LV interface per type** — Assess whether each showcase type has an accompanying MEP interface schedule:
+- Power feed (240V, 110V, low-voltage)
+- Data/network (for interactive cases)
+- Lighting integration (internal case lighting, dimmers, DALI)
+- Condensate drainage (for active climate cases)
+- HVAC integration (microclimate units, air extraction)
+- If DT drawings have NONE of these: the MEP D&B contractor needs a per-type interface brief
+
+**Q6 — Structural loading** — Check if showcase weights are specified anywhere (DT drawings, structural report, FF&E schedule):
+- Large showcases (T1 at 8.3m x 1m x 1.42m) can weigh 500+ kg empty, more with artefacts
+- Floor loading limit is typically 4 kN/m2 (~400 kg/m2) — large footprints concentrate weight
+- Mechanical hood lifts (T3, T4) add moving-part weight and dynamic loading
+- If weights are absent: flag as structural gap requiring manufacturer input
+
+**Q7 — Microclimate/environmental requirements** — Assess per type:
+- Does the DT drawing note climate type (active / passive / TBC)?
+- Are the gallery environmental conditions compatible with showcase-level control?
+- Do sensitive objects (textiles, paper, archaeology) need isolated microclimates?
+- If all types say "passive (TBC)" or nothing: define environmental brief per object type
+
+**Q8 — Gallery mapping completeness** — Map every gallery against the drawing register to confirm:
+- Which showcase types go in which gallery (read the _0005 Showcase Locations GA)
+- Which galleries have heavy object loads requiring many cases
+- Which galleries use freestanding vs recessed types
+- Floor-by-floor summary table
+
+### Report Structure
+
+When producing a showcase/setworks procurement risk register, structure as:
+
+1. **Procurement Risks** — manufacturer appointment, drawing status, pricing readiness
+2. **Dimensional/Access Risks** — delivery route, lift capacity, door openings, in-situ assembly
+3. **Interface/Coordination Risks** — MEP, structural, lighting, HVAC, environmental
+4. **Documentation Gaps** — missing Showcase Location GAs, missing interface schedules
+5. **Gallery-Showcase Mapping Table** — floor x gallery x showcase types used x setwork IDs
+6. **Risk Matrix** — severity x likelihood, prioritised
+7. **Recommendations** — actionable next steps ranked by criticality
+
+### Pitfalls (showcase-specific)
+
+- **Architect-drawn showcase drawings are NOT IFC-ready.** The DT family sheet says explicitly "specialist manufacturer must advise." Treat every dimension as indicative until confirmed.
+- **Glasbau Hahn quotation interface does not equal appointment.** A single line in the Exhibit Schedule referencing GH for pricing does not constitute a contractual appointment. Verify actual appointment.
+- **Oversized showcases (8m+, 2.9m+) are logistics-critical.** T1 at 8300mm and T3 at 5850mm cannot fit through standard building openings. They MUST be assembled in-situ, requiring coordinated wall installation sequencing.
+- **Showcase weights are almost always unstated at Stage 2-3.** Do not assume they are within floor loading. Flag as a structural coordination item.
+- **Climate control is often deferred to "specialist to confirm"** — this means the gallery HVAC design has no showcase environmental brief. Close the gap before MEP D&B contractor completes load calculations.
+- **Per-type power/data interface schedule does not exist at Stage 2-3.** Flag as a required pre-IFC deliverable.
+- **Basement delivery is the hardest problem.** If basement galleries have no goods lift or accessible ramp, every showcase destined for BF needs a logistics plan.
+- **EX2/external setworks may have independent design tracks.** When the structural report flags an external zone as "In Abeyance" or requiring demolition/redesign, any setworks drawings for that zone are invalid.
+
+---
 
 ## Consultant Submittal Review (Subagent Workflow)
 

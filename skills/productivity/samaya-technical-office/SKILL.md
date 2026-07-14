@@ -380,6 +380,49 @@ When redesigning any section of a proposal HTML:
 2. **QC review → Kimi.** Before finalizing any redesigned section, consult Kimi for: text readability, color contrast, layout balance, Saudi tender conventions, print-readiness. Apply ALL critical/high-priority findings.
 3. **After delegation, verify:** (a) structural integrity (div/section balance), (b) no duplicated old content left behind from partial replacement, (c) renamed/moved sections still have correct page numbers in TOC and footers.
 
+## Aseer Command Center & Manager Lane Routing (MANDATORY)
+
+When any Aseer Regional Museum task arrives, route through the repo's command center system before acting:
+
+1. **Open** `00_Command_Center/master_dashboard.md` — identifies the activity type and points to the responsible manager lane
+2. **Open** the matching `10_Manager_Lanes/<lane>/dashboard.md` for that activity type
+3. **Read the dashboard** — it defines the lane's mandate, governing sources, controls, and escalation triggers
+4. **Cross-check plan CG status** in `08_Document_Index/00_plan_tracker.md` before relying on any plan as approved
+5. **Use** `03_Plans/99_Consolidated/project_plan_operating_model.md` for activity-specific mandatory checks (design, procurement, HSE, quality, etc.)
+6. **Update the evidence register** (existing markdown register in the repo, not a new file)
+
+**Lane routing table (quick ref):**
+
+| Activity | Lane directory |
+|---|---|
+| Design / NRS / RIBA gates | `02_Design_Manager` |
+| Submittals / drawings / CG replies / Aconex | `10_Document_Controller` |
+| Procurement / prequal / long-lead | `07_Procurement_Manager` |
+| Subcontractor packages / serial governance | `11_Subcontractor_Manager` |
+| Materials / samples / suppliers / Oddy | `06_Materials_Manager` |
+| Risk / PRR / DDR / treatment plans | `04_Risk_Manager` |
+| Sustainability / SMP / Mostadam / Oddy | `05_Sustainability_Manager` |
+| Quality / NCR / ITP / PQP | `03_Quality_Manager` |
+| HSE (all sub-plans) | `09_HSE_Manager` |
+| BIM / LOD / models / clash detection | `08_BIM_Manager` |
+| Project-level actions / decisions | `01_Project_Manager` |
+| Blockers needing management attention | `00_Command_Center/escalation_board.md` |
+
+**Never skip the lane routing step.** Every Aseer action must trace to a manager lane, governing source, and evidence register.
+
+### Risk Register Update Pattern
+
+When the user provides new risk intelligence (material failure, scope change, supply chain risk, client action):
+
+1. **Cross-check** existing `01_Registers/risk_register.md` (PRR) and `01_Registers/design_discipline_risk_register.md` (DDR) for existing coverage
+2. **If not captured or under-scored:** Add DDR rows under the appropriate discipline category with full cause/trigger, impact, priority, linked PRR, control action, owner, and evidence source
+3. **If risk elevates to project level:** Add PRR row with PxS scoring (1-4 scale), update Risk Snapshot counts, RBS counts, and Dashboard cross-reference table
+4. **Always link PRR <-> DDR** via the link columns in both registers
+5. **Update Immediate Priorities** in DDR if ranking changes
+6. **Add register control entry** (new version row with date, author, change summary)
+7. **Update last_updated** in frontmatter
+8. **Score upgrade rule:** When new evidence (datasheet, CG response, supplier disclaimer) elevates a previously Medium risk, re-score immediately — do not keep old scores based on "missing data"
+
 ## Core Principles
 
 ### 1. Project Separation Is Strict

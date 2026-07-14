@@ -134,6 +134,53 @@ Add the materials register entries to `01_Registers/submittal_register.md` under
 | MOC-MUS-ASE-1A0-MA-0008 | Metal SS PVD Coated Patinated Brass Effect — SAM-FIN-SS-002 | Materials | **In Preparation** | ... |
 ```
 
+## Supplier Technical Datasheet Risk Analysis
+
+Supplier datasheets contain risk signals that are easy to miss but critical for museum-grade materials. When a supplier submits a datasheet, analyze it for disclaimers before relying on it for CG submission or procurement.
+
+### What to extract from every datasheet
+
+| Signal | What to look for | Risk implication |
+|--------|-----------------|------------------|
+| **"Random" or "varying" finish disclaimer** | "Randomly generated surface finish", "final result will differ from sample" | Sample approval is meaningless — production units will differ. CG may reject as-delivered finish. |
+| **Variation exclusion clause** | "Color variations within a single piece and from batch to batch do not constitute grounds for complaint" | Supplier explicitly disclaims liability. If finish is rejected, you have no recourse. |
+| **Complaint limitation** | "Final appearance is not a basis for subsequent complaints" | **Red flag.** The datasheet is a legal document stating the supplier will not accept returns or claims for appearance. |
+| **Process type** | "Chemically darkened", "hand-applied patina", "batch process" vs "production line" | Batch chemical processes have higher variability than production-line automation. Oddy testing one batch does not guarantee the next. |
+| **Clear coat / sealant type** | "Clear coat sealed", "lacquer", "wax" | Affects Oddy test parameters, VOC emissions, and long-term durability. Verify all coating materials also pass Oddy. |
+
+### How to connect datasheet findings to project risks
+
+| Datasheet finding | Risk to create/update | Example |
+|---|---|---|
+| Supplier disclaims appearance variation | **Finish matching risk** — same material on multiple applications will vary batch-to-batch | EDEN-DESIGN CD/CC patinated brass on showcases (Glasbau Hahn), doors, cladding → each application will differ |
+| Batch chemical process (not production line) | **Oddy testing risk** — one batch passes, next may not. Re-test cycle is 3-4 months. | EDEN CD/CC: chemically darkened non-ferrous metal. Each batch = unique chemical reaction. |
+| Single supplier named across multiple trades | **Supply concentration risk** — if that supplier fails or can't scale, all trades affected | Single German patination source serving showcase, doors, cladding |
+| Supplier explicit disclaimer language | **CG rejection risk** — CG will reject a material whose own datasheet says "final result will differ from sample" | EDEN datasheet: "final appearance is not a basis for subsequent complaints" |
+
+### The "Look and Feel First" Strategy
+
+When a material submittal is rejected (Code C) because certifications are missing but visual/functional properties are acceptable:
+
+1. **Request CG to approve LOOK AND FEEL** (visual appearance, colour, texture) of the submitted sample **now**
+2. **Pursue test reports in parallel** (Oddy, fire, VOC, off-gassing, MSDS, chemical composition)
+3. **Develop alternatives in parallel** — e.g., PVD-coated sample from local KSA suppliers as risk mitigation
+4. **Document risk to CG** — explicitly state that batch variation is inherent (citing the datasheet), so look-and-feel approval covers a representative range, not exact match
+
+This decouples aesthetic approval (CG decides immediately) from technical certification (takes weeks/months).
+
+### Workflow
+
+1. Extract datasheet text with `pdftotext`
+2. Search for: "random", "vary", "batch", "not a basis", "complaint", "differ", "sample", "chemical"
+3. If disclaimers found, flag the material row with ⚠️ in Notes
+4. Add risk to DDR (under relevant discipline — Showcase, Metal, Finish)
+5. Escalate to Procurement Manager (07) and Materials Manager (06) lanes
+6. Disclose variation risk explicitly in CG submission — never hide supplier disclaimers
+
+### Reference file
+
+See `references/patinated-brass-datasheet-eden-analysis.md` for a worked example of EDEN-DESIGN patinated brass datasheet analysis.
+
 ## Submittal Statement Format (to CG)
 
 Keep statements **very short** — the user explicitly rejected verbose framing. Pattern:
