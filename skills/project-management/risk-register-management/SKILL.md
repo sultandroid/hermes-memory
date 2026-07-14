@@ -146,7 +146,63 @@ When the user provides new risk intel (supplier datasheet, new object list, fabr
 
 7. **Update all counts** — snapshot table, RBS counts, dashboard cross-references, version control table.
 
-### Step 3: Update RMP DOCX (Word)
+### Step 2b: Audit External/PM Register Against Live Register
+
+When the PM or a stakeholder sends an Excel risk register that should be aligned with the live repo register, do NOT assume they are in sync. Auditing an external register requires systematic cross-comparison across multiple dimensions.
+
+### Audit Checklist
+
+| Check | What to Look For | How to Resolve |
+|-------|-----------------|----------------|
+| **Date reference** | What status report / MoM is the register aligned to? If 5+ weeks stale, all status fields are suspect | Note the basis date; treat all LIVE/Materialising flags as unconfirmed |
+| **Scoring formula** | Open the Excel — are Risk Score / Rating columns populated with values, or are they empty because P and S stored as text labels? | Flag as broken; convert P/S to numeric or report to PM |
+| **Dashboard counts** | Are the Critical/High/Medium/Low counts actually computed, or are they all empty? | Same cause as broken scoring; fix and recalculate |
+| **Risk ID overlap** | Do PRR-XXX-XX IDs in the Excel mean the same thing as same IDs in the repo? | Read the risk event descriptions side by side — same ID may describe a different risk (e.g. Excel PRR-COM-01 = "scope changes" but repo PRR-COM-01 = "EOT dispute") |
+| **Missing risks** | What risks exist in the repo but not in the Excel? What risks exist in the Excel but not the repo? | Create a cross-reference table. Repo-missing good risks may need importing; Excel-missing Critical risks are gaps the PM needs to know about |
+| **Target close dates** | Does the Excel have target close dates for each risk? If all blank, it lacks accountability tracking | Flag as gap; repo has target dates for all risks |
+| **Status freshness** | "Open - Materialising (Rpt 16)" is stale if Rpt 16 is 5 weeks old | Update status or generalise the convention (use "LIVE" without report number) |
+| **Evidence column** | Does each risk cite source documents (CG codes, NCR refs, MoM references)? | If not, the register is opinion-based rather than evidence-based |
+| **Residual scoring** | Are post-mitigation residual P&S scored? If not, no way to tell if mitigations are working | Flag as gap |
+| **Watchlist cross-check** | Compare Excel's Executive Watchlist against current project status from repo (project_status.md, look_ahead.md, NCRs, MoM) | Mark each watchlist item as ✅ Still live / ⚠️ Partial / 🔴 Escalated / 🟡 Downgraded |
+
+### Output Format
+
+Produce a structured audit report with these sections:
+
+```markdown
+// Section A: Scoring — BROKEN/WORKING
+// Section B: Critical Gap — X risks MISSING from PM's Excel
+// Section C: Y Risks in Both — Status Discrepancies (side-by-side table)
+// Section D: Dashboard LIVE Watchlist — Reality Check
+// Section E: Structural Issues in the Excel
+// Section F: Summary — What the PM's Register Gets Right vs Wrong
+// Section G: Recommended Actions (numbered, with owners and due dates)
+```
+
+### Common Structural Issues Found in External Registers
+
+| Issue | Example from Aseer | Fix |
+|-------|-------------------|-----|
+| **ID collision** — same ID, different risk | Excel PRR-COM-01 = "scope changes"; repo PRR-COM-01 = "EOT dispute" | ID migration: re-ID one set, or split into separate COM-01/COM-05 |
+| **Dashboard empty** — counts not computed | All Dashboard cells for Critical/High/Medium/Low counts are None | Fix scoring formula first, then counts auto-fill |
+| **Score column blank** — P×S not derived | All 33 Excel risks show Risk Score = None | P and S stored as text "High"/"Medium" instead of numbers 1-4. Convert to numeric |
+| **Status tied to stale report** | "Open - Materialising (Rpt 16)" — Rpt 16 is 5 weeks old | Generalise convention; drop the report number suffix |
+| **No target close dates** | All 33 risks have Target Close = blank | Import dates from repo or set during next review |
+| **Owner naming inconsistent** | "Project Director / Commercial Manager" vs repo's specific "Technical Office Mgr", "Procurement Lead" | Align to repo role titles |
+| **Risk merged when repo splits** | Excel PRR-FLS-01 = one fire risk; repo splits into FLS-01 (IFC-0004) + FLS-02 (Fire Pump decision) | Accept split: the two risks have different causes, owners, and response actions |
+
+### Importing Good Risks from External Register
+
+When an external register has risks the repo doesn't:
+1. Evaluate each — is it a genuine EPD (early proactive detection) or noise?
+2. Score it per RMP scale (P×S 1-4 for PRR)
+3. Assign a new PRR-CAT-NN ID (check for existing unused IDs in the correct category range)
+4. Write to the live register
+5. Update the RMP risk counts and RBS distribution
+6. Log in the weekly review
+7. Tag as "Pending import" in the register cross-reference until PM confirms
+
+## Step 3: Update RMP DOCX (Word)
 
 The DOCX is the formal CG submittal version. It must match the RMP MD exactly.
 
@@ -240,7 +296,7 @@ The register's **Risk Breakdown Structure** table at the top must match the actu
 
 ### Step 5: Verify Alignment
 
-Check these specific data points across all three documents:
+Check these specific data points across ALL documents:
 
 ```python
 # READ the actual register first — these values are examples only
@@ -260,6 +316,22 @@ alignment_checks = [
 ]
 ```
 
+**Also verify ancillary files:**
+- `03_Plans/08_Risk/README.md` — governance line revision, current snapshot (risk count, treatment coverage)
+- `00_Command_Center/master_dashboard.md` — Risk Management lane revision tag
+- `reviews/<latest>.md` — documents the changes that triggered this revision
+- `01_Registers/risk_register.md` cross-reference table — does it mention any pending imports from external audits?
+
+**Cross-document consistency check (from this session):**
+| Document | RMP (§1.2) | RMP (§2) | RMP (§4.2) | RMP (§9.1) | Register | README | master_dashboard |
+|----------|-----------|---------|-----------|-----------|----------|--------|-----------------|
+| Total risks | 29 | — | 29 | 29 | 29 | 29 | — |
+| Critical | — | — | 10 | — | 10 | — | — |
+| DRR count | 79 | — | — | 79 | — | 79 | — |
+| RMP revision | C03 | — | — | — | C03 ref | C03 | C03 |
+| Treatment files | — | — | — | — | — | 10/10 ✅ | — |
+```
+
 ### Step 6: Bump Revisions
 
 | Document | Pattern |
@@ -270,6 +342,11 @@ alignment_checks = [
 | DDR markdown | `revision: D0X` in frontmatter (D = Design risk register, distinct from PRR's C-series) |
 | RMP MD | `revision: C0X` in frontmatter |
 | RMP Document Control | Append row |
+| `master_dashboard.md` | Update Risk Management lane description to include new revision (e.g. "RMP C03 (14-Jul)") |
+| `03_Plans/08_Risk/README.md` | Update governance line, current snapshot (risk count, treatment coverage, revision) |
+| `reviews/` | Create new weekly review file documenting what changed and why |
+
+**Always update ALL ancillary files** when bumping the RMP or register — the README and master_dashboard are the entry points that other agents and the PM use to find the current revision state.
 
 ### Verification Command
 
@@ -298,12 +375,57 @@ When using `patch()` to fix markdown tables, the tool sometimes adds an extra `|
 **Fix:** After all patches are done, verify and clean:
 ```bash
 # Check for triple-pipe artifacts
-rg '^\|\|\|' path/to/register.md
+rg '^\\|\\|\\|' path/to/register.md
 # Fix them
 sed -i '' 's/^||| /|| /' path/to/register.md
 sed -i '' 's/^||/|/' path/to/register.md  # if needed for specific table sections
 ```
 Check each table section individually — some tables use single-pipe starts (`| col |`), others use double-pipe (`|| col |`). A blanket fix may break correct formatting.
+
+### Risk ID collision between registers
+
+The **same PRR-XXX-XX ID** in the PM's Excel and the repo's risk_register.md may describe **different risks**. This is not a typo — it happens when both registers evolve independently and reuse the same ID for different risk events.
+
+**Example:**
+| Source | PRR-COM-01 Description | PRR-COM-02 Description |
+|--------|----------------------|----------------------|
+| PM's Excel (Rpt 16) | "Scope changes post-award" | "SAR 0 certified — cash flow" |
+| Repo C05 (14-Jul) | "EOT Claim 01 rejected — dispute" | "Milestone certification lag" |
+
+**Fix:** Before merging registers, read risk event descriptions side by side. Flag all collisions to the PM. Options:
+- Re-ID one set (e.g. repo COM-01 → COM-05 if Excel has a legitimate different use of COM-01)
+- Keep both under different IDs and clearly document which is which
+- Merge into one risk with comprehensive description if they're actually the same event
+
+### External Excel has broken scoring formula
+
+PM-provided Excel registers often store Probability and Severity as text labels ("High", "Medium") instead of numeric values (3, 2). This causes the Risk Score (P×S) and Risk Rating columns to be empty for all rows, even though the formula is present.
+
+**Detection:** Open the Excel and check if the Risk Score column has values for at least one row. If all rows show blank or None, the formula can't multiply text.
+
+**Fix path:**
+1. Convert P and S columns from text to lookup values using openpyxl or Excel formulas
+2. Or rebuild the register from the repo's numeric data
+3. After fixing P/S, the Dashboard counts auto-populate
+
+### External Excel lacks target close dates
+
+Repo registers have target close dates for every risk. PM-provided Exports often omit this column entirely or leave it blank. Flag as a governance gap — without target dates, risk owners have no deadline for resolution.
+
+### Status tied to a stale status report number
+
+The Excel convention "Open - Materialising (Rpt 16)" ties the risk status to a specific report. When Rpt 16 is 5 weeks old, the status label is misleading. Generalise to "Open - Materialising" or "Open - LIVE" without the report number suffix, and track the evidence date separately.
+
+### Dashboard counts null when scoring formula is broken
+
+The Dashboard sheet's Critical/High/Medium/Low counts are typically derived from the Master sheet's Risk Score column. If scoring is broken (P/S stored as text), the Dashboard counts will all be 0 or blank — not because no risks exist, but because the formula can't compute them.
+
+### Watchlist items may have escalated or split since the Excel was created
+
+The Executive Watchlist on the Dashboard should be validated against current repo data. Common findings:
+- A single watchlist item in the Excel may have split into multiple separate Critical risks in the repo (e.g. "Fire risk" → PRR-FLS-01 IFC-0004 + PRR-FLS-02 Fire Pump)
+- Watchlist items may have escalated from High to Critical since the Excel was frozen
+- Some watchlist items may have been downgraded or resolved
 
 ### Onedrive Excel write safety
 If the Excel file is open in Excel when openpyxl tries to save, the write may silently corrupt the file. Ask the user to close the file first, or use a temp copy and replace after confirming.

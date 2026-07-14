@@ -115,12 +115,14 @@ If the file shows the expected size (e.g., 16018 bytes), the write succeeded eve
 | Method | Read | Write | Notes |
 |--------|------|-------|-------|
 | `write_file` tool (Hermes built-in) | ✅ Best | ✅ Best | Only method that works on cold stubs. No `brctl download` needed. |
-| `brctl download` + `cat <src> > /tmp/<dest>` | ✅ Best | N/A | Use `cat >` not `cp` — avoids fcopyfile deadlock. Verify with `stat -f \"%Sf\"` first. |
+| `osascript -e 'do shell script "rm -f /tmp/dest && cp /path/to/icloud/src /tmp/dest"'` | ✅ Best | N/A | **NEW: Most reliable read pattern.** `rm -f` on the /tmp destination first releases any lock, then `cp` from iCloud source works. Verified working on macOS 26.5.2. |
+| `osascript -e 'do shell script "rm -f /path/to/icloud/dest && cp /tmp/source /path/to/icloud/dest"'` | N/A | ✅ Works | **NEW: Reliable write pattern.** `rm -f` on the iCloud destination releases the sync engine lock, then `cp` from /tmp source succeeds. Verified: 16KB register files written correctly. |
+| `brctl download` + `cat <src> > /tmp/<dest>` | ✅ Works | N/A | Use `cat >` not `cp` — avoids fcopyfile deadlock. Verify with `stat -f \"%Sf\"` first. May produce 0-byte output if file is still a cold stub. |
 | `brctl download` + `python3 /tmp/script.py` | ✅ Works | ✅ Works | Must `brctl download` + verify local first. Writes to cold stubs also fail. |
 | `osascript -e 'do shell script \"python3 ...\"'` | ⚠️ Sometimes | ⚠️ Sometimes | Fails on some macOS versions |
 | `brctl download` + `cp` | ❌ Fails | ❌ Fails | `cp` uses fcopyfile which deadlocks |
 | `cat <src> > /tmp/x && mv /tmp/x <dest>` | OneDrive only | OneDrive only | iCloud produces 0-byte output |
-| `rm -f <target> && cp /tmp/source <target>` | Medium | Medium | Delete first to release lock, then copy |
+| `rm -f <target> && cp /tmp/source <target>` (direct shell, no osascript) | ❌ Fails | ❌ Fails | Direct shell `cp` after `rm -f` still deadlocks. Must go through `osascript -e 'do shell script'` bridge. |
 
 ## Detection
 

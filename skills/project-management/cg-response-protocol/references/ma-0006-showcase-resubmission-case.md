@@ -107,3 +107,53 @@ When supplier test reports/certifications take time (supplier lead time), but th
 4. **Separate submittals** — don't let one Code C block another
 5. **Look & feel first** — visual approval can proceed while technical docs catch up
 6. **CR Sheet goes to CG** — email thread + checklist stay outside the support folder for direct sending
+
+## Canonical File Locations (verified 2026-07-14)
+
+**The same MA-0006 PDF is filed in 10+ locations.** When searching, the **canonical register** is `~/aseer-museum-pm/01_Registers/material_submittal_register.md` (row 24 = MA-0006, status C). The **canonical support package** is:
+
+```
+/Users/mohamedessa/OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/24_Subcontractors/05_Showcases_Contractor/09_Submittals/MA-0006_Rev01_Support/
+```
+
+Sub-folder numbering (1..7) maps to a stable pattern — do NOT rename:
+- `01_CG_Rejection_Code_C/` — Rev.00 rejection letter (only `*_Rev00_CG_Rejection.pdf` lives here; Rev.01 itself does NOT exist yet as a PDF)
+- `02_Glasbau_Hahn_Technical_Reply/` — supplier's 29-Apr-2026 comments reply
+- `03_Guardian_Clarity_Datasheet/` — anti-reflective glass manufacturer datasheet
+- `04_Supporting_Data_Sheets/` — 14 manufacturer datasheets FLAT (no subdirs)
+- `05_PQ_0063_Approval/` — prequalification Code B approval
+- `06_Sample_Board/` — sample board photo
+- `07_MA_0007_Brass_Support/` — EDEN patination + CuZn37 brass spec (cross-link to MA-0007)
+
+**Two artefacts must stay in sync:**
+- `09_Submittals/MA-0006_Rev01_CR_Sheet.xlsx` — 10-row CR sheet for CG (also duplicated to `06_Correspondence/20260713_MA-0006_Rev01_CR_Sheet.xlsx`)
+- `09_Submittals/09_Resubmission_Checklist/MA-0006_Rev01_Checklist.md` — internal checklist of items prepared vs items still needed
+
+**Parallel bank — Adel Darwish's archive** at `~/OneDrive - SAMAYA INVESTMENT/Adel  Darwish's files - 01- Execution Documents/08- Material Submittal MA/Architectural/06 -MOC-MUS-ASE-1A0-MA-0006/` contains the same material with an `Approval/` subfolder and a Form-MS xlsx. Cross-check Adel's bank against the canonical support folder when discrepancy is suspected.
+
+**Other locations where the MA-0006 PDF is also parked** (search these if the canonical is missing): `04_Docs/03_Submittals/`, `04_Docs/03_Submittals/03.3_Material_Submittals/15_Showcases_Conservation/01_NRS_Specs/`, `12_Procurment/General/08_Exhibition_FitOut_Contractor/QA_Oddy_Testing/05_Returned_Submittals/`, `16_Email_Archive/_attachments/`, `23_Scripts/output/attachments_staging/MA-0006/`, `24_Subcontractors/08_Exhibition_FitOut_Contractor/QA_Oddy_Testing/05_Returned_Submittals/`.
+
+## Full 10-Comment CR Sheet Structure
+
+The 5-comment pattern (above) covers only CG rejection items. The **real** CR sheet for MA-0006 Rev.01 has 10 items because PQ-0063 conditions are treated as additional comments:
+
+| # | Source | Comment Theme | Typical Status |
+|---|--------|---------------|----------------|
+| 1-3 | CG Rejection Letter (15-Apr) | Materials non-compliance, AR glass, SI-007 | CLOSED via supplier reply + datasheets |
+| 4-5 | CG Rejection Letter | Patinated brass (→ MA-0007), 3 alternative suppliers | PARTIAL / OPEN (negotiate single-source) |
+| 6 | MA-0007 Code C (02-Jul) | Test reports, certifications, 2 alternatives for brass | REQUESTED — awaiting CG reply on Look & Feel |
+| 7 | PQ-0063 Condition #1 | Conservation test certificates (Oddy 14-day, ALL internal materials) | OPEN — 21-day extension requested |
+| 8 | PQ-0063 Condition #2 | HVAC/electrical/humidity integration shop drawings | OPEN — 14-day extension, needs AD Engineering |
+| 9 | PQ-0063 Condition #5 | Full-scale on-site mock-up prior to bulk supply | OPEN — commitment made (Type 3 Al Muftaha, 5200x1000x978) |
+| 10 | PQ-0063 Condition #6 | Permanent on-site technical team from Glasbau Hahn | OPEN — post-approval (Glasbau Hahn confirmed) |
+
+**Key insight:** items 7-10 come from the **PQ-0063 prequalification approval** (Code B, 03-Mar-2026), not from the CG rejection letter. They were carried forward as conditions that the original Rev.00 MA submission never fully closed. The CR sheet must list them as separate items, not bundle them under a generic "fulfil PQ conditions" line.
+
+**Cross-discipline blocker:** Item 8 (HVAC/elec/humidity shop drawings) depends on **AD Engineering** as the MEP designer. Track this as a separate dependency in the RIBA Stage 4 deliverable tree — it is the longest-tail item on the Rev.01 critical path.
+
+## Rev.01 Status (as of 2026-07-13)
+
+- **Rev.01 has NOT been issued to CG** as a PDF
+- CR sheet + checklist are dated 2026-07-13 — submission is staged, not sent
+- The 6 OPEN items (items 4 partial + 6, 7, 8, 9, 10) need either (a) closure before issue, or (b) cover-letter commitment to close post-approval
+- **Critical-path risk:** the 169-row procurement Excel (`ASM_Material_Procurement_Schedule_ARCH.xlsx`) lists 13 showcase lines all submittal-rejected under MA-0006 with delivery target 2027-12-03 — 14 months AFTER the 30-Sep-2026 contract handover. MA-0006 Rev.01 must be issued + approved fast or it becomes the showcase installation's binding constraint.

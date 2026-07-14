@@ -64,7 +64,7 @@ More reliable than `mdls` for OneDrive — works even when `mdls -name com_apple
 | `stat -f "%Sf"` | Returns `-` (local) or `compressed,dataless` (cloud) | Returns `-` or `compressed,dataless` |
 | Safe operations | `find`, `ls -la`, `stat` on filenames, directory listing | `find`, `ls` (but `stat` fails) |
 | Python read via AppleScript | Fails (same EDEADLK) | May work |
-| Delete-and-copy workaround | `os.remove()` + `cp -X` | Silent 0-byte output from `cat` |
+| Delete-and-copy workaround | `os.remove()` + `cp -X` | **`rm -f` + `cp` WORKS** — produces correct file size (unlike `cat >` which races with sync engine) |
 | **`read_file` tool** | Returns EDEADLK error | Returns **empty content** (no error, just blank) — the tool's dedup cache then returns "unchanged" on retry, masking the problem |
 | **`osascript -e 'do shell script "cat ..."'`** | Fails (EDEADLK) | Also fails — returns empty string with exit 0 |
 | **Python script via `osascript -e 'do shell script "python3 /tmp/script.py"'`** | Fails | **WORKS** — AppleScript's `do shell script` bridges permissions and can read iCloud files that direct shell access cannot |
@@ -81,7 +81,8 @@ When `read_file` returns empty content and `file` command says "cannot read (Res
    ```bash
    brctl download --progress /path/to/file.pdf
    ```
-4. **Prevent the problem**: ensure OneDrive is set to "Download all files" or mark target folders as "Always keep on this device" in OneDrive preferences.
+4. **Delete-and-copy (rm -f + cp)** — removes the iCloud stub, then cp uses fcopyfile which handles the replacement atomically. This works (unlike cat > which races with the sync engine and produces 0-byte stubs). Confirmed: rm -f <target> && cp <source> <target> produces correct file size.
+5. **Prevent the problem**: ensure OneDrive is set to "Download all files" or mark target folders as "Always keep on this device" in OneDrive preferences.
 
 ## BIM scanning workaround: list-only matching
 

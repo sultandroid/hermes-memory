@@ -199,6 +199,7 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 - **cat-row separators** must use `.cat-row td` class (dark background, white text), not blank rows. Blank rows break table continuity.
 - **Status badges** must be consistent: CLOSED (green), SUBMITTAL-PENDING (amber), IN-PROGRESS (blue), RE-OPENED (red). Don't invent new badge types mid-document.
 - **Round column** must include both date and round number (e.g., "R2 · 2-Jun") for traceability across revisions.
+- **Verify which floor the CRS covers** — CG often reviews one floor at a time. Check drawing number prefixes (BF=Basement Floor, LG=Lower Ground, GF=Ground Floor) in the CRS drawing references. The document title may say "Basement Floor" only. Do not assume a CRS covers multiple floors unless explicitly stated. When forwarding to the designer, name the correct floor in the subject line.
 
 ### Supplier Technical Rebuttal — When CG Demands Alternatives
 
@@ -267,6 +268,8 @@ MA-NNNN_Rev01_Support/
 | 3 | Comply with SI-007 | Rejection letter | NRS approved drawings | 08_Email_Thread/ | CLOSED | SI closed |
 | 4 | Brass patinated | Rejection letter | Separate submittal | 07_Related_Submittal_Support/ | PARTIAL | Look & feel request sent to CG |
 | 5 | 3 alternative suppliers | Rejection action | Request single-source acceptance | 02_Supplier_Reply/ + 05_PQ_Approval/ | OPEN | Awaiting CG decision |
+
+**Real-world CR sheets are longer than 5 items.** PQ (prequalification) conditions carry forward as additional CR rows — they were never closed by the original Rev.00 MA submission. For the full 10-row MA-0006 Rev.01 pattern (with PQ-0063 conditions 1/2/5/6) and the canonical file locations, see `references/ma-0006-showcase-resubmission-case.md` sections "Full 10-Comment CR Sheet Structure", "Canonical File Locations", and "Rev.01 Status".
 
 ### Look & Feel Approval Strategy
 

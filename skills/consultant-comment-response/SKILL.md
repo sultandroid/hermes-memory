@@ -270,6 +270,71 @@ This means:
 - **Blum/Henkel catalogs don't state BHMA/EN grades explicitly.** Blum catalogs show load capacities and cycle durability but not BHMA A156.9 Grade 1. Henkel TDSs show viscosity and lap shear but not EN 204 D3. A manufacturer declaration letter is needed for each — don't assume the catalog data alone satisfies the spec.
 - **Consolidate evidence into one folder.** Create `10_Compliance_Evidence/` with subfolders `Datasheets/` (organized by manufacturer) and `Certificates/`. Update all file references in the compliance sheet and MAR checklist to point to this consolidated folder. This makes the resubmission package self-contained and easy for the engineer to audit.
 
+## Forwarding CG Comments to Designers (Pre-CR-Sheet Routing)
+
+Before building the CR Sheet, CG comments often need to be **filtered and forwarded to the designer** (NRS, AD Engineering, etc.) for their input. This is a distinct workflow step.
+
+### Workflow
+
+1. **Read the full CRS** — Extract all comments from the CG's Excel/PDF
+2. **Map each comment to a party** — Use the scope split, not assumptions:
+   - **Designer scope** (NRS): Drawing content, title blocks, QA notes, sheet layout standards, dimensions, room names, section details, showcase design, finishes schedule format, material specifications
+   - **Contractor scope** (Samaya): Cloud survey, demolition methodology, mock-ups, material samples, BIM coordination, subcontractor appointments, site logistics
+   - **Specialist scope**: Graphic housing, AV, lighting (ZNA), life safety — route to the relevant specialist
+3. **Verify responsibility from past emails** — Before assigning a comment to a party, check Outlook for prior correspondence on the same topic. The designer may have already addressed it or pushed back. Use `Conversation_ConversationID` to find the full thread.
+4. **Draft a filtered email** — Only include items that belong to the designer. Do NOT dump the entire CRS on them.
+
+### What Belongs to the Designer
+
+The designer produces the drawings, so these are on them:
+- Title block content (dates, revision schedule, drawing numbers, reviewer names)
+- QA notes and sheet layout standards compliance
+- Missing dimensions, room/space names on sections
+- Showcase design details (opening mechanisms, finishes, dimensions)
+- Finishes schedule format and content
+- Space labeling (FFL, CIL, space codes)
+
+### What Belongs to the Contractor
+
+These are Samaya/contractor responsibilities:
+- Cloud survey (pending — note it in the email for context)
+- Demolition methodology and ceiling removal clarification
+- On-site mock-ups and material samples
+- BIM coordination and clash resolution
+- Subcontractor appointments (Glasbau Hahn, etc.)
+- Site logistics and access
+
+### Email Structure to Designer
+
+```
+Subject: NRS Input Required — [SUBMITTAL REF] CRS ([FLOOR] Only)
+
+Dear [Name],
+
+CG returned the CRS for the [Floor] [Discipline] DD submittal (overall C).
+We are preparing our response and will address the items on our side
+([list contractor-side items]) directly with CG.
+
+The following items need [Designer] design input:
+
+[Section Heading (Reviewer Name)]:
+- #[N] — [Brief description of comment]
+- #[N] — [Brief description of comment]
+
+Please review and advise so we can prepare the resubmission.
+
+Regards,
+[Name]
+```
+
+### Key Rules
+
+- **Mention pending contractor items** (cloud survey, etc.) in one line so the designer knows the context — but don't list them as action items for the designer
+- **Check past emails** before assigning — the designer may have already responded to a similar comment in a previous round
+- **Name the floor** in the subject — CG often reviews one floor at a time
+- **Group by reviewer** (Eng. Maged Zamzam, Eng. Islam Mostafa, Eng. Abdrabo) for clarity
+- **Keep it short** — the designer doesn't need to see all 89 comments, only their ~15-20
+
 ## Pitfalls
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks
 - Comments may have inline status markers like "OK", "OK - comply with Ad.", "OK - Update in DL" — these need careful parsing
@@ -277,6 +342,8 @@ This means:
 - Some comments are duplicates ("Same comment #N") — handle by referencing the original
 - Always include a table in the external reply for clarity
 - Deadlines should be realistic (typically 5-7 working days for resubmission)
+- **Don't assume scope split** — title blocks, QA notes, and sheet layout standards are on the designer (they produce the drawings), not the contractor. Cloud survey is on the contractor, not the designer. Verify from past emails before assigning.
+- **Name the floor** in the subject line — CG often reviews one floor at a time. Check drawing number prefixes (BF, LG, GF) to confirm which floor the CRS covers.
 
 ## User Preferences (Mohamed Sultan Abbas)
 - Formal, professional tone in both internal and external communications

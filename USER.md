@@ -3,3 +3,5 @@ Eng. Mohamed Sultan, Tech Office Mgr, Samaya. Write like engineer: plain ASCII, 
 CG comment disposition should be external Excel (CR sheet), not inline in the document. Remove full CG comment pages from plans, reference attached CR sheet only.
 §
 Workstyle: self-QC before presenting — verify all data against repo (names, roles), no AI fingerprints, no meta-commentary, state facts only (no inferred approval). Ask if unsure. Think proactively: study design drawings for root-cause risks (batch vs line, single-source, cascading cross-discipline impacts). Delegate sub-agents for parallel risk discovery.
+§
+When forwarding CRS to NRS/designers: filter items by responsible party first. NRS (designer) owns title blocks, QA notes, sheet layout standards, drawing content. Samaya/contractor owns cloud survey, demolition methodology, mock-ups, material samples, BIM coordination. Always acknowledge known gaps (e.g. cloud survey pending) in the email. Be precise — don't lump items under "etc." without verifying who owns each.

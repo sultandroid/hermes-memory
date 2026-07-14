@@ -710,6 +710,186 @@ Save the assessment to `_MANAGER_DASHBOARD/PREQUALIFICATION_ASSESSMENT.md` with:
 - **Supporting docs are not a guarantee** — giving the sub the SCOPE_REQUEST and SoW helps them submit better, but it doesn't create museum experience they don't have. Be honest about fundamental gaps.
 - **"Supporting documents" vs "rejection"** — frame the recommendation constructively. The sub may be a good execution partner even if not the right design lead.
 
+### Phase 3b-i: PQD Review (Received) — Gap-and-Red-Flag Triage
+
+The inverse of Phase 3b: instead of designing a prequalification document to send out, you receive a PQD PDF and produce a structured plain-text review with a verdict. This is the most common PQD task in practice — a 50–300 page company profile arrives via email/WhatsApp/OneDrive, and you need to answer "qualified / conditional / reject?" within a few hours.
+
+#### When to Use
+
+- User forwards a PQD / company profile PDF and asks for a review
+- Aseer Museum-style prequalification triage (other consultants like NRS, CG, ICR use 6-section review templates)
+- Need a go/no-go recommendation backed by cited evidence from the PQD
+
+#### Workflow
+
+**Step 1: Verify the file is what was requested — naming-mismatch check**
+
+The #1 triage signal: do the file name and the asked-for company match the actual content? Mismatches are common when PQDs are forwarded out-of-order or via shared folders.
+
+```bash
+cp "/path/to/<USER-REFERENCED-FILE>.pdf" /tmp/pqd.pdf
+pdftotext -layout -enc UTF-8 /tmp/pqd.pdf /tmp/pqd.txt
+grep -inE "<asked-name>|company name|legal name|cr.{0,5}number|national.{0,5}number" /tmp/pqd.txt | head -10
+```
+
+| Mismatch Type | Signal | Action |
+|---|---|---|
+| User asked for "PQD for Smith" but file is "AKI PQD.pdf" and content is "Al Kalas International" | File name + content both disagree with the asked-for name | **Flag the mismatch at the top of the review** — do not silently substitute. Ask user to confirm the routing. |
+| User asked for "PQD for X" and content is X | Aligned | Proceed |
+| User asked for "PQD for X" and content is X's parent/sister company | Related entity | Note as related-party, not a mismatch |
+
+**Step 2: Map the PQD's table of contents to its real content**
+
+Many vendor PQDs list sections in the cover page TOC that are then **empty placeholders** (image-only, scan-only, or simply not filled in). Cross-check TOC vs. actual page content.
+
+```bash
+grep -inE "^(SECTION|CHAPTER|PHASE|PART|KEY PERSONS|EQUIPMENT|CLIENT|QUALITY|FACILITIES|CALIBRATION|PROJECT REFERENCE|PROJECTS COMPLETED)" /tmp/pqd.txt
+```
+
+Common PQD sections that are often placeholder-only in vendor submissions:
+- "Client Approvals / List of Clients" — usually a cover page with no list
+- "Project Reference List" — often absent
+- "Equipment List" — cover image only, no make/model/capacity/count
+- "Quality Manual" — TOC entry, no body
+- "Facilities & Lab Equipment" — photographs, no text content
+- "Equipment Calibration Certificates" — embedded scans, not extractable as text
+
+For any placeholder section, **flag it as "PQD claims section X is included but extracted content is empty"**. Do NOT invent content to fill the gap.
+
+**Step 3: Extract the 6 required data buckets**
+
+Use `pdftotext -layout` for text-based PDFs (works for Word-exported vendor PQDs). For scanned/image-based PQDs, fall back to PyMuPDF + tesseract OCR per `document-analysis` skill.
+
+| Bucket | What to look for | Typical location in PQD |
+|---|---|---|
+| **Company Info** | CR national number, VAT reg, Civil Defense lic, Nitaqat band, factory/office address, establishment year, management names, ownership structure | First 5–15 pages, "Company Profile" / "About Us" / "Legal Documents" sections |
+| **Experience** | Project reference list (client, scope, value, date, role), pre-PQD history of key personnel | "Projects Completed" / "Project Reference" / "Key Personnel CVs" sections |
+| **Technical** | Services offered, standards cited (ASTM/BS/EN/ISO), test methods, equipment list, methodology | "Services" / "Technical Capabilities" / "Disciplines" sections |
+| **QA/QC** | ISO 9001/14001/45001, ISO/IEC 17025, sector-specific certs (SASO, SABER, ENAS, GAC, NABL, A2LA), audit history, calibration program | "Quality Manual" / "ISO Certificates" / "Accreditation" sections |
+| **Red Flags** | Synthesised from gaps, mismatches, accreditation scope, project-less PQD, fresh-entity, non-GCC accreditor | Cross-cutting — derived from the four buckets above |
+| **Recommendation** | Not Qualified / Conditional / Qualified, with cited reasons and a list of supplementary documents required for any conditional path | Last section of the review |
+
+**Step 4: Cross-check the supplier's declared scope vs. the project scope**
+
+The most common reject cause: supplier's stated services have **zero overlap** with the project scope. Example patterns:
+
+| Project Scope | Wrong Supplier Type | Why reject |
+|---|---|---|
+| Museum / heritage / exhibition fit-out (AV, lighting, graphics, showcase, scenography) | Civil materials testing lab | No museum-grade work in 288-page PQD |
+| Concrete & structural QC subcontractor | Architectural designer | Wrong service model (design vs. test) |
+| MEP design consultant | Equipment vendor | No design team, only supply |
+| Specialist fit-out subcontractor | General contractor with no specialist team | No specialist depth |
+
+**Always state the alignment check explicitly** in the review: "Supplier scope (X) vs. project scope (Y) → aligned / tangential / misaligned."
+
+**Step 5: Red-flag catalog (reuse across PQD reviews)**
+
+Build up a personal list of red-flag patterns. Common ones:
+
+1. **File-name / company-name mismatch** — user asked for "Smith", file is for "Al Kalas" or "AKI". Flag at top, do not silently proceed.
+2. **Wrong scope** — supplier's services have zero overlap with project scope. The strongest reject signal.
+3. **Brand-new entity in KSA** — CR issued < 6 months, all senior staff joined within the same month, no track record. Acceptable for some scenarios (e.g. local-content preference) but not for prequal of complex specialist scopes.
+4. **No project reference list** — vendor PQDs almost always *claim* a "Projects Completed" section. If it's a placeholder or absent, this is a major gap. A PQD without a project list cannot be qualified.
+5. **No equipment list** — vendor claims 27+ services and a 232 m² lab but lists zero equipment with make/model/capacity. Capacity is unverifiable.
+6. **Fresh ISO/IEC 17025** — first issue < 12 months ago. First surveillance audit not yet completed. Verify acceptance with the Consultant (CG) — they often require at least one clean surveillance audit on file.
+7. **Non-GCC 17025 accreditor** — issuing body is US/India/UK commercial registrar (e.g. "American Quality System Registrars", "AMERI COQUALITY"). Not a Gulf/Saudi signatory (SASO, GAC, ENAS, Dubai Accreditation Center, etc.). CG may or may not accept — verify.
+8. **ISO 9001/14001/45001 from low-tier commercial certifier** — certs from a body with no IAF/MLA accreditation. Same GCC-acceptance caveat.
+9. **Heavy single-nationality management** — all 5 named senior managers are the same nationality. Fine in principle but flag for projects requiring a more diverse leadership profile or specific national presence.
+10. **All certificates < 12 months old** — VAT, Nitaqat, Monsha'et, ISO — every cert issued in the last 6 months. The company is in start-up phase; verify they can sustain operations.
+11. **No KSA-track-record for senior staff** — all CV experience is from home country. Only one person has prior KSA experience. Risk on KSA-specific compliance.
+12. **Marketing-style PQD** — pages of glossy company prose, but missing the structured prequalification schedule sections: legal entity details, similar-project experience, key personnel CVs with project references, methodology, HSE, QA plan, financial standing, insurance, litigation history, current commitments. The PQD is technically complete as a brochure but materially non-compliant with the project's prequalification requirements.
+13. **Placeholder sections with no content** — see Step 2. The most common: empty "Client Approvals" / "Project Reference" / "Equipment List" pages that are present in the TOC but blank in the body.
+14. **PQD mismatch with project language** — PQD is in Arabic only, project SOW is bilingual, or vice versa. Not a reject but flag for follow-up.
+
+**Step 6: Synthesise the verdict**
+
+| Verdict | Criteria | Action |
+|---|---|---|
+| **NOT QUALIFIED** | Wrong scope, brand-new with no track record, no project list + no equipment list, fresh + non-GCC 17025 with no surveillance, multiple high-severity red flags | Reject. List specific gaps so the user can confirm. |
+| **CONDITIONAL** | Mostly aligned, but missing 1–2 critical items (e.g. project list, equipment list, financials) | Recommend shortlisting **only after** the listed items are supplied. |
+| **QUALIFIED** | Aligned scope, demonstrable track record, valid GCC-acceptable certs, named KSA-experienced team | Recommend award subject to standard contract terms. |
+
+**Step 7: Output the review in plain text**
+
+The standard output format is a single plain-text file with the 6 sections from Step 3, in the order: Company Info → Experience → Technical → QA/QC → Red Flags → Recommendation. Use this template:
+
+```
+================================================================================
+PQD REVIEW — <Supplier Legal Name> ("<filename>", <N> pages, <rev>)
+Project: <Project Name> — Supplier Prequalification Review
+================================================================================
+
+NOTE ON FILING: <state any name/scope/routing mismatch up front>
+
+--------------------------------------------------------------------------------
+COMPANY INFO
+--------------------------------------------------------------------------------
+- Legal name:           ...
+- CR National Number:   ...
+- ...
+
+--------------------------------------------------------------------------------
+EXPERIENCE
+--------------------------------------------------------------------------------
+- <no project list, no client list, no track-record table>
+- <pre-PQD history of named senior staff>
+- <any project examples cited in CVs>
+- <sector relevance verdict>
+
+--------------------------------------------------------------------------------
+TECHNICAL CAPABILITIES (as offered)
+--------------------------------------------------------------------------------
+- <services list with disciplines>
+- <standards cited>
+- <scope coverage vs. project scope>
+
+--------------------------------------------------------------------------------
+QA / QC & CERTIFICATION
+--------------------------------------------------------------------------------
+- <ISO 9001/14001/45001 with cert numbers and validity>
+- <ISO/IEC 17025 with cert number, validity, issuing body, scope>
+- <auditor history / surveillance status>
+- <Quality Manager credentials>
+
+--------------------------------------------------------------------------------
+RED FLAGS
+--------------------------------------------------------------------------------
+1. <flag, evidence, severity>
+2. ...
+
+--------------------------------------------------------------------------------
+RECOMMENDATION
+--------------------------------------------------------------------------------
+<NOT QUALIFIED / CONDITIONAL / QUALIFIED>
+<one-paragraph rationale>
+<suggested actions: (a) confirm routing, (b) request supplementary docs, (c) reject>
+
+Tone: factual; no data invented. Where information is absent from the PQD
+(project list, equipment list, financials), this is noted as a gap rather
+than filled in.
+================================================================================
+```
+
+Save the review to `/tmp/<supplier>_pqd_review.txt` so the user can copy it directly into a project folder, email reply, or assessment register.
+
+**Tone rule** — same as the Samaya recommendation sheets: no AI fluff, no verbose prose. Bullet-granular facts, cited evidence, verdict at the end. The user explicitly rejects verbose framing; the verdict and the red-flag list are what the user reads.
+
+**No-data-invented rule** — if a section (project list, equipment list, financials) is absent, say "absent" or "placeholder", do not invent content. This is a hard rule across all PQD reviews. A review that invents data to fill gaps is worse than one that flags them.
+
+#### Pitfalls
+
+- **Naming mismatch is a routing problem, not a content problem** — when the user asks for "PQD for Smith" but the file is for "AKI", flag the mismatch prominently at the top of the review. Do not silently substitute. The user may have a real reason for the routing, or it may be a clerical mistake — let them decide.
+- **Placeholder sections are vendor PQD's most common gap** — almost every vendor PQD lists "Client Approvals" and "Project Reference" in the TOC. Verify with text extraction that the section actually has content. If the only text is a section header with no entries, it's a placeholder.
+- **Scanned / image-only PQD sections cannot be assessed** — if a section (e.g. "Equipment Calibration Certificates", "Quality Manual") is image-only, note it as "embedded scans, not extractable as text". Do NOT OCR the whole PQD just to read an equipment list — ask the user to provide the section as a text source.
+- **PQD covers a 232 m² lab but no equipment list** — capacity claim is unverifiable. Flag as a red flag, not a fact.
+- **Don't accept "Nitaqat Platinum" as evidence of company size** — Nitaqat band is based on Saudization rate, not headcount. A 5-person company can be Platinum at 38% Saudization. Always pair Nitaqat band with explicit headcount.
+- **Don't accept "ISO 9001:2015" without checking the cert body** — a PQD with an ISO 9001 cert from a non-IAF-member body is functionally equivalent to no cert. List the issuing body explicitly.
+- **Don't accept pre-supplier experience as the supplier's experience** — if a QA/QC Manager lists 9 years of experience at "ZKB Builders" and "DESCON Engineering Limited", that experience is at those companies, not at AKI. AKI gets zero credit for it on the AKI track-record.
+- **No "N/A" or "TBD" in your review** — if a section is absent, write "absent" or "not provided". If a fact is unknown, say "not stated in PQD". Don't use placeholders in the review itself.
+- **Mark everything you can't verify** — if a PQD claims a project reference but you cannot verify it (e.g. no client name, no date, no scope), note it as "unverifiable claim" not as a project reference.
+
+See `references/pqd-review-template.md` for a full worked example of an Aseer Museum PQD review (Al Kalas International, 288 pages, 6-section structure) with all pitfalls realised. Use as a reference for tone, structure, and red-flag catalog.
+
 ### Submittal Statement Drafting (AV Prequal Packages)
 
 When writing the submittal statement for an AV equipment prequalification package, keep it **very short**. The user explicitly rejected verbose framing. Pattern:

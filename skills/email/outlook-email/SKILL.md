@@ -923,13 +923,17 @@ The file header (first ~285 bytes) contains metadata in plain text:
   Detect cloud-stub status: `mdls -name com_apple_provenance_isDownloaded <file>` (OneDrive) or check extended attrs.
 
   **Priority-ordered workarounds:**
-  1. `osascript -e 'do shell script "python3 <script.py> 2>&1"'` — even from a fully locked directory, AppleScript's `do shell script` can execute Python scripts when direct shell access fails. Proven to work on both iCloud and OneDrive.
-  2. `python3 <script.py>` — can execute cloud-stored `.py` scripts successfully even when `cat`/`head`/`file` commands fail on the same file. `wc -c` reads full size.
-  3. `brctl download <path>` — forces the file to sync locally. Wait 1–2s, verify with `stat -f "%Sf" <path>` (output `-` when fully local).
-  4. Delete-and-copy — `os.remove(target_path)` then `cp -X /tmp/source target`; deleting the existing stub removes the sync engine lock. For iCloud `~/Documents/` files, `rm -f` + `cp /tmp/source target` also works after `brctl download` to force local sync first.
-  5. `cat <src> > /tmp/x && mv /tmp/x <dest>` — bypasses `fcopyfile` deadlock in `cp`. ⚠️ Only works for OneDrive files, NOT iCloud Drive dataless files (those silently produce 0-byte output).
-  6. **Content-request via time-based detection** — when you cannot read file contents, use `find -ctime -1` (change time), `find -newermt "<date>"` (modification time), or `find -newer <reference_file>` to detect if new/changed files exist. Compare filenames against target BIM folders with `find ... -name "${base}*"` to determine if already filed, without needing to read file bytes.
+  1. `osascript -e 'do shell script "rm -f /tmp/dest && cp <src> /tmp/dest"'` — **BEST for reading.** The `rm -f` on the /tmp destination releases any lock, then `cp` from iCloud source succeeds. Verified on macOS 26.5.2. Works when `cat > /tmp/` and direct `cp` both fail.
+  2. `osascript -e 'do shell script "rm -f <dest> && cp /tmp/source <dest>"'` — **BEST for writing.** The `osascript` bridge provides a different execution context that bypasses the iCloud sync engine lock. Verified: 16KB register files written correctly.
+  3. `write_file` tool (Hermes built-in) — works on cold stubs without `brctl download` or `rm -f` first. Best for writing when available.
+  4. `osascript -e 'do shell script "python3 <script.py> 2>&1"'` — even from a fully locked directory, AppleScript's `do shell script` can execute Python scripts when direct shell access fails. Proven to work on both iCloud and OneDrive.
+  5. `python3 <script.py>` — can execute cloud-stored `.py` scripts successfully even when `cat`/`head`/`file` commands fail on the same file. `wc -c` reads full size.
+  6. `brctl download <path>` — forces the file to sync locally. Wait 1–2s, verify with `stat -f "%Sf" <path>` (output `-` when fully local).
+  7. Delete-and-copy — `os.remove(target_path)` then `cp -X /tmp/source target`; deleting the existing stub removes the sync engine lock. For iCloud `~/Documents/` files, `rm -f` + `cp /tmp/source target` also works after `brctl download` to force local sync first.
+  8. `cat <src> > /tmp/x && mv /tmp/x <dest>` — bypasses `fcopyfile` deadlock in `cp`. ⚠️ Only works for OneDrive files, NOT iCloud Drive dataless files (those silently produce 0-byte output).
+  9. **Content-request via time-based detection** — when you cannot read file contents, use `find -ctime -1` (change time), `find -newermt "<date>"` (modification time), or `find -newer <reference_file>` to detect if new/changed files exist. Compare filenames against target BIM folders with `find ... -name "${base}*"` to determine if already filed, without needing to read file bytes.
 
+  **`rm -f` + `cp` works for iCloud writes (unlike `cat >`).** The `cp` command uses `fcopyfile` which handles iCloud stub replacement atomically, while `cat >` shell redirection races with the sync engine and produces 0-byte stubs. Confirmed working: `rm -f <target> && cp <source> <target>` produces correct file size. Prefer `write_file` tool when available, but `rm -f` + `cp` is a reliable fallback for iCloud-synced `~/Documents/` files.
   Last resort: write companion sidecar files to the same directory (write-to-cloud works when reads fail — write/read asymmetry).
   See `references/olk15-attachment-parsing.md` for the file format specification (magic bytes, header offsets, base64 boundaries).
   See `references/aseer-email-processing-example.md` for a complete worked example (batch processing, AppleScript extraction, Aseer document routing rules, email thread analysis, team contact indexing).

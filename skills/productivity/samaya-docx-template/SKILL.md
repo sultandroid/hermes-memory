@@ -73,7 +73,7 @@ doc.save("/path/to/output.docx")
 | `add_h3` | `(number, text)` | 12pt Bold Dark Gray |
 | `add_body` | `(text)` | 11pt Calibri justified. **No `add_bullet()` exists** — use `add_body("- item text")` for bullet lists |
 | `add_rich_body` | `(segments)` | For mixed bold/normal segments |
-| `add_remark` | `(text, size=9)` | Halftone gray #64748B, 9pt, compact spacing. Use for descriptive sentences between headings/tables, timestamps, legend definitions |
+| `add_remark` | `(text, size=9)` | **DOES NOT EXIST on current SamayaDoc class.** Use `add_body()` with manual post-processing instead. For halftone remarks, apply after generation: `for p in doc.paragraphs: if len(p.text.strip()) < 180: for run in p.runs: run.font.size = Pt(9); run.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)` |
 | `add_table` | `(headers, rows, col_widths_cm=None)` | `col_widths_cm` works correctly (sum to ~16.5cm for A4) |
 | `create_header` | `(project_name, doc_ref, doc_type, revision, date)` | Call before `create_footer()` |
 | `create_footer` | `(doc_ref)` | Call after `create_header()` |
@@ -355,7 +355,7 @@ Before showing the document to the user, do a quick self-audit:
 - **Verification pattern for published values:** After writing any project-specific number (area, dates, counts), search PROJECT_MEMORY.md for the authoritative value. If they differ, fix the document and note the corrected source in the revision log. area is 4,616 m² not "~4,000".
 - **Stakeholder logos: NEVER create custom SVG logos.** Use actual files from `_Style-Guides/logos archives/` (moc-logo.png, pmc-logo-trans.png, cg-logo-trans.png, samaya-logo-trans.png, rcrc-logo.svg, bma-logo.svg). Embed as base64 img tags. Authoritative Samaya PNG at `_Style-Guides/samaya-rfi-style-guide/assets/samaya.png` (1885x621, 50KB, RGBA transparent).
 - Base64 truncation when patching HTML: verify base64 integrity after any data URI patch. Regenerate via Python base64.b64encode() and replace via script, not patch.
-- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body("- item text")` for bullet lists. The `add_body()` method renders as 11pt Calibri justified body text — prefix with dash for list items. This is a common error; the SamayaDoc class provides `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_remark`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`.
+- **SamayaDoc API: `add_bullet()` does NOT exist.** Use `doc.add_body("- item text")` for bullet lists. The SamayaDoc class provides `add_body`, `add_h1`, `add_h2`, `add_h2_u`, `add_h3`, `add_rich_body`, `add_table`, `create_header`, `create_footer`, `line`, `save`, `save_temp`. Note: `add_remark()` is documented in the skill but does NOT exist on the actual class — use post-processing instead.
 - MEP scope completeness: cross-reference design packages against references/mep-scope-completeness.md before pricing. Scenographic sets only cover exhibition-facing power and AV containment.
 - **Arabic-led bilingual documents:** When the document is bilingual (AR/EN), put Arabic content first. Cover title, eyebrow, and metadata labels should appear in Arabic before English. Add RTL CSS: `.ar{font-family:var(--font-arabic);direction:rtl;text-align:right}`. Wrap Arabic blocks with `dir="rtl"` or class `ar`.
 
@@ -660,34 +660,13 @@ When the DOCX is the master (updated by a stakeholder) and the existing HTML mus
 
 See `references/docx-to-html-sync.md` for the full step-by-step workflow with exact delegation prompt structure and verification checklist.
 
-## Halftone remark paragraphs using `add_remark()`
+## Halftone remark paragraphs — post-processing fallback only
 
-Descriptive/commentary sentences between headings and tables (e.g. "4 spheres of influence showing...", "2x2 graphical classification...", "snapshot baselined...") must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes explanatory text from actionable content.
+`add_remark()` does NOT exist on the current SamayaDoc class. For halftone remarks, use `add_body()` then apply post-processing.
 
-### Preferred approach: `doc.add_remark()`
+### Post-processing fallback
 
-Use the `add_remark()` method on `SamayaDoc` instead of `add_body()` for remark content:
-
-```python
-# Instead of:
-doc.add_body("4 spheres of influence showing the contractual hierarchy.")
-doc.add_body("R = Responsible, A = Accountable, C = Consulted, I = Informed.")
-
-# Use:
-doc.add_remark("4 spheres of influence showing the contractual hierarchy.")
-# → 9pt halftone #64748B, compact spacing (2pt before/after, 11pt line)
-doc.add_remark("R = Responsible, A = Accountable, C = Consulted, I = Informed.")
-```
-
-| Use `add_body()` for | Use `add_remark()` for |
-|---|---|
-| Project metadata, policy statements, scope descriptions | Short descriptions of tables/charts |
-| Formal content paragraphs with contractual weight | Explanatory notes, commentary, timestamp notes |
-| Paragraphs > ~180 chars of substantive content | RACI legend definitions, "This snapshot baselined..." notes |
-
-### Post-processing fallback (editing existing docs)
-
-When retrofitting an existing DOCX that wasn't generated with `add_remark()`, use this heuristic — short (<180 chars), non-bold paragraphs after headings are treated as remarks:
+After generating all content, apply this heuristic — short (<180 chars), non-bold paragraphs after headings are treated as remarks:
 
 ```python
 from docx.shared import Pt, RGBColor
