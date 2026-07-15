@@ -584,6 +584,19 @@
     "use_count": 3,
     "view_count": 3
   },
+  "email-pipeline-automation": {
+    "archived_at": null,
+    "created_at": "2026-07-15T08:48:17.224840+00:00",
+    "created_by": null,
+    "last_patched_at": "2026-07-15T14:09:45.104844+00:00",
+    "last_used_at": "2026-07-15T14:09:30.213679+00:00",
+    "last_viewed_at": "2026-07-15T14:09:30.210904+00:00",
+    "patch_count": 10,
+    "pinned": false,
+    "state": "active",
+    "use_count": 12,
+    "view_count": 10
+  },
   "entity-intake": {
     "archived_at": null,
     "created_at": "2026-06-03T07:52:57.867388+00:00",
@@ -693,12 +706,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-09T05:26:31.577155+00:00",
-    "last_used_at": "2026-07-12T09:21:33.562236+00:00",
+    "last_used_at": "2026-07-15T14:06:44.052314+00:00",
     "last_viewed_at": "2026-07-12T09:21:33.560359+00:00",
     "patch_count": 3,
     "pinned": false,
     "state": "active",
-    "use_count": 4,
+    "use_count": 6,
     "view_count": 4
   },
   "google-workspace": {
@@ -1343,12 +1356,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-07-14T13:01:02.775361+00:00",
+    "last_used_at": "2026-07-15T13:00:44.614678+00:00",
     "last_viewed_at": "2026-07-10T15:40:18.477481+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 294,
+    "use_count": 296,
     "view_count": 53
   },
   "outgoing-document-qa-review": {
@@ -1368,14 +1381,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-14T22:42:11.680239+00:00",
-    "last_used_at": "2026-07-15T03:20:52.606195+00:00",
-    "last_viewed_at": "2026-07-15T03:20:52.604294+00:00",
-    "patch_count": 173,
+    "last_patched_at": "2026-07-15T15:29:33.096289+00:00",
+    "last_used_at": "2026-07-15T15:29:16.536886+00:00",
+    "last_viewed_at": "2026-07-15T15:29:16.534627+00:00",
+    "patch_count": 177,
     "pinned": false,
     "state": "active",
-    "use_count": 261,
-    "view_count": 242
+    "use_count": 276,
+    "view_count": 255
   },
   "p5js": {
     "archived_at": null,
@@ -1810,14 +1823,14 @@
     "archived_at": null,
     "created_at": "2026-07-13T11:36:32.470665+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-14T09:24:02.639139+00:00",
-    "last_used_at": "2026-07-14T09:24:06.632788+00:00",
-    "last_viewed_at": "2026-07-14T09:24:06.630412+00:00",
-    "patch_count": 24,
+    "last_patched_at": "2026-07-15T08:54:40.828409+00:00",
+    "last_used_at": "2026-07-15T08:54:23.979363+00:00",
+    "last_viewed_at": "2026-07-15T08:54:23.976739+00:00",
+    "patch_count": 27,
     "pinned": false,
     "state": "active",
-    "use_count": 17,
-    "view_count": 17
+    "use_count": 20,
+    "view_count": 20
   },
   "saas-subscription-assessment": {
     "archived_at": null,
@@ -1875,14 +1888,14 @@
     "archived_at": null,
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
-    "last_patched_at": "2026-07-14T09:37:11.134801+00:00",
-    "last_used_at": "2026-07-14T09:37:05.707841+00:00",
-    "last_viewed_at": "2026-07-14T09:37:05.705972+00:00",
-    "patch_count": 248,
+    "last_patched_at": "2026-07-15T10:21:09.547442+00:00",
+    "last_used_at": "2026-07-15T10:20:27.236058+00:00",
+    "last_viewed_at": "2026-07-15T10:20:27.233423+00:00",
+    "patch_count": 255,
     "pinned": false,
     "state": "active",
-    "use_count": 300,
-    "view_count": 300
+    "use_count": 307,
+    "view_count": 307
   },
   "samaya-factory-deploy": {
     "archived_at": null,
@@ -2200,14 +2213,14 @@
     "archived_at": null,
     "created_at": "2026-06-07T23:23:52.916505+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-12T22:24:49.831284+00:00",
-    "last_used_at": "2026-07-12T22:24:32.957767+00:00",
-    "last_viewed_at": "2026-07-12T22:24:32.955466+00:00",
-    "patch_count": 48,
+    "last_patched_at": "2026-07-15T05:55:38.744633+00:00",
+    "last_used_at": "2026-07-15T05:54:25.678510+00:00",
+    "last_viewed_at": "2026-07-15T05:54:25.676459+00:00",
+    "patch_count": 55,
     "pinned": false,
     "state": "active",
-    "use_count": 46,
-    "view_count": 46
+    "use_count": 47,
+    "view_count": 47
   },
   "subcontractor-procurement": {
     "archived_at": null,
@@ -2266,13 +2279,13 @@
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-12T07:18:29.397604+00:00",
-    "last_used_at": "2026-07-14T09:35:59.593449+00:00",
-    "last_viewed_at": "2026-07-14T09:35:59.586098+00:00",
+    "last_used_at": "2026-07-15T15:28:14.659312+00:00",
+    "last_viewed_at": "2026-07-15T15:28:14.655672+00:00",
     "patch_count": 95,
     "pinned": false,
     "state": "active",
-    "use_count": 107,
-    "view_count": 107
+    "use_count": 110,
+    "view_count": 110
   },
   "supplier-prequalification": {
     "archived_at": null,

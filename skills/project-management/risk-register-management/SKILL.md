@@ -196,11 +196,15 @@ Produce a structured audit report with these sections:
 When an external register has risks the repo doesn't:
 1. Evaluate each — is it a genuine EPD (early proactive detection) or noise?
 2. Score it per RMP scale (P×S 1-4 for PRR)
-3. Assign a new PRR-CAT-NN ID (check for existing unused IDs in the correct category range)
-4. Write to the live register
-5. Update the RMP risk counts and RBS distribution
-6. Log in the weekly review
-7. Tag as "Pending import" in the register cross-reference until PM confirms
+3. **Re-ID mapping** — the external ID (e.g. PRR-PRC-01 for FX risk) may collide with an existing repo risk (e.g. PRR-PRC-01 for ZNA lighting). Map as: `Excel PRR-PRC-01 → repo PRR-PRC-06` (next available in PRC range). Check the repo RBS table for the category's current max sequential number.
+4. **RBS extension** — if the imported risk uses a category not yet in the repo's RBS table (e.g. LOG, OPS, QA, SEC), add a new row to the RBS table in both the register and the RMP. Update the RMP's §4.1 RBS hierarchy if it's a new top-level category.
+5. **Scoring clash check** — ensure the risk's numeric P×S score (not the text label) matches the RMP scale. External registers often store P/S as text "High"/"Medium". Convert: Low=1, Medium=2, High=3, Very High=4.
+6. Write to the live register (append at end, then renumber if inserting mid-list; see pitfall on row-number shift).
+7. **Critical imported risks need treatment files** — if the imported risk scores ≥12, create `treatment/PRR-{CAT}-{NN}.md` within 48 h, same as any other Critical risk.
+8. Update the RMP risk counts, RBS distribution, and register architecture table.
+9. Log in the weekly review.
+10. Tag as "Pending import" in the register cross-reference until PM confirms.
+11. **Stale pending-import tags get cleaned up** — other agents may remove stale pending-import cross-references if the risks aren't added within the same session. Either import immediately after audit, or update the tag to show actual status.
 
 ## Step 3: Update RMP DOCX (Word)
 
@@ -402,6 +406,7 @@ The **same PRR-XXX-XX ID** in the PM's Excel and the repo's risk_register.md may
 PM-provided Excel registers often store Probability and Severity as text labels ("High", "Medium") instead of numeric values (3, 2). This causes the Risk Score (P×S) and Risk Rating columns to be empty for all rows, even though the formula is present.
 
 **Detection:** Open the Excel and check if the Risk Score column has values for at least one row. If all rows show blank or None, the formula can't multiply text.
+**Cascading symptom:** The Dashboard sheet's Critical/High/Medium/Low counts will also be 0 or blank — not because no risks exist, but because the counts derive from the broken Risk Score column. Fix scoring first, then counts auto-populate.
 
 **Fix path:**
 1. Convert P and S columns from text to lookup values using openpyxl or Excel formulas
@@ -769,6 +774,55 @@ For large design packages spanning many disciplines (e.g. full museum fit-out wi
 
 - `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
 - `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
+
+## NCR Register Management
+
+NCRs (Non-Conformance Reports) are adjacent to risk management — open NCRs represent materialising quality/HSE risks. The repo's `01_Registers/ncr_register.md` tracks all project NCRs.
+
+### When to create/update
+
+- A new NCR arrives via email from CG (Hossam Mabrouk)
+- The user asks about NCR status
+- During weekly risk review — open NCRs feed into PRR-STK-02 (work stoppage risk)
+
+### NCR Register Format
+
+```markdown
+# NCR Register — Aseer Regional Museum
+
+| NCR # | Date | Source | Subject | Status | Owner | Due Date |
+|-------|------|--------|---------|--------|-------|----------|
+| NC-001 | date | CG / Internal | Brief description | Open / Closed | Owner | date |
+```
+
+### NCR Routing from Email
+
+When a CG NCR email arrives:
+1. Extract the PDF from Outlook (AppleScript batch extract)
+2. `pdftotext` to read the full NCR — extract: NCR number, date, subject, CG comments, required actions, deadline
+3. Route the PDF to: `04_Docs/10_Test_and_Inspection/10.3_NCRs/{NCR-ID}_{Subject}/`
+4. Add a row to `01_Registers/ncr_register.md` in the repo
+5. Check if the NCR is already referenced in the risk register (PRR-STK-02 tracks open NCR count)
+6. If the NCR represents a new materialising risk not yet in PRR, consider opening a new risk
+
+### CG NCR Processing Pattern (from session)
+
+```
+NCR: MOC-MUS-CG-ASE-NC-1KH-009
+Subject: Unsafe Fabricated Debris Chute (welded drums, no engineering design)
+Date: 15-Jun-2026
+CG Status: Open — closeout rejected by CG (insufficient evidence)
+CG Required: MSRA + competent-person inspection records + verified by HSE Manager + PM approval
+Root cause: Internal coordination failure; initial chute bracing inadequate
+Corrective action taken: Steel-tube bracing installed, floor anchorage with Hilti bolts
+```
+
+### Pitfalls
+
+- **CG may reject closeout even after corrective action** — the submitted evidence must address ALL NCR requirements, not just the immediate fix. Read the CG comment sheet at the end of the PDF.
+- **NCR file naming** uses the NCR number as folder name, not the subject
+- **NCR register is separate from the risk register** but linked via PRR-STK-02 — update both when NCRs arrive or close
+- **NCR folder doesn't exist by default** — create `04_Docs/10_Test_and_Inspection/10.3_NCRs/` if it doesn't exist
 
 ## Related Skills
 

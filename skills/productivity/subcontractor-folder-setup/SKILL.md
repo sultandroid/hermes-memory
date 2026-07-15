@@ -25,7 +25,7 @@ The OneDrive copy is what goes to CG via Aconex. The repo copy is the coordinati
 mirror. They must agree. When a new vendor PQ lands, mirror it in both: create
 `00_Prequalification/<Vendor>/` in the repo AND `NN- MOC-...PQ-XXXX/` in OneDrive.
 
-```\\nNN_Subcontractor_Name/\\n├── SCOPE_REQUEST.docx                 (generated from SamayaDoc template)\\n├── 00_Prequalification/              Prequalification dossiers, company profiles, qualifications docs, support docs for supplier to stamp\\n├── 01_Schedule_and_BOQ/               BOQs, schedules, cost data\\n├── 02_Reference_Drawings/             IFC drawings, reference CAD/PDF\\n├── 03_Specifications_and_Standards/   ER, SoW, Division specs, codes, TDS/SDS\\n├── 04_Reference_Imagery/             Photos, reference images\\n├── 05_Returned_Submittals/           Submittals returned from review\\n├── 06_RFIs/                          RFI register and correspondence\\n├── 07_Approvals/                     Approved documents, certificates\\n├── 09_Offers/                        Commercial proposals, quotations per company — each company gets its own subfolder (e.g., `AD_Engineering/`, `SG_Group/`)\\n├── Email_Data_Extraction/            Extracted email threads\\n└── _MANAGER_DASHBOARD/               All .md management files live here (NO Excel files, NO draft email .md files, NO .docx)\\n    ├── SCOPE_REQUEST.md               Source markdown (editing copy)\\n    ├── SITUATION_REPORT.md            Status tracking\\n    └── SPEC.md                        Package specification (scope, deliverables by stage, long-lead items)\\n\\n**Note:** Draft email .md files (`_Email_to_*.md`, `DRAFT_EMAIL_*.md`) are deleted — do not keep them. Send the email directly instead.\\n```
+```\\nNN_Subcontractor_Name/\\n├── SCOPE_REQUEST.docx                 (generated from SamayaDoc template)\\n├── 09_Prequalification/             Prequalification dossiers, company profiles, qualifications docs, support docs for supplier to stamp — each company gets its own subfolder (e.g., `Acoustige/`, `AME/`)\\n├── 01_Schedule_and_BOQ/               BOQs, schedules, cost data\\n├── 02_Reference_Drawings/             IFC drawings, reference CAD/PDF\\n├── 03_Specifications_and_Standards/   ER, SoW, Division specs, codes, TDS/SDS\\n├── 04_Reference_Imagery/             Photos, reference images\\n├── 05_Returned_Submittals/           Submittals returned from review\\n├── 06_RFIs/                          RFI register and correspondence\\n├── 07_Approvals/                     Approved documents, certificates\\n├── 09_Offers/                        Commercial proposals, quotations per company — each company gets its own subfolder (e.g., `AD_Engineering/`, `SG_Group/`)\\n├── Email_Data_Extraction/            Extracted email threads\\n└── _MANAGER_DASHBOARD/               All .md management files live here (NO Excel files, NO draft email .md files, NO .docx)\\n    ├── SCOPE_REQUEST.md               Source markdown (editing copy)\\n    ├── SITUATION_REPORT.md            Status tracking\\n    └── SPEC.md                        Package specification (scope, deliverables by stage, long-lead items)\\n\\n**Note:** Draft email .md files (`_Email_to_*.md`, `DRAFT_EMAIL_*.md`) are deleted — do not keep them. Send the email directly instead.\\n```
 
 ## File placement rules (hard conventions)
 
@@ -126,12 +126,12 @@ If Installation and Contractor are the same entity, consolidate into one folder 
 See reference: `references/mep-scope-split-consolidation.md` for a worked example of this exact pattern on the Aseer Museum project.
 ### 7. Offers folder audit
 
-`09_Offers/` must contain **commercial proposals/quotations only** — NOT prequalification or qualifications docs. Prequalification material goes in `00_Prequalification/` at the same level.
+`09_Offers/` must contain **commercial proposals/quotations only** — NOT prequalification or qualifications docs. Prequalification material goes in `09_Prequalification/` at the same level.
 
 Offers folder conventions:
 - **Each company** gets its own subfolder inside `09_Offers/` (e.g., `09_Offers/AD_Engineering/`, `09_Offers/SG_Group/`)
-- **Prequalification docs** stay in `00_Prequalification/` — even if from the same company — because prequalification is a separate phase from offers
-- When a company submits both prequalification and an offer, file prequal in `00_Prequalification/<Company>/` and the offer in `09_Offers/<Company>/`
+- Prequalification docs stay in `09_Prequalification/` — even if from the same company
+- When a company submits both prequalification and an offer, file prequal in `09_Prequalification/<Company>/` and the offer in `09_Offers/<Company>/`
 - If the company name is unknown, use a descriptive folder name (e.g., `MEP_Design_Offer/`) and ask the user
 
 ### 8. Offer gap analysis (SOW §8)
@@ -257,10 +257,10 @@ Create a companion compliance matrix as an Excel file alongside the prequalifica
 
 ### 5. Organize folder
 
-- Create `00_Prequalification/` at sub root if not exists
-- Move supplier profile PDF into `00_Prequalification/`
-- Move the compliance Excel sheet into `00_Prequalification/`
-- Move the support document into `00_Prequalification/`
+- Create `09_Prequalification/` at sub root if not exists
+- Move supplier profile PDF into `09_Prequalification/`
+- Move the compliance Excel sheet into `09_Prequalification/`
+- Move the support document into `09_Prequalification/`
 - Clean up any Word temp files (`~$*.tmp`)
 - Remove duplicate SCOPE_REQUEST.docx from `_MANAGER_DASHBOARD/` (keep only .md there)
 
@@ -338,7 +338,7 @@ Samaya creates a document with blank fill-in forms (CR info, portfolio, personne
 ### Procurement handoff after prequalification
 
 After the prequalification doc is prepared on behalf of the supplier:
-1. Save to `00_Prequalification/` under the subcontractor's folder
+- Save to `09_Prequalification/` under the subcontractor's folder
 2. Email procurement team with the doc attached
 3. Procurement's role: contact the supplier directly, ask them to review, apply company stamp, sign, and return
 4. A separate Scope of Work (SOW) document follows as a standalone deliverable

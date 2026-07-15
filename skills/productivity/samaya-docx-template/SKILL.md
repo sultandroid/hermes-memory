@@ -106,7 +106,84 @@ When receiving an external document (consultant deliverable, reference standard,
 4. **Assign a document reference** matching the project's ISO 19650 container code pattern (`223032-SAM-XX-XX-{TYPE}-{DISC}-###`)
 5. **Save directly to the project folder** — never to Desktop as a staging area
 
-### SOW contract-accuracy verification (mandatory for scope documents)
+### SOW technical depth — mandatory level of detail, with CG-readiness filter
+
+**THE USER WILL REJECT A THIN SOW — THIS IS THE #1 SOW-RELATED CORRECTION.** The first draft of a specialist SOW must include solid technical content from the start. A thin/generic SOW triggers "why no details" (exact user quote). Do not start with a short summary and plan to expand later — expand before presenting.
+
+**However, depth must be balanced with contractor-risk awareness.** The same user who demands detail will also correct: "i dont want to add in our shoulders as contractor scope more that what requests" and "remove safely." This means: include real technical content, but only what the contract actually requires. Do not gold-plate the spec (e.g. excessive Oddy testing, micron-precision values, over-specified testing regimes) because those become Samaya's contractual obligation to enforce.
+
+**User correction history:** The rigging SOW was generated 5 times before final acceptance:
+1. Too thin (5 scope items) → "why no details"
+2. Too corporate → "write like humman engineer"
+3. Wrong format → "fix format follow samaya doc format"
+4. Correct format, over-specified → "dont add in our shoulders as contractor scope more that what requests" + "dont add the dor ref the DC will make this, add rev and QC block, dont add dates"
+5. Final: lean, CG-ready, contractor-safe
+
+**Lesson:** First pass must combine: technical depth, engineer language, SamayaDoc format AND contractor-safe/lean framing. Over-specifying is as bad as under-specifying.
+
+### CG-ready SOW vs internal working SOW — know the audience
+
+The user explicitly distinguished between documents for CG approval vs internal working documents. Rules differ:
+
+| Element | CG-Ready (external) | Internal Working Doc |
+|---|---|---|
+| Doc reference | "[DC to assign]" — DC fills it | May include internal ref |
+| QC block | Required — Prepared/Reviewed/Approved with signature lines | Optional |
+| Dates | Remove all dates from tables | Keep dates |
+| RACI | Fully filled — no TBC cells. R/A/C/I per Appendix A. | TBC acceptable where pending |
+| Internal columns | Remove: Source Trace, Register Link, Notes, Owner | Keep for tracking |
+| Scope language | Lean — only contractually required scope. "Per project specifications" not specific values. | Can be more detailed |
+| Technical values | General code references (SBC 301) not specific thresholds (1.5x, 25 micron) | Can include specifics |
+| ITP hold points | 4-5 generic stages (delivery, install, completion, test, handover) | Can be detailed (8+) |
+| Over-specification risk | HIGH — every extra requirement becomes Samaya's obligation to enforce | Lower risk |
+| Open items section | Remove — internal tracking | Keep |
+
+**Rule of thumb:** If a technical detail (value, threshold, test regime) is not explicitly in the contract SOW/ER, do not include it in a CG-facing SOW. Replace specific numbers with "per approved method statement" or "per project specifications."
+
+### Minimum sections for any specialist SOW DOCX
+
+**For CG submission (lean, contractor-safe):**
+
+| Section | Content required |
+|---|---|
+| Included Scope | 5-10 items covering core scope. Each item: action + practical constraint. No internal notes columns. |
+| Exclusions | What is NOT in scope, by whom. No source trace column. |
+| Deliverables | Item + stage + acceptance basis. No register link or status columns. |
+| RACI | Fully filled from Appendix A — no TBCs. R/A/C/I columns only. No Source Trace or Notes. |
+| Technical Requirements | Code names (SBC 301, ACI 318) without specific numeric thresholds. Replace values with "per approved ITP/method statement." |
+| Materials | General requirements per application zone. References to project specifications. See pitfall: do not add Oddy/salt-spray values that become contractual obligations. |
+| Inspection & Testing | 4-5 generic hold points. No detailed witness/criteria tables unless contractually required. |
+
+**For internal review (detailed working doc):**
+
+| Section | Content required |
+|---|---|
+| Included Scope | Minimum 10 items with description, source trace, key constraints, coordination notes |
+| Exclusions | Table with source reference for each exclusion |
+| Technical Standards | Full industry codes with standard numbers AND specific pass/fail values |
+| Material Specifications | Tiered table per material type, banned materials with reasons |
+| Interface Matrix | Every coordination partner with exchange items and timing |
+| Deliverables Register | 10+ deliverables with reference codes, format, CG code target, linked register |
+| RACI | Filled from Appendix A; TBC only where contract is silent |
+| ITP Hold Points | Minimum 6 hold points with verification criteria and witness requirements |
+| Programme | Milestone table with target dates, dependencies, risk levels |
+| Quality & Compliance | Spec-specific requirements (Oddy, mill certs, galvanic analysis, seismic, salt spray) |
+| BOQ / Pricing Basis | Pricing divisions with MasterFormat codes |
+
+### Sourcing technical depth (for internal use; filter for CG docs)
+
+- **Material specs:** Read the project's Hardware Fixings/Mounts spec — extract tier tables, banned materials. **For CG docs:** reference the spec by name, do not copy detailed values.
+- **Technical standards:** Read Division specs for applicable codes. **For CG docs:** state code names only, not numeric thresholds.
+- **Interface details:** Read Appendix A/B extraction for responsibility splits.
+- **Deliverables:** Read the subcontractor's submittal register for existing deliverable codes.
+- **RACI:** Extract from Appendix A. **For CG docs:** fill all cells, remove Source Trace column.
+- **ITP:** Derive from spec testing requirements. **For CG docs:** keep to 4-5 generic stages.
+
+### python-docx implementation note
+
+When building tables programmatically, the `enumerate(data, 1)` pattern (start index at 1) requires `table.rows = len(data) + 1`. Using `enumerate(data, 1)` with `row(t, i, d)` means row indices 1 through N (inclusive). Tables created with `doc.add_table(rows=N+1, cols=M)` produce rows 0 through N. If `rows = len(data)` instead of `len(data) + 1`, `table.rows[N]` will raise `IndexError`. Always verify: `len(table.rows) >= max_data_index + 1`.
+
+## SOW contract-accuracy verification (mandatory for scope documents)
 
 When writing a Scope of Services (SOW) for a contractor, consultant, or in-house role, every scope statement must be grounded in the actual contract. **The SoW and ER are the authority, not assumptions.**
 
@@ -213,12 +290,23 @@ Documents must not betray AI generation:
 - State facts directly. If uncertain, flag as "TBC" or "subject to confirmation".
 - Dates, names, references, and numbers must be traceable to a source document. Mark estimates as [TBC].
 
-### Human voice
+### Human voice — audience-dependent
+
+**For MoC-facing documents (plans, reports, proposals):**
 - Write as a senior engineer dictating: contractions allowed in cover letters ("We'll", "It's").
 - Use "Samaya" (not "the Contractor" or "the Company").
 - Prefer concrete numbers over ranges ("6 production lines" not "several lines").
-- Address the reader as "the Client" or "RCRC" — never "you".
+- Address the reader formally: "the Client", "MoC", "CG" — never "you".
 - Write for a Saudi government evaluator who reads 30 proposals — make yours the one they understand on first scan.
+
+**For subcontractor SOWs and scope documents (ABSOLUTE — user correction signal "write like humman engineer"):**
+- Write in second person: "you" — "You design, supply, and install...", "You certify that...".
+- Use practical engineer-to-engineer notes: "Here's what that means in practice" columns, "What you coordinate" and "When" in interface tables.
+- Banned/forbidden items: state the reason, not just the rule — "Zinc-plated steel inside showcases causes galvanic corrosion and metal migration."
+- Section headings: short imperative phrases — "What the Rigging Contractor Does", "What You Don't Do", "Who You Coordinate With", "What You Submit", "Stuff We Still Need to Sort Out".
+- Each scope item reads like a site instruction: action + practical constraint + timing.
+- Avoid: "The Specialist Rigging Contractor is responsible for the engineering, supply, installation, inspection, certification, and handover of..." — rewrite as: "You design, supply, install, test, and certify..."
+- User correction history: first SOW draft was too corporate/generic; user said "write like humman engineer" and "why no details." The corrected version used second person, included practical notes per ITP hold point, gave reasons for banned materials, wrote programme risks as real issues (not generic labels).
 
 ## Style rules
 
@@ -284,6 +372,7 @@ Before showing the document to the user, do a quick self-audit:
 
 ## Pitfalls
 
+- **Open file immediately after generation for user review.** After saving the DOCX, call `open '<path>'` via terminal so the user sees it right away. The user expects to review the document immediately — they should not have to hunt for the file. This applies to both first-time generation and updates.
 - **Revision history: only show actual CG submissions, not internal drafts.** The revision history table should reflect what was actually submitted to CG, not every internal draft iteration. If Rev 00 (Code C) and Rev 01 (Code C) were the only submissions before approval, the table should show Rev 00, Rev 01, Rev 02 (Approved), and the current Rev — not Rev 00, 01, 02, 03, 04 where 02 and 03 were internal drafts never submitted. User correction signal: "i think this Rev02 we submit 2 times only before." Verify against CG_STATUS.md and PROJECT_MEMORY.md before writing the revision table.
 
 - **Cover page: keep it brief for CG submittals.** CG reviewers do not need a verbose change log on the cover. The cover should show: document title, revision, date, superseded revs, and reference documents only. Do NOT list every stakeholder change, KPI count, or internal audit note on the cover. That information belongs in the revision history table inside the document. User correction signal: 'dont talk too much the cover page, dont tell information in general are dosnot important to cg to tell.'
@@ -308,6 +397,13 @@ Before showing the document to the user, do a quick self-audit:
 - **Commercial readiness before acceptance:** Do NOT include an execution-ready acceptance/signature block in a SOW or R&R if the commercial arrangement (subcontract, PO, service agreement, payment terms) is not yet finalized. The user will say "we have to deal with them commercially also we didnt done yet." Draft the technical scope for review, but mark acceptance as draft/pending until commercial terms are confirmed. If sending to PD for review, note in the email that signing awaits commercial finalization.
 
 - **SOW content: never exceed contract scope.** When writing a Scope of Services for a contractor or in-house role, the responsibilities must strictly match what the SoW and ER contractually require. Do NOT add certification targets (e.g. Silver rating or points thresholds) unless the contract explicitly mandates them. Adding unrequested targets creates contractual liability the contractor did not price for. When in doubt, state 'support the certification process per project requirements' rather than committing to a specific rating or points target. **Always dispatch labors (Kimi, Codex, Claude) to cross-verify SOW claims against the source contract PDFs** — give them the PDFs and ask for a second opinion on each scope statement.
+
+- **Over-specifying technical requirements in a SOW creates contractual risk for Samaya as main contractor.** Every detailed requirement (Oddy test duration, salt-spray hours, pull-out load factors, micron precision) becomes Samaya's obligation to enforce. The user corrected: "i dont want to add in our shoulders as contractor scope more that what requests" and "remove safely." For CG-facing SOWs:
+  - Replace specific values with "per project specifications" or "per approved method statement/ITP"
+  - List code names (SBC 301, ACI 318) without numeric thresholds
+  - Keep banned materials and tier tables to the actual spec — do not add more than the project Hardware Fixings spec requires
+  - ITP hold points: 4-5 generic stages, not 8+ detailed ones
+  - Test: for every numeric value in the document, ask "is this contractually required or am I adding it?" If the answer is "adding it," remove or generalize.
 
 - **Output location: save directly to project folder, never Desktop.** When reformatting an existing document, determine the correct project folder first (see Output location rules table). Saving to Desktop as a staging area adds a manual copy step the user shouldn't need to do. The output goes straight into the project's `Docs/` or `Bim Unit/` tree.
 

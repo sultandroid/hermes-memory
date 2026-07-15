@@ -6,7 +6,7 @@ Trigger: Scheduled cron job checking for project-critical emails in last 24 hour
 
 - **SQLite access is intermittent** — macOS TCC sometimes blocks `sqlite3` on the Outlook DB (authorization denied), sometimes allows it. **Always try SQLite first** (faster, supports proper filtering/joins). If it fails with "authorization denied", fall back to AppleScript. Do NOT assume it's always blocked.
 - **iCloud EDEADLK on register files** — `~/Documents/` files (iCloud-synced) return `OSError: [Errno 11] Resource deadlock avoided` on direct read/write. **Proven workarounds (ordered by reliability):**
-  - **Reading (BEST):** `osascript -e 'do shell script "rm -f /tmp/dest && cp /path/to/icloud/src /tmp/dest"'` — the `rm -f` on the /tmp destination releases any lock, then `cp` from iCloud source succeeds. Verified on macOS 26.5.2. This works when `cat > /tmp/` and direct `cp` both fail.
+  - **Reading (BEST):** `osascript -e 'do shell script "cat /path/to/icloud/src > /tmp/dest"'` — the shell redirect (`>`) avoids `fcopyfile` deadlock that `cp` triggers. Verified on macOS 26.5.2. This works when `cp`, `python3 open()`, and `brctl download` all fail. **Always try this first** — it is the most reliable single-shot read method for iCloud-synced files. After the file is in `/tmp/`, use `read_file` to inspect it.
   - **Reading (fallback):** `brctl download <path>` + `sleep 5` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock. May produce 0-byte output if file is still a cold stub. Always verify with `wc -c /tmp/<dest>`.
   - **Writing (BEST):** Use the Hermes `write_file` tool directly — it's the only method that works on cold iCloud stubs without `brctl download` or `rm -f` first. No Python script needed, no shell redirection.
   - **Writing (reliable fallback):** `osascript -e 'do shell script "rm -f /path/to/icloud/dest && cp /tmp/source /path/to/icloud/dest"'` — the `osascript` bridge provides a different execution context that bypasses the iCloud sync engine lock. Verified: 16KB register files written correctly. The `rm -f` on the iCloud destination releases the sync engine lock, then `cp` from /tmp source succeeds.
@@ -104,3 +104,46 @@ When an iCloud file is a cold stub (not yet synced locally), `mdls -name kMDItem
 ### Pitfall: `brctl download` may not resolve EDEADLK immediately
 
 Calling `brctl download <path>` followed by `sleep 3` does NOT guarantee the file is readable. On macOS 26.5.2, `brctl download` returned success but `python3 open().read()` still hit EDEADLK. The file only became readable after a second `brctl download` + longer sleep. **Pattern:** call `brctl download` twice with a sleep between, or use `cat > /tmp/` as the primary read method instead of relying on `brctl download` to make the file accessible.
+
+### Pitfall: `com.apple.provenance` xattr + `compressed,dataless` — the hardest EDEADLK state
+
+On macOS 26.5.2, iCloud-synced files can enter a state where the `com.apple.provenance` extended attribute persists through `xattr -d` and `xattr -c`, and the file shows `compressed,dataless` in `ls -laO`. In this state:
+
+- **ALL read methods fail:** `cat`, `head`, `cp`, `ditto`, `rsync`, `python3 open()`, `osascript -e 'do shell script "cat > /tmp/"'`, `perl`, `dd`, `od`, `strings` — all return `Resource deadlock avoided`
+- **`xattr -d` and `xattr -c` appear to succeed** (exit 0) but the attribute is immediately re-applied by the sync engine
+- **`brctl download` + `sleep 5` does NOT resolve it**
+- **`chflags nouchg` has no effect** — the flag is managed by the sync engine, not user-controllable
+- **`patch` tool also fails** — it internally reads the file before applying edits
+- **`mv` (rename) succeeds** — this is the key to the workaround
+
+**Detection:**
+```bash
+xattr -l <path>   # shows com.apple.provenance
+ls -laO <path>    # shows "compressed,dataless" in flags column
+cat <path>        # returns "Resource deadlock avoided"
+```
+
+**Workaround:**
+```bash
+# Step 1: Rename to break iCloud sync lock
+mv /path/to/file.md /path/to/file.md.bak
+
+# Step 2: Force iCloud to sync the renamed file
+brctl download /path/to/file.md.bak
+sleep 5
+
+# Step 3: Copy to /tmp using shell redirect (avoids fcopyfile)
+cat /path/to/file.md.bak > /tmp/file.md
+
+# Step 4: Read from /tmp
+cat /tmp/file.md
+
+# Step 5: Restore original name
+mv /path/to/file.md.bak /path/to/file.md
+```
+
+**Pitfall: restoring the name re-locks the file.** After `mv` back, the file may again be `compressed,dataless`. Content is preserved on disk but can't be read again until the next rename cycle. Use `ls -la` for size verification, not `cat`/`head`.
+
+**Pitfall: `xattr -c` does NOT work.** Even after clearing all xattrs, `com.apple.provenance` is immediately re-applied. Do not rely on xattr removal.
+
+See `references/icloud-edeadlk-workaround.md` for the full reference with workarounds summary table.

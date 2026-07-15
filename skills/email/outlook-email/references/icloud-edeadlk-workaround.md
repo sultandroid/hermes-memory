@@ -133,6 +133,55 @@ mdls -name com_apple_provenance_isDownloaded <path>
 stat -f "%Sf" <path>  # "-" = local, "d" = dataless stub
 ```
 
+## New Pattern: `com.apple.provenance` xattr + `compressed,dataless` flag
+
+On macOS 26.5.2, iCloud-synced files in `~/Documents/` can have a **persistent `com.apple.provenance` extended attribute** that survives `xattr -d` and `xattr -c` removal attempts. The file shows as `compressed,dataless` in `ls -laO` output. When this flag is present:
+
+- **ALL read methods fail:** `cat`, `head`, `cp`, `ditto`, `rsync`, `python3 open()`, `osascript -e 'do shell script "cat > /tmp/"'`, `perl -e 'open()'`, `dd`, `od`, `strings` — all return `Resource deadlock avoided`
+- **`xattr -d` and `xattr -c` appear to succeed** (exit 0) but the attribute is immediately re-applied by the iCloud sync engine
+- **`brctl download` + `sleep 5` does NOT resolve it** — the file remains `compressed,dataless` even after `brctl download` reports success
+- **`mv` (rename) succeeds** — renaming the file breaks the iCloud sync lock, but the renamed file (.bak) is ALSO locked because iCloud has already indexed the new name
+- **The only reliable read path:** `mv <file> <file>.bak` → `brctl download <file>.bak` → `sleep 5` → `cat <file>.bak > /tmp/<file>` — the rename breaks the sync engine's lock, `brctl download` forces local sync of the renamed file, and `cat > /tmp/` avoids `fcopyfile` deadlock
+
+### Detection of this state
+
+```bash
+# Check for the persistent xattr
+xattr -l <path>  # shows com.apple.provenance
+# Check for compressed,dataless flag
+ls -laO <path>   # shows "compressed,dataless" in the flags column
+# Try to read
+cat <path>       # returns "Resource deadlock avoided"
+```
+
+### Workaround for this specific state
+
+```bash
+# Step 1: Rename to break iCloud sync lock
+mv /path/to/file.md /path/to/file.md.bak
+
+# Step 2: Force iCloud to sync the renamed file
+brctl download /path/to/file.md.bak
+sleep 5
+
+# Step 3: Copy to /tmp using shell redirect (avoids fcopyfile)
+cat /path/to/file.md.bak > /tmp/file.md
+
+# Step 4: Read from /tmp
+cat /tmp/file.md
+
+# Step 5: Restore original name
+mv /path/to/file.md.bak /path/to/file.md
+```
+
+**Pitfall: Step 5 (restore) may re-lock the file.** After restoring the original name, the file may again be `compressed,dataless` with the `com.apple.provenance` xattr. This is expected — the iCloud sync engine re-applies the flag. The content is preserved on disk; it just can't be read again until the next rename cycle.
+
+**Pitfall: `xattr -c` (clear all) does NOT work.** Even after `xattr -c` reports success, the `com.apple.provenance` attribute is immediately re-applied by the sync engine. Do not rely on xattr removal as a workaround.
+
+**Pitfall: `chflags nouchg` does NOT help.** The `compressed,dataless` flag is not a user-controllable flag — it's managed by the iCloud sync engine. `chflags` operations have no effect on it.
+
+**Pitfall: `patch` tool also fails on `compressed,dataless` files.** The `patch` tool internally reads the file before applying edits, so it also hits EDEADLK on this state. Use the `mv` + `brctl download` + `cat > /tmp/` workaround to read, then `write_file` to write back.
+
 ## Pattern for Cron Jobs
 
 When a cron job needs to read/write register files in `~/Documents/`:
