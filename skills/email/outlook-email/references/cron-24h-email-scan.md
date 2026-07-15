@@ -67,15 +67,28 @@ After writing, re-reading the same file for verification also hits EDEADLK. Use 
 
 After writing to an iCloud-synced file via the `write_file` tool, the `read_file` tool may return "unchanged" (cached from an earlier read in the same session). The file on disk IS actually updated — check with `ls -la` for the expected file size instead. The dedup cache does not reflect iCloud sync state changes.
 
-### Pitfall: `write_file` for writing, `cat > /tmp/` for reading
+### Pitfall: `patch` tool fails on iCloud EDEADLK
+
+The `patch` tool (find-and-replace) returns `"Failed to read file"` for iCloud-synced files because it internally reads the file before applying the edit. **Do not use `patch` on iCloud-synced register files.** Instead:
+1. Read the file content via `brctl download` + `python3 -c "open(path).read()"` in terminal
+2. Make the edits in a Python script or by reconstructing the full content
+3. Write the complete file back using the `write_file` tool
+
+### Pitfall: `sed -i ''` via `osascript` corrupts iCloud files to 0 bytes
+
+**DANGER — `sed -i ''` on iCloud-synced files produces 0-byte files.** The in-place edit triggers a race between `sed`'s temp-file rename and iCloud's sync engine, resulting in a 0-byte stub. This happened on macOS 26.5.2 with `~/Documents/` iCloud files. **Never use `sed -i ''` on iCloud-synced files.** Always use `write_file` tool to write the complete reconstructed content.
+
+### Pitfall: `write_file` for writing, `brctl download` + `python3 open()` for reading
 
 The two operations require different approaches:
-- **Reading** iCloud files: `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock that `cp` triggers.
+- **Reading (BEST):** `brctl download <path>` + `sleep 3` + `python3 -c "open(path).read()"` — after `brctl download` forces local sync, direct `python3 open()` works where all other methods fail. Verified on macOS 26.5.2.
+- **Reading (fallback):** `brctl download <path>` + `sleep 2` + `cat <src> > /tmp/<dest>` — the shell redirect avoids `fcopyfile` deadlock that `cp` triggers. May produce 0-byte output if file is still a cold stub.
 - **Writing (BEST):** Use the Hermes `write_file` tool directly — it's the only method that works on cold iCloud stubs without `brctl download` or `rm -f` first. No Python script needed, no shell redirection.
 - **Writing (fallback):** Write a `.py` script to `/tmp/` with `write_file`, then `python3 /tmp/script.py` — writes trigger implicit iCloud download and succeed even when reads fail.
 - **DANGER — `rm -f` + `cat >`:** Deleting an iCloud file and recreating it produces 0-byte stubs. iCloud re-creates a placeholder between `rm` and the write. Only use `write_file` after `rm -f`.
 - **Do NOT use `cp`** to copy from iCloud — it uses `fcopyfile` which deadlocks on cloud stubs.
-- **Do NOT use `osascript -e 'do shell script'`** as the primary bridge — it also fails with EDEADLK on some macOS versions. Use `cat > /tmp/` for reads and `write_file` for writes instead.
+- **Do NOT use `osascript -e 'do shell script'`** as the primary bridge — it also fails with EDEADLK on some macOS versions. Use `brctl download` + `python3 open()` for reads and `write_file` for writes instead.
+- **Do NOT use `sed -i ''`** on iCloud-synced files — produces 0-byte files. Use `write_file` to write the complete reconstructed content.
 
 ### Pitfall: `execute_code` blocked in cron mode
 
@@ -83,3 +96,11 @@ The `execute_code` tool is blocked for cron jobs (returns `BLOCKED: execute_code
 1. Write a `.py` script to `/tmp/` using `write_file` tool
 2. Execute it with `python3 /tmp/script.py` via `terminal()`
 3. For iCloud-synced files, the script can open the path directly (writes work, reads need `cat > /tmp/` first)
+
+### Pitfall: `mdls` returns null for iCloud cold stubs
+
+When an iCloud file is a cold stub (not yet synced locally), `mdls -name kMDItemFSSize` returns `(null)` for all metadata fields — even though `stat` shows the correct file size. This is normal iCloud behavior. Do not interpret null metadata as "file doesn't exist" or "file is corrupted." Use `stat -f "%z"` for reliable size checks on iCloud files.
+
+### Pitfall: `brctl download` may not resolve EDEADLK immediately
+
+Calling `brctl download <path>` followed by `sleep 3` does NOT guarantee the file is readable. On macOS 26.5.2, `brctl download` returned success but `python3 open().read()` still hit EDEADLK. The file only became readable after a second `brctl download` + longer sleep. **Pattern:** call `brctl download` twice with a sleep between, or use `cat > /tmp/` as the primary read method instead of relying on `brctl download` to make the file accessible.
