@@ -10,7 +10,27 @@ description: Use Samaya branded DOCX template for all formal documents. Import S
 
 ## When to use
 
-Any time you generate a `.docx` file **for Samaya** — SOW, report, letter, transmittal, register, meeting minutes.
+Any time you generate a `.docx` file **for Samaya** — SOW, report, letter, transmittal, register, meeting minutes, quotation.
+
+### BOQ-to-Quotation generation (design consultancy vs construction)
+
+When the user provides a BOQ (xlsx) and asks for a quotation, **first clarify the service type** before generating:
+
+| Service type | What items represent | Rate basis |
+|---|---|---|
+| **Construction / Supply & Install** | Physical materials, labour, installation | Market rates per unit |
+| **Design Consultancy** (الاعمال الاستشاريه والتصميميه) | Design development, shop drawings, material selection, coordination, site support | Professional fee per item |
+
+**Pitfall:** If the user provides a BOQ with items like "wood paneling" or "LED screen" and says "quotation," do NOT default to construction pricing. The user may mean design consultancy fees for those same items. Ask or check context. The correction signal is the user saying "الاعمال الاستشاريه والتصميميه" after you generated a construction quotation.
+
+**Fixed-total distribution pattern:** When the user specifies a total fee (e.g. 440,000 SAR) to distribute across BOQ divisions:
+1. Allocate a reasonable share per division based on complexity and quantity
+2. For each item within a division, compute `rate = item_amount / qty` (round to clean numbers)
+3. Verify every division subtotal + all division subtotals = the specified total
+4. If a division's items don't sum exactly, adjust the largest item's rate to close the gap
+5. Show per-item breakdown with Qty x Rate = Amount so the client sees the basis
+
+See `references/boq-to-quotation-pattern.md` for a worked example (Khair El-Khalq Museum design consultancy quotation).
 
 **Style reference:** The canonical Samaya Stakeholder Management Plan HTML style is deployed at `https://samaya-factory.com/build/technical-office/stakeholder-management-plan.html`. When asked about document style or format, use this as the reference implementation for Samaya project plans.
 

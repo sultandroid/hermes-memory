@@ -1,9 +1,15 @@
 # SysLeaders Access & Data Extraction
 
 ## Login
-- **URL:** `https://www.sysleaders.com/samaya/index.php?module=users/login`
-- **Username:** `sultan`
-- **Password:** `1batagoniaA`
+- **Web URL:** `https://www.sysleaders.com/samaya/index.php?module=users/login`
+- **Web Username:** `sultan`
+- **Web Password:** `1batagoniaA`
+- **cPanel URL:** `https://www.sysleaders.com:2083/`
+- **cPanel Username:** `sysleaders`
+- **cPanel Password:** `1batagoniaA`
+- **Database:** `sysleaders_samaya` (via phpMyAdmin from cPanel)
+- **SSH:** Port 22 CLOSED — no direct MySQL connection
+- **MySQL remote:** Port 3306 CLOSED — localhost only
 
 ## Navigation Structure
 After login, the main sidebar has these relevant sections:

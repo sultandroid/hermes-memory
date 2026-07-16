@@ -10,10 +10,10 @@ Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/ski
 §
 Tqanny project 010 path: ~/Library/CloudStorage/OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/010
 §
-KKIA Concourse A woodwork submission for Tqanny Project 010: MAR SAF-0280-Q-MAR-AR-1112, Code C. Engineer requires complete datasheets, compliance sheet with achieved values + test report references, ASTM E84 Class A fire test data, and project-specific shop drawings. Verdo FR MDF is Class B (FSI 35) — spec requires Class A (FSI ≤25). Ritver FR coatings provide BS 476 Class 0 alternative path.
-§
-Compliance sheet rules: never fill section headers/titles. Only fill actual spec clauses with numerical requirements. Use words Compliant/Partial/Pending, never symbols (✓/△/—). Include evidence in Remarks with specific file names. Don't repeat boilerplate across rows.
-§
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
 §
-Datasheets organization: Samaya/Assetes/Datasheets/ by category (MDF FR, Hardware, Adhesives, HPL_Laminates, Plywood, Fire_Retardant_Coatings, PU Painting, Stain, Lighting, Steel). File names in English with manufacturer_product_standard format.
+KKIA Concourse A (Tqanny 010): Verdo FR MDF=Class B (FSI 35), spec needs Class A (≤25). Ritver FR coatings offer BS 476 Class 0 path.
+§
+SysLeaders: web sultan/1batagoniaA, cPanel sysleaders/1batagoniaA. DB: sysleaders_samaya (live, disk quota exceeded). Entity 21=Projects, 22=Tasks/BOQ, 27=Workers, 28=Labor Records (attendance/payroll), 49=POs. Labor cost=field_256×field_257 on-the-fly. Rateeb entity=282. Backup folder: /Volumes/MIcro/Work/Sysleaders/Database backup_claude/ (5.9MB full dump, 211 projects, 870 POs). All SQL backups are structure-only — no data.
+§
+Sister Companies _Final: each client folder has ONLY original Excel + Section5_Detail.xlsx. No backups/old files. Section 5 (تكاليف المصنع): Line1=Labor, Line2=Materials, Line3=Other. NEVER duplicate Section 1 items. Backup originals to /Volumes/MIcro/Work/Sysleaders/backups/ before edits.

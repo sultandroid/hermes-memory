@@ -86,11 +86,46 @@ The info page contains two tables:
 
 Labor costs are **calculated on-the-fly** (rate × hours), NOT stored in the database.
 
-Required data:
-- **Labor rates**: From Operation Management → Work Centers (`module=items/work_centers`)
-- **Hours worked**: From project Tasks (`module=items/tasks` with project path)
+### Database Schema (full mapping)
+The SysLeaders system uses Rukovoditel CRM with an EAV (Entity-Attribute-Value) pattern. Each entity has a main table (`app_entity_N`) and a values table (`app_entity_N_values`). Relationships are stored in `app_related_items_X_Y` tables.
 
-The calculation: `labor_cost = SUM(hours_per_task × rate_per_work_center)`
+Key entities for Sister Companies costing:
+
+| Entity | Table | Purpose |
+|--------|-------|---------|
+| 21 | `app_entity_21` | Projects (Rateeb = id 282) |
+| 22 | `app_entity_22` | Tasks/BOQ Items (parent_id → project) |
+| 27 | `app_entity_27` | Technicians/Workers (field_241=name) |
+| 28 | `app_entity_28` | Labor Time Records (field_254=date, field_255=worker_id, field_256=hours, field_257=rate) |
+| 49 | `app_entity_49` | Purchase Orders (field_622=PO#, field_626=description) |
+| 52 | `app_entity_52` | Invoices |
+| 53 | `app_entity_53` | Expenses |
+| 54 | `app_entity_54` | Fleet Requests |
+| 63 | `app_entity_63` | Raw Materials |
+| 72 | `app_entity_72` | Delivery Notes |
+
+Relationship tables: `app_related_items_21_28` (Project↔Labor), `app_related_items_22_28` (Task↔Labor), `app_related_items_27_28` (Worker↔Labor).
+
+Full schema with field mappings is in `sister-companies-costing` skill at `references/sysleaders-database-schema.md`.
+
+### Browser Extraction Method (most reliable)
+When cPanel/phpMyAdmin/API are all blocked, use the browser to navigate the SysLeaders web app:
+1. Login at `https://www.sysleaders.com/samaya/index.php?module=users/login`
+2. Navigate to project: `index.php?module=items/info&path=21-{entity_id}`
+3. The project page shows ALL subentities (Tasks, POs, Fleet, Delivery Notes, Labor) in a single scrollable view
+4. Use `browser_console` with `expression` to extract table data via JavaScript
+5. Parse the extracted JSON to get worker names, dates, hours, rates, BOQ codes, PO numbers
+
+### Backup File Analysis
+ALL backup files examined are structure-only (CREATE TABLE, no data):
+- `sysleaders_samaya.sql` — no entity data
+- `sysleaders_samaya2.sql` — no entity data
+- `backup-7.15.2026_23-42-47_sysleaders.tar.gz` — same structure-only SQL files
+- `sysleaders_samaya2 (1).sql` — has entity_28 data but from 2020-2021 (old factory records, not Rateeb)
+
+The live data is ONLY on the server. A proper backup of `sysleaders_samaya` (the one with actual records) is needed.
+
+**Local backup folder:** `/Volumes/MIcro/Work/Sysleaders/Database backup_claude/` — contains full API dump (5.9MB JSON), 211 projects, 870 POs, 4422 cost records, Rateeb live data, schema reference, and Sister Companies project list. See `README.json` in that folder for the index.
 
 ## Pitfalls
 

@@ -18,8 +18,21 @@ DATA_DIR = Path("/Volumes/MIcro/Work/Sysleaders")
 
 # === Project Registry ===
 # Add new projects here. Discover entity_id and path via browser.
+# Sister Companies projects (see sister-companies-costing skill for full map)
 PROJECTS = {
+    "01": {"entity_id": None, "path": None, "name": "Al Wahi Gift Shop", "jn": "JN-367+255", "area": 240},
+    "02": {"entity_id": None, "path": None, "name": "Holy Quran Gift Shop", "jn": "JN-367", "area": 194},
+    "03": {"entity_id": None, "path": None, "name": "Qahwatna Cafe", "jn": "JN-262", "area": 77.5},
+    "04": {"entity_id": None, "path": None, "name": "Hira Cafe", "jn": "JN-262", "area": 398},
+    "05": {"entity_id": None, "path": None, "name": "Jabal Omar VIP Stores", "jn": None, "area": None},
+    "06": {"entity_id": None, "path": None, "name": "As Safiyyah Giftshop", "jn": "JN-329", "area": 445},
+    "07": {"entity_id": None, "path": None, "name": "Khair Al-Khalq Store", "jn": "JN-403", "area": 173},
+    "08": {"entity_id": None, "path": None, "name": "Qahwatna Al-Safiya Cafe", "jn": "JN-359", "area": 26},
+    "09": {"entity_id": None, "path": None, "name": "Tzkarat Store", "jn": "JN-279", "area": 51},
     "10": {"entity_id": 282, "path": 49, "name": "Rateeb Store", "jn": "JN-Rateeb-Shop", "area": 42},
+    "11": {"entity_id": None, "path": None, "name": "Najdi Coffee", "jn": "JN-345", "area": 173},
+    "12": {"entity_id": None, "path": None, "name": "Ice Coffee Shop", "jn": "JN-312", "area": None},
+    "13": {"entity_id": None, "path": None, "name": "Hera Visitor Center", "jn": "JN-81", "area": None},
 }
 
 def curl(url, post_data=None, headers=None):
