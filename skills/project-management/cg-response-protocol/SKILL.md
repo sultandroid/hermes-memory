@@ -192,6 +192,77 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 | Noted | Acknowledged, no action needed | Blue |
 | C:Resubmit | CG returned with comments, blocked until resubmission | Yellow + "BLOCKED" prefix |
 
+## CRS Triage — Filtering Comments Before Forwarding to Designer
+
+When you receive a CG CRS (Comments Resolution Sheet) for a submittal, **do not forward the raw CRS to the designer.** Filter comments by responsible party first.
+
+### Triage Categories
+
+| Category | Who handles | Examples from this session |
+|----------|-------------|---------------------------|
+| **Design scope** | Forward to designer (NRS) | Showcase design comments (#9-10, #67-82), sections missing dimensions (#140-143), floor/ceiling scoping (#19-20), title block/QA notes (#3-4, #8) |
+| **Samaya/contractor gap** | We respond to CG directly | Cloud survey pending (#1), demolition methodology (#11-12), mock-ups/material samples/BIM coordination (#5-7) |
+| **CG process issue** | We query CG | Overall C status when 88 drawings are B and only 29 are C — disproportionate verdict |
+
+### Triage Rules
+
+- **Cloud survey / survey-related comments** are Samaya's responsibility, not the designer's. Acknowledge as pending in your response to CG. Do not forward to NRS.
+- **Title blocks, QA notes, sheet layout standards** ARE on the designer (they produce the drawings). Forward these to NRS.
+- **Doors/stairs shop drawings** (#13) are contractor action — the designer provides design intent, contractor produces shop drawings.
+- **Setwork details and graphic housing** (items #83-99) are specialist sub scope, not NRS — handle separately.
+- **B-status per-drawing comments** ("See General Comments") are typically contractor action unless the general comment itself is design-related.
+- **Verify which floor(s) the CRS covers** by checking drawing number prefixes (BF=Basement Floor, LG=Lower Ground, GF=Ground Floor). The document title may say one floor only. Do not assume multi-floor coverage.
+- **Demolition comments** (#11-12, #15-16) are contractor action — demolition methodology, ceiling removal clarification. Do not forward to NRS.
+- **Sections missing dimensions/room names** (#140-143) ARE on the designer — they produce the section drawings. Forward to NRS.
+- **Floor/ceiling scoping comments** (#19-20) about space labeling (FFL/CIL), finishes schedule format, expansion joint treatment ARE on the designer. Forward to NRS.
+- **Do NOT lump Samaya gaps into a vague "etc." in the forwarding email** — be specific about what Samaya handles (cloud survey pending, demolition methodology, mock-ups, material samples, BIM coordination) so the designer knows exactly what is not their problem.
+- **When the user corrects your triage** (e.g. "title blocks is on jim"), fix the email immediately — do not argue. The user knows who produces what.
+
+### Forwarding Email Template
+
+```
+Subject: NRS Input Required — [CRS NUMBER] ([Floor])
+
+Dear Jim,
+
+CG returned the CRS for the [Floor] [Discipline] DD submittal (overall C). We are preparing our response and will address the items on our side ([list Samaya gaps]) directly with CG.
+
+The following items need NRS design input:
+
+[Section heading]:
+- #[N] — [brief description]
+- #[N] — [brief description]
+
+Please review and advise so we can prepare the resubmission.
+
+Regards,
+Mohamed Sultan
+```
+
+### CRS Email to NRS — What NOT to Include
+
+- Do NOT list contractor-side items (cloud survey, mock-ups, material samples, BIM coordination, demolition methodology) as NRS action items
+- Do NOT ask NRS to fix things that are Samaya's responsibility
+- Do NOT include the full raw CRS — only the filtered NRS-relevant items
+- Do NOT use the CRS email to also discuss unrelated topics (visuals, invoices, etc.) — keep it focused
+
+## Design Study Folder Structure
+
+When NRS submits a design study in response to CG/Ministry requests, file it under a dedicated `12_Design_Studies/` folder:
+
+```
+Aseer-Museum/
+├── 12_Design_Studies/
+│   ├── 01_Object_List/          (object schedule files)
+│   ├── 02_New_Study/            (future studies)
+│   └── 03_Study_01/
+│       ├── MOC-ASE-AR-ARC-GEN-DDD-DS01-00_DRAFT.pdf   (NRS study PDF)
+│       ├── G12_Structural_Assessment_Template.docx     (team templates)
+│       └── G12_Logistics_Method_Statement_Template.docx
+```
+
+The study PDF is extracted from Outlook via AppleScript. Team action templates (structural assessment, logistics method statement) are generated as Samaya-branded DOCX and placed alongside the study.
+
 ## Pitfalls
 
 - **Never add unapproved names to documents.** If a person's name hasn't been formally approved by CG/MoC (via CV submission, KPR update, or formal appointment), list the role only with a note: "Per live KPR" or "TBC — appointment pending." Adding unapproved names creates liability — CG will hold Samaya to that person's qualifications even if they were never formally accepted. The user explicitly corrected: "dont add names are not approved."

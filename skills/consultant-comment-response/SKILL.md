@@ -33,6 +33,7 @@ See `references/cg-schedule-processing.md` for the full workflow with templates 
 - `templates/external-reply-email.md` — Template for external reply to consultant
 - `references/comment-extraction-technique.md` — Detailed technique for extracting and mapping comments
 - `references/cg-schedule-processing.md` — Processing CG Excel/PDF schedules (object schedules, drawing registers): extraction, version comparison, gap analysis, multi-party routing, handling designer pushback
+- `references/design-study-handling.md` — Handling NRS Design Study submissions with cost notifications and team assignment templates
 
 ## Extended Workflow: CR Sheet (Comment Response Register) Excel
 
@@ -270,6 +271,42 @@ This means:
 - **Blum/Henkel catalogs don't state BHMA/EN grades explicitly.** Blum catalogs show load capacities and cycle durability but not BHMA A156.9 Grade 1. Henkel TDSs show viscosity and lap shear but not EN 204 D3. A manufacturer declaration letter is needed for each — don't assume the catalog data alone satisfies the spec.
 - **Consolidate evidence into one folder.** Create `10_Compliance_Evidence/` with subfolders `Datasheets/` (organized by manufacturer) and `Certificates/`. Update all file references in the compliance sheet and MAR checklist to point to this consolidated folder. This makes the resubmission package self-contained and easy for the engineer to audit.
 
+### Subcontractor Compliance Sheet — Fill the Engineer's Form, Do Not Create a New One
+
+When you are a subcontractor responding to a Code C on a MAR, the Engineer wants you to fill their existing compliance template, not create a new one from scratch. The user will correct you if you create a new file: "he said just fill my form only."
+
+#### Workflow
+
+1. **Use the Engineer's own compliance format.** The Engineer provides an Excel template with spec text already written in. It has columns: No., Section, Specifications, Manufacturer/Supplier Statement, Compliance, Remarks. Only fill the last three columns. Do not modify the spec text, section numbering, header rows, signature blocks, or merged cells.
+
+2. **Only fill material data rows, not company data rows.** As a subcontractor, your compliance sheet addresses only material-specific spec clauses:
+   - MDF physical properties (density, MOR, MOE, IB, swelling, screw holding)
+   - Fire ratings (flame spread, smoke developed)
+   - Formaldehyde emissions (NAUF, CARB, E1)
+   - Hardware (hinges, slides — BHMA compliance)
+   - Adhesives (EN 204 D3, UF-free)
+   - Plywood/panel products (BS EN 636, marine grade)
+   - Coatings/finishes (fire retardant, VOC)
+
+   Do NOT fill rows for company-level items:
+   - Fabricator qualifications (years of experience)
+   - Installer qualifications
+   - Warranty periods
+   - Installation tolerances
+   - Product data submittals (1.3.A)
+   - Product certificates (1.3.E)
+   - Environmental limitations
+
+   These are the main contractor's responsibility. The user will correct you: "only fill the materials data not company data."
+
+3. **Evidence in Remarks column.** Every filled row must have a source reference in the Remarks column — the exact file name of the datasheet, test report, or certificate that supports the achieved value. Do not leave Remarks empty. The user will correct you: "add in Remarks the evidence of the comply, not just tell comply."
+
+4. **No subcontractor datasheets for main contractor items.** The main contractor provides their own company certificates (ISO, CR, VAT, GOSI, Saudization) and general submittal documents. The subcontractor only provides their own material datasheets and test reports. The user will correct you: "no need to add Ola paper because we are subcontractor and the main contractor will add his papers."
+
+5. **Keep the Engineer's original structure intact.** The Engineer's Excel has merged cells, signature rows, and section headers. Only fill the Manufacturer Statement, Compliance, and Remarks columns. Do not modify the spec text, section numbering, header rows, or signature blocks. Preserve all original formatting.
+
+6. **No symbols or AI fingerprints in compliance sheets.** Use plain text status labels: "Compliant", "Partial", "Pending". No emoji, no checkmarks, no unicode symbols. Remarks should reference file names directly — no AI-sounding phrases like "demonstrates full compliance" or "exceeds minimum by 20%". Write like an engineer: "Verdo FR MDF TDS - Density 800.80 kg/m3".
+
 ## Forwarding CG Comments to Designers (Pre-CR-Sheet Routing)
 
 Before building the CR Sheet, CG comments often need to be **filtered and forwarded to the designer** (NRS, AD Engineering, etc.) for their input. This is a distinct workflow step.
@@ -334,6 +371,49 @@ Regards,
 - **Name the floor** in the subject — CG often reviews one floor at a time
 - **Group by reviewer** (Eng. Maged Zamzam, Eng. Islam Mostafa, Eng. Abdrabo) for clarity
 - **Keep it short** — the designer doesn't need to see all 89 comments, only their ~15-20
+
+### CRS Item Mapping — Designer vs Contractor
+
+Before forwarding, map each CRS item to the correct party. Do NOT dump the entire CRS on the designer.
+
+**Designer (NRS) scope — send to NRS:**
+- Title block content (dates, revision schedule, drawing numbers, reviewer names)
+- QA notes and sheet layout standards compliance
+- Missing dimensions, room/space names on sections
+- Showcase design details (opening mechanisms, finishes, dimensions, perspective views)
+- Finishes schedule format and content
+- Space labeling (FFL, CIL, space codes)
+- Expansion joint detailing in finishes
+- Stairs solution and finishes
+
+**Contractor (Samaya) scope — handle internally:**
+- Cloud survey (pending — note in email for context only)
+- Audit report coordination
+- On-site mock-ups and material samples
+- BIM coordination and clash resolution
+- Demolition methodology and ceiling removal clarification
+- Subcontractor appointments (Glasbau Hahn, etc.)
+- Site logistics and access
+- Shop drawings for doors/stairs (contractor to produce from design intent)
+
+**Specialist scope — route separately:**
+- Graphic housing — route to signage/graphics specialist
+- AV coordination — route to AV specialist (Rawasin)
+- Lighting — route to ZNA
+- Life safety — route to life safety specialist
+
+### Floor Verification Step
+
+Before forwarding, verify which floor(s) the CRS covers:
+
+1. Check the document title in the CRS header (row 7-8 of the Excel)
+2. Check drawing number prefixes in the Sheet column:
+   - `BF` = Basement Floor
+   - `LG` = Lower Ground
+   - `GF` = Ground Floor
+   - `GEN` = General (cross-floor)
+3. If all drawing numbers use one prefix, the CRS covers that floor only
+4. Name the correct floor in the email subject line
 
 ## Pitfalls
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks

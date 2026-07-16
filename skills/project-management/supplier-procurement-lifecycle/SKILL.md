@@ -2,7 +2,7 @@
 name: supplier-procurement-lifecycle
 category: project-management
 description: "Complete supplier/vendor/contractor lifecycle management for construction/BIM projects. Covers entity research (intake), proposal evaluation, prequalification document design, capability profile creation, and subcontractor dossier management. Designed for Samaya / Tqanny portfolio, supports bilingual AR/EN workflows."
-version: 1.2.0
+version: 1.3.0
 author: Hermes Agent
 platforms: [macos]
 metadata:
@@ -615,7 +615,70 @@ def uri(data, mime='image/jpeg'):
 # Write HTML with __PLACEHOLDER__ tokens, then replace
 ```
 
-### Phase 3b: Prequalification Profile Compliance Assessment
+### Phase 3b-i: Fill Engineer-Provided Compliance Sheets
+
+When the Engineer provides their own compliance Excel format (e.g. `064023 - INTERIOR ARCHITECTURAL WOODWORK.xlsx`, `061000 - ROUGH CARPENTRY.xlsx`), **fill that format** — do NOT create a new one. The user has explicitly corrected this: "he said you have to fill our compliance sheet dont make new one."
+
+#### When to Use
+
+- Engineer/Consultant sends a compliance Excel template with spec text already embedded
+- User says "fill their compliance sheet" or "update the compliance sheet"
+- Rev02 or later revision arrives with new datasheets from the supplier team
+
+#### Engineer's Format Structure
+
+| Column | Content | Who fills |
+|--------|---------|-----------|
+| No. | Clause number | Pre-filled by Engineer |
+| Section | Section reference | Pre-filled by Engineer |
+| Specifications | Full spec text (e.g. "Density: 700-850 kg/m³") | Pre-filled by Engineer |
+| Manufacturer / Supplier Statement | Achieved value + product name | **We fill** |
+| Compliance | ✓ / △ / — | **We mark** |
+| Remarks | Source file reference, notes | **We fill** |
+
+#### Workflow
+
+**Step 1: Inventory new evidence** — list all new datasheets/PDFs in the Rev folder. Classify each by what spec clause it addresses.
+
+**Step 2: Extract achieved values** — use `pdftotext -l 3` to get key numerical data from each datasheet. Focus on:
+- Physical properties (density, MOR, MOE, IB, thickness swelling, screw holding)
+- Fire test results (FSI, SDI, class rating, test standard)
+- Formaldehyde/emission data
+- Material grade/classification
+- Standards cited (ASTM, BS EN, EN, etc.)
+
+**Step 3: Map each datasheet to spec clauses** — for each clause in the Engineer's sheet, find the matching achieved value from the datasheets. If a clause has no matching evidence, mark it as pending.
+
+**Step 4: Fill Manufacturer/Supplier Statement** — write the actual achieved value and product name. Format: `[Value] ([product name], [manufacturer])`. Example: `800.8 kg/m³ (Verdo FR MDF, Danube)`
+
+**Step 5: Mark Compliance** — use these rules:
+
+| Mark | Meaning | When |
+|------|---------|------|
+| ✓ | Compliant | Achieved value meets or exceeds spec requirement |
+| △ | Partial | Value exists but standard/format differs (e.g. EN vs ASTM), or manufacturer declaration still needed |
+| — | Pending | To be confirmed at shop drawing / material selection stage |
+
+**Step 6: Add Remarks** — always include the source file path (relative to submission root) and any caveat. Example: `Verdo FR MDF TDS — Rev02/التقديم 14-7/Data sheet/TDS FR MDF E0 NAUF CARB P2 -B.pdf`
+
+**Step 7: Critical compliance check** — before marking ✓, verify the achieved value ACTUALLY meets the spec. Common pitfalls:
+- **Fire class mismatch**: Spec says Class A (FSI ≤25) but product is Class B (FSI 35) → mark △, not ✓. Note the alternative acceptance path if one exists (e.g. BS 476 Class 0 coating system).
+- **Standard mismatch**: Spec cites ASTM E84 but datasheet gives EN 13501-1 → mark △, note the standard difference.
+- **Irrelevant datasheets**: Lighting/LED datasheets in a woodwork submission → flag as not relevant, do not include.
+
+#### Pitfalls
+
+- **Do NOT create a new compliance sheet** — the Engineer's format is the authoritative one. Fill their columns, don't restructure.
+- **Do NOT copy old compliance data blindly** — Rev02 may have new evidence that changes △→✓ or reveals new gaps (e.g. Verdo FR MDF is Class B, not Class A).
+- **Do NOT mark ✓ for fire compliance when the product is Class B and spec requires Class A** — note the gap and the alternative acceptance path (e.g. Ritver coatings provide BS 476 Class 0).
+- **Irrelevant datasheets happen** — the Ola team may include unrelated products (LED strips, lighting). Exclude them from the compliance mapping.
+- **Image-only PDFs** (SS 304 sheet, scanned certs) cannot be text-extracted — note as "image-based, needs visual verification."
+- **The Engineer's format already has the spec text** — you only fill 3 columns: Statement, Compliance, Remarks. Do not modify the spec text column.
+- **Fire compliance is the most common gap** — always check the actual FSI/SDI numbers against the spec's class requirement. A "Class B" product does not satisfy a "Class A" spec unless an alternative standard is explicitly accepted.
+
+See `references/compliance-sheet-fill-pattern.md` for a worked example (Outline Enterprise Rev02 compliance update with Verdo FR MDF, Ritver coatings, and fire class gap analysis).
+
+### Phase 3b-ii: Prequalification Profile Compliance Assessment
 
 Evaluate a received company profile/prequalification dossier against the project's scope documents (SCOPE_REQUEST.md, SPEC.md, SoW, ER) to determine suitability and identify gaps.
 

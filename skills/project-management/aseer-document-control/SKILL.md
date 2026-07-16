@@ -255,6 +255,99 @@ What they want: Technical Office assessment on NRS's proposed switch from blockw
 - **Not being on original distribution is the key signal** — if the user was on the original distro, the document was sent to them at the time. If forwarded later, someone specifically wants their input on it now
 - **Don't assume a single ask** — the forward may have multiple purposes (review + coordinate + respond). Separate them
 
+## 1ac. CRS Triage for NRS — Separating Design Scope from Contractor Items
+
+**Trigger:** CG returns a Comments Resolution Sheet (CRS) Excel for a submittal. User needs to forward only NRS-relevant items to the designer.
+
+### Workflow
+
+1. **Read the CRS Excel** — extract all rows with reviewer comments, sheet references, and status codes (A/B/C/D/-)
+
+2. **Classify each comment** into one of three buckets:
+
+   | Bucket | Description | Examples |
+   |--------|-------------|---------|
+   | **NRS Design Scope** | Items NRS must act on — drawing content, design intent, title block, QA notes, sheet layout, missing dimensions, space labeling, showcase design | Title block date, QA standards, missing room names, showcase opening mechanisms, finishes schedule format |
+   | **Samaya/Contractor** | Items Samaya handles — cloud survey, mock-ups, material samples, BIM coordination, demolition methodology, shop drawings | Cloud survey pending, mock-up requirements, material submittals, BIM clash coordination |
+   | **CG Process Issue** | Items where CG's process/status is wrong — challenge in CRS reply | Overall C status when majority of drawings are B |
+
+3. **Filter the CRS** — only NRS items go in the email. Never forward contractor-side items to the designer.
+
+4. **Draft email to NRS** with:
+   - Subject: `NRS Input Required — {Doc Ref} CRS ({Floor})`
+   - Opening: acknowledge CG returned the CRS, state we handle contractor-side items
+   - Body: grouped by reviewer, each item with its CRS number and brief description
+   - Close: request review and advice for resubmission
+
+5. **Respond to CG separately** — the CRS reply covers Samaya-side items and any process challenges.
+
+### Common NRS vs Samaya Split (Basement Floor Arch DD example)
+
+| CRS # | Reviewer | Topic | Action By |
+|-------|----------|-------|-----------|
+| 1 | Maged Zamzam | Cloud survey | Samaya (pending) |
+| 3-4 | Maged Zamzam | QA notes, title block date | NRS |
+| 5-7 | Maged Zamzam | Mock-ups, samples, BIM | Samaya |
+| 8 | Abdrabo | Title block, drawing number | NRS |
+| 9-10 | Islam Mostafa | Showcase design, Glasbau Hahn | NRS |
+| 11-12 | Abdrabo | Demolition methodology | Samaya |
+| 13 | Maged Zamzam | Doors/stairs design intent | NRS |
+| 19-20 | Islam Mostafa | Floor/ceiling scoping, labeling | NRS |
+| 67-82 | Islam Mostafa | Showcase per-drawing comments | NRS |
+| 83-99 | — | Graphic housing (specialist) | Samaya |
+| 140-143 | Maged Zamzam | Sections missing dimensions | NRS |
+
+### Pitfalls
+
+- **Title blocks are on NRS** — they produce the drawings. Don't classify title block items as Samaya.
+- **Cloud survey is on Samaya** — don't forward to NRS as if it's their fault.
+- **"See General Comments" items** — check what the general comment says before classifying. Many B-status items reference general comments that are NRS scope.
+- **Showcase comments are NRS scope** — opening mechanisms, finishes, Glasbau Hahn coordination, perspective views all need NRS input.
+- **Graphic housing (items 83-99)** — specialist subcontractor scope, not NRS. Don't forward.
+- **Always verify the floor/package** — the CRS title tells you which floor. Don't assume it covers multiple floors.
+
+## 1ad. NRS Design Study Response — Structural & Logistics Action Items
+
+**Trigger:** NRS sends a design study proposing changes (showcase sizes, plinth details, new object supports). User needs to extract action items for the Samaya team and notify management of cost implications.
+
+### Workflow
+
+1. **Read the study** — extract per-gallery changes, structural requirements, and cost notes
+
+2. **Identify Samaya action items** — typically fall into:
+
+   | Domain | Typical Actions |
+   |--------|---------------|
+   | **Structural** | Loading assessment, plinth design, spreader plates, slab capacity verification |
+   | **Logistics** | Method statement for moving heavy objects, access route, lifting equipment, handling procedure |
+   | **Cost** | Additional design time incurred by NRS (director + senior designer days) |
+
+3. **Create team templates** — fill-in-the-blank DOCX or MD files for each domain:
+   - Structural assessment template (loading, plinth, slab, reinforcement)
+   - Logistics method statement template (access, lifting, handling, safety, approvals)
+
+4. **Draft cost notification to PM** — brief email to project manager and management with:
+   - NRS time spent (director days x rate + senior designer days x rate)
+   - Total amount
+   - Question: within existing scope or needs variation/PO?
+
+5. **File the study** in a serialized folder under `12_Design_Studies/`:
+   ```
+   12_Design_Studies/
+   ├── 01_Object_List/
+   ├── 02_New_Study/
+   └── 03_Study_01/
+   ```
+
+6. **Save templates** in `11_Standards_and_Skills/03_Templates/{Domain}/` for reuse
+
+### Pitfalls
+
+- **Don't assume cost is within scope** — always flag additional time/cost to PM for decision
+- **Structural assessment is Samaya's responsibility** — NRS proposes the design change, Samaya verifies the building can support it
+- **Templates should be fill-in-the-blank** — the team completes the technical details, not the agent
+- **DOCX templates use Samaya branding** — these are internal Samaya documents, not subcontractor-facing
+
 ## 1aa. Material Submittal Rejection (Code C) — Handling Supplier Technical Rebuttals
 
 **Trigger:** A material submittal (MA-XXXX) is returned Code C. The supplier has already provided a technical rebuttal (comments reply sheet + datasheets) that addresses the CG's rejection reasons. User asks "do I need 3 alternative suppliers or can I resubmit the same?"
@@ -869,7 +962,7 @@ Use when setting up or expanding a plan/procedure document folder (e.g., 02.17_R
 ## 3. Drafting project correspondence
 
 ### Email rules
-- **NRS emails**: only items NRS must act on. Remove any mention of Samaya-internal actions.
+- **NRS emails**: only items NRS must act on. Remove any mention of Samaya-internal actions. When forwarding a CRS, filter out contractor-side items (cloud survey, mock-ups, demolition, BIM coordination) — only send design-scope items (title blocks, showcase design, missing dimensions, space labeling).
 - **PM emails**: separate NRS-action list from Samaya-team-action list clearly.
 - Save drafts as `.md` in `Correspondence/draft_email_{recipient}_{topic}.md` for review before sending.
 - Never ask NRS to decide something the contract/spec already defines — NRS suggestions are flags, not decision requests.

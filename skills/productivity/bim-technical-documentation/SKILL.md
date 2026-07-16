@@ -66,6 +66,7 @@ Rules specific to plans and reports issued for CG/PMC/MoC review (Resource Mgmt 
 CG/client-facing documents must read like a human wrote them. Rules:
 
 - **No `§` symbol** — use `Clause` or `Section` in plain English. The `§` character is an AI fingerprint.
+- **No status symbols** — use `Compliant` / `Partial` / `Pending` instead of `✓` / `△` / `—`. Symbols in compliance tables are an AI fingerprint. CG reviewers read plain text, not icon legends.
 - **No verbose section subtitles** — section banners should just be the title. No explanatory subtitles like "audit trail · baseline integrity", "methodology · ecology · 55-role register", "seam integrity · cross-discipline alignment". CG doesn't need a subtitle explaining what the section is about.
 - **No "honest status"** or editorializing — just state the status.
 - **No "NEW" badges** on TOC entries — the revision history is where new content is documented.

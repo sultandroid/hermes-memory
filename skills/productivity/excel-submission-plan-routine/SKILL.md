@@ -310,3 +310,4 @@ center_align = Alignment(wrap_text=True, vertical='center', horizontal='center')
 - `references/schedule-activity-mapping.md` — Activity ID mapping from programme schedule
 - `references/cr-sheet-structure.md` — CR sheet column layout and response patterns
 - `references/cg-response-handling.md` — CG response handling workflow
+- `references/compliance-sheet-filling.md` — Filling Engineer-provided compliance sheets for material submittals. Plain text statuses, no symbols, no AI language.

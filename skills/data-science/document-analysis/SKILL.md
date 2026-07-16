@@ -86,6 +86,148 @@ enhancer = ImageEnhance.Contrast(gray)
 gray_high = enhancer.enhance(2.0)
 ```
 
+### Table Reconstruction from Garbled OCR
+
+Image-based PDFs with tabular data (inspection certificates, test reports, material data sheets) produce garbled OCR output where table cells are jumbled, column headers are scrambled, and values are misaligned. Use this multi-strategy pipeline to recover structured data.
+
+#### Strategy 1: TSV Bounding-Box Line Reconstruction
+
+Use `pytesseract.image_to_data()` with `output_type=pytesseract.Output.DICT` to get per-word bounding boxes, then group by `(block_num, line_num)` and sort by `left` coordinate to reconstruct table rows:
+
+```python
+from collections import defaultdict
+
+data = pytesseract.image_to_data(img, lang='eng',
+    config='--oem 3 --psm 6', output_type=pytesseract.Output.DICT)
+
+lines = defaultdict(list)
+for i in range(len(data['text'])):
+    t = data['text'][i].strip()
+    if t and data['conf'][i] > 0:  # filter low-confidence noise
+        key = (data['block_num'][i], data['line_num'][i])
+        lines[key].append((data['left'][i], t))
+
+for key in sorted(lines.keys()):
+    items = sorted(lines[key], key=lambda x: x[0])
+    print(' | '.join(item[1] for item in items))
+```
+
+**Why this works:** Tesseract's TSV output preserves spatial position even when the raw `image_to_string` output is garbled. Grouping by block+line and sorting by x-coordinate reconstructs the original table layout.
+
+**Filtering:** Use `data['conf'][i] > 0` to drop noise. For cleaner output, raise to `> 10` or `> 30` depending on image quality.
+
+#### Strategy 2: Zoomed Crop for Missing Values
+
+When OCR misses specific table cells (e.g., the "Result" column in a test report), crop the exact region, upscale 2-3x with NEAREST, apply high contrast (3-4x), binarize aggressively, and re-OCR:
+
+```python
+from PIL import ImageEnhance, ImageFilter
+
+w, h = img.size
+# Crop the results area specifically
+crop = img.crop((int(w*0.15), int(h*0.45), int(w*0.85), int(h*0.65)))
+# Upscale 2-3x with NEAREST to preserve pixel edges
+crop = crop.resize((crop.width * 2, crop.height * 2), Image.NEAREST)
+crop = crop.convert('L')
+enhancer = ImageEnhance.Contrast(crop)
+crop = enhancer.enhance(3.0)
+# Aggressive binarization
+crop = crop.point(lambda x: 0 if x < 120 else 255, '1')
+
+text = pytesseract.image_to_string(crop, lang='eng', config='--oem 3 --psm 6')
+```
+
+**Parameter tuning:**
+- **Crop region**: Start with `(0.15w, 0.45h, 0.85w, 0.65h)` and adjust based on where the table body sits in the page
+- **Upscale factor**: 2x for most cases, 3x for very small text
+- **Contrast enhancement**: 2.0-3.0 for moderate, 3.0-4.0 for very faint text
+- **Binarization threshold**: 100-140 range; lower = more aggressive (captures faint text but more noise)
+- **PSM**: 6 (uniform block) for table cells, 7 (single line) for one-line results
+
+#### Strategy 3: Multiple PSM Mode Cross-Reference
+
+Different PSM modes produce different results on the same image. Run 3-4 modes and cross-reference:
+
+```python
+for psm in [3, 6, 7, 11]:
+    text = pytesseract.image_to_string(img, lang='eng',
+        config=f'--oem 3 --psm {psm}')
+    print(f"=== PSM {psm} ===\n{text}")
+```
+
+| PSM | Best for | Notes |
+|-----|----------|-------|
+| 3 | Default — general purpose | Fallback when others fail |
+| 6 | Uniform block of text | Best for table bodies, single-column data |
+| 7 | Single text line | Best for one-line results, headers |
+| 11 | Sparse text | Best when table has many empty cells |
+| 12 | Single block variable orient | Best for forms with mixed orientation |
+
+#### Strategy 4: Manual Calculation of Derived Values
+
+When OCR reads the raw data (loads, areas, dimensions) but misses the calculated average/result, compute it manually:
+
+```python
+# Example: Internal Bond Strength from load + area
+loads = [2760, 2560, 2550]  # OCR'd from table
+area = 2500                  # OCR'd from table
+avg_bond = sum(loads) / len(loads) / area
+print(f"Average: {avg_bond:.3f} N/mm² = {avg_bond*145.038:.1f} psi")
+```
+
+**Common derived values in material test reports:**
+- **MOR** (Modulus of Rupture): `(3 * max_load * span) / (2 * width * thickness²)`
+- **MOE** (Modulus of Elasticity): `(span³ * slope) / (4 * width * thickness³)`
+- **Density**: `mass / volume`
+- **Internal Bond**: `max_load / bond_area`
+- **Moisture Content**: `((wet_mass - dry_mass) / dry_mass) * 100`
+
+#### Strategy 5: Full Pipeline — Multi-Page Image-Based PDF with Tables
+
+Combine all strategies for a complete extraction:
+
+```python
+import fitz, pytesseract
+from PIL import Image, ImageEnhance
+from collections import defaultdict
+import io
+
+doc = fitz.open("document.pdf")
+
+for page_num in range(len(doc)):
+    # 1. Render at 300 DPI
+    pix = doc[page_num].get_pixmap(dpi=300)
+    img = Image.open(io.BytesIO(pix.tobytes("png")))
+
+    # 2. Try full-page OCR first
+    text = pytesseract.image_to_string(img, lang='eng', config='--oem 3 --psm 6')
+    print(f"=== Page {page_num+1} ===\n{text}")
+
+    # 3. If table data is garbled, use TSV reconstruction
+    data = pytesseract.image_to_data(img, lang='eng',
+        config='--oem 3 --psm 6', output_type=pytesseract.Output.DICT)
+    lines = defaultdict(list)
+    for i in range(len(data['text'])):
+        t = data['text'][i].strip()
+        if t and data['conf'][i] > 0:
+            key = (data['block_num'][i], data['line_num'][i])
+            lines[key].append((data['left'][i], t))
+    for key in sorted(lines.keys()):
+        items = sorted(lines[key], key=lambda x: x[0])
+        print(' | '.join(item[1] for item in items))
+
+    # 4. For specific missing values, zoom crop + re-OCR
+    # (see Strategy 2 above)
+```
+
+**Pitfalls:**
+1. **TSV confidence filtering**: `data['conf'][i] > 0` includes very low-confidence noise. For cleaner output, raise to `> 10` or `> 30`. But be aware that some valid values (especially in scanned documents) have low confidence — cross-reference with the raw `image_to_string` output.
+2. **Overlapping Arabic/English text**: When Arabic stamps overlap English table cells (common in Middle East inspection certs), OCR garbles both. The TSV approach helps by isolating spatial positions, but some cells will be unrecoverable. Note these as "partially obscured" in your output.
+3. **NEAREST vs LANCZOS for upscaling**: Use `Image.NEAREST` (not LANCZOS/BILINEAR) when upscaling for OCR. Nearest-neighbor preserves hard character boundaries; interpolation blurs them.
+4. **Binarization destroys thin text**: If the text is very thin (1-2px strokes), aggressive binarization can erase it entirely. Try a higher threshold (140-160) or skip binarization and rely on contrast enhancement alone.
+5. **Page-by-page memory**: For multi-page documents (10+ pages), process one page at a time and save results incrementally. Don't hold all rendered images in memory.
+6. **Verify with manual calculation**: When OCR reads raw data but misses the summary value, calculate it yourself. This also serves as a sanity check on the OCR'd values.
+
 ### Split, Merge & Search PDFs (pymupdf)
 
 ```python
@@ -184,9 +326,39 @@ with pdfplumber.open(pdf_path) as pdf:
                 print(row)
 ```
 
-### Image-based PDFs (no text layer)
+### Image-based PDFs (no text layer — or partial text layer)
 
-PDFs from Adobe Illustrator, InDesign, scanned documents, or **slide deck exports** (PowerPoint/Keynote → PDF) may have zero extractable text. Detect with PyMuPDF:
+PDFs from Adobe Illustrator, InDesign, scanned documents, or **slide deck exports** (PowerPoint/Keynote → PDF) may have zero extractable text. **However, many "image-based" PDFs actually have partial text layers** — especially those created via PostScript → Acrobat Distiller (producer: `PScript5.dll Version 5.2.2` + `Acrobat Distiller`). These PDFs look like scanned images but contain hidden text that PyMuPDF can extract.
+
+**Critical workflow: always try `page.get_text()` FIRST before falling back to OCR.** The text layer, even if garbled or incomplete, is often more reliable than tesseract on the same page.
+
+```python
+import fitz
+doc = fitz.open(path)
+for i, page in enumerate(doc):
+    text = page.get_text()
+    if text.strip():
+        print(f"Page {i+1}: {len(text)} chars of text layer found")
+        # Use this as primary source — supplement with OCR for missing pages
+    else:
+        print(f"Page {i+1}: no text layer — need OCR")
+```
+
+**Detection of PostScript/Distiller PDFs (partial text layer):**
+```bash
+pdfinfo "/path/to/file.pdf" | grep -i "producer"
+# "PScript5.dll Version 5.2.2" + "Acrobat Distiller" → partial text layer likely
+# "macOS" or "LibreOffice" → may have full text layer
+# "Image Conversion Plug-in" → slide deck export, no text layer
+```
+
+**Workflow for mixed text-layer PDFs (most common in shop drawings):**
+1. Extract text from ALL pages with `page.get_text()` in one pass
+2. Pages with text → use as primary source (even if garbled)
+3. Pages without text → render at 300 DPI + tesseract OCR
+4. Cross-reference: OCR may catch things the text layer missed, and vice versa
+
+Detect with PyMuPDF:
 
 **Quick detection via pdfinfo:**
 ```bash
@@ -955,6 +1127,7 @@ PYEOF
 
 ## Reference files
 
+- `references/shop-drawing-extraction.md` — Shop drawing PDFs from PostScript/Acrobat Distiller: partial text layer extraction, title block fields, dimension data, materials specs, and common sheet patterns (worked example: Bohemian Collection furniture shop drawings, 32 pages)
 - `references/bma-cad-pdf-extraction.md` — BMA/Boris Micka CAD-generated interior design PDFs: drawing code system, MEP fixture legend libraries, critical disclaimer language, and RFI cross-reference worked example (RCRC Exhibition, 27 questions)
 - `references/aseer-file-location-patterns.md` — Aseer Museum project file structure, OneDrive stub detection, Excel comparison sheet extraction, Outlook DB cross-reference, and known vendor quotation locations
 - `references/aseer-register-2026-05-28.md` — Aseer-style multi-section register extraction (8 log types in one PDF, RTL Arabic, status code mapping)
@@ -963,4 +1136,5 @@ PYEOF
 - `references/medical-report-ocr.md` — OCR pipeline for mixed Arabic/English medical lab reports (blood tests, CBC, hormones) with tesseract + pillow, structured data extraction, and HTML/Chart.js dashboard generation
 - `references/excel-schedule-extraction.md` — Extract all columns from multi-sheet Excel schedule files, auto-detect header rows, handle deduplication by code prefix, preserve full field sets per schedule type
 - `references/standard-pdf-extraction-pattern.md` — Pattern for extracting from European/British standards (BS EN, EN, ISO): encrypted national adoptions, incomplete PDFs (TOC says 42 pages, file has 15), supplementing missing clauses from web sources. Worked example: BS EN 16893:2018 Conservation of Cultural Heritage.
+- `references/material-data-sheet-extraction.md` — Worked example: extracting tabular data from image-based material data sheets (SS 304 inspection cert + Verdo FR MDF test report) using TSV bounding-box reconstruction, zoomed crop OCR, and manual calculation of derived values
 - `references/riba-plan-of-work-2013-study.md` — RIBA Plan of Work 2013 comprehensive study: all 8 stages (0–7) with full task bar tables, 6 procurement options with museum-specific recommendations, 12 project strategies, contractor's PM perspective, 2007→2013 stage mapping, and information exchange deliverables. Extracted from a 39-page image-based slide deck PDF + UCL overview supplement.

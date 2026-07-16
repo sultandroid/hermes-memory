@@ -59,23 +59,27 @@ Script template at `/tmp/batch_extract.applescript` — iterate email IDs, save 
 | Document Type | Routing Folder (Aseer Museum root) |
 |---|---|
 | NCR (MOC-MUS-CG-ASE-NC-*) | `04_Docs /10_Test_and_Inspection/10.3_NCRs/{NCR-ID}/` |
-| Subcontractor Prequal | `24_Subcontractors/{NN}_{Specialist}/01_Prequalification/` |
+| Subcontractor Prequal (PQ-*) | `24_Subcontractors/{NN}_{Specialist}/01_Prequalification/` |
 | Contracts/Agreements (main contract) | `00_Contracts/` |
 | Subcontractor Contracts | `24_Subcontractors/{NN}_{Specialist}/02_Contract/` |
 | Scope of Work | `24_Subcontractors/{NN}_{Specialist}/01_Scope_of_Work/` |
 | Proposals | `24_Subcontractors/{NN}_{Specialist}/08_RFP_and_Proposals/` |
-| Design Submittals (DD Gate) | `02_Submittals/01_DD_Gate/{Discipline}/` |
+| Design Submittals — DD Gate (1G-*) | `02_Submittals/01_DD_Gate/{Discipline}/` |
+| Design Studies (DS01, DDD-*) | `03_Design_Files/` |
+| DWG drawings | `03_Design_Files/` |
 | Material Lists | `04_Docs /09_Registers/22_Procurement_Schedule/MEP_Materials/` |
 | Plans (PL-*) | `04_Docs /02_Plans_and_Procedures/{folder}/` |
-| Contracts / Agreements (main contract) | `00_Contracts/` |
+| General Documents (ZD-*) | `04_Docs /02_Plans_and_Procedures/{folder}/` |
 | Weekly / Daily Reports | `00_Status/` |
-| Meeting Minutes (MOM) | `04_Docs /09_Registers/` |
+| Meeting Minutes (MOM) | `00_Status/` |
 | Material Board Review Comments | `03_Design_Files/FF&E_Material_Boards/` |
 | Management Plans Status | `04_Docs /09_Registers/` |
 | Design Management / Tracking | `03_Design_Files/` |
 | Safety / HSE Documents | `04_Docs /02_Plans_and_Procedures/02.5_HSE_Plan/` |
+| HERC/SASO compliance guidelines | `04_Docs /02_Plans_and_Procedures/02.5_HSE_Plan/` |
 | Daily Reports | `00_Status/` |
 | RFQ / Procurement Schedules | `04_Docs /09_Registers/22_Procurement_Schedule/` |
+| Schedule files (.xer) | `02_Schedule/` |
 | Risk Register | `04_Docs /09_Registers/23_Project_Risk_Register/` |
 | Aconex notifications (no att) | Skip — CDE-based, reference only |
 | Ops/HR/ERP | Skip — not project-critical |

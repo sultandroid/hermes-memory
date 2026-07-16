@@ -152,6 +152,8 @@ After receiving vendor proposals and before award, audit each proposal against t
 6. **No special Unicode chars** — replace: en-dash (-) with hyphen (-), middot () with hyphen/comma, em-dash (--) with double hyphen (--), right arrow (->) with "->", greater-or-equal (>=) with ">=", superscript (²) with "2"
 7. **No AI footprint phrases** — avoid: "as per", "in accordance with", "please find attached", "kindly", "I trust this meets your expectations", "we are pleased to submit", "valued feedback", "sincerely appreciate", "look forward to", "remains fully available"
 8. **Numbers and codes stay original** — drawing codes, standards references, product names keep their original formatting
+9. **No symbols in compliance statuses** — use plain words not icons: "Compliant" not "✓", "Partial" not "△", "Pending" not "—". Never use checkmarks, triangles, or dashes as status indicators in compliance sheets or checklists.
+10. **No AI fingerprint in Excel cells** — avoid: "Exceeds minimum by X%", "Well within limit", "Standard industry practice", "Acknowledged — will comply", "To be submitted per Engineer's direction". Write direct statements: "Exceeds minimum", "Within limit", "Will comply", "To be submitted post-approval".
 
 ## SOW Content Rules (Added 2026-07-03)
 

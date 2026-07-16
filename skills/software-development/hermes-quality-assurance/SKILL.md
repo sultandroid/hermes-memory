@@ -584,6 +584,27 @@ When a humanization pass is requested, apply these specific changes:
 - **Paragraph length:** max 3-4 sentences
 - **Number presentation:** plain without dramatic lead-ins ("CV = -218K" not "a troubling variance of")
 
+### Engineer-Provided Compliance Forms — Fill Only, Don't Create
+
+When the Engineer provides their own Excel compliance sheet template (e.g. 064023 and 061000 forms with spec text pre-filled):
+
+1. **Fill their form only** — do NOT copy old compliance sheets, MAR checklists, or any other files into the submission folder. The Engineer wants only their two forms back.
+2. **Columns to fill:** Manufacturer/Supplier Statement (what value is achieved), Compliance (Compliant/Partial/Pending), Remarks (source file reference).
+3. **Plain text status labels only:** `Compliant`, `Partial`, `Pending`. No symbols (✓, △, —, ⚠️). The user explicitly corrected: "dont use symbols , or any AI foot print."
+4. **Reference actual datasheet values** from the team's submission — extract achieved values from test reports and TDS, not from memory or inference.
+5. **Supporting datasheets** stay in a separate folder (e.g. `التقديم 14-7/Data sheet/`) — do not embed them in the compliance sheet folder.
+6. **When datasheets are image-based PDFs** (no extractable text), delegate to Kimi with OCR/vision to extract the values before filling.
+7. **Mark Partial honestly** when the product doesn't fully meet spec (e.g. Class B vs Class A fire rating) and note the alternative acceptance path if one exists in the spec.
+8. **Submit what you have** — don't delay submission waiting for manufacturer declarations that may take weeks. The Engineer will tell you what they specifically need more of.
+
+**Material data only — no company data:** Only fill rows that reference material specifications (density, MOR, MOE, fire rating, formaldehyde, thickness, etc.). Do NOT fill company data rows: fabricator qualifications, installer experience, warranty periods, product data submittals, shop drawing submittals, installation tolerances, or any row that describes the company's capability rather than a material property. The user explicitly corrected: "only fill the materials data not company data."
+
+**Evidence in Remarks is mandatory — never remove it:** Every filled row must have a source file reference in the Remarks column. The user explicitly corrected when evidence was missing: "you remove the evidence :(" and "add in Remarks the evidence of the comply." The Remarks column is where the Engineer verifies your claim. Format: "File name - specific value found." For Partial items, state what is missing and what is needed to close the gap.
+
+**Pitfall — Don't add old files:** The user corrected: "he said just fill my forum only." Copying old compliance sheets, MAR checklists, or generated documents into the Rev02 folder is wrong. Only the Engineer's two forms belong in the submission root.
+
+**Pitfall — Don't remove evidence when clearing company rows:** When you clear company data rows (fabricator qualifications, etc.), be careful not to also clear evidence from material data rows. The user will notice and call it out. Only clear the specific rows that are company data, not adjacent material rows.
+
 ### AI Fingerprint Symbols — Zero Tolerance
 
 The user explicitly corrected these as AI fingerprints. They must NEVER appear in formal documents, CR sheets, registers, or any deliverable:
