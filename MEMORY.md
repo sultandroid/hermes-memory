@@ -14,6 +14,6 @@ NEVER delete user files without explicit confirmation. User is very particular a
 §
 KKIA Concourse A (Tqanny 010): Verdo FR MDF=Class B (FSI 35), spec needs Class A (≤25). Ritver FR coatings offer BS 476 Class 0 path.
 §
-SysLeaders: web sultan/1batagoniaA, cPanel sysleaders/1batagoniaA. DB: sysleaders_samaya (live, disk quota exceeded). Entity 21=Projects, 22=Tasks/BOQ, 27=Workers, 28=Labor Records (attendance/payroll), 49=POs. Labor cost=field_256×field_257 on-the-fly. Rateeb entity=282. Backup folder: /Volumes/MIcro/Work/Sysleaders/Database backup_claude/ (5.9MB full dump, 211 projects, 870 POs). All SQL backups are structure-only — no data.
+SysLeaders: sultan/1batagoniaA. DB sysleaders_samaya (disk quota exceeded). Entity 21=Projects, 28=Labor, 49=POs. Rateeb entity=282. Backup: /Volumes/MIcro/Work/Sysleaders/Database backup_claude/ (5.9MB JSON dump, 870 POs). All SQL backups structure-only. Rate systems: Project_Exports_v2 uses DAILY rates; Factory_Details.bak and Master_Workers_Reference use HOURLY rates. Verify rate × hours = cost before extrapolating.
 §
 Sister Companies _Final: each client folder has ONLY original Excel + Section5_Detail.xlsx. No backups/old files. Section 5 (تكاليف المصنع): Line1=Labor, Line2=Materials, Line3=Other. NEVER duplicate Section 1 items. Backup originals to /Volumes/MIcro/Work/Sysleaders/backups/ before edits.

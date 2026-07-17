@@ -1,5 +1,11 @@
-Plain engineer speak — no AI filler, em-dashes, section symbols, smart quotes, accented chars, no checkmark/cross symbols. Use plain words: Compliant/Partial/Pending not ✓/△/—. No AI jargon like 'exceeds minimum by 20%', 'well within limit', 'standard industry practice'. Evidence in Remarks must be specific file names, not generic. Fill Engineer's own forms, don't create new ones. Keep datasheets alongside compliance sheets. Name files by content. Double-check files exist before reporting missing. SOWs deep from first pass — generic gets rejected. Use SamayaDoc. Open file after gen. Arabic summaries. CG disp = external CR sheet. Radiance = Dr Waleed only.
+Plain engineer speak — no AI filler, em-dashes, smart quotes, checkmark/cross symbols. Use Compliant/Partial/Pending. Evidence in Remarks = specific file names. Fill Engineer's own forms. Open file after gen. Arabic summaries. CG disp = external CR sheet.
 §
-CG comment disposition should be external Excel (CR sheet), not inline in the document. Remove full CG comment pages from plans, reference attached CR sheet only.
+CG comment disposition = external CR sheet, not inline. Remove full CG comment pages from plans.
 §
-Precise responsibility allocation: when forwarding CRS/comments to consultants, only include items that are actually their scope. Clearly separate what's on Samaya's side vs consultant's side. Don't lump Samaya gaps under consultant scope or vice versa.
+Precise responsibility allocation: when forwarding comments to consultants, only include their scope. Don't lump Samaya gaps under consultant scope.
+§
+Pragmatic about data gaps — prefers extrapolating from real patterns (same workers, rates, material costs) to fill Section 5 gaps rather than leaving unsupported. Forecast rows must be clearly marked.
+§
+Hard rule: never touch accounting files (Main_Accounting_Sheet.xlsx, _Final workbooks). Only modify Factory_Details.xlsx.
+§
+Wants plan written first before execution. Corrects approach when wrong. Gives clear scope boundaries.

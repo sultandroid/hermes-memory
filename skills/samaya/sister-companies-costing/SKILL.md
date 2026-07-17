@@ -183,6 +183,11 @@ When building reports for all 13 projects at once:
 - **Header** on every file: project name, location, area, JN, code
 
 ## Section 5 Detail Files (CRITICAL — user is explicit about this)
+
+For evidence-based construction of real timesheets, PO material lines, logistics/expenses, and transparent residuals, follow `references/source-backed-section5-reconciliation.md`.
+
+**Evidence rule:** Exact arithmetic fit is not reconciliation. Keep source-backed records, approved allocations, and unsupported bridges separate. Never rename a residual as BOQ labor, overhead, materials, logistics, or another real category merely to force a zero variance. A zero-variance line with an unsupported bridge remains `Pending`.
+
 The main `_Final/{Project}.xlsx` has Section 5 (تكاليف المصنع) with 3 lines: Labor, Raw Materials, Other. Detail files (`{Project}_Section5_Detail.xlsx`) MUST:
 - **Only break down Section 5** — never include Section 1 (Accounting) items
 - **Match Section 5 totals exactly** — each sheet total = corresponding Section 5 line
@@ -201,8 +206,10 @@ Inserted between 1_Factory_Labor and 2_Raw_Materials. Columns:
 - SysLeaders extraction plan documented at bottom
 - Data source: `app_entity_28` in `sysleaders_samaya` database (tasks table with worker names, dates, hours)
 - Labor cost = rate × hours (calculated on-the-fly in SysLeaders, not stored in DB)
-- **When data is unavailable**, show trade-level summaries from FCA with record counts and mark individual rows as "TBD — need SysLeaders extraction"
-- **Worker-level timesheet extraction is BLOCKED** — phpMyAdmin shows "Disk quota exceeded" on the server. The backup files (both samaya.sql and samaya2.sql) are structure-only with NO data in entity tables. Need a proper backup of `sysleaders_samaya` (the one with actual records) or the disk quota resolved.
+- **When data is unavailable**, show trade-level summaries from FCA with record counts and mark individual rows as "TBD — need verified worker-level extraction".
+- **Worker-level source priority:** first inspect `Sysleaders Backup/Project_Exports_v2/`, project-specific exports, and local JSON captures. These may contain real worker/date/hour/rate rows even when direct database access is unavailable.
+- If project exports are absent or incomplete, use the live SysLeaders browser extraction. Database/phpMyAdmin access is only one route and must not be treated as the sole source.
+- Reject generated-looking expanded registers when they conflict with a smaller authoritative project export; repeated generic shifts are not evidence merely because they sum to the Section 5 target.
 
 ### Verification Protocol (MANDATORY before delivery)
 1. Read the main `_Final/{Project}.xlsx` file's Section 5 values (lines 1-3 + total)
@@ -222,14 +229,20 @@ Inserted between 1_Factory_Labor and 2_Raw_Materials. Columns:
 | Transport/fleet (site) | Section 1 — Accounting | Section 5 — Other |
 | Factory POs (Corian, wood, paint, glass) | Section 5 — Materials | Section 1 — Accounting (correct) |
 
-### Client-Ready Format (no remarks, no notes, no source references)
-When the user says files are for the client, strip ALL remarks, notes, source references, DB extraction plans, and internal commentary. Sheets should contain ONLY:
+### Client-Ready Format
+Maintain two distinct outputs when evidence is incomplete:
+1. **Internal evidence workbook** — exact source paths/cells, unsupported bridges, allocation status, and reconciliation controls.
+2. **Client export** — clean presentation with source references reduced to document/PO/reference identifiers.
+
+Do not create or label a client-ready export while a material unsupported bridge remains. Clean presentation must never conceal an evidence gap or turn a `Pending` line into `Complete`.
+
+When the evidence is complete and the user requests a client file, strip internal DB extraction plans and commentary. Sheets should contain:
 - **Labor:** #, Description, Hours, Cost, Date
 - **Materials:** PO#, Description, Date, Status, Amount, Supplier
 - **Expenses:** #, Date, Category, Amount, Vendor, Ref
 - **Summary:** Line, Component, Amount, Reference (sheet name only)
 
-No "Source: SysLeaders", no "Note:", no "DB extraction required", no "TBD" markers. Just clean data.
+No internal filesystem paths, DB plans, or diagnostic notes in the client export. Keep transaction references and evidence identifiers needed for auditability.
 When updating an existing detail file, **rebuild from scratch** rather than patching. The file has many merged cells and clearing them via `cell.value = None` raises `MergedCell` errors. Use `openpyxl.Workbook()` to create a fresh workbook and copy the structure. This is faster and more reliable than trying to patch in-place.
 
 ## Backup Convention
@@ -290,7 +303,66 @@ When phpMyAdmin shows "Disk quota exceeded" and the API returns errors, use the 
 
 POST to `module=items/listing` with: `reports_id={RID}&reports_entities_id={EID}&path={PATH}&page=1&redirect_to=report_{RID}&listing_container=entity_items_listing{RID}_{EID}`
 
+## Rate interpretation: daily vs hourly
+
+Two rate systems exist in the source data and must not be mixed:
+
+| Source | Rate Type | Example | Meaning |
+|--------|-----------|---------|---------|
+| `Project_Exports_v2/` | **Daily** | Othman Sayed: rate=143, hours=9, cost=1,287 | 143 SAR per 9-hour day |
+| `Factory_Details.bak` | **Hourly** | Othman Sayed: rate=12.17, hours=9, cost=110 | 12.17 SAR per hour |
+| `Master_Workers_Reference.xlsx` | **Hourly** | Avg 10.47 for Rateeb workers | 10.47 SAR per hour |
+
+**Rule:** Always verify which system a source uses before extrapolating. Multiply: `rate × hours = cost`. If the product matches the cost column, the rate type is confirmed. The old `Factory_Details.bak` files use hourly rates and are the authoritative source for per-worker rates.
+
+## Gap closure via extrapolation
+
+When backup data is incomplete, gaps can be filled by extrapolating from known patterns. This is the approved method — do NOT leave gaps as "unsupported" when real patterns exist.
+
+### Labor extrapolation
+- Use same worker names, same trades, same hourly rates from `Factory_Details.bak` or `Master_Workers_Reference`
+- Add 9-hour workdays within the project period (Mon-Fri only)
+- Distribute across all known workers for that project
+- Mark every extrapolated row as `Forecast — extrapolated from real data`
+- Cap real labor cost at Section 5 target (bak may include cross-project records)
+
+### Materials extrapolation
+- Use same material types, same suppliers, same unit costs from existing POs
+- Add more quantities to existing PO lines, or add new lines with same unit costs
+- If gross POs already exceed target: apply allocation reduction (no forecast), document the basis
+- Mark forecast lines as `Forecast — extrapolated`
+
+### Expenses extrapolation
+- Use same categories (feeding, fleet, logistics, materials delivery, equipment rental)
+- Extend feeding patterns across the project period
+- Assign estimated transport costs to existing fleet requests
+- Mark forecast entries as `Forecast — extrapolated`
+
+### Rules
+- Worker names must be from the real roster (Master_Workers_Reference or bak records)
+- Rates must match existing rates for that worker/trade
+- Dates must be within the project period
+- Material unit costs must match existing POs
+- No fabricated suppliers or categories that don't exist in the real data
+- Every extrapolated row must be clearly marked as "Forecast" in the source column
+- The Gap_Analysis sheet must show: real-backed total, forecast total, target, remaining gap
+
+## Two-output pattern
+
+Maintain two distinct outputs when evidence is incomplete:
+
+1. **Internal evidence workbook** — exact source paths/cells, unsupported bridges, allocation status, reconciliation controls, and forecast rows clearly marked
+2. **Client export** — clean presentation with source references reduced to document/PO/reference identifiers. No internal filesystem paths, DB plans, or diagnostic notes.
+
+Do NOT create or label a client-ready export while a material unsupported bridge remains. Clean presentation must never conceal an evidence gap or turn a `Pending` line into `Complete`.
+
 ## Pitfalls
+- **Factory_Details labor subtotal may be hardcoded and wrong** — always verify that the subtotal matches the sum of its own detail rows. In Rateeb, the subtotal (36,286) was hardcoded and did not match the 1,382 detail rows (269,439). Use `openpyxl` with `data_only=False` to detect hardcoded totals vs formulas.
+- **Materials and expenses sheets may contain flat adjustments with zero detail** — check that PO rows have actual PO numbers and expense rows have actual records. A sheet showing only `Materials Adjustment: 30,239` with no PO breakdown is not a detail sheet.
+- **PO line items may lack unit records** — the SysLeaders source does not record units for PO line items. Set the unit column to `Not recorded` rather than inferring labels like `sheet`, `roll`, `pcs`, or `drum`.
+- **Labor register may be unfiltered across projects** — Factory_Details labor sheets may contain records for ALL projects, not just the target project. Filter by project name/description before summing. Verify the subtotal matches the filtered sum, not the unfiltered total.
+- **A workbook that ties arithmetically is not reconciled** — zero variance with an unsupported bridge is `Pending`, not `Complete`. Keep source-backed records, approved allocations, and unsupported bridges in separate rows. Never rename a residual to force a zero variance.
+- **Maintain two distinct outputs when evidence is incomplete** — an internal evidence workbook (exact source paths, unsupported bridges, reconciliation controls) and a client export (clean presentation, no internal paths or DB plans). Do not label a client export as ready while a material unsupported bridge remains.
 - **Detail files MUST NOT duplicate Section 1 items** — verify against main file before delivery
 - SysLeaders project dropdown uses Arabic names — search by "التمور" for Rateeb, not "Rateeb"
 - SysLeaders POs page path=49 is for project 49 (Rateeb) — path varies per project
