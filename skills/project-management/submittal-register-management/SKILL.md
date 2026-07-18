@@ -6,6 +6,20 @@ trigger: user asks to create/clean/organize a submittal register, add dates, fix
 tags: [bim, submittal-register, aseer, openpyxl, excel, schedule]
 ---
 
+## RFI/TQ Register — Status Semantics
+
+**Critical rule: RFI status = whether CG answered, not the folder it sits in.**
+
+| Status | Meaning |
+|--------|---------|
+| OPEN | Submitted, no CG answer yet |
+| CLOSED | CG answered (any outcome) |
+| REJECTED | CG rejected the query itself |
+
+Never use "PENDING APPROVAL" or "PENDING REVIEW" — those describe folder state, not answer state. An RFI in an "Approval/" subfolder is still OPEN until CG responds.
+
+See `references/rfi-register-design.md` for the full pattern: column design, revision handling, Adel's folder bank cross-check, and naming anomalies to watch for.
+
 ## AV Prequalification Package Handling
 
 When processing AV equipment supplier prequalifications (suppliers to Rawasin, the AV contractor):
@@ -1018,6 +1032,10 @@ This makes it clear that the subcontractor still has an obligation to provide in
 ### AV Submittal Plan Reference
 
 A complete worked example (AV Stage 04, 69 items, 4 gates, responsibility split) is at:
+
+### CRS-to-Drawing-Register Mapping
+
+When CG returns a CRS Excel for a DD Gate package, see [`references/crs-to-drawing-register-mapping.md`](references/crs-to-drawing-register-mapping.md) for the mapping workflow — extract codes per drawing, handle mixed B/C/U.R results, and update the register.
 `02_Submittals/04_Registers/AV_Submittal_Register/AV_Stage04_Submittal_Plan.xlsx`
 
 The generator pattern:

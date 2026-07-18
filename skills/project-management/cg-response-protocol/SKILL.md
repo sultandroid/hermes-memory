@@ -360,6 +360,109 @@ When supplier test reports/certifications take time (supplier lead time), but th
 
 See `references/ma-0006-showcase-resubmission-case.md` for the full worked example.
 
+## Plan-Level CG Comment Audit Against Contractual Obligations
+
+When CG returns a management plan (SMP, DMP, HSE Plan, QMP) with Code C, audit each comment against the actual ER/SoW/SBC text before drafting responses. This determines which comments are valid, which are already addressed, and what specific action is needed.
+
+See `references/plan-cg-comment-audit.md` for the full workflow: extracting comments, mapping to ER/SoW clauses, checking the submitted document, determining priority, and producing the audit table.
+See `references/crs-to-drawing-register.md` for extracting per-drawing review codes from CG CRS Excel files and updating the drawing register with floor-by-floor DD Gate status tables.
+
+### Key ER References for Plan Audits
+
+| ER Section | Content | When to cite |
+|-----------|---------|-------------|
+| §2.4D | Sustainability & Environmental Performance | Material compliance, VOC, Oddy comments |
+| §2.7 | General Cleaning — sustainability requirements | Cleaning sustainability comments |
+| §3.7.VIII | Client sustainability initiative, energy efficiency | Client initiative, energy efficiency comments |
+| §3.7.XIII | Applicable Codes — Mostadam Manual (no cert level) | Mostadam-related comments |
+| SoW §1.5 | Oddy testing, British Museum certification | Oddy test comments |
+| SoW §2.1 | Exhibition design (RIBA Stage 4) and off-site fabrication | Exhibition sustainability comments |
+
+## Critical Finding Pattern: MOSTADAM Certification Level
+
+The ER lists "Mostadam Manual" as an applicable code but does **not** specify any certification target level (Bronze/Silver/Gold). This is a common source of CG comments. The correct position:
+
+> SMP should be compliance-based, not certification-based: comply with SBC 1001 and Mostadam Manual as referenced in the ER — no commitment to any specific rating level.
+
+Any references in the SMP to a specific Mostadam level should be removed unless contractually required.
+
+### CG Asking for Credit Selection Criteria
+
+If the SMP includes a Yes/No MOSTADAM credit selection table and CG asks for selection criteria/rationale:
+
+| Situation | Response |
+|-----------|----------|
+| SMP has a Yes/No credit selection table | **Remove the table entirely.** The table implies we are pursuing certification. Since no certification level is contractually required, there are no credits to select. The table invites exactly this question. |
+| CG asks for rationale per credit | **Push back.** "The MOSTADAM credit matrix is an informational reference showing the relationship between project scope and MOSTADAM D+C credits. Since no specific certification level is contractually required per ER §3.7.XIII, there are no credits to select or criteria to define. The table is provided for awareness only." |
+| CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER §3.7.XIII. No specific certification level is contractually required." |
+
+**Do NOT** add a rationale column or fill rows with justifications — that implies we are pursuing certification, which we are not. The best move is to remove the table so it stops inviting the question.
+
+| Situation | Response |
+|-----------|----------|
+| SMP has a Yes/No credit selection table | **Remove the table entirely.** The table implies we are pursuing certification. Since no certification level is contractually required, there are no credits to select. |
+| CG asks for rationale per credit | **Push back.** "The MOSTADAM credit matrix is an informational reference showing the relationship between project scope and MOSTADAM D+C credits. Since no specific certification level is contractually required per ER §3.7.XIII, there are no credits to select or criteria to define. The table is provided for awareness only." |
+| CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER §3.7.XIII. No specific certification level is contractually required." |
+
+**Do NOT** add a rationale column or fill rows with justifications — that implies we are pursuing certification, which we are not. The existing Yes/No table (if kept) is sufficient for awareness.
+
+## Scope Creep Protection — CR Sheet with Cost/Schedule Impact
+
+When CG returns a plan with Code C, not all comments are equal. Some are valid contractual obligations, others are scope creep. Before sending instructions to the specialist, triage each comment into one of three lanes:
+
+| Lane | Criteria | Action | Example |
+|------|----------|--------|---------|
+| **✅ Comply** | Contractual obligation, no cost/schedule impact | Add to plan, no pushback | MOSTADAM prerequisites table, cleaning sustainability |
+| **⚠️ Comply (limited)** | Contractual obligation but scope-limited — we define criteria, others implement | Add criteria to plan, state who implements | Sustainability SPECS (we define, NRS implements) |
+| **🔴 Push back** | Not a contractual obligation, or has cost/schedule impact | Do NOT include. Prepare separate proposal if CG insists | Exhibition sustainability strategy (not in ER/SoW as standalone deliverable) |
+
+### CR Sheet Structure for Fida
+
+When sending instructions to the specialist, structure the CR sheet as:
+
+```
+## CG Comment N — [Title]
+
+| Field | Detail |
+|-------|--------|
+| CG Comment | [exact text] |
+| ER/SoW Reference | [clause] |
+| Our Obligation | ✅ On our shoulder / ❌ Push back — [reason] |
+| Cost Impact | None / ⚠️ Minor / 🔴 Yes — [amount] |
+| Schedule Impact | None / 🔴 Yes — [duration] |
+| Action for Fida | [specific copy-paste instructions] |
+| Response to CG | [exact text to use] |
+```
+
+### When to Push Back
+
+Push back when the CG comment would create a **new deliverable** not listed in ER/SoW, or when compliance would require **additional cost or schedule** beyond what was priced. Key arguments:
+
+1. **Not in ER/SoW as a named deliverable** — the ER and SoW define the required documents. If it's not listed, it's not a contractual deliverable.
+2. **Not in the specialist's PO** — the specialist was engaged for a specific scope. A new deliverable requires a new PO.
+3. **Requires multi-specialist input** — if the deliverable needs input from specialists not yet appointed or not part of the original scope, it's a new scope.
+4. **Cost impact** — if compliance requires additional hours, materials, or sub-consultant fees, flag it.
+5. **Schedule impact** — if compliance would delay the approval timeline, flag it.
+
+### Middle Ground: Offer a Subsection Instead of a Standalone Document
+
+When CG asks for a new standalone document, offer to add a brief subsection to the existing plan at no cost. This:
+- Closes the content gap without creating a new deliverable
+- Avoids the cost/schedule impact of a standalone document
+- Shows good faith to CG
+- Preserves the position that a standalone document is a separate scope
+
+Example: "The SMP already covers material compliance, Oddy testing, VOC limits, and energy efficiency. Exhibition-specific requirements are addressed through the same criteria. A standalone Exhibition Sustainability Strategy is not required by ER/SoW but can be provided as a separate scope if needed."
+
+### Add New Risks to Risk Register
+
+For each push-back item, add a risk to the project risk register:
+
+| Risk ID | Category | Risk Event | P | S | Score | Mitigation |
+|---------|----------|-----------|--|---|-------|------------|
+| PRR-SMP-001 | COM | CG may insist on exhibition sustainability strategy as condition of SMP approval | 3 | 2 | 6 (Medium) | Prepare position paper showing coverage in existing SMP. If CG insists, submit separate proposal. |
+| PRR-SMP-002 | PRC | CG may reject SASO equivalent and demand Energy Star/WaterSense | 2 | 2 | 4 (Medium) | Proactively specify SASO equivalent. If rejected, provide cost comparison and request VO. |
+
 ## File Organization
 
 ```

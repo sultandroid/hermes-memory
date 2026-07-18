@@ -19,6 +19,14 @@ All Samaya Investment company projects managed by the BIM Technical Office:
 The official Samaya logo is at:
 `_Style-Guides/logos archives/samaya-logo-trans.png`
 
+**Source path must be documented in EVERY guide that references logos.** When a shared asset (logo, template, etc.) is referenced across multiple style guides / documentation files, the SOURCE path (`_Style-Guides/logos archives/`) must be explicitly stated in EACH guide — not just in one central location. An agent reading any single guide must know where to find the original asset without searching the repo. This applies to:
+- `AGENTS.md` (repo entry point)
+- `_Style-Guides/README.md` (style guide entry point)
+- `Samaya-Formal-Plan-A4-Style-Guide.md` (HTML portrait)
+- `Engineering-Deck-HTML-Style-Guide.md` (HTML landscape)
+- `samaya-cv-pk-SKILL.md` (CV packs)
+- `Samaya_Doc_Style_Guide_v1.0.md` (docx guide — example `logo_path`)
+
 - This is a bilingual Arabic/English logo (سمايا الاستثمارية + samaya investment)
 - The wordmark is LOWERCASE "samaya" with red "a" — NOT uppercase "SAMAYA" with a diamond
 - NEVER create inline SVG text approximations (uppercase "SAMAYA", diamond shapes, red letters, etc.)

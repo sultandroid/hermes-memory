@@ -368,8 +368,43 @@ The cover page table (Table 0) has rows that map to cover fields. Contract value
 ### 🔴 Chart data in hidden area
 Charts need data references in the worksheet. Place chart data in a hidden area (e.g., row 50+) with minimal styling. Keep the chart data references simple — use contiguous ranges.
 
+## Formula-Driven Rating System (v2.0 Pattern)
+
+For Excel registers that match the reference template pattern (`سجل_مخاطر_متحف_عسير_Risk_Register_v2.0.xlsx`), use **live Excel formulas** instead of static computed values. See `references/formula-driven-register-pattern.md` for the full pattern.
+
+### When to Use Formula-Driven
+
+- The user provides a reference Excel that uses `=I6*J6` / nested `IF` scoring
+- The register needs to be interactive (user edits P/S, score/rating auto-update)
+- Building a multi-sheet workbook with Dashboard (COUNTIF), Risk Matrix (COUNTIFS),
+  and Cover (COUNTA) all linked to the Risk Register sheet
+- The user asks to "make system to calculate the rating same as [reference file]"
+
+### Quick Reference
+
+**Risk Register formulas** (data row R, columns K-L, O-P):
+
+| Cell | Formula |
+|------|---------|
+| K | `=I{row}*J{row}` |
+| L | `=IF(K{row}="","",IF(K{row}>=12,"Critical",IF(K{row}>=8,"High",IF(K{row}>=4,"Medium","Low"))))` |
+| O | `=IF(OR(M{row}="",N{row}=""),"",M{row}*N{row})` |
+| P | `=IF(O{row}="","",IF(O{row}>=12,"Critical",IF(O{row}>=8,"High",IF(O{row}>=4,"Medium","Low"))))` |
+
+**Dashboard**: `=COUNTA('Risk Register'!C6:C{N})` for total,
+`=COUNTIF('Risk Register'!L6:L{N},"Critical")` for rating counts,
+`=COUNTIF('Risk Register'!S6:S{N},"Open")` for status counts.
+
+**Risk Matrix**: `=COUNTIFS('Risk Register'!I6:I{N},{prob},'Risk Register'!J6:J{N},{imp})`.
+
+Where `N = 5 + len(risks)`.
+
 ## Related Skills
 
+- `risk-register-management` — For merging external registers into JSON SoT,
+  auditing PM registers, RMP alignment, and cross-document verification.
+  This skill covers the back-end (data); `project-risk-register` covers the
+  front-end (Excel generation).
 - `bim-project-register` — For updating an existing Risk_Register.xlsx (minimal 7-column template)
 - `project-register-manager` — For appending rows to existing Excel registers (append-only pattern)
 - `evm-analysis-chart` — For financial risk / cost variance reporting (different domain)

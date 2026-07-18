@@ -889,7 +889,9 @@ This returns paths like `Message%20Attachments/35/<UUID>.olk15MsgAttachment` rel
 
 ### Extracting PDF from .olk15MsgAttachment files
 
-The `.olk15MsgAttachment` files have a proprietary binary header (~285 bytes) followed by base64-encoded PDF content starting with `JVBER`:
+The `.olk15MsgAttachment` files have a proprietary binary header (~285 bytes) followed by base64-encoded PDF content starting with `JVBER`.
+
+**CRITICAL: The header boundary is `\r\r` (two CRs), NOT `\r\n\r\n`.** The Content-transfer-encoding header ends with `base64\r\r` followed immediately by base64 data. Using `\r\n\r\n` will fail to find the boundary. Verified on macOS 26.5.2 Outlook 16.97.
 
 ```python
 import base64, re
@@ -945,4 +947,6 @@ See `references/cg-deliverables-schedule-response.md` for constructing the respo
 See `references/contract-review-from-email-attachment.md` for the contract-review workflow when the user asks to "check the contract" from an Outlook email attachment — DOCX/PDF extraction, structured summary template, and red-flag checklist.
 See `references/onedrive-edeadlk.md` for full diagnostics.
 See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 24h scan using AppleScript (since TCC blocks SQLite), project-critical filtering, emoji status reporting, SILENT protocol, and Aconex transmittal register update workflow.
+See `references/cron-email-to-register-sync.md` for the 4× daily cron-job pattern — SQLite scan → classify → update all repo registers → commit → push → Telegram delivery.
 See `references/icloud-edeadlk-workaround.md` for the iCloud EDEADLK workaround — `cat > /tmp/` for reads, `python3 /tmp/script.py` for writes, `osascript` bridge as fallback.
+See `references/exportmailin-analysis.md` for processing Outlook ExportMailIn-*.xlsx files — classify rows, compare against repo, identify delta, update registers, commit.

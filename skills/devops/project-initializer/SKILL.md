@@ -37,6 +37,7 @@ Run this exact set of mkdir commands:
 PROJ="/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/[PROJECT_DIR]"
 
 # Top-level folders
+mkdir -p "$PROJ/00_Project_Charter"  # Live foundational docs — NOT in 99_Archive
 mkdir -p "$PROJ/As-Built Docs"
 mkdir -p "$PROJ/B.O.Q"
 mkdir -p "$PROJ/Completed Tender Package From NRS"

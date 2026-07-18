@@ -1,4 +1,4 @@
-Repo (~/aseer-museum-pm) is single source of truth for plan content — check before OneDrive files. ER/SoW compliance only, no Mostadam rating targets. CR registers: Excel, Open/Closed status. Fida's SMP: construction-phase focus, MOSTADAM Bronze framing — fix only contradictions (waste 60%, Oddy 14-day), keep his language.
+Repo is source of truth for plan content. ER/SoW compliance only. Fida's SMP: fix only contradictions (waste 60%, Oddy 14-day), keep his language.
 §
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 §
@@ -8,12 +8,18 @@ AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is f
 §
 Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 §
-Tqanny project 010 path: ~/Library/CloudStorage/OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/010
-§
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
 §
-KKIA Concourse A (Tqanny 010): Verdo FR MDF=Class B (FSI 35), spec needs Class A (≤25). Ritver FR coatings offer BS 476 Class 0 path.
+Risk Mgmt Plan REV00: footer='Page X of Y\tSamaya Investment Company' (Word fields). Header: Samaya logo + title. TOC: Word TOC field (Heading 1-2, hyperlinked, page numbers). Cover: REV00 - Issue for CG Review, 18 Jul 2026. DC block: QC table. Rev table: 1.0, C01, C02, REV00. 31 tables, 169 paragraphs, 15 H1 + 34 H2 styles.
 §
-SysLeaders: sultan/1batagoniaA. DB sysleaders_samaya (disk quota exceeded). Entity 21=Projects, 28=Labor, 49=POs. Rateeb entity=282. Backup: /Volumes/MIcro/Work/Sysleaders/Database backup_claude/ (5.9MB JSON dump, 870 POs). All SQL backups structure-only. Rate systems: Project_Exports_v2 uses DAILY rates; Factory_Details.bak and Master_Workers_Reference use HOURLY rates. Verify rate × hours = cost before extrapolating.
+Risk Register REV00: 1 bar chart (user adjusted), 4 sheets: PRR (49 risks), DDR/HSE/AV templates. 17 RBS categories roll up into PRR.
 §
-Sister Companies _Final: each client folder has ONLY original Excel + Section5_Detail.xlsx. No backups/old files. Section 5 (تكاليف المصنع): Line1=Labor, Line2=Materials, Line3=Other. NEVER duplicate Section 1 items. Backup originals to /Volumes/MIcro/Work/Sysleaders/backups/ before edits.
+Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
+§
+Graphit (graphics) is a sister company — no PO/subcontract, direct execution after SoW approval.
+§
+Before sending RFIs/TQs, audit content against repo data (registers, SOW_RACI, submission plans) to verify questions are accurate and not already answered.
+§
+User prefers validation before action: when proposing corrections, ask 'are these logical or wrong?' rather than applying directly.
+§
+Cron job 'Adel Darwish folder check' (5d1b58e4ef6f) runs daily 9AM/5PM KSA, delivers to Telegram. Need to verify Telegram chat ID is correct — user said 'telegram' without specifying chat_id, so it uses the default gateway channel.

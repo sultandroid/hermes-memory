@@ -296,7 +296,7 @@ $dataDir = __DIR__ . '/../../hotspot-data';  // OUTSIDE deploy dir
 | File too large | Source may be on OneDrive — extract only referenced assets |
 | Hostinger subdomain 404 | Create directory manually: `mkdir -p ~/domains/sub.domain.com/public_html/` |
 | Hostinger 403 Forbidden | SCP uploads create files with `-rw-------` (600) permissions. Web server cannot read them. Always `chmod -R 755` after upload on Hostinger/LiteSpeed. |
-| Hostinger subfolder 404 (htaccess rewrite) | Hostinger sometimes has a root `.htaccess` that rewrites everything to a `/build/` subdirectory via `RewriteRule ^(.*)$ /build/$1 [L]`. Your files must go inside `/build/` as well, or add an exception for your subfolder in `.htaccess`. Check `cat ~/domains/domain.com/public_html/.htaccess` first. |
+| Hostinger subfolder 404 (htaccess rewrite) | Hostinger sometimes has a root `.htaccess` that rewrites everything to a `/build/` subdirectory via `RewriteRule ^(.*)$ /build/$1 [L]`. Your files must go inside `/build/` as well. See [`references/hostinger-htaccess-rewrite.md`](references/hostinger-htaccess-rewrite.md) for the exact rule and fix. |
 | Apple extended attributes | Use `COPYFILE_DISABLE=1` or strip with `dot_clean` |
 
 ### Deploying Named HTML Files (not index.html)

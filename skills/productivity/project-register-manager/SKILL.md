@@ -174,7 +174,7 @@ Two distinct register types exist:
 
 When Mohamed asks for a **submittal register** for a subcontractor discipline from the SOW or ER:
 
-1. **Locate source documents** — SOW lives in `Contracts/01_Main_Contract/Contractors Scope of Works Document - Technical_250313/`; ER lives in `Contracts/01_Main_Contract/Contractors Employers Requirements - Engineering_250313/`. Both are PDF.
+1. **Locate source documents** — SOW, ER, contract, pricing, and StudioZNA scope text extracts live in `00_Project_Charter/` (repo root, NOT in `99_Archive/`). The SOW PDF is at `Contractors Scope of Works Document - Technical_250313/` in OneDrive; ER PDF at `Contractors Employers Requirements - Engineering_250313/`. Text extracts: `00_Project_Charter/scope_of_work.txt`, `00_Project_Charter/er_document.txt`, `00_Project_Charter/contract.txt`, `00_Project_Charter/studiozna_scope.txt`.
 2. **Extract text** using `python3 -c "import fitz; doc = fitz.open('path.pdf')"` (system Python 3.13 has pymupdf). Use `terminal()` not `execute_code` — pymupdf/openpyxl aren't in sandbox.
 3. **Extract deliverables by SOW section** — especially SOW 6.22.x (Technical Design Deliverables), SOW 6.9 (Design Phase Submittals), SOW 6.10-6.18 (product data/certificates), SOW Part 3 (Off-Site Fabrication sections 8.x), and ER 3.x (MEPF/IT/Security scope).
 4. **Use EXACT SOW wording** for descriptions — Mohamed corrected: "list same as SOW Listed". Copy the deliverable name verbatim from the SOW. Do NOT paraphrase or extrapolate. Add clarifying notes only in the Remarks column.

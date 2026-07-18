@@ -5,7 +5,60 @@ description: File Aseer Museum submittals, create analysis sidecars, build subco
 
 # Aseer Museum — Document Control & Correspondence Workflow
 
-Trigger: user sends a PDF file for the Aseer Museum project or asks to create a subcontractor folder.
+Trigger: user sends a PDF file for the Aseer Museum project, asks to create a subcontractor folder, or asks to extract formal project documents from OneDrive into the repo.
+
+## Reference Files
+
+| File | Covers |
+|------|--------|
+| `references/rfi-tq-drafting.md` | RFI/TQ format, correct reference codes, signatory (Waris Sultan), contract refs for content/MoC items, bilingual structure |
+
+## Repo Structure Rule — Live Docs vs Archive
+
+**Live foundational documents (Project Charter, Contracts, ERs, SoW, Pricing Schedules, Scope Summaries) must NOT go in `99_Archive/`.** The archive is for closed/superseded items only.
+
+| Document Type | Repo Location | Example |
+|--------------|---------------|---------|
+| Project Charter | `00_Project_Charter/` (root level) | contract.txt, scope_of_work.txt, er_document.txt, overview.txt, studiozna_scope.txt, pricing schedule xlsx, doc numbering xlsx, title block extracts |
+| Contracts | `00_Contracts/` | Contract summary, signed agreements |
+| Plans | `03_Plans/<NN_Plan>/` | DMP, PEP, BEP, SMP, etc. |
+| Registers | `01_Registers/` | Drawing register, submittal register, etc. |
+| Superseded / Closed | `99_Archive/` | Old versions, completed work packages |
+
+## Document Extraction from OneDrive to Repo
+
+When the user asks to "extract" or "copy" formal project documents from OneDrive into the repo:
+
+### Source Path
+```
+~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/04_Docs/00_Project_Charter/
+```
+
+### Extraction Rules by File Type
+
+| File Type | Action | Notes |
+|-----------|--------|-------|
+| `.pdf` | Extract text with `pdftotext` → `.txt` in repo | Use `pdftotext <src> /tmp/<name>.txt` then copy to repo |
+| `.xlsx` | Copy directly to repo | These are working files, not binaries that bloat git (gitignored) |
+| `.md` | Copy directly to repo | Already text |
+| `.dwg` / `.png` / `.jpg` | Stay in OneDrive | CAD binaries and images don't go in repo |
+| Large PDFs (22MB+ contract, 31MB overview) | Extract text only | The PDF stays in OneDrive; only the `.txt` extract goes to repo |
+
+### Workflow
+
+1. **List the OneDrive folder** to see what exists
+2. **Check what's already in the repo** — don't re-extract existing files
+3. **For each new file**:
+   - PDF → `pdftotext` → copy `.txt` to repo
+   - xlsx → `cp` to repo
+   - md → `cp` to repo
+4. **Verify** — `ls -la` both locations, confirm all OneDrive files have a corresponding repo entry
+
+### Target Repo Path
+```
+~/aseer-museum-pm/99_Archive/01_Integration_Management/Project_Charter/
+```
+⚠️ **This path is WRONG for live docs** — see the Repo Structure Rule above. The correct location is `00_Project_Charter/` at repo root. If the files are already in `99_Archive/`, move them to the correct location.
 
 ## Key reference: Drawing & Discipline Codes
 

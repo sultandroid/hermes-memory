@@ -12,13 +12,15 @@ Offset 0x00:  4 bytes magic = d00d 0000 (little-endian)
 Offset 0x04:  12 bytes unknown/padding
 Offset 0x10:  16 bytes GUID
 Offset 0x20+: MIME-style headers (Content-Type, Content-Disposition, Content-Transfer-Encoding)
-             Terminated by \r\n\r\n (0d 0a 0d 0a)
+             Terminated by \r\r (0d 0d) — NOT \r\n\r\n
 After headers: base64-encoded payload
 
 For PDFs: payload starts with "JVBER" (base64 encoding of "%PDF")
 For JPEGs: payload starts with "/9j/" (base64 encoding of JPEG SOI)
 For PNGs: payload starts with "iVBOR" (base64 encoding of PNG header)
 ```
+
+**CRITICAL: The header boundary is `\r\r` (two CRs), NOT `\r\n\r\n`.** The Content-transfer-encoding header ends with `base64\r\r` followed immediately by base64 data. Using `\r\n\r\n` will fail to find the boundary. Verified on macOS 26.5.2 Outlook 16.97.
 
 ## Header Content
 
@@ -35,6 +37,22 @@ Content-Transfer-Encoding: base64
 
 ## Python Extraction
 
+### Finding attachment file paths (SQLite → filesystem)
+
+The `Mail_OwnedBlocks` table maps email IDs to attachment BlockIDs. The `Blocks` table maps BlockIDs to filesystem paths:
+
+```sql
+SELECT hex(b.BlockID), b.BlockTag, b.PathToDataFile
+FROM Blocks b
+JOIN Mail_OwnedBlocks m ON m.BlockID = b.BlockID
+WHERE m.Record_RecordID = <RECORD_ID>
+ORDER BY m.BlockTag;
+```
+
+The `PathToDataFile` column returns paths like `Message%20Attachments/35/<UUID>.olk15MsgAttachment` — URL-encoded spaces. Resolve with `urllib.parse.unquote` or bash `$'...'` quoting.
+
+### Decoding the .olk15MsgAttachment file
+
 ```python
 import base64, re, os
 
@@ -42,34 +60,44 @@ def extract_from_olk15(path, output_dir):
     """Extract attachment from .olk15MsgAttachment file."""
     with open(path, 'rb') as f:
         data = f.read()
-    
+
     # Find base64 content start after MIME headers
-    header_end = data.find(b'\r\n\r\n')
-    if header_end < 0:
-        raise ValueError("No MIME header boundary found")
-    
-    payload = data[header_end + 4:]
-    
-    # Decode base64 content
-    # Content starts after the \r\n\r\n boundary
-    for marker, ext in [(b'JVBER', '.pdf'), (b'/9j/', '.jpg'), (b'iVBOR', '.png')]:
-        idx = payload.find(marker)
-        if idx >= 0:
-            b64_text = payload[idx:].decode('ascii', errors='ignore')
-            b64_clean = re.sub(r'[^A-Za-z0-9+/=]', '', b64_text)
-            raw = base64.b64decode(b64_clean)
-            
-            # Get filename from headers
-            header_text = data[:header_end].decode('ascii', errors='ignore')
-            fname_match = re.search(r'name="([^"]+)"', header_text)
-            fname = fname_match.group(1) if fname_match else f'extracted{ext}'
-            
-            out_path = os.path.join(output_dir, fname)
-            with open(out_path, 'wb') as out:
-                out.write(raw)
-            return out_path, len(raw)
-    
-    return None, 0
+    # CRITICAL: boundary is \r\r (two CRs), NOT \r\n\r\n
+    b64_marker = data.find(b'base64\r\r')
+    if b64_marker < 0:
+        raise ValueError("No base64 marker found")
+
+    payload = data[b64_marker + 8:]  # skip 'base64\r\r'
+
+    # Find where base64 ends (next non-base64 character)
+    end = 0
+    for i, byte in enumerate(payload):
+        c = chr(byte)
+        if c not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\r\n':
+            end = i
+            break
+    if end == 0:
+        end = len(payload)
+
+    b64_text = payload[:end].decode('ascii', errors='ignore').strip()
+
+    # Fix padding
+    padding = 4 - len(b64_text) % 4
+    if padding != 4:
+        b64_text += '=' * padding
+
+    raw = base64.b64decode(b64_text)
+
+    # Get filename from headers
+    header_text = data[:b64_marker].decode('ascii', errors='ignore')
+    fname_match = re.search(r'name="([^"]+)"', header_text)
+    ext = '.pdf' if raw[:4] == b'%PDF' else '.jpg' if raw[:2] == b'\xff\xd8' else '.bin'
+    fname = fname_match.group(1) if fname_match else f'extracted{ext}'
+
+    out_path = os.path.join(output_dir, fname)
+    with open(out_path, 'wb') as out:
+        out.write(raw)
+    return out_path, len(raw)
 ```
 
 ## Common Issues

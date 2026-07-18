@@ -33,28 +33,37 @@ PYEOF
 
 ## 1. Page breaks before section headings
 
-Add `pageBreakBefore` to every H2 (numbered section heading like "1. Document Control", "2. Purpose...") and section divider paragraphs:
+Add `pageBreakBefore` to every major section heading. Use regex patterns for robust matching across different document styles:
 
 ```python
-body = doc.element.body
-h2_count = 0
+import re
 
-# Match numbered H2 headings: "1. ", "2. ", ..., "12. "
-# Also match section divider text like "ADMINISTRATIVE GOVERNANCE"
-section_divider_texts = [
-    "ADMINISTRATIVE GOVERNANCE", "STRATEGIC GOVERNANCE", "TEAM ORGANIZATION",
-    "RESOURCE BREAKDOWN", "DEPLOYMENT TIMELINE", "RESOURCE LOADING",
-    "PHYSICAL DEPLOYMENT", "INDUCTION", "DEMOBILIZATION", "RESOURCE CONTROL",
-    "PLAN GOVERNANCE"
-]
-
+pb_count = 0
 for p in doc.paragraphs:
-    txt = p.text.strip()
+    text = p.text.strip()
+    if not text:
+        continue
     
-    is_h2 = any(txt.startswith(f"{n}. ") and len(txt) < 100 for n in range(1, 13))
-    is_divider = any(dt in txt.upper() for dt in section_divider_texts) and len(txt) < 100
+    clean = text.lstrip("'\"` ")
+    is_section = False
     
-    if is_h2 or is_divider:
+    # "N  TEXT" or "N TEXT" where N is 1-15 (section headings)
+    if re.match(r'^\d{1,2}\s+[A-Z]', clean):
+        is_section = True
+    
+    # "A  TEXT", "B TEXT", "C ABBREVIATIONS" (appendices)
+    if re.match(r'^[A-C]\s+[A-Z]', clean):
+        is_section = True
+    
+    # "DOCUMENT CONTROL", "TABLE OF CONTENTS"
+    if clean in ["DOCUMENT CONTROL", "TABLE OF CONTENTS"]:
+        is_section = True
+    
+    # All-caps section dividers like "ADMINISTRATIVE GOVERNANCE"
+    if re.match(r'^[A-Z][A-Z\s&/]{3,60}$', clean):
+        is_section = True
+    
+    if is_section:
         pPr = p._p.find(qn('w:pPr'))
         if pPr is None:
             pPr = OxmlElement('w:pPr')
@@ -64,10 +73,10 @@ for p in doc.paragraphs:
         if existing is None:
             pb = OxmlElement('w:pageBreakBefore')
             pPr.append(pb)
-            h2_count += 1
+            pb_count += 1
 ```
 
-**Pitfall:** Only add page breaks to section-level headings (H2), not sub-headings (H3 like "1.1", "2.1"). Sub-headings should flow naturally after their parent section content. The divider paragraphs (all-caps section labels like "ADMINISTRATIVE GOVERNANCE") also need breaks.
+**Pitfall:** Only add page breaks to section-level headings (H1/H2), not sub-headings (H3 like "1.1", "2.1"). Sub-headings should flow naturally after their parent section content. The regex `^\d{1,2}\s+[A-Z]` catches both "1  PURPOSE" (double space) and "12 RISK" (single space) patterns that different documents use. Some documents have leading quote characters (`'12 RISK'`) — strip those with `lstrip("'\"` ")` before matching.
 
 ## 2. Prevent table splitting across pages + compact cells
 
@@ -379,7 +388,712 @@ for p in doc.paragraphs:
         p.style = doc.styles['Heading 3']
 ```
 
-## 10. SVG chart fallback: replace with styled tables
+## 10. Fix mismatched table column counts (merged cells / empty columns)
+
+When a DOCX has tables where header rows and data rows have different numbers of XML `w:tc` elements, the table renders with broken column alignment. This happens when:
+- The original was created with merged cells (gridSpan) that python-docx doesn't expand
+- Extra empty columns were added to the header row
+- Data rows have fewer tc elements than the grid defines
+
+### Detection
+
+```python
+from docx.oxml.ns import qn
+
+for ti, table in enumerate(doc.tables):
+    if len(table.rows) < 2:
+        continue
+    first_row_tcs = len(list(table.rows[0]._tr.findall(qn('w:tc'))))
+    for ri, row in enumerate(table.rows):
+        tcs = len(list(row._tr.findall(qn('w:tc'))))
+        if tcs != first_row_tcs:
+            print(f"T{ti}: R0={first_row_tcs}tc, R{ri}={tcs}tc")
+```
+
+### Fix: rebuild the table from scratch
+
+Extract data from the original XML tc elements (handling gridSpan), then rebuild with consistent column count:
+
+```python
+def get_tc_text(tc):
+    return ''.join(t.text or '' for t in tc.findall('.//' + qn('w:t'))).strip()
+
+def make_cell(text, is_header=False, row_idx=0):
+    tc = OxmlElement('w:tc')
+    tcPr = OxmlElement('w:tcPr')
+    tc.append(tcPr)
+    tcW = OxmlElement('w:tcW')
+    tcW.set(qn('w:w'), '1875')
+    tcW.set(qn('w:type'), 'dxa')
+    tcPr.append(tcW)
+    shd = OxmlElement('w:shd')
+    shd.set(qn('w:val'), 'clear')
+    shd.set(qn('w:color'), 'auto')
+    shd.set(qn('w:fill'), '1E293B' if is_header else ('FFFFFF' if row_idx % 2 == 1 else 'F1F5F9'))
+    tcPr.append(shd)
+    # ... margins, paragraph, run with Calibri 9pt ...
+    return tc
+
+def rebuild_table(table, data_rows, num_cols):
+    tbl = table._tbl
+    for row in list(tbl.findall(qn('w:tr'))):
+        tbl.remove(row)
+    tblGrid = tbl.find(qn('w:tblGrid'))
+    if tblGrid is not None:
+        for gc in list(tblGrid.findall(qn('w:gridCol'))):
+            tblGrid.remove(gc)
+        for _ in range(num_cols):
+            gc = OxmlElement('w:gridCol')
+            gc.set(qn('w:w'), '1875')
+            tblGrid.append(gc)
+    for ri, row_data in enumerate(data_rows):
+        tr = OxmlElement('w:tr')
+        trPr = OxmlElement('w:trPr')
+        tr.append(trPr)
+        cs = OxmlElement('w:cantSplit')
+        trPr.append(cs)
+        is_header = (ri == 0)
+        for ci, cell_text in enumerate(row_data):
+            tr.append(make_cell(cell_text, is_header=is_header, row_idx=ri))
+        tbl.append(tr)
+```
+
+### Common patterns by column count
+
+| Original issue | Detection | Fix |
+|---|---|---|
+| Header 9 cols (5 text + 4 empty), data 5 | `R0=9tc, R1=5tc` | Rebuild 5 cols, take first 5 header texts |
+| Header 3 cols, data 2 (merged) | `R0=3tc, R1=2tc` | Extract pipe-delimited content, split into proper cols |
+| Header 6 cols (last empty), data 5 | `R0=6tc, R1=5tc` | Rebuild 5 cols, drop empty last header col |
+| Header 12 cols (4 text + 8 empty), data 4 | `R0=12tc, R1=4tc` | Rebuild 4 cols, take first 4 header texts |
+| Header 2 cols, data 4 | `R0=2tc, R1=4tc` | Rebuild 4 cols, pad header rows with empty cells |
+
+**Pitfall:** When extracting data from merged cells (gridSpan), python-docx's `row.cells[ci].text` may return empty strings for cells that are part of a merge. Always use XML-level `tc.findall('.//' + qn('w:t'))` to get actual text. Check `gridSpan` and `vMerge` attributes on `tcPr` to understand merge structure.
+
+## 11. Writing to empty table cells (no runs)
+
+When a table cell has no runs (`len(p.runs) == 0`), you cannot set `run.text`. Fix:
+
+```python
+p = cell.paragraphs[0]
+if len(p.runs) == 0:
+    run = p.add_run("your text here")
+    run.font.size = Pt(9)
+    run.font.name = 'Calibri'
+    run.font.color.rgb = RGBColor(0x1F, 0x29, 0x3B)
+else:
+    p.runs[0].text = "your text here"
+```
+
+## 12. Removing sections (heading + table) from an existing DOCX
+
+When the user asks to remove a section (e.g. "remove Appendix A, B, and 15"), you need to remove BOTH the section heading paragraph AND its associated table. The body element tree is flat — paragraphs and tables are siblings, not nested.
+
+### Detection
+
+```python
+# Find target paragraphs by exact text match
+target_texts = ["15 APPENDICES", "A  RISK REGISTER LOCATION", "B KEY RISK-RELATED DOCUMENTS AND DATA GAPS"]
+target_paras = []
+for i, p in enumerate(doc.paragraphs):
+    t = p.text.strip()
+    if t in target_texts:
+        target_paras.append(p._p)
+
+# Find target tables by header cell content
+tables_to_remove = []
+for ti, table in enumerate(doc.tables):
+    if table.rows:
+        first_cell = table.rows[0].cells[0].text.strip()
+        if first_cell == 'Version' and table.rows[0].cells[1].text.strip() == 'Location':
+            tables_to_remove.append(table._tbl)  # Appendix A
+        elif first_cell == 'DOCUMENT' and table.rows[0].cells[1].text.strip() == 'REFERENCE':
+            tables_to_remove.append(table._tbl)  # Appendix B
+```
+
+### Removal
+
+Remove from the body element in reverse order to preserve indices:
+
+```python
+body = doc.element.body
+elements_to_remove = target_paras + [t for t, _ in tables_to_remove]
+
+for elem in reversed(elements_to_remove):
+    body.remove(elem)
+```
+
+**Pitfall:** The body element tree is flat — paragraphs and tables are siblings. You cannot rely on python-docx's `doc.paragraphs` index to find the table position. Always use XML-level matching on `table.rows[0].cells[0].text` to identify which table to remove. Remove in reverse order so earlier indices don't shift.
+
+## 13. Adding a DC block (Prepared/Reviewed/Approved) after revision history
+
+When the user asks to add a document control block with Prepared by / Reviewed by / Approved by, create a 4-column table and insert it after the revision history table.
+
+### Table structure
+
+| (empty) | Prepared by | Reviewed by | Approved by |
+|---------|-------------|-------------|-------------|
+| Name:   |             |             |             |
+| Name:   |             |             |             |
+| Name:   |             |             |             |
+
+### Implementation
+
+Build the table from scratch using OxmlElement (not python-docx's `add_table()`) so you can insert it at a specific position in the body:
+
+```python
+def make_dc_table():
+    tbl = OxmlElement('w:tbl')
+    tblPr = OxmlElement('w:tblPr')
+    tbl.append(tblPr)
+    tblW = OxmlElement('w:tblW')
+    tblW.set(qn('w:w'), '5000')
+    tblW.set(qn('w:type'), 'pct')
+    tblPr.append(tblW)
+    
+    # Grid: 4 columns
+    tblGrid = OxmlElement('w:tblGrid')
+    tbl.append(tblGrid)
+    for w in ['1000', '1500', '2500', '2500']:
+        gc = OxmlElement('w:gridCol')
+        gc.set(qn('w:w'), w)
+        tblGrid.append(gc)
+    
+    # Header row: navy background, white bold text
+    tr = OxmlElement('w:tr')
+    trPr = OxmlElement('w:trPr')
+    tr.append(trPr)
+    cs = OxmlElement('w:cantSplit')
+    trPr.append(cs)
+    
+    for text in ['', 'Prepared by', 'Reviewed by', 'Approved by']:
+        tc = OxmlElement('w:tc')
+        tcPr = OxmlElement('w:tcPr')
+        tc.append(tcPr)
+        tcW = OxmlElement('w:tcW')
+        tcW.set(qn('w:w'), '1875')
+        tcW.set(qn('w:type'), 'dxa')
+        tcPr.append(tcW)
+        shd = OxmlElement('w:shd')
+        shd.set(qn('w:val'), 'clear')
+        shd.set(qn('w:color'), 'auto')
+        shd.set(qn('w:fill'), '1E293B')
+        tcPr.append(shd)
+        # ... paragraph with white bold 9pt Calibri text ...
+        tr.append(tc)
+    tbl.append(tr)
+    
+    # Data rows: alternating shading, "Name:" in first column
+    for row_idx in range(3):
+        tr = OxmlElement('w:tr')
+        # ... same pattern, alternating FFFFFF/F1F5F9 ...
+        for ci, label in enumerate(['Name:', '', '', '']):
+            # ... cell with 9pt Calibri text ...
+            tr.append(tc)
+        tbl.append(tr)
+    
+    return tbl
+
+# Insert after revision history table
+body = doc.element.body
+rev_table = doc.tables[-1]._tbl  # last table is revision history
+insert_idx = list(body).index(rev_table) + 1
+body.insert(insert_idx, make_dc_table())
+```
+
+**Pitfall:** The DC block must be inserted AFTER the revision history table, not before. Find the revision table by position (last table) and insert at `index + 1`. The table must use the same styling as all other tables (navy header, alternating rows, cantSplit) for consistency.
+
+## 14. Paragraph classification for DOCX reformatting
+
+When reformatting an existing DOCX (not generating from scratch), classify paragraphs into these tiers:
+
+| Class | Font | Color | Bold | Spacing | Matches |
+|---|---|---|---|---|---|
+| H1 | 11pt Calibri | Navy `#1E293B` | Yes | 12pt before, 4pt after | `r'^\d{1,2}\s+[A-Z]'` or all-caps divider |
+| H2 | 10.5pt Calibri | Navy `#1E293B` | Yes | 8pt before, 3pt after | `r'^\d{1,2}\.\d{1,2}\s+[A-Z]'` |
+| TOC | 10pt Calibri | Navy `#1E293B` | No | - | `r'^\d{1,2}\.\s{2,}[A-Z]'` |
+| Body | 10pt Calibri | `#1F293B` | No | 3pt before/after | Long text, bullet items |
+| Halftone | 9pt Calibri | Gray `#64748B` | No | 2pt before/after | Short text <120 chars, references (RIBA, Contract, ER, SoW, etc.) |
+
+**Pitfall:** The initial pass often makes ALL body text halftone (9pt gray) because the heuristic "short text = remark" is too aggressive. Section headings like "10. Risk Review Cadence" are short but are NOT remarks. Use regex patterns to detect actual headings first, then classify remaining text by length and content keywords.
+
+### Classification order (mandatory)
+
+Apply classifications in this exact order to avoid false positives:
+
+1. **H1** — `r'^\d{1,2}\s{2,}[A-Z]'` (e.g. "1  PURPOSE & SCOPE") or all-caps divider `r'^[A-Z][A-Z\s&/]{3,60}$'`
+2. **H2** — `r'^\d{1,2}\.\d{1,2}\s{2,}[A-Z]'` (e.g. "1.1  PURPOSE")
+3. **TOC** — `r'^\d{1,2}\.\s{2,}[A-Z]'` (e.g. "1.  Purpose & Scope")
+4. **Cover metadata** — specific strings like "RISK MANAGEMENT PLAN", "Aseer Regional Museum"
+5. **Bullet items** — starts with `•` or `- `
+6. **Halftone** — short text <120 chars OR contains reference keywords (RIBA, Contract, Article, ER, SoW, SBC, FIDIC, ASHRAE, "As a result of", "Residual Risk", "Secondary Risk", "Triggered by", "Team Member > PM", "Contingency adequacy", "This document is maintained", "Identify > Assess")
+7. **Body** — everything else
+
+**Pitfall:** Strip leading quote/backtick characters with `text.lstrip("'\"` ")` before regex matching. Some documents have `'12 RISK BUDGET & CONTINGENCY'` with leading quotes that break the pattern.
+
+## 15. Moving tables to first page (cover → DC → Rev)
+
+When the user asks to put the DC block and revision history on the first page (after cover metadata), move them by removing from their current position and re-inserting after the cover table:
+
+```python
+body = doc.element.body
+
+cover_table = doc.tables[0]._tbl
+rev_table = doc.tables[29]._tbl    # find by position or content
+dc_table = doc.tables[30]._tbl
+
+# Remove from current positions (reverse order)
+body.remove(dc_table)
+body.remove(rev_table)
+
+# Re-insert after cover table
+new_children = list(body)
+new_cover_idx = new_children.index(cover_table)
+body.insert(new_cover_idx + 1, dc_table)
+body.insert(new_cover_idx + 2, rev_table)
+```
+
+**Pitfall:** Table indices shift after removal. Always remove in reverse order (last table first), then re-insert. The cover table is always T0 (first table in the document). After moving, verify the order: T0=cover, T1=DC, T2=rev history.
+
+## 16. Adding spacing between first-page tables
+
+After moving DC and rev tables to the first page, add empty paragraphs between them for visual separation:
+
+```python
+def insert_spacing_para(after_elem, count=1):
+    for _ in range(count):
+        p = OxmlElement('w:p')
+        pPr = OxmlElement('w:pPr')
+        p.append(pPr)
+        spacing = OxmlElement('w:spacing')
+        spacing.set(qn('w:before'), '0')
+        spacing.set(qn('w:after'), '120')  # ~6pt
+        spacing.set(qn('w:line'), '240')
+        spacing.set(qn('w:lineRule'), 'auto')
+        pPr.append(spacing)
+        children = list(body)
+        idx = children.index(after_elem)
+        body.insert(idx + 1, p)
+
+insert_spacing_para(cover_table, 1)
+insert_spacing_para(dc_table, 1)
+```
+
+## 17. Clearing and replacing page header content
+
+When the user asks to remove doc ref / revision from page headers:
+
+```python
+for section in doc.sections:
+    header = section.header
+    if header:
+        for p in header.paragraphs:
+            for run in p.runs:
+                run.text = ""
+            run = p.add_run("New header text")
+            run.font.size = Pt(8)
+            run.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+            run.font.name = 'Calibri'
+        # Clear any header tables
+        for table in header.tables:
+            table._tbl.getparent().remove(table._tbl)
+```
+
+## 18. Adding a REV00 row to the revision history table
+
+When issuing a new version (REV00 for CG review), add a row to the revision history table. **The revision entry must be client-appropriate** — describe what changed in a way that matters to the reviewer, not internal formatting details.
+
+| Wrong (internal) | Right (client-facing) |
+|---|---|
+| "Format revision — unified table styles, halftone remarks, page breaks, removed internal references. REV00 issue for CG review." | "REV00 - First issue for CG review" |
+| "Fixed table column widths, added cantSplit, removed markdown paths" | "Updated risk distribution data from departmental reviews" |
+
+**Rule:** The revision entry should answer "what changed that affects the content?" not "what did we fix in the formatting?" Formatting fixes are invisible to the client and don't belong in the revision log.
+
+## 19. Inserting a Word TOC field with heading styles
+
+When the user asks for a TOC with page numbers and hyperlinks, replace static text entries with a Word TOC field. This requires applying Word heading styles (Heading 1, Heading 2) to the document paragraphs first.
+
+### Step 1: Apply Word heading styles
+
+```python
+import re
+
+h1_pattern = re.compile(r'^(\d{1,2})\s{2,}[A-Z]')
+h2_pattern = re.compile(r'^(\d{1,2}\.\d{1,2})\s{2,}[A-Z]')
+divider_pattern = re.compile(r'^[A-Z][A-Z\s&/]{3,60}$')
+appendix_pattern = re.compile(r'^[A-C]\s{2,}[A-Z]')
+
+for p in doc.paragraphs:
+    text = p.text.strip()
+    if not text:
+        continue
+    
+    if h1_pattern.match(text):
+        p.style = doc.styles['Heading 1']
+    elif h2_pattern.match(text):
+        p.style = doc.styles['Heading 2']
+    elif divider_pattern.match(text) and len(text) < 60:
+        p.style = doc.styles['Heading 1']
+    elif appendix_pattern.match(text) and len(text) < 60:
+        p.style = doc.styles['Heading 1']
+    elif text in ["DOCUMENT CONTROL", "TABLE OF CONTENTS"]:
+        p.style = doc.styles['Heading 1']
+```
+
+### Step 2: Remove old TOC entries
+
+```python
+body = doc.element.body
+to_remove = []
+found_toc = False
+for p in doc.paragraphs:
+    text = p.text.strip()
+    if text == "TABLE OF CONTENTS":
+        found_toc = True
+        continue
+    if found_toc:
+        if text.startswith("1  PURPOSE & SCOPE") or text == "1  PURPOSE & SCOPE":
+            break
+        if text:
+            to_remove.append(p._p)
+
+for elem in to_remove:
+    try:
+        body.remove(elem)
+    except:
+        pass
+```
+
+### Step 3: Insert TOC field
+
+```python
+toc_p = OxmlElement('w:p')
+toc_pPr = OxmlElement('w:pPr')
+toc_p.append(toc_pPr)
+
+# Begin field
+r = OxmlElement('w:r')
+fldChar_begin = OxmlElement('w:fldChar')
+fldChar_begin.set(qn('w:fldCharType'), 'begin')
+r.append(fldChar_begin)
+toc_p.append(r)
+
+# Instruction
+r2 = OxmlElement('w:r')
+instrText = OxmlElement('w:instrText')
+instrText.set(qn('xml:space'), 'preserve')
+instrText.text = 'TOC \\o "1-2" \\h \\z \\u'
+r2.append(instrText)
+toc_p.append(r2)
+
+# Separate
+r3 = OxmlElement('w:r')
+fldChar_separate = OxmlElement('w:fldChar')
+fldChar_separate.set(qn('w:fldCharType'), 'separate')
+r3.append(fldChar_separate)
+toc_p.append(r3)
+
+# Placeholder text
+r4 = OxmlElement('w:r')
+rPr4 = OxmlElement('w:rPr')
+r4.append(rPr4)
+rFonts = OxmlElement('w:rFonts')
+rFonts.set(qn('w:ascii'), 'Calibri')
+rFonts.set(qn('w:hAnsi'), 'Calibri')
+rPr4.append(rFonts)
+sz = OxmlElement('w:sz')
+sz.set(qn('w:val'), '20')
+rPr4.append(sz)
+color = OxmlElement('w:color')
+color.set(qn('w:val'), '1E293B')
+rPr4.append(color)
+t = OxmlElement('w:t')
+t.set(qn('xml:space'), 'preserve')
+t.text = 'Right-click > Update Field'
+r4.append(t)
+toc_p.append(r4)
+
+# End field
+r5 = OxmlElement('w:r')
+fldChar_end = OxmlElement('w:fldChar')
+fldChar_end.set(qn('w:fldCharType'), 'end')
+r5.append(fldChar_end)
+toc_p.append(r5)
+
+# Insert after TOC heading
+body.insert(toc_heading_idx + 1, toc_p)
+```
+
+**Pitfall:** The TOC field uses `\\o "1-2"` to include Heading 1 and Heading 2 levels. If the document uses custom heading styles, adjust the level range. The `\\h` flag adds hyperlinks, `\\z` hides tab leader dots, `\\u` uses paragraph outline level. After inserting, the user must right-click > Update Field > "Update entire table" in Word to generate page numbers.
+
+## 20. Adding Samaya logo to page header
+
+```python
+logo_path = "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/_Style-Guides/logos archives/samaya-logo-trans.png"
+
+for section in doc.sections:
+    header = section.header
+    for p in header.paragraphs:
+        p.clear()
+    
+    p = header.paragraphs[0]
+    run = p.add_run()
+    run.add_picture(logo_path, width=Inches(1.0))
+    
+    run2 = p.add_run("    Document Title")
+    run2.font.size = Pt(8)
+    run2.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+    run2.font.name = 'Calibri'
+    
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+```
+
+**Pitfall:** `run.add_picture()` embeds the image into the DOCX. The logo path must be accessible at generation time. If the path is on OneDrive and TCC-blocked, use the Group Containers fallback path. The image is stored in `word/media/` inside the zip.
+
+## 21. Footer with Page X of Y (Word fields)
+
+```python
+for section in doc.sections:
+    footer = section.footer
+    for p in footer.paragraphs:
+        p.clear()
+    
+    p = footer.paragraphs[0]
+    
+    # Tab
+    run = p.add_run("\tPage ")
+    run.font.size = Pt(8)
+    run.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+    
+    # PAGE field
+    run = p.add_run()
+    fldChar_begin = OxmlElement('w:fldChar')
+    fldChar_begin.set(qn('w:fldCharType'), 'begin')
+    run._r.append(fldChar_begin)
+    
+    run2 = p.add_run()
+    instrText = OxmlElement('w:instrText')
+    instrText.set(qn('xml:space'), 'preserve')
+    instrText.text = 'PAGE'
+    run2._r.append(instrText)
+    
+    run3 = p.add_run()
+    fldChar_separate = OxmlElement('w:fldChar')
+    fldChar_separate.set(qn('w:fldCharType'), 'separate')
+    run3._r.append(fldChar_separate)
+    
+    run4 = p.add_run("1")
+    run4.font.size = Pt(8)
+    run4.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+    
+    run5 = p.add_run()
+    fldChar_end = OxmlElement('w:fldChar')
+    fldChar_end.set(qn('w:fldCharType'), 'end')
+    run5._r.append(fldChar_end)
+    
+    # " of "
+    run = p.add_run(" of ")
+    run.font.size = Pt(8)
+    run.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+    
+    # NUMPAGES field (same pattern as PAGE)
+    run = p.add_run()
+    fldChar_begin = OxmlElement('w:fldChar')
+    fldChar_begin.set(qn('w:fldCharType'), 'begin')
+    run._r.append(fldChar_begin)
+    
+    run2 = p.add_run()
+    instrText = OxmlElement('w:instrText')
+    instrText.set(qn('xml:space'), 'preserve')
+    instrText.text = 'NUMPAGES'
+    run2._r.append(instrText)
+    
+    run3 = p.add_run()
+    fldChar_separate = OxmlElement('w:fldChar')
+    fldChar_separate.set(qn('w:fldCharType'), 'separate')
+    run3._r.append(fldChar_separate)
+    
+    run4 = p.add_run("1")
+    run4.font.size = Pt(8)
+    run4.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+    
+    run5 = p.add_run()
+    fldChar_end = OxmlElement('w:fldChar')
+    fldChar_end.set(qn('w:fldCharType'), 'end')
+    run5._r.append(fldChar_end)
+    
+    # Company name
+    run = p.add_run("\tSamaya Investment Company")
+    run.font.size = Pt(8)
+    run.font.color.rgb = RGBColor(0x64, 0x74, 0x8B)
+```
+
+**Pitfall:** Word field codes (PAGE, NUMPAGES) must be constructed as three separate runs: fldChar begin → instrText → fldChar separate → placeholder text → fldChar end. The placeholder text ("1") is what Word displays before updating. After opening in Word, the fields auto-update to show the correct page numbers.
+
+## 22. Adding a halftone note under a specific section table
+
+When the user asks to add a note like "This snapshot is based on the live Project Risk Register and is updated weekly" under a specific table:
+
+```python
+HALFTONE = RGBColor(0x64, 0x74, 0x8B)
+body = doc.element.body
+
+# Find the target table
+target_table = None
+for table in doc.tables:
+    if table.rows and table.rows[0].cells[0].text.strip() == 'Category':
+        target_table = table._tbl
+        break
+
+# Create halftone paragraph
+p = OxmlElement('w:p')
+pPr = OxmlElement('w:pPr')
+p.append(pPr)
+spacing = OxmlElement('w:spacing')
+spacing.set(qn('w:before'), '40')
+spacing.set(qn('w:after'), '40')
+spacing.set(qn('w:line'), '240')
+spacing.set(qn('w:lineRule'), 'auto')
+pPr.append(spacing)
+
+r = OxmlElement('w:r')
+rPr = OxmlElement('w:rPr')
+r.append(rPr)
+rFonts = OxmlElement('w:rFonts')
+rFonts.set(qn('w:ascii'), 'Calibri')
+rFonts.set(qn('w:hAnsi'), 'Calibri')
+rPr.append(rFonts)
+sz = OxmlElement('w:sz')
+sz.set(qn('w:val'), '18')  # 9pt
+rPr.append(sz)
+color = OxmlElement('w:color')
+color.set(qn('w:val'), '64748B')
+rPr.append(color)
+
+t = OxmlElement('w:t')
+t.set(qn('xml:space'), 'preserve')
+t.text = "Your note text here."
+r.append(t)
+p.append(r)
+
+# Insert after the table
+children = list(body)
+idx = children.index(target_table)
+body.insert(idx + 1, p)
+```
+
+**Pitfall:** When inserting after a table, check if a note already exists after it (e.g., an RBS note). If so, insert after the existing note, not between the table and the note. Use `idx + 1` and verify the next element's content before inserting.
+
+## 23. Plan documents describe methodology, not live data
+
+**Critical distinction for risk plans, resource plans, and similar methodology documents:**
+
+| Belongs in the plan | Belongs in the live register |
+|---|---|
+| How risks are identified, assessed, and managed | The actual risk list with scores and EMV |
+| The RBS categories and scoring scales | Which categories have active risks |
+| The review cadence and RACI | The current risk count and distribution |
+| The contingency methodology | The contingency amount |
+| The register architecture (how many registers) | The status of each register |
+
+**CG review expectation:** A plan that says "To be recalculated from PRR" or "To be confirmed" for methodology-describes-live-data items is acceptable — the plan describes the process, the register holds the numbers. However, if the plan claims completeness (e.g., "4-register architecture") but one register is "in progress," that's a contradiction. Either complete the register or note it as "under development."
+
+**User preference:** Revision entries should be client-appropriate. "REV00 - First issue for CG review" is correct. "Format revision — unified table styles, halftone remarks, page breaks, removed internal references" is wrong — those are internal formatting details invisible to the client.
+
+## 24. CG response forecasting for plan documents
+
+When the user asks to forecast CG response on a plan document, evaluate against these criteria:
+
+| Code | Meaning | Typical triggers |
+|---|---|---|
+| A | Accepted | Standard methodology (PMBOK-aligned), no factual errors |
+| B | Minor comments | Missing notes on empty categories, role titles instead of names, vague contingency figures |
+| C | Revise & Resubmit | Unfilled data placeholders ("To be confirmed"), incomplete register architecture, contradictions between sections |
+| D | Rejected | Wrong methodology, missing required sections, factual errors |
+
+**Key insight for methodology plans:** CG evaluates whether the plan describes a workable process, not whether the live data is complete. "To be recalculated from PRR" is acceptable for EMV values because EMV lives in the register. But "AV Register in progress" while claiming "4-register architecture" is a contradiction that triggers Code B/C.
+
+**Common CG comments on risk plans:**
+- "RBS has 17 categories but only 12 have active risks" → Add monitoring note
+- "No contingency amount stated" → Methodology is sufficient; amount is commercial
+- "Role titles instead of names in DC block" → Replace with actual names
+- "EMV values marked TBC" → Acceptable if methodology is clear; values live in register
+
+When issuing a new version (REV00 for CG review), add a row to the revision history table:
+
+```python
+table = doc.tables[2]  # revision history is T2 after moving
+row = table.add_row()
+
+# Set text via XML (cells may have no runs)
+texts = ["REV00", "18 July 2026", "Samaya Technical Office", "Description of changes"]
+for ci, cell in enumerate(row.cells):
+    tc = cell._tc
+    # Clear existing text
+    for t_elem in tc.findall('.//' + qn('w:t')):
+        t_elem.text = ""
+    # Find or create a run
+    runs = tc.findall('.//' + qn('w:r'))
+    if runs:
+        t_elem = runs[0].find(qn('w:t'))
+        if t_elem is None:
+            t_elem = OxmlElement('w:t')
+            t_elem.set(qn('xml:space'), 'preserve')
+            runs[0].append(t_elem)
+        t_elem.text = texts[ci]
+    else:
+        # Create run from scratch
+        p = tc.find(qn('w:p'))
+        if p is None:
+            p = OxmlElement('w:p')
+            tc.append(p)
+        r = OxmlElement('w:r')
+        rPr = OxmlElement('w:rPr')
+        r.append(rPr)
+        rFonts = OxmlElement('w:rFonts')
+        rFonts.set(qn('w:ascii'), 'Calibri')
+        rFonts.set(qn('w:hAnsi'), 'Calibri')
+        rPr.append(rFonts)
+        sz = OxmlElement('w:sz')
+        sz.set(qn('w:val'), '18')
+        rPr.append(sz)
+        color = OxmlElement('w:color')
+        color.set(qn('w:val'), '1F293B')
+        rPr.append(color)
+        t = OxmlElement('w:t')
+        t.set(qn('xml:space'), 'preserve')
+        t.text = texts[ci]
+        r.append(t)
+        p.append(r)
+    
+    # Style cell (alternating shading)
+    tcPr = tc.find(qn('w:tcPr'))
+    if tcPr is None:
+        tcPr = OxmlElement('w:tcPr')
+        tc.insert(0, tcPr)
+    fill = 'FFFFFF' if len(table.rows) % 2 == 0 else 'F1F5F9'
+    shd = tcPr.find(qn('w:shd'))
+    if shd is None:
+        shd = OxmlElement('w:shd')
+        tcPr.append(shd)
+    shd.set(qn('w:val'), 'clear')
+    shd.set(qn('w:color'), 'auto')
+    shd.set(qn('w:fill'), fill)
+
+# cantSplit
+tr = row._tr
+trPr = tr.find(qn('w:trPr'))
+if trPr is None:
+    trPr = OxmlElement('w:trPr')
+    tr.insert(0, trPr)
+cs = trPr.find(qn('w:cantSplit'))
+if cs is None:
+    cs = OxmlElement('w:cantSplit')
+    trPr.append(cs)
+```
+
+**Pitfall:** Newly added table rows via `add_row()` have cells with 1 paragraph and 0 runs. You cannot set `run.text` directly — you must either use `p.add_run()` or write via XML `w:t` elements. Always check `len(p.runs)` before accessing `p.runs[0]`.
 
 When SVG→PNG images don't render in Word (common on macOS with RGBA PNGs), replace the chart with a styled table. Use navy header, alternating rows, compact 8pt font:
 

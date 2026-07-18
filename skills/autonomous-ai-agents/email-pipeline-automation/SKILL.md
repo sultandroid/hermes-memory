@@ -52,7 +52,66 @@ ORDER BY m.Message_TimeReceived DESC;
 
 Use AppleScript batch extract (save to `/tmp/email_attachments/`). Skip `image/*` content types.
 
-Script template at `/tmp/batch_extract.applescript` — iterate email IDs, save non-image attachments as `{emailID}_{filename}`.
+### Cron-mode pattern: per-email `.applescript` files (PREFERRED)
+
+The ~700-byte AppleScript body limit blocks monolithic batch scripts. Write one short `.applescript` file per email ID, then run each with `osascript`:
+
+```bash
+# Write individual scripts via write_file tool, then:
+for f in /tmp/extract_*.applescript; do osascript "$f" 2>&1; done
+```
+
+Each script handles one email ID — stays well under the byte limit:
+
+```applescript
+set outFolder to "/tmp/email_attachments/"
+tell application "Microsoft Outlook"
+	set eidVal to 48572
+	set theMsg to message id eidVal
+	set atts to (every attachment of theMsg)
+	repeat with att in atts
+		if content type of att does not start with "image/" then
+			set attName to name of att
+			set savePath to outFolder & "48572_" & attName
+			do shell script "touch " & quoted form of savePath
+			save att in (POSIX file savePath as alias)
+		end if
+	end repeat
+end tell
+```
+
+Run all extraction scripts in parallel (they're independent) to speed up the batch.
+
+### Interactive-mode alternative: bash heredoc loop
+
+For non-cron sessions where `execute_code` is available, a bash heredoc loop works for smaller batches:
+
+```bash
+for id in 35001 35002 35003; do
+  osascript <<EOF
+tell application "Microsoft Outlook"
+    set theMsg to message id $id
+    set atts to (every attachment of theMsg)
+    set outFolder to "/tmp/email_attachments/"
+    repeat with att in atts
+        set attName to name of att
+        set savePath to outFolder & "${id}_" & attName
+        do shell script "touch " & quoted form of savePath
+        set saveFile to POSIX file savePath as alias
+        save att in saveFile
+    end repeat
+end tell
+EOF
+done
+```
+
+### Verify extraction
+
+After extraction, list the staging directory to confirm files landed:
+
+```bash
+ls -la /tmp/email_attachments/
+```
 
 ## Step 3 — Classify & Route
 

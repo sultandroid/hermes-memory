@@ -337,6 +337,7 @@ Documents must not betray AI generation:
 - **Tables:** Navy header (9.5pt white bold), alternating rows `#F1F5F9`/white
   - All table cells: left-aligned. Header row stays bold on navy background. Body cells: plain black text (no bold), no emoji icons.
   - Column widths set via `set_table_widths()` after creation — NEVER via `col_widths_cm` parameter
+  - **ALL tables in a document must have the SAME style** — navy header, alternating rows, cantSplit on every row, proportional column widths
 - **Margins:** A4 portrait, 2.5cm top/left, 2.0cm bottom/right
 - **Colors:** Navy `#1E293B`, Red `#B01E2F`, Dark Gray `#334155`, Medium Gray `#64748B`
 
@@ -390,10 +391,87 @@ Before showing the document to the user, do a quick self-audit:
 
 ---
 
+## Revision entry content — client-appropriate only
+
+**Critical rule:** Revision entries in the document control table must describe what changed that affects the content, not internal formatting details. Formatting fixes are invisible to the client and do not belong in the revision log.
+
+| Wrong (internal) | Right (client-facing) |
+|---|---|
+| "Format revision — unified table styles, halftone remarks, page breaks, removed internal references. REV00 issue for CG review." | "REV00 - First issue for CG review" |
+| "Fixed table column widths, added cantSplit, removed markdown paths" | "Updated risk distribution data from departmental reviews" |
+| "Applied Heading 1/2 styles, added page breaks, halftone remarks" | "REV01 - Revised per CG comments" |
+
+**Test:** If the entry describes something the client would never notice or care about, it's wrong. Rewrite it.
+
+## Plan documents describe methodology, not live data
+
+**Critical distinction for risk plans, resource plans, and similar methodology documents:**
+
+| Belongs in the plan | Belongs in the live register |
+|---|---|
+| How risks are identified, assessed, and managed | The actual risk list with scores and EMV |
+| The RBS categories and scoring scales | Which categories have active risks |
+| The review cadence and RACI | The current risk count and distribution |
+| The contingency methodology | The contingency amount |
+| The register architecture (how many registers) | The status of each register |
+
+**CG review expectation:** A plan that says "To be recalculated from PRR" or "To be confirmed" for methodology-describes-live-data items is acceptable — the plan describes the process, the register holds the numbers. However, if the plan claims completeness (e.g., "4-register architecture") but one register is "in progress," that's a contradiction. Either complete the register or note it as "under development."
+
+**Every table showing live register data must carry a halftone note:** "Data shown is a snapshot from the live Project Risk Register, which is the authoritative source and updated weekly."
+
+## Schedule severity thresholds — align to project duration
+
+When setting schedule impact thresholds in a risk plan, align them to the project's remaining duration. For a 10-week remaining project:
+
+| Rating | Threshold |
+|--------|-----------|
+| Low | Less than 1 week |
+| Medium | 1 - 2 weeks |
+| High | 2 - 4 weeks |
+| Very High | More than 4 weeks |
+
+A 10-week delay would consume the entire remaining programme — the thresholds must be proportionate to the project's actual duration, not generic PMBOK defaults.
+
+## DC block — use actual names, not role titles
+
+The DC block (Prepared by / Reviewed by / Approved by) must contain actual names with honorifics, not role titles:
+
+| Wrong | Right |
+|---|---|
+| Project Manager | Eng. Mohamed Sultan |
+| QC manager | Eng. Waris Sultan |
+| Project Director | Eng. Adel Darwish |
+
+CG reviewers expect to see who is accountable. Role titles are vague and trigger Code B comments.
+
+## Header — logo + title only
+
+The page header should contain only:
+- Samaya logo (left)
+- Document title (right)
+
+Do NOT include in the header:
+- Document reference number
+- Revision number
+- Date
+- Project name (if already in the title)
+
+These belong on the cover page and in the document control table, not in the running header.
+
+## Footer — Page X of Y with company name
+
+Footer format: `Page X of Y \t Samaya Investment Company`
+
+Use Word PAGE and NUMPAGES fields (not hardcoded numbers) so page numbers update automatically. The tab separates the page counter from the company name.
+
+## § symbol — banned everywhere
+
+The section symbol (§) is NEVER used in any Samaya document. Replace with "Sec." or just the section number. This applies to DOCX, Excel, HTML, and markdown files. Scan for it after every generation/edit pass.
+
 ## Pitfalls
 
 - **Open file immediately after generation for user review.** After saving the DOCX, call `open '<path>'` via terminal so the user sees it right away. The user expects to review the document immediately — they should not have to hunt for the file. This applies to both first-time generation and updates.
-- **Revision history: only show actual CG submissions, not internal drafts.** The revision history table should reflect what was actually submitted to CG, not every internal draft iteration. If Rev 00 (Code C) and Rev 01 (Code C) were the only submissions before approval, the table should show Rev 00, Rev 01, Rev 02 (Approved), and the current Rev — not Rev 00, 01, 02, 03, 04 where 02 and 03 were internal drafts never submitted. User correction signal: "i think this Rev02 we submit 2 times only before." Verify against CG_STATUS.md and PROJECT_MEMORY.md before writing the revision table.
+- **Revision history: client-appropriate language only.** Never write "Format revision — unified table styles, halftone remarks, page breaks, removed internal references" in a revision entry. The client does not care about internal formatting work. Write what changed from the client's perspective: "REV00 - First issue for CG review" or "Updated risk counts from design, procurement, site, and HSE departments." Internal formatting notes belong in memory or a changelog, not in the document's revision history.
 
 - **Cover page: keep it brief for CG submittals.** CG reviewers do not need a verbose change log on the cover. The cover should show: document title, revision, date, superseded revs, and reference documents only. Do NOT list every stakeholder change, KPI count, or internal audit note on the cover. That information belongs in the revision history table inside the document. User correction signal: 'dont talk too much the cover page, dont tell information in general are dosnot important to cg to tell.'
 
@@ -782,25 +860,101 @@ See `references/docx-to-html-sync.md` for the full step-by-step workflow with ex
 
 ### Post-processing fallback
 
-After generating all content, apply this heuristic — short (<180 chars), non-bold paragraphs after headings are treated as remarks:
+After generating all content, apply this heuristic. **CRITICAL: do NOT use a simple `len < 180` check alone** — it catches section headings that aren't bold (e.g. "1  PURPOSE & SCOPE" in existing docs where bold wasn't set). Always classify paragraphs first using regex patterns:
 
 ```python
+import re
 from docx.shared import Pt, RGBColor
 
 HALFTONE = RGBColor(0x64, 0x74, 0x8B)
+BODY = RGBColor(0x1F, 0x29, 0x3B)
+NAVY = RGBColor(0x1E, 0x29, 0x3B)
+
+# Heading patterns
+h1_pattern = re.compile(r'^(\d{1,2})\s{2,}([A-Z].+)')       # "1  PURPOSE & SCOPE"
+h2_pattern = re.compile(r'^(\d{1,2}\.\d{1,2})\s{2,}([A-Z].+)')  # "1.1  PURPOSE"
+divider_pattern = re.compile(r'^[A-Z][A-Z\s&/]{3,60}$')     # "PURPOSE & SCOPE"
+toc_pattern = re.compile(r'^\d{1,2}\.\s{2,}[A-Z]')          # "1.  Purpose & Scope"
+
 for p in doc.paragraphs:
     text = p.text.strip()
-    if not text or len(text) < 15:
+    if not text or len(text) < 10:
         continue
-    if p.runs and p.runs[0].font.bold:
-        continue  # skip headings
-    if len(text) < 180:
+    
+    # 1. H1 headings
+    if h1_pattern.match(text):
         for run in p.runs:
-            run.font.size = Pt(9)
-            run.font.color.rgb = HALFTONE
+            run.font.size = Pt(11); run.font.color.rgb = NAVY
+            run.font.bold = True; run.font.name = 'Calibri'
+        continue
+    
+    # 2. H2 headings
+    if h2_pattern.match(text):
+        for run in p.runs:
+            run.font.size = Pt(10.5); run.font.color.rgb = NAVY
+            run.font.bold = True; run.font.name = 'Calibri'
+        continue
+    
+    # 3. Section dividers (all-caps)
+    if divider_pattern.match(text):
+        for run in p.runs:
+            run.font.size = Pt(11); run.font.color.rgb = NAVY
+            run.font.bold = True; run.font.name = 'Calibri'
+        continue
+    
+    # 4. TOC entries
+    if toc_pattern.match(text):
+        for run in p.runs:
+            run.font.size = Pt(10); run.font.color.rgb = NAVY
+            run.font.name = 'Calibri'
+        continue
+    
+    # 5. Bullet items
+    if text.startswith('•') or text.startswith('- '):
+        for run in p.runs:
+            run.font.size = Pt(10); run.font.color.rgb = BODY
+            run.font.name = 'Calibri'
+        continue
+    
+    # 6. Halftone remarks — short reference/note lines
+    is_reference = any(kw in text for kw in [
+        'RIBA', 'Contract', 'Article', 'Section', 'Clause',
+        'ER ', 'SoW ', 'SBC ', 'FIDIC', 'ASHRAE',
+        'As a result of', 'Each risk follows',
+        'Residual Risk', 'Secondary Risk',
+        'Triggered by any trigger', 'Team Member > PM',
+        'Contingency adequacy reviewed',
+        'This document is maintained',
+    ])
+    if is_reference or (len(text) < 120):
+        for run in p.runs:
+            run.font.size = Pt(9); run.font.color.rgb = HALFTONE
+            run.font.name = 'Calibri'
         p.paragraph_format.space_before = Pt(2)
         p.paragraph_format.space_after = Pt(2)
+        continue
+    
+    # 7. Body text (everything else)
+    for run in p.runs:
+        run.font.size = Pt(10); run.font.color.rgb = BODY
+        run.font.name = 'Calibri'
+    p.paragraph_format.space_before = Pt(3)
+    p.paragraph_format.space_after = Pt(3)
 ```
+
+**Pitfall:** The simple `len < 180` heuristic catches section headings that lack bold formatting (common in existing DOCX not created via SamayaDoc). Always classify by text pattern FIRST, then apply halftone only to the remaining short/reference paragraphs. A heading like "1  PURPOSE & SCOPE" (15 chars) should be 11pt bold navy, not 9pt gray.
+
+**Pitfall: One-shot completeness is mandatory, not aspirational.** The user will reject a first pass that only partially addresses the brief (e.g. styling tables but not fixing headings, or removing some file paths but missing others). They will say "still you refrence markdown files , and still format of all docs not professional" — meaning fix ALL issues in a single pass. Before running any fix script, audit the document exhaustively first, then apply every fix in one script. Do not run a partial fix, show the user, and plan to fix the rest in round 2.
+
+**Pitfall: Table column mismatch — always scan ALL tables before fixing one.** When the user points out one broken table (e.g. "2.1 CURRENT RISK SNAPSHOT"), there are almost always other tables with the same issue (merged cells, empty trailing columns). Run a full scan of all tables for tc count mismatches before fixing any single one.
+
+**Pitfall: CG submittal — remove internal tracking sections.** Sections like "Appendix A — Risk Register Location", "Appendix B — Key Risk-Related Documents and Data Gaps", and "Section 15 — Appendices" are internal tracking artifacts. Remove them from client-facing documents. Also remove "Section 13 — Integration with Other Plans" if the referenced plans don't exist as standalone documents. The user will ask "is this section important to add" — the answer is no for internal tracking sections.
+
+**Pitfall: DC block is mandatory for CG submittals.** After the revision history table, add a Prepared by / Reviewed by / Approved by table with navy header and 3 signature rows. The user will ask for it explicitly if missing.
+
+**Pitfall: REV00 entry must be client-appropriate, not a changelog.** The revision description should say "REV00 - First issue for CG review" or similar. Do NOT list internal formatting changes ("unified table styles, halftone remarks, page breaks, removed internal references") — the client doesn't care about internal formatting work. The user will correct: "dont tell such information like this its not usful for the client."
+
+**Pitfall: "Read to keep" means update the document, not just memory.** When the user says "read to keep in future" after making manual edits, they want you to read the current state AND apply any pending changes (like filling an empty C02 revision entry). Saving to memory is secondary. Always check the revision history table — if a Changes cell is empty, ask what to put there or fill it with a descriptive note about what was collected/updated.
 
 Contractual references (SoW section numbers, ER clauses, code names, CG comments) in DOCX body text must render in **halftone** — medium gray `#64748B`, 9pt. This visually distinguishes the reference from the task statement.
 
@@ -988,6 +1142,24 @@ assert remaining == 0, f"{remaining} symbols still present"
 
 **Pitfall:** If you skip this audit and wait for the user to review, expect multiple rounds of corrections with increasing frustration. The user expects you to catch everything — style, routing, contract scope, placement, commercial readiness — in one shot. A single comprehensive pass is faster than 5 fix rounds.
 
+- **"Read to keep" means update the document, not just memory.** When the user says "read to keep in future" after making manual edits, they want you to read the current state AND apply any pending changes (like filling an empty C02 revision entry). Saving to memory is secondary. Always check the revision history table — if a Changes cell is empty, ask what to put there or fill it with a descriptive note about what was collected/updated.
+- **Revision entries must be client-appropriate, not a changelog.** The revision description should say "REV00 - First issue for CG review" or similar. Do NOT list internal formatting changes ("unified table styles, halftone remarks, page breaks, removed internal references") — the client doesn't care about internal formatting work. The user will correct: "dont tell such information like this its not usful for the client."
+- **Plan documents describe methodology, not live data.** A risk plan explains HOW risks are managed. The actual risk list, EMV values, and counts live in the live register (PRR). "To be recalculated from PRR" is acceptable for EMV values because EMV lives in the register. But if the plan claims completeness (e.g., "4-register architecture") while one register is "in progress," that's a contradiction — either complete it or note it as "under development."
+- **CG response forecasting for plan documents:** CG evaluates whether the plan describes a workable process, not whether the live data is complete. Common CG comments: empty RBS categories need a monitoring note, role titles in DC block need actual names, EMV "TBC" is acceptable if methodology is clear. See `references/docx-formatting-fixes.md` §23-24 for full CG forecasting guide.
+- **Word TOC field with heading styles:** Apply Heading 1/2 styles to document paragraphs, remove old static TOC entries, insert a TOC field (`TOC \o "1-2" \h \z \u`). User must right-click > Update Field in Word to generate page numbers. See `references/docx-formatting-fixes.md` §19.
+- **Samaya logo in header:** Use `run.add_picture(logo_path, width=Inches(1.0))` on the first header paragraph. Logo path: `_Style-Guides/logos archives/samaya-logo-trans.png`. See `references/docx-formatting-fixes.md` §20.
+- **Footer with Page X of Y:** Construct PAGE and NUMPAGES Word fields as three-run sequences (begin → instrText → separate → placeholder → end). See `references/docx-formatting-fixes.md` §21.
+- **Halftone note under a specific table:** Find the table by header cell text, create a 9pt gray paragraph, insert at `body.index(table) + 1`. Check if a note already exists after the table and insert after it. See `references/docx-formatting-fixes.md` §22.
+- **One-shot completeness is mandatory, not aspirational.** The user will reject a first pass that only partially addresses the brief (e.g. styling tables but not fixing headings, or removing some file paths but missing others). They will say "still you refrence markdown files , and still format of all docs not professional" — meaning fix ALL issues in a single pass. Before running any fix script, audit the document exhaustively first, then apply every fix in one script. Do not run a partial fix, show the user, and plan to fix the rest in round 2.
+- **Table column mismatch: always scan ALL tables before fixing one.** When the user points out one broken table (e.g. "2.1 CURRENT RISK SNAPSHOT"), there are almost always other tables with the same issue (merged cells, empty trailing columns). Run a full scan of all tables for tc count mismatches before fixing any single one.
+- **CG submittal: remove internal tracking sections.** Sections like "Appendix A — Risk Register Location", "Appendix B — Key Risk-Related Documents and Data Gaps", and "Section 15 — Appendices" are internal tracking artifacts. Remove them from client-facing documents. Also remove "Section 13 — Integration with Other Plans" if the referenced plans don't exist as standalone documents. The user will ask "is this section important to add" — the answer is no for internal tracking sections.
+- **DC block is mandatory for CG submittals.** After the revision history table, add a Prepared by / Reviewed by / Approved by table with navy header and 3 signature rows. The user will ask for it explicitly if missing.
+- **Severity scale thresholds must match project duration.** For a project with ~10 weeks remaining, schedule impact thresholds should be: Low <1wk, Medium 1-2wk, High 2-4wk, Very High >4wk. The original values (1wk/4wk/10wk/10wk+) were designed for a longer programme and don't make sense for a compressed timeline. The user will flag this.
+- **Live register notes on every data table.** Every table showing register data (snapshot, distribution, status summary) needs a halftone note: "Data shown is a snapshot from the live Project Risk Register, which is the authoritative source and updated weekly." The user will ask for this explicitly if missing.
+- **RBS empty categories note.** Add a halftone note after the RBS distribution table: "RBS categories with no active risks are monitored and will be populated as new risks emerge." Without this, CG will flag the empty categories as gaps.
+- **First-page layout order.** Cover table, then DC block, then Revision history, then TOC, then document body. The user will ask to move DC and revision tables to the first page if they are at the end.
+- **Spacing between first-page tables.** After moving DC and revision tables to the first page, add empty paragraphs between them. The user will ask for spacing if tables are crammed together.
+
 ## HTML format decision: Color vs. Monochrome
 
 Two HTML template styles exist for Samaya formal documents:
@@ -1045,6 +1217,10 @@ When the user asks to "fix tables", "don't split tables", "add page breaks", "fi
 - RevC03→Rev00 reset pattern (copy + format fixes, no metadata changes)
 - Verification checks after fixes
 - Charts vs images detection
+- **Fixing mismatched table column counts** (merged cells / empty columns) — rebuild tables from XML when header and data rows have different tc counts
+- **Removing sections** (heading + table) from an existing DOCX — find by text match, remove from body in reverse order
+- **Adding DC block** (Prepared/Reviewed/Approved) after revision history — build 4-col table with OxmlElement, insert at body position
+- **Paragraph classification** for reformatting existing DOCX — H1/H2/TOC/Body/Halftone tiers with regex patterns
 
 **Pitfall:** Only add page breaks to section-level H2 headings, not sub-headings (H3 like "1.1", "2.1"). The divider paragraphs (all-caps section labels) also need breaks. `cantSplit` on every row means a tall table pushes entirely to the next page — this is correct per user request.
 
@@ -1065,8 +1241,10 @@ See the reference file for complete code patterns including: table XML rebuild w
 - `references/dc-submission-transmittal-pattern.md` — DC submission transmittal for submitting prequalification packages to CG via Aconex (cover document with attachments table)
 - `references/docx-audit-and-fix-workflow.md` — Systematic audit and structural fix for existing DOCX (heading styles, cantSplit, table rebuilding via XML, content correction). Use when user says "check this [plan docx]" on non-SamayaDoc documents.
 - `references/docx-formatting-fixes.md` — DOCX formatting fixes: page breaks before sections, prevent table splitting, set proportional column widths, RevC03→Rev00 reset pattern
+- `references/docx-merged-cell-extraction.md` — Extract text from merged cells (gridSpan) and rebuild tables from scratch when column structure is broken. Use when an existing DOCX has merged cells that make column removal unreliable.
 - `references/docx-image-rendering-fix.md` — Fix for images disappearing after bulk DOCX edits: empty cNvPr name, missing noChangeAspect, AND RGBA->RGB conversion (Word on macOS does not render RGBA PNGs). Run after any page-break/table-width/symbol-cleanup pass.
 - `references/cg-correspondence-best-practices.md` — CG correspondence strategy: don't ask logic questions, separate threads, align with NRS before sending, acknowledge without commitment, state commercial impact upfront. Derived from user corrections on email drafts to CG.
+- `references/cg-submittal-first-page.md` — First page layout, DC block, revision table, TOC field, severity scale, live register notes
 - `references/contract-grounded-sow-methodology.md` — Verifying SOW scope against contract (SoW + ER) before writing. Every scope statement must map to a contract clause; never invent tasks. Dispatch labors (Kimi/Codex/Claude) for cross-verification. Copy PDFs from OneDrive via AppleScript first, then extract text with PyMuPDF. See the "SOW contract-accuracy verification" section above.
 - `references/onedrive-macos-workaround.md` — OneDrive macOS sandbox workaround via Finder AppleScript (essential when files lock after `mv`)
 - `references/docx-generation-example.md` — Full working gen script with `set_table_widths()` + `get_col_widths()`

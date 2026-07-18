@@ -75,7 +75,8 @@ cg_status: A | B | C | D | Submitted
 - **PDFs**: Use `pymupdf` (Python) to extract text. Copy PDFs to `/tmp/` first to avoid OneDrive lock issues.
 - **DOCX**: Use `python-docx` or extract via `pandoc`.
 - **Existing MD**: Copy directly from archive folders.
-- **Empty/0-byte PDFs**: These are OneDrive placeholder files. Find the real file in the repo's `99_Archive/` or use the OneDrive web UI to download.
+- **Empty/0-byte PDFs**: These are OneDrive placeholder files. Find the real file in the repo's `00_Project_Charter/` (text extracts) or use the OneDrive web UI to download.
+- **Verify extraction completeness**: After extracting a PDF, check line count vs page count. Rule of thumb: ~40-50 lines per page for text-heavy PDFs. If the extract is suspiciously short (e.g. 358 lines for 72 pages), re-extract with `pdftotext -layout`.
 
 ### 3.3 Structure Rules
 
@@ -535,7 +536,7 @@ When a plan has been approved (Code A/B) but time has passed, new stakeholders, 
 
 | Source | What to Check | Location |
 |--------|---------------|----------|
-| **PROJECT_MEMORY.md** | Latest status updates section — new appointments, role changes, new requirements | `99_Archive/00_Project_Overview/PROJECT_MEMORY.md` |
+| **PROJECT_MEMORY.md** | Latest status updates section — new appointments, role changes, new requirements | `00_Project_Charter/PROJECT_MEMORY.md` or `99_Archive/00_Project_Overview/PROJECT_MEMORY.md` |
 | **CG_STATUS.md** (plan folder) | Latest CG response, open comments, resubmission status | `03_Plans/<NN_Plan>/CG_STATUS.md` |
 | **Plan audit files** | PMBOK/RIBA gap analysis, residual open gaps | `03_Plans/<NN_Plan>/` — audit `.md` files |
 | **Plan source files** | The actual plan document (HTML/DOCX/PDF) | `03_Plans/<NN_Plan>/01_Source_Files/` |

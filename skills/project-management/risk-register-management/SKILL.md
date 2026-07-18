@@ -36,11 +36,11 @@ The Aseer Museum Risk Management System (RMS) has four synchronized documents:
 | HSE Risk Register | Excel (OneDrive) | Internal | Task-level HSE risks |
 | AV Risk Register | Excel (OneDrive) | Internal | AV/multimedia risks |
 
-**Rule:** The MD register is the operational truth. The Excel is a derived output. The RMP MD is the internal methodology doc. The RMP DOCX is the formal CG submittal and must match the MD exactly in all data points.
+**Rule:** The JSON (`06_Risk_System/risks.json`) is the operational source of truth. The MD register is auto-generated from it by `risk_sync.py`. The Excel is a derived output. Always edit the JSON, never the MD for bulk changes. The RMP MD is the internal methodology doc. The RMP DOCX is the formal CG submittal.
 
 ## DOCX Writing Style Principles
 
-When writing or editing any DOCX that goes to CG/PMC/MoC (including the RMP), follow these rules:
+When writing or editing any DOCX that goes to CG/PMC/MoC (including the RMP), follow these rules. **The user will reject documents that violate these — this is the #1 avoidable correction.**
 
 ### No Client-Irrelevant Methodology
 
@@ -51,6 +51,16 @@ The client does not care about PMBOK, PRINCE2, or other textbook methodology ref
 
 The client wants: what risks exist, how they are scored, who owns them, what will be done. Not which textbook inspired the approach.
 
+### No Internal References
+
+The client cannot access your repo, OneDrive paths, or markdown files. Never reference:
+- File paths (`01_Registers/risk_register.md`, `03_Plans/08_Risk/`)
+- "project repo" or "repository"
+- Markdown format
+- Internal tooling or agent references
+
+Replace with generic descriptions: "Project Risk Register (PRR)", "Risk Management System", "Project Document Control".
+
 ### No AI Symbols
 
 Replace all typographic symbols with plain ASCII:
@@ -58,6 +68,21 @@ Replace all typographic symbols with plain ASCII:
 - Section symbol (§) -> "Section" or just section number
 - Middle dot (·) -> bullet or hyphen
 - Curly quotes -> straight quotes
+
+**The user will call you out on § symbols specifically.** Scan every document before delivery.
+
+### Revision History — Client-Appropriate Language
+
+The revision history table is for the client, not for internal notes. Never include:
+- "Format revision — unified table styles, halftone remarks, page breaks, removed internal references"
+- Any description of formatting changes, tooling, or internal process
+
+Instead write:
+- "REV00 - First issue for CG review"
+- "Updated risk counts from design, procurement, site, and HSE departments"
+- "Revised scoring methodology per project requirements"
+
+### Write Like an Engineer, Not Like AI
 
 ### Write Like an Engineer, Not Like AI
 
@@ -74,6 +99,17 @@ Principles:
 - Start sections with the point, not a throat-clearing intro
 - Every claim must trace to an approved project source (ER/SoW/CG comment/submittal) - never cite external standards
 
+### Revision History — Client-Appropriate Language
+
+The revision history table is for the client, not for internal notes. Never include:
+- "Format revision — unified table styles, halftone remarks, page breaks, removed internal references"
+- Any description of formatting changes, tooling, or internal process
+
+Instead write:
+- "REV00 - First issue for CG review"
+- "Updated risk counts from design, procurement, site, and HSE departments"
+- "Revised scoring methodology per project requirements"
+
 ### Language Checklist Before Delivery
 
 - [ ] No PMBOK or external methodology citations
@@ -81,10 +117,12 @@ Principles:
 - [ ] No section symbols (§)
 - [ ] No middle dots (·)
 - [ ] No AI buzzwords: systematic, framework(alone), robust, leverage, facilitate, proactive(as filler), streamline
+- [ ] No internal file paths, repo references, or markdown mentions
 - [ ] Each body paragraph is 1-2 sentences max
 - [ ] Active voice throughout
 - [ ] Every data point cross-checked against repo or DRR Excel
 - [ ] Names and roles from repo only, never inferred
+- [ ] Revision history entries are client-facing, not internal notes
 
 ### Step 1: Extract Current State
 
@@ -205,6 +243,160 @@ When an external register has risks the repo doesn't:
 9. Log in the weekly review.
 10. Tag as "Pending import" in the register cross-reference until PM confirms.
 11. **Stale pending-import tags get cleaned up** — other agents may remove stale pending-import cross-references if the risks aren't added within the same session. Either import immediately after audit, or update the tag to show actual status.
+
+### Step 2c: Merge External Risks into JSON SoT (Programmatic Bulk Import)
+
+The current architecture (C08+) uses `06_Risk_System/risks.json` as the single source of truth, with `risk_sync.py` auto-generating `01_Registers/risk_register.md`. For bulk imports of 5+ risks, write a Python merge script against the JSON rather than manually patching the MD.
+
+#### When to Use
+
+- Bulk import of 5+ risks from an external/PM-provided register
+- Merging a consolidated register with both overlap and new risks (ID collisions expected)
+- Adding new RBS categories alongside new risks
+- Any merge where manual MD patching would be error-prone
+
+#### Archive the Script
+
+The merge script is a **generated tool for a single merge event**, not a permanent fixture. Delete it after it runs:
+
+```
+rm 06_Risk_System/merge_consolidated.py
+```
+
+#### Merge Script Pattern
+
+```python
+#!/usr/bin/env python3
+"""Merge external register risks into risks.json SoT."""
+import json
+from pathlib import Path
+
+JSON_PATH = Path("06_Risk_System/risks.json")
+
+with open(JSON_PATH) as f:
+    data = json.load(f)
+
+existing_ids = {r["id"] for r in data["risks"]}
+
+# --- 0. Extend RBS categories if needed ---
+data["rbs_categories"].update({
+    "CNS": "Conservation & Collection",
+    "SEC": "ICT & Security",
+    "AV":  "AV & Multimedia",
+    "QLT": "Quality",
+    "TCH": "Testing, Commissioning & Handover",
+})
+
+# --- 0a. Extend owners ---
+data["owners"].update({
+    "Conservation Consultant": "TBC",
+    "Security Specialist": "TBC",
+})
+
+# --- 0b. Re-ID existing risks when external uses same ID for different risk ---
+for r in data["risks"]:
+    if r["id"] == "PRR-COM-05":   # external has "EOT rejected" but repo has "Insurance"
+        r["id"] = "PRR-COM-07"
+        r["history"].append({"date": "YYYY-MM-DD", "action": "Re-ID", "by": "Merge",
+                             "note": "Re-ID from PRR-COM-05 to PRR-COM-07"})
+        break
+existing_ids = {r["id"] for r in data["risks"]}
+
+# --- 1. Update existing risks where external has better evidence ---
+updates = {
+    "PRR-COM-02": {
+        "score": 12, "rating": "Critical", "severity": 4, "probability": 3,
+        "title": "Updated title", "event": "...", "consequence": "...",
+        "response_action": "...", "owner": "New Owner", "status": "Open",
+    },
+}
+
+# --- 2. Define and add new risks ---
+new_risks = []
+
+def add_risk(rid, cat, title, event, cause, consequence, response, prob, sev, owner,
+             status="Open", target_close="", evidence=None):
+    """Add risk, auto-resolving ID collisions via next-available-serial."""
+    if rid in existing_ids:
+        prefix = rid.rsplit("-", 1)[0] + "-"
+        n = 1
+        while f"{prefix}{n:02d}" in existing_ids:
+            n += 1
+        rid = f"{prefix}{n:02d}"
+    score = prob * sev
+    rating = "Critical" if score >= 12 else "High" if score >= 8 else "Medium" if score >= 4 else "Low"
+    new_risks.append({
+        "id": rid, "category": cat, "title": title,
+        "cause": cause, "event": event, "consequence": consequence,
+        "probability": prob, "severity": sev, "score": score, "rating": rating,
+        "status": status, "owner": owner, "target_close": target_close,
+        "created": "YYYY-MM-DD", "last_reviewed": "YYYY-MM-DD",
+        "treatment_file": "",
+        "evidence": evidence or ["Source: External Register"],
+        "response_action": response,
+        "actions": [],
+        "history": [{"date": "YYYY-MM-DD", "action": "Created", "by": "Merge",
+                     "note": "Imported from [source]"}]
+    })
+    existing_ids.add(rid)
+
+# 5 string params (title, event, cause, consequence, response) then 2 ints (prob, sev) then owner
+add_risk("PRR-SCH-04", "SCH",
+    "Short descriptive title",
+    "Event — what could happen",
+    "Cause / root trigger",
+    "Consequence / impact",
+    "Response / mitigation plan",
+    4, 4, "Planning Manager")
+
+# --- 3. Apply updates, add new risks, sort ---
+for r in data["risks"]:
+    if r["id"] in updates:
+        for k, v in updates[r["id"]].items():
+            r[k] = v
+data["risks"].extend(new_risks)
+data["risks"].sort(key=lambda r: r["id"])
+
+# --- 4. Bump revision ---
+data["revision"] = "C09"
+data["last_updated"] = "YYYY-MM-DD"
+data["merge_note"] = f"Merged [source]. Added {len(new_risks)} risks. Updated ratings: [...]. New RBS: [...]."
+
+# --- 5. Validate and write ---
+ids = [r["id"] for r in data["risks"]]
+assert len(ids) == len(set(ids)), f"Duplicate IDs: {[i for i in ids if ids.count(i) > 1]}"
+with open(JSON_PATH, "w") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+print(f"Written Rev {data['revision']} — run risk_sync.py to regenerate markdown.")
+```
+
+Then regenerate:
+```bash
+python3 06_Risk_System/risk_sync.py
+```
+
+#### Merge Checklist
+
+| Step | Check |
+|------|-------|
+| ✅ | New RBS categories added to `data["rbs_categories"]` before risks reference them |
+| ✅ | Existing risks re-ID'd when external uses same ID for different risk |
+| ✅ | Each new risk has all required JSON fields |
+| ✅ | IDs validated — no duplicates before write |
+| ✅ | `merge_note` documents what changed and why |
+| ✅ | `risk_sync.py` runs without error |
+| ✅ | Final MD register verified (counts, snapshot, categories) |
+| ✅ | Merge script deleted |
+
+#### Pitfalls
+
+- **ID collision is the most common bug** — read risk event/cause side by side, not just IDs
+- **add_risk() must be defined before the calls** — Python executes top to bottom
+- **Five string params before ints**: signature is `add_risk(rid, cat, title, event, cause, consequence, response, prob, sev, owner)`. Missing one shifts all params and causes cryptic `missing required positional argument` errors
+- **New RBS categories must exist in data before adding risks that reference them** — otherwise `risk_sync.py` fails
+- **Re-ID must rebuild `existing_ids`** before add_risk calls, or the freed ID is still treated as taken
+- **Every change gets a `history` entry** — Created, Re-ID, Reviewed, etc.
+- **Merge script is disposable** — run, verify, delete. Do not commit it.
 
 ## Step 3: Update RMP DOCX (Word)
 
@@ -466,6 +658,52 @@ Additionally, the Design Risk Register sheet (the data sheet) has the revision i
 
 ### DRR count in RMP is often stale
 The RMP (repo) says DRR has 37 risks. The actual DRR Excel (P03) has 76 risks. Always open the DRR Excel directly and count, rather than trusting the RMP's stated number.
+
+### Risk Close vs Mitigate
+
+When a risk's root cause is eliminated (the specific threat no longer exists), set status to **Closed**, not Mitigated. "Mitigated" means the risk still exists but controls have reduced it. "Closed" means the risk event cannot happen anymore.
+
+Example: PRR-CON-03 (blockwork mandate) — CG approved drywall, so the blockwork threat is gone → **Closed**. The residual coordination work (MEP/AV routing, slab verification) is normal design development, not a risk.
+
+### Owner Names — Use Real People, Not Role Titles
+
+When the PM gives an owner update, use the actual person's name (e.g. "Hani Alghamdi"), not a role title (e.g. "Commercial Manager"). The user corrected this explicitly.
+
+This applies to:
+- Risk owner field in the register
+- Response action owner
+- Any assignment of accountability
+
+If the person is unknown, use the role title as a placeholder but flag it for the PM to fill in the real name.
+
+### Cleanup Stale Dropdowns
+
+The `build_unified_sheet()` function may leave duplicate dropdowns from the old template. After rebuilding, clear all existing data validations and add a single one:
+
+```python
+ws.data_validations.dataValidation = []
+dv = DataValidation(
+    type="list",
+    formula1='"Avoid,Transfer,Mitigate,Accept (Active),Accept (Passive),SOW-Protect"',
+    allow_blank=True,
+    showDropDown=False
+)
+ws.add_data_validation(dv)
+dv.add(f'J2:J{last_row}')
+```
+
+### Dashboard Formulas After Template Change
+
+After changing the register template to 14 columns, update Dashboard formulas to reference the correct columns:
+- Rating is column I (9)
+- Category is column B (2)
+
+```python
+ws.cell(row=5, column=3).value = f'=COUNTIF({prr_sheet}!I2:I100,"Critical")'
+ws.cell(row=5, column=4).value = f'=COUNTIF({prr_sheet}!I2:I100,"High")'
+ws.cell(row=5, column=5).value = f'=COUNTIF({prr_sheet}!I2:I100,"Medium")'
+ws.cell(row=5, column=6).value = f'=COUNTIF({prr_sheet}!I2:I100,"Low")'
+```
 
 ## Samaya Style — Excel Risk Register Formatting
 
@@ -774,6 +1012,9 @@ For large design packages spanning many disciplines (e.g. full museum fit-out wi
 
 - `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
 - `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
+- `references/register-merge-id-collisions.md` — ID collision patterns and resolutions from the C08→C09 merge, with field structure reference and param order pitfalls
+- `references/unified-register-template.md` — Standard 14-column template for all register sheets with identical headers, widths, formulas, dropdowns, and formatting rules
+- `project-risk-register` skill's `references/formula-driven-register-pattern.md` — Formula-driven Excel pattern (v2.0) with live P×S→Score→Rating formulas, Dashboard COUNTIF, Risk Matrix COUNTIFS, and Cover live metrics. Use this when the user wants interactive formula-based scoring
 
 ## NCR Register Management
 
@@ -824,8 +1065,147 @@ Corrective action taken: Steel-tube bracing installed, floor anchorage with Hilt
 - **NCR register is separate from the risk register** but linked via PRR-STK-02 — update both when NCRs arrive or close
 - **NCR folder doesn't exist by default** — create `04_Docs/10_Test_and_Inspection/10.3_NCRs/` if it doesn't exist
 
+## Risk Register Reconciliation — Cross-Check Against Actual Transactions
+
+### When to Use
+
+- User flags that a risk entry is stale or out of sync with actual project events
+- A new MoM, decision log entry, or CG approval changes the status of one or more risks
+- Before a weekly risk review — ensure the register reflects current reality
+- After a batch of email processing — new evidence may upgrade/downgrade existing risks
+
+### The Core Problem
+
+Risk registers drift from reality when:
+- A risk was created around an **appointment** (e.g. "MEP Designer not appointed") but the appointment happened and the risk was never refocused
+- A **target close date** passes without the risk being reviewed or extended
+- New **evidence** (letters, test results, CG responses) arrives but is not added to the risk's evidence list
+- The risk's **title/cause** still describes the original threat but the actual threat has evolved
+
+### Reconciliation Workflow
+
+#### Step 1: Identify Stale Entries
+
+Scan the register for these patterns:
+
+| Pattern | What to Check | Example from Session |
+|---------|---------------|---------------------|
+| **Appointment vs mobilisation confusion** | Risk says "not appointed" but MoM confirms appointment | PRR-DES-01: "MEP designer appointment" still Critical open despite MoM-14 confirming AD Engineering approved |
+| **Overdue target_close with no update** | target_close date has passed, status still Open, no history entry | PRR-FLS-02: target_close 16-Jul, no review on 18-Jul |
+| **Missing evidence** | New letters, datasheets, or CG responses exist but not in evidence list | PRR-PRC-05: GBH Letter 002 received but not referenced |
+| **Stale evidence references** | Evidence cites a stale report number or superseded document | Any risk still referencing "Rpt 16" when Rpt 18 is current |
+| **Status mismatch with decisions_log** | decisions_log says "approved" but risk still says "Open - materialising" | Cross-check each risk's evidence against decisions_log entries |
+
+#### Step 2: Cross-Check Each Risk Against Source Documents
+
+For each risk, verify against these sources in order:
+
+1. **MoMs** — does the latest MoM mention this risk? Is the status consistent?
+2. **decisions_log.md** — was a decision made that changes this risk's status?
+3. **action_items.md** — are the risk's mitigation actions still open/overdue?
+4. **Email scan** — did new evidence arrive (letters, CG responses, test results)?
+5. **Submittal status** — did the related submittal get approved/rejected?
+6. **look_ahead.md** — is the risk still on the critical path?
+
+#### Step 3: Apply Fixes Per Risk
+
+| Fix Type | What to Change | Where |
+|----------|---------------|-------|
+| **Refocus** | Update title, cause, event to reflect current threat (not the original one) | risks.json + treatment file |
+| **Extend target_close** | Push to a realistic new date, add history note explaining why | risks.json |
+| **Add evidence** | Append new source references to evidence array | risks.json |
+| **Update last_reviewed** | Set to today's date | risks.json |
+| **Add history entry** | Document what changed and why | risks.json |
+| **Update treatment file** | Refocus risk statement, update action due dates, add reconciliation note | treatment/PRR-{ID}.md |
+
+#### Step 4: Update Treatment Files
+
+For each risk that changed, update its treatment file:
+
+- **Risk statement** — must reflect the current threat, not the original one
+- **Action due dates** — push overdue dates to realistic new targets
+- **Evidence column** — add new source references
+- **Reconciliation note** — add a section at the bottom documenting what was reconciled and why
+- **Escalation triggers** — update if the risk's urgency changed
+
+#### Step 5: Regenerate and Commit
+
+```bash
+python3 06_Risk_System/risk_sync.py
+git add -A
+git commit -m "Risk register reconciliation C{NN} — {date}
+
+- PRR-XXX: refocused from 'appointment' to 'mobilisation' — MoM-{N} confirms appointment done
+- PRR-YYY: target_close extended {old} → {new}
+- PRR-ZZZ: added {evidence} evidence
+- PRR-AAA, PRR-BBB: reviewed, no change
+- Treatment file PRR-XXX.md: updated with reconciliation note"
+```
+
+#### Step 6: Bump Revision
+
+| Document | Change |
+|----------|--------|
+| `risks.json` | `revision: C{NN}` (increment from current) |
+| `risk_register.md` | Auto-generated by risk_sync.py — verify counts |
+| `03_Plans/08_Risk/README.md` | Update governance line revision |
+| `00_Command_Center/master_dashboard.md` | Update Risk Management lane revision tag |
+
+### Common Reconciliation Patterns (from Aseer Museum)
+
+| Pattern | Original Risk | Actual Status | Fix |
+|---------|--------------|---------------|-----|
+| **Appointment done, mobilisation pending** | PRR-DES-01: "MEP designer appointment" Critical 4x4 | AD Engineering approved per MoM-14; SOW/fee/LOI not finalised | Refocus title to "mobilisation", update cause/evidence, keep score |
+| **Overdue decision, extend target** | PRR-FLS-02: Fire Pump Room, target_close 16-Jul | 7-option study still undecided | Extend to 22-Jul, add history note |
+| **New evidence received** | PRR-PRC-05: Patinated brass Oddy risk | GBH Letter 002 received 16-Jul | Add to evidence array |
+| **No change, just review** | PRR-APP-01: Renovation licence | Still pending per MoM-14 section 4 | Update last_reviewed, add history note |
+
+### Worked Example: PRR-DES-01 Reconciliation (2026-07-18)
+
+**Situation:** User flagged that PRR-DES-01 was still titled "MEP detailed designer appointment / mobilisation slips" with Critical 4x4=16, target_close 23-Jul, and evidence citing only "look_ahead item 1 & 6; MoM-14 M14-2.5; project_status ITC". However, MoM-14 (06-Jul) explicitly documents: "MEP Designer submission completed and approved."
+
+**Diagnosis:** The risk conflated two phases — appointment (done) and mobilisation (pending). The title, cause, and evidence were stale because they still described the original "not appointed" threat.
+
+**Fix applied:**
+
+| Artifact | Before | After |
+|----------|--------|-------|
+| Title | "MEP detailed designer appointment / mobilisation slips" | "MEP Designer (AD Engineering) mobilisation / first deliverables slip" |
+| Cause | "ITC variation / commercial path; replacement consultant LOI not closed; CG no-objection path open" | "AD Engineering appointed per MoM-14 (06-Jul); SOW/fee/LOI not finalised; CG no-objection path open" |
+| Evidence | `look_ahead item 1 & 6; MoM-14 M14-2.5; project_status ITC` | Added `decisions_log 2026-07-06 (MEP Designer approved)` |
+| Treatment risk statement | "MEP detailed designer not being appointed and mobilised" | "AD Engineering appointed but SOW/fee/LOI not yet finalised" |
+| Treatment action due dates | 14-Jul, 15-Jul (overdue) | 20-Jul, 22-Jul (extended) |
+| Treatment escalation | "Daily PM + Legal if LOI not issued by 15-Jul" | "Daily PM + Legal if LOI not issued by 20-Jul" |
+| Treatment file | No reconciliation note | Added "Reconciliation note (2026-07-18)" section |
+| Score | Kept 4x4=16 (mobilisation delay still blocks Life Safety, Fire Pump, energy coordination) | Unchanged |
+
+**Key decision:** Score was kept at Critical because the consequence (blocking Life Safety, Fire Pump, energy/IT coordination) is unchanged by the appointment. Only the threat vector changed from "not appointed" to "appointed but not delivering."
+
+**Treatment file update pattern:**
+```markdown
+## Reconciliation note (2026-07-18)
+
+MoM-14 (06-Jul) documents MEP Designer appointment as **completed and approved**. 
+This risk has been refocused from "appointment" to "mobilisation and first deliverables." 
+The appointment itself is no longer the risk — the commercial close-out and kick-off schedule are.
+```
+
+### Pitfalls
+
+- **Don't close a risk just because the original threat changed** — the risk may have evolved into a different threat that still needs management. Refocus, don't close.
+- **Don't change the score without evidence** — only upgrade/downgrade PxS when new data justifies it. A refocused risk may keep the same score.
+- **Treatment files get stale faster than the register** — always update the treatment file alongside the JSON entry. A treatment file with old due dates is worse than no treatment file.
+- **risk_sync.py overwrites the MD register** — never edit `risk_register.md` directly. All changes go in `risks.json`.
+- **The register's ID migration table** (at the bottom) may reference old IDs that were re-ID'd during reconciliation. Update the migration table if a risk was re-ID'd.
+
 ## Related Skills
 
+- `project-risk-register` — Build professional Excel-based risk registers with
+  dashboard, heat map, and formula-driven rating system (v2.0 pattern with
+  live `=I*J` / nested `IF` formulas). Use this when building or rebuilding an
+  Excel register from scratch; `risk-register-management` covers back-end
+  data maintenance (JSON MD, RMP) while `project-risk-register` covers
+  front-end Excel generation.
 - `project-register-manager` — BIM submittal registers (appending rows, creating new registers from SOW)
 - `aseer-document-control` — Aseer-specific filing conventions, sidecar analysis
 - `samaya-technical-office` — project context, entity isolation rules

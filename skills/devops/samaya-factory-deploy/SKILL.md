@@ -216,6 +216,44 @@ When specialist deployment data changes, plan documents are interdependent. For 
 
 **Pitfall:** deploying an updated SMP without also updating the Resource Plan leaves stale data live. Before deploying, check which companion documents reference the same specialist assignments.
 
+## Public Shared Assets
+
+The server hosts shared project assets (logos, templates, reference files) at public URLs so any agent working outside the repo can fetch them directly.
+
+**Location on server:**
+```
+domains/samaya-factory.com/public_html/build/assets/logos/
+```
+
+**Public URLs (no auth required):**
+| Asset | URL |
+|-------|-----|
+| Samaya logo (transparent) | `https://samaya-factory.com/assets/logos/samaya-logo-trans.png` |
+| Samaya logo (opaque) | `https://samaya-factory.com/assets/logos/samaya-logo.png` |
+
+**Why `/build/` prefix:** The `.htaccess` at root rewrites all requests to `/build/`. So `https://samaya-factory.com/assets/logos/...` resolves to `public_html/build/assets/logos/...`.
+
+**To add a new shared asset:**
+```bash
+# 1. Create the directory
+ssh -p 65002 u517606786@samaya-factory.com \
+  "mkdir -p ~/domains/samaya-factory.com/public_html/build/assets/logos"
+
+# 2. Upload via SSH pipe (reliable, avoids SCP hang)
+cat /path/to/local/file.png | ssh -p 65002 u517606786@samaya-factory.com \
+  "cat > ~/domains/samaya-factory.com/public_html/build/assets/logos/filename.png"
+
+# 3. Fix permissions (SSH pipe creates files with 644, but verify)
+ssh -p 65002 u517606786@samaya-factory.com \
+  "chmod 644 ~/domains/samaya-factory.com/public_html/build/assets/logos/*"
+
+# 4. Verify
+curl -s -o /dev/null -w "%{http_code}" https://samaya-factory.com/assets/logos/filename.png
+# Expect: 200
+```
+
+**Document in AGENTS.md:** After adding a new shared asset, add a row to the style guide table in the repo's `AGENTS.md` so every agent knows the public URL.
+
 ## Related References
 
 - `references/html-css-audit-repair.md` — Systematic workflow for auditing and fixing HTML/CSS issues (tag balance, section numbering, page numbers, CSS fixes) on deployed production documents.

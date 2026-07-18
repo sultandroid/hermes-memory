@@ -35,8 +35,14 @@ STAGE_NAMES = {35: "Initiation", 36: "DD", 39: "Procurement",
 
 # ── Source: PROJECT_MEMORY.md ──
 PM_CANDIDATES = [
+    # Primary: CloudStorage (interactive shell)
     Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/_Project_Memory/PROJECT_MEMORY.md",
     Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/PROJECT_MEMORY.md",
+    # Fallback: symlink (works in cron when CloudStorage is TCC-blocked)
+    Path.home() / "OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/_Project_Memory/PROJECT_MEMORY.md",
+    Path.home() / "OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/PROJECT_MEMORY.md",
+    # Fallback: repo archive copy
+    Path("/Users/mohamedessa/aseer-museum-pm/99_Archive/00_Project_Overview/PROJECT_MEMORY.md"),
 ]
 pm_source = None
 for p in PM_CANDIDATES:
