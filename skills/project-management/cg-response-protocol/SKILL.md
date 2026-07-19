@@ -452,12 +452,17 @@ If the supplier's formal letter states they do NOT recommend the specified mater
 **Handling CG's "2 alternative manufacturers" demand when supplier confirms single-source:**
 
 When CG asks for 2 alternative certified manufacturers but the supplier's letter confirms only 1 supplier exists globally:
-- State the fact directly: "GBH Letter 002 confirms: only ONE supplier exists globally for [material]. Therefore, providing 2 additional alternative manufacturers for the SAME material is not feasible."
+
+- **Frame it as GBH's market finding, not an absolute fact.** Say: "GBH conducted a market search and identified only one supplier capable of producing it to the required museum standards." Not "only one supplier exists globally" — CG may challenge that claim.
+- **CG likely wants to see options to choose from, not supply from multiple sources simultaneously.** Frame the response accordingly: "This gives you multiple options to review and select from."
+- **Single-source argument for finish consistency:** Patinated brass is specified across multiple project elements (showcases, wayfinding, doors, wall cladding). To guarantee colour and texture consistency, all must come from a single supplier. Different suppliers = visible variations due to the manual patination process.
 - Propose alternatives in a DIFFERENT material category (e.g., PVD-coated brass instead of patinated brass)
 - Reference the risk register entry (e.g., PRR-PRC-05, Score 12, Critical) to show the risk is already tracked
 - Offer: "Samaya will source [alternative material] alternatives from KSA suppliers as a functionally equivalent, lower-risk substitute — samples within 30 days."
 
 **Alternative submittal package scope:** When offering a PVD-coated or other alternative, the full submittal package must include: sample, manufacturer certificates, and test reports — not just a visual sample. State this explicitly in the email: "Full package to be submitted within 30 days including sample, manufacturer certificates, and test reports."
+
+**Do NOT recommend accepting an alternative before it's submitted.** Never say "recommend CG accept X as primary path" when X is still in development. Say "to be submitted for CG review" instead.
 
 **Email composition — which email to reply to and what to attach:**
 
@@ -475,35 +480,45 @@ Subject: RE: [Original Subject]
 
 Dear Eng. [Name],
 
-Good day.
+We received [Supplier Letter Ref] from [Supplier] regarding [topic]. Risk [Risk ID] (Score [N], [Rating]) already registered.
 
-We have received [Supplier Letter Ref] from [Supplier] regarding [topic]. The [material] risk is already registered in the Project Risk Register as [Risk ID] (Score [N], [Rating]).
+On your request for 2 alternative manufacturers:
+[Supplier] searched the market and found only one supplier for this finish. We also contacted [country] suppliers — samples with certificates expected within [timeframe]. A [alternative] is also in development (full package within [timeframe]). This gives you options to choose from, while ensuring the final finish is applied consistently from one source across all project elements.
 
-Regarding your request for two additional alternative certified manufacturers:
-[Supplier] confirms only ONE supplier exists globally for [material]. Providing two additional certified manufacturers for the same material is therefore not feasible.
+Current samples submitted:
+1. [Material A] — [N] effects under [Submittal Ref]. [Status].
+2. [Material B] — [description] already submitted.
+3. [Material C] — in development, to be submitted for your review within [timeframe].
 
-Current status of submitted finish samples:
-1. [Material A] — [N] samples already submitted under [Submittal Ref]. [Status].
-2. [Material B] — [description], already submitted with [Submittal Ref] for reference.
-3. [Material C] — being developed as a second alternative from local KSA suppliers. Full package (sample + certificates + tests) within 30 days.
+Request — approve two independent tracks to avoid delay:
 
-Our proposal — two independent tracks:
+Track A — [Submittal Ref] & Shop Drawings: Proceed now. [Finish] is a surface finish only, does not affect fabrication — [Supplier] confirmed.
 
-Track A — [Submittal Ref] ([Scope]) & Shop Drawings:
-We will resubmit [Submittal Ref] with all requested supporting documents for your approval. The [finish material] is a surface finish only and does not affect [fabrication/production] — [Supplier] has confirmed this. We request CG to proceed with [Submittal Ref] and shop drawing approval independently.
+Track B — [Submittal Ref] ([Finish]): Finalize separately. [Status updates].
 
-Track B — [Submittal Ref] ([Finish Material]):
-- [Testing] in progress — results [date]
-- [Alternative] in development — full submittal package within 30 days
-- To be finalized separately without blocking Track A
+Attached: updated CR Sheet and [Supplier Letter].
 
-We have updated the CR Sheet ([Ref], dated [date]) reflecting this approach and will submit it with the resubmission package.
+Kindly confirm.
 
 Best regards,
 [Name]
 ```
 
 **Before composing the email, verify the baseline:** Check what was in the first submission (data sheets, samples, TDS) vs what's new in the resubmission. The first submission may already have all technical data sheets complete — the resubmission is about responding to CG's open conditions, not adding missing TDS. List the baseline clearly so the email doesn't claim to be submitting things that were already submitted.
+
+**CR Sheet conciseness rules:**
+- Write short, human English. No long paragraphs. Break into short lines.
+- When multiple items reference the same source document (e.g., GBH Letter 002), put the full content in ONE item and have others say "See Item [N] for details." Never repeat the same information.
+- Status/remarks columns should be 1-2 sentences max.
+- Don't say "recommend" for something not yet submitted. Say "to be submitted for CG review."
+- For timing-dependent items (shop drawings, on-site team), state the actual trigger condition, not an arbitrary day count. E.g., "to be submitted in the coordination stage after MEP design freeze" not "14-day extension." "Available after first batch delivery" not "upon Rev.01 approval."
+- **No "only one supplier exists globally" as an absolute claim.** Frame as: "GBH conducted a market search and identified only one supplier capable of producing it to the required museum standards." CG may challenge absolute claims.
+- **CG's "2 alternative manufacturers" request is about options to choose from, not supply from multiple sources simultaneously.** Frame the response accordingly: "This gives you multiple options to review and select from."
+- **Single-source argument for finish consistency:** Patinated brass is specified across multiple project elements (showcases, wayfinding, doors, wall cladding). To guarantee colour and texture consistency, all must come from a single supplier. Different suppliers = visible variations due to the manual patination process.
+- **Alternative submittal package scope:** When offering a PVD-coated or other alternative, the full submittal package must include: sample, manufacturer certificates, and test reports — not just a visual sample. State explicitly: "Full package to be submitted within 30 days including sample, manufacturer certificates, and test reports."
+- **Email reply target:** Reply to the CG's most recent follow-up email (e.g., Mansour's reminder asking for 2 alternatives), not the original rejection. Attachments: (1) updated CR Sheet, (2) supplier's letter. Do NOT re-attach original submittal PDFs, sample board photos, or data sheets — those were already submitted.
+- **Email structure for Track A/B proposal:** Keep it short. State the supplier's finding, list current samples submitted, then the two-track request. End with "Kindly confirm." See the full template in the Track A/B section above.
+- **Before composing, verify the baseline:** Check what was in the first submission (data sheets, samples, TDS) vs what's new in the resubmission. The first submission may already have all technical data sheets complete — the resubmission is about responding to CG's open conditions, not adding missing TDS. List the baseline clearly so the email doesn't claim to be submitting things that were already submitted.
 
 See `references/ma-0006-showcase-resubmission-case.md` for the full worked example.
 

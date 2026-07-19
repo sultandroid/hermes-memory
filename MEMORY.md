@@ -10,10 +10,6 @@ Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/ski
 §
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
 §
-Risk Mgmt Plan REV00: footer='Page X of Y\tSamaya Investment Company' (Word fields). Header: Samaya logo + title. TOC: Word TOC field (Heading 1-2, hyperlinked, page numbers). Cover: REV00 - Issue for CG Review, 18 Jul 2026. DC block: QC table. Rev table: 1.0, C01, C02, REV00. 31 tables, 169 paragraphs, 15 H1 + 34 H2 styles.
-§
-Risk Register REV00: 1 bar chart (user adjusted), 4 sheets: PRR (49 risks), DDR/HSE/AV templates. 17 RBS categories roll up into PRR.
-§
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
 §
 Graphit (graphics) is a sister company — no PO/subcontract, direct execution after SoW approval.
@@ -22,4 +18,10 @@ Before sending RFIs/TQs, audit content against repo data (registers, SOW_RACI, s
 §
 User prefers validation before action: when proposing corrections, ask 'are these logical or wrong?' rather than applying directly.
 §
-Cron job 'Adel Darwish folder check' (5d1b58e4ef6f) runs daily 9AM/5PM KSA, delivers to Telegram. Need to verify Telegram chat ID is correct — user said 'telegram' without specifying chat_id, so it uses the default gateway channel.
+CR sheet responses: short human language, cross-reference items instead of repeating. Never recommend/submit something before it's ready for review.
+§
+Supplier alternative requests: frame as 'options to choose from' not 'supply same material from multiple sources'. CG wants to see capabilities and select.
+§
+Shop drawing timelines: don't promise fixed 14-day extensions for MEP integration drawings — depend on coordination stage and MEP designer mobilization.
+§
+OneDrive files: never write directly — write to /tmp first, then cp to OneDrive path. Direct writes get reverted by sync. Read files one by one to avoid sync corruption.

@@ -51,6 +51,32 @@ The `search` method has the same bug. Use `search_read` with empty domain `[[]]`
 | `state` | selection | draft, confirmed, progress, done, cancel |
 | `origin` | char | Source document reference |
 
+## hr.leave (Time Off / Leave Requests)
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `id` | int | Leave record ID |
+| `name` | char | Leave reason / notes (often in Arabic) |
+| `employee_id` | many2one | `[id, 'Employee Name']` |
+| `holiday_status_id` | many2one | `[id, 'Leave Type']` — e.g. "Annual leave", "Sick leave" |
+| `date_from` | datetime | Start datetime (in UTC) |
+| `date_to` | datetime | End datetime (in UTC) |
+| `number_of_days` | float | Duration in days |
+| `duration_display` | char | Human-readable duration string |
+| `state` | selection | `draft`, `confirm`, `validate` (approved), `refuse`, `cancel` |
+
+**Domain filter by Odoo user:**
+```python
+[["employee_id.user_id", "=", 151]]  # 151 = Sultan Issa
+```
+
+**Employee lookup:**
+```python
+emp_ids = models.execute_kw(db, uid, pw, "hr.employee", "search",
+    [[["user_id", "=", 151]]])
+# Returns [975] for Sultan Issa
+```
+
 ## res.partner
 
 | Field | Type | Notes |

@@ -382,3 +382,10 @@ After all updates, verify totals by reading the Cost_Register raw values (not fo
 
 ### Small-Task Preference
 When the scope is large (10+ files, 800+ items), the user prefers **small sequential tasks** rather than large batch delegations. Present the work as a checklist of discrete steps and execute one at a time, getting user confirmation between each. Batch delegation of 3+ parallel subagents is acceptable for independent file operations, but stop and report between batches.
+
+### Full vs Clean Workbook Variants
+When creating factory cost detail workbooks, the user often needs **two variants** of the same file:
+- **Full** (with Summary + Gap_Analysis sheets) — for internal review and reconciliation
+- **Clean** (data-only, no summary/gap sheets) — for client-facing or simplified distribution
+
+See `references/full-vs-clean-workbook-pattern.md` for the complete pattern including sheet structure, styling rules, Python build pattern, and pitfalls.

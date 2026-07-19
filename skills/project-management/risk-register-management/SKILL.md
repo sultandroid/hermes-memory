@@ -23,7 +23,145 @@ metadata:
 
 ## System Architecture
 
-The Aseer Museum Risk Management System (RMS) has four synchronized documents:
+The Aseer Museum Risk Management System (RMS) has three register types, each with its own scoring scale per RMP:
+
+| Register | Scale | Range | Severity Bands | Audience |
+|----------|:-----:|:-----:|:---------------|----------|
+| **Master (PRR)** | P×S 1-4 | 1-16 | Critical ≥12, High 8-11, Medium 4-7, Low ≤3 | CG/PMC/executive |
+| **Design (DRR)** | P×S 1-5 | 1-25 | Critical ≥20, High 12-19, Medium 8-11, Low 4-7, Very Low 1-3 | Design team |
+| **HSE** | C×L 1-5 | 1-25 | Critical 16-25, High 10-15, Medium 5-9, Low 1-4 | Site/HSE team |
+
+**Do NOT mix scales** — severity bands don't align across registers. A "Medium 6" in PRR is "Low" in HSE.
+
+### Multi-Sheet Excel File Pattern
+
+The formal xlsx carries all three registers as **separate sheets**, each with its own scoring header:
+
+| Sheet | Content | Scale | Notes |
+|-------|---------|:-----:|-------|
+| Cover | Metrics, index, RMP note | — | Total = PRR only |
+| Dashboard | Severity/category charts, critical watchlist | — | **PRR only** — DRR and HSE are working registers, not CG-facing |
+| Risk Register | Master project risks (PRR) | P×S 1-4 | 54 risks, formula-driven scoring |
+| RBS | 18 categories with counts | — | PRR categories only |
+| Scoring Matrix | P×S 1-4 matrix | — | PRR scale only |
+| Register Control | Revision history | — | A01→C11 (optional — user may prefer to remove) |
+| Designer Risk Register (DRR) | Design-discipline risks | P×S 1-5 | 79 risks, own header, own scale |
+| HSE Risk Register (Fit-Out) | Task-level HSE controls | C×L 1-5 | 41 items, own header, own scale |
+
+**Dashboard rule:** Dashboard reflects only the master project risk register (PRR). DRR and HSE are working registers — design-team and site-team tools, not CG-facing. Different scoring scales can't be mixed in one chart. If a summary of all 3 registers is wanted, add a small count table at the top (e.g. "Master: 54 risks · DRR: 79 risks · HSE: 41 controls") but keep severity charts for PRR only.
+
+**Remove internal working sheets:** When copying DRR/HSE from a consolidated register, exclude internal working sheets (Status Audit, Duplicate Check, Overlap Analysis). These are one-time analysis tools, not part of the formal register. Keep only the main data sheets.
+
+**Risk IDs are immutable:** Never change a risk ID or code. Risk IDs are fixed references used across other documents (submittal registers, CR sheets, correspondence, RFIs, NCRs). Changing them breaks cross-references. The user explicitly enforces this rule.
+
+**Date Identified from version history:** Add a "Date Identified" column (after Risk ID) and a "Last Review" column (after Status) as best practice. Populate Date Identified from the register's version history (original creation date, then each revision's date for newly added risks). Last Review defaults to the current date for all risks on each review cycle.
+
+## OneDrive Write Safety
+
+OneDrive sync reverts direct writes to files in synced folders. Always write to `/tmp` first, then `cp` to the OneDrive path:
+
+```bash
+# Write to temp
+python3 /tmp/build_register.py  # writes to /tmp/risk_register.xlsx
+# Then copy to OneDrive
+cp /tmp/risk_register.xlsx "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/.../file.xlsx"
+```
+
+**Do NOT write directly to OneDrive paths with openpyxl.** The file will appear to save but OneDrive will revert it to the previous version. Always verify after copy by re-reading the file and checking sheet names.
+
+## Outlook Evidence Search Pattern
+
+When the user asks to check risk evidence against project emails, search the Outlook SQLite database directly:
+
+```python
+import sqlite3
+db = '/Users/mohamedessa/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite'
+conn = sqlite3.connect(db)
+cur = conn.cursor()
+cur.execute("""SELECT datetime(Message_TimeSent, 'unixepoch', 'localtime') as sent,
+       Message_NormalizedSubject, Message_Preview, Message_SenderList, Message_DisplayTo
+FROM Mail WHERE Message_NormalizedSubject LIKE ? ORDER BY Message_TimeSent DESC LIMIT 5""", (f'%{keyword}%',))
+```
+
+Key columns: `Message_TimeSent` (unix epoch), `Message_NormalizedSubject`, `Message_Preview`, `Message_SenderList`, `Message_DisplayTo`.
+
+Search patterns:
+- **Subject keywords** — use `LIKE '%keyword%'` for flexible matching
+- **Sender/recipient** — search `Message_SenderList` or `Message_DisplayTo`
+- **Date range** — filter by `Message_TimeSent > <unix_timestamp>`
+- **Attachments** — `Message_HasAttachment = 1`
+
+## Risk Status Update Workflow (Evidence-Based)
+
+When the user asks to check risks one by one and update based on evidence:
+
+1. **Read current status** from the xlsx (all risk IDs + statuses)
+2. **Search repo** for each risk ID — check `01_Registers/`, `03_Plans/08_Risk/`, `00_Status/`, `02_Schedule/`
+3. **Search Outlook** for key evidence emails (appointments, approvals, submissions, decisions)
+4. **Evaluate** — does the evidence justify a status change?
+   - **Mitigated** — root cause addressed but residual risk remains (e.g. drawing protocol issued, contract signed, design direction formalised)
+   - **Closed** — risk event cannot happen anymore (rare — only 3 DRR risks closed in this project)
+   - **No change** — risk still active, evidence confirms it
+5. **Update xlsx** — change status + add evidence to evidence column
+6. **Update repo markdown** — patch `01_Registers/risk_register.md` with new status and evidence
+7. **Move to next risk** without asking for confirmation (user explicitly wants this)
+
+## Construction Stage Sheet
+
+Add a separate "Construction Stage" sheet for site-level operational risks (C-001 to C-060). Same logic as DRR and HSE:
+
+- **Different audience** — site team, not CG/executive
+- **Different review frequency** — daily/weekly, not monthly
+- **RMP-compliant scoring** — P(1-4) x S(1-4) with formula-driven PxI and Severity
+- **Source and Linked PRR columns** — trace each construction risk to its source document (SI, NCR, MoM) and linked master risk
+
+## Response Strategy and Status Columns
+
+All register sheets must have **Response Strategy** and **Status** columns with dropdown validation:
+
+| Column | Dropdown Values | Sheets |
+|--------|----------------|--------|
+| Response Strategy | Avoid, Transfer, Mitigate, Accept (Active), Accept (Passive), SOW-Protect | Risk Register, DRR, Construction Stage, HSE |
+| Status (PRR/DRR/CS) | Open, Watch, Mitigated, Closed, Superseded | Risk Register, DRR, Construction Stage |
+| Status (HSE) | Ongoing, Completed, Pending, Not Required | HSE |
+
+Add dropdowns via openpyxl DataValidation:
+```python
+from openpyxl.worksheet.datavalidation import DataValidation
+dv = DataValidation(type='list', formula1='"Avoid,Transfer,Mitigate,Accept (Active),Accept (Passive),SOW-Protect"', allow_blank=True, showDropDown=False)
+ws.add_data_validation(dv)
+dv.add(f'L4:L57')
+```
+
+## Formula-Driven Dashboard/Cover/RBS
+
+All metrics must use COUNTIF/COUNTA formulas referencing the Risk Register sheet, not hardcoded values:
+
+| Sheet | Cell | Formula |
+|-------|:----:|---------|
+| Cover | Total | `=COUNTA('Risk Register'!B4:B57)` |
+| Cover | Critical | `=COUNTIF('Risk Register'!K4:K57,"Critical")` |
+| Dashboard | Critical count | `=COUNTIF('Risk Register'!K4:K57,"Critical")` |
+| Dashboard | COM count | `=COUNTIF('Risk Register'!D4:D57,"COM")` |
+| RBS | COM count | `=COUNTIF('Risk Register'!D4:D57,"COM")` |
+| RBS | Total | `=SUM(C4:C21)` |
+| Scoring Matrix | P4xS1 | `=F6*B$4` |
+
+## Date Identified and Last Review Columns
+
+Add these as best-practice columns to the Risk Register:
+
+| Column | Position | Purpose |
+|--------|:--------:|---------|
+| Date Identified | After Risk ID (col C) | When the risk was first raised |
+| Last Review | After Status (col O) | When the risk was last assessed |
+
+Populate Date Identified from the register's version history:
+- Original risks → first register creation date
+- Risks added in each revision → that revision's date
+- Map by risk ID, not by row position
+
+## Source documents
 
 | Document | Format | Location | Role |
 |----------|--------|----------|------|
@@ -83,6 +221,28 @@ Instead write:
 - "Revised scoring methodology per project requirements"
 
 ### Write Like an Engineer, Not Like AI
+
+### No AI Fingerprints in Client-Facing Documents
+
+**Hard rule:** The user will reject any document that contains AI model names, automation references, or internal tooling mentions. This applies to ALL documents — Excel, markdown, DOCX, registers.
+
+| ❌ Wrong | ✅ Right |
+|----------|----------|
+| `owner_agent: Hermes` | `owner_agent: Technical Office` |
+| "Auto-synced by risk_sync.py" | Remove entirely or say "Updated per project records" |
+| "Source of truth: 06_Risk_System/risks.json" | "Source: Project Risk Register" |
+| "Generated by Claude/Grok/Kimi" | "Prepared by Technical Office" |
+| "Full rebuild from repo" | "Revised risk distribution" |
+| "Markdown import of xlsx" | "Data migration completed" |
+
+**Checklist before delivering any document:**
+- [ ] `owner_agent` in YAML frontmatter = `Technical Office` (never `Hermes`, `Claude`, `Kimi`, etc.)
+- [ ] No AI model names anywhere in the document body
+- [ ] No file paths to internal repo (`01_Registers/`, `03_Plans/`, `06_Risk_System/`)
+- [ ] No automation tool references (`risk_sync.py`, `update_statistics.py`)
+- [ ] No JSON/SoT references in client-facing text
+- [ ] Revision history entries describe content changes, not formatting or tooling
+- [ ] Source references point to project documents (contract, SOW, CG response, MoM), not internal data stores
 
 ### Write Like an Engineer, Not Like AI
 
@@ -188,6 +348,18 @@ When the user provides new risk intel (supplier datasheet, new object list, fabr
 
 When the PM or a stakeholder sends an Excel risk register that should be aligned with the live repo register, do NOT assume they are in sync. Auditing an external register requires systematic cross-comparison across multiple dimensions.
 
+**Two common audit scenarios:**
+1. **Stale PM register** — PM sends an old version that needs updating. Compare counts, statuses, and evidence freshness.
+2. **Different-source register** — A consolidated register from a different source (e.g. an earlier version from a different agent/tool) that has risks the live register may be missing. This requires a **risk-by-risk cross-reference** to find gaps.
+
+**For scenario 2 (gap-finding audit):**
+- Read ALL risks from the external register (risk ID + event description)
+- Read ALL risks from the live register
+- Create a side-by-side mapping: external risk → live risk ID (or "MISSING")
+- A risk is "covered" if the same risk event exists in the live register, even if the ID or category changed
+- Report the gaps as a table: external ID, external risk event, live status (covered/missing), and if missing, the proposed new ID and severity
+- **Do not assume ID collisions mean the same risk** — read the risk event descriptions side by side. Same ID may describe a completely different risk event.
+
 ### Audit Checklist
 
 | Check | What to Look For | How to Resolve |
@@ -243,6 +415,7 @@ When an external register has risks the repo doesn't:
 9. Log in the weekly review.
 10. Tag as "Pending import" in the register cross-reference until PM confirms.
 11. **Stale pending-import tags get cleaned up** — other agents may remove stale pending-import cross-references if the risks aren't added within the same session. Either import immediately after audit, or update the tag to show actual status.
+12. **Update ALL 5 xlsx sheets** — Risk Register (append rows), Cover (totals), Dashboard (counts), RBS (category counts), Register Control (revision history). See `references/xlsx-multi-sheet-update-pattern.md`.
 
 ### Step 2c: Merge External Risks into JSON SoT (Programmatic Bulk Import)
 
@@ -676,6 +849,19 @@ This applies to:
 
 If the person is unknown, use the role title as a placeholder but flag it for the PM to fill in the real name.
 
+### RMP Is a Plan, Register Is Live Data — Don't Re-Version the RMP for Register Changes
+
+The RMP (Risk Management Plan) is a **methodology document** — it defines *how* risks are identified, scored, and managed. It is submitted to CG once and approved once. The risk register is a **live data file** — it is updated daily/weekly as risks emerge, evolve, and close.
+
+**Rule:** Do NOT bump the RMP revision just because the register changed. The RMP's snapshot is a point-in-time reference. The register cover should note: "RMP submitted [date]. This register is the live daily file — supersedes RMP snapshot."
+
+Signals that trigger this correction:
+- User says "RMP already submitted, no need to version it again"
+- User says "the risk register is what we update daily and weekly"
+- You propose re-issuing the RMP to match new register counts
+
+**Fix:** Add a note on the register cover/header explaining the RMP was submitted on [date] and this register is the live file. Do not create an RMP Rev01 just because the register grew from 29 to 52 risks.
+
 ### Revision Entries Must Be Client-Appropriate
 
 **Hard rule:** Revision entries describe what changed that affects the content, NOT internal formatting details. The user explicitly corrected this.
@@ -1090,6 +1276,7 @@ For large design packages spanning many disciplines (e.g. full museum fit-out wi
 ### Reference Files
 
 - `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
+- `references/consolidated-register-audit-workflow.md` — Audit old consolidated Excel registers against live register: find gaps, add missing master risks, copy DRR/HSE sheets as separate tabs with correct scoring scales
 - `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
 - `references/register-merge-id-collisions.md` — ID collision patterns and resolutions from the C08→C09 merge, with field structure reference and param order pitfalls
 - `references/unified-register-template.md` — Standard 14-column template for all register sheets with identical headers, widths, formulas, dropdowns, and formatting rules

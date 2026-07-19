@@ -156,17 +156,27 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 | Subcontractor Prequal (PQ-*) | `24_Subcontractors/{NN}_{Specialist}/01_Prequalification/` |
 | Subcontractor SOW (ZD-0085, ZD-0087) | `24_Subcontractors/{NN}_{Specialist}/01_Scope_of_Work/` |
 | Graphics Specialist SOW (ZD-0085) | `24_Subcontractors/04_Graphics_Graphite/01_Scope_of_Work/` |
-| Mechanical Engineer CV (ZD-0087) | `24_Subcontractors/05_Mechanical_Engineer/01_Scope_of_Work/` |
+| Mechanical Engineer CV / Replacement (ZD-0087) | `24_Subcontractors/05_Mechanical_Engineer/01_Scope_of_Work/` |
 | Contracts/Agreements (main contract) | `00_Contracts/` |
+| MEP / Subcontractor Agreements | `00_Contracts/` |
 | Subcontractor Contracts | `24_Subcontractors/{NN}_{Specialist}/02_Contract/` |
 | Proposals | `24_Subcontractors/{NN}_{Specialist}/08_RFP_and_Proposals/` |
 | Design Submittals — DD Gate (1G-*) | `02_Submittals/01_DD_Gate/{Discipline}/` |
-| DD Gate — Architecture (1A0-1G-*) | `02_Submittals/01_DD_Gate/Architecture/` |
-| DD Gate — Civil/Structural (1C0-1G-*) | `02_Submittals/01_DD_Gate/Civil/` |
-| DD Gate — MEP/HVAC (1M0-1G-*) | `02_Submittals/01_DD_Gate/MEP/` |
+| DD Gate — Architecture (1A0-1G-0003/4/5/6) | `02_Submittals/01_DD_Gate/Architecture/` |
+| DD Gate — Civil/Structural (1C0-1G-0001) | `02_Submittals/01_DD_Gate/Civil/` |
+| DD Gate — MEP/HVAC (1M0-1G-0001) | `02_Submittals/01_DD_Gate/MEP/` |
+| Technical Query (TQ-*) | `03_Design_Files/{Discipline}/` |
+| Risk Management Plan (ZD-0093, PL-02.17) | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
+| Technical Query (TQ-*) | `03_Design_Files/{Discipline}/` |
+| Contracts (ZNA, subcontractor agreements) | `00_Contracts/` |
 | Design Studies (DS01, DDD-*) | `03_Design_Files/` |
 | DWG drawings | `03_Design_Files/` |
-| Electrical Assessments (ZD-0088–ZD-0092) | `03_Design_Files/Electrical/{Assessment}/` |
+| Electrical Assessments — ATS (ZD-0088) | `03_Design_Files/Electrical/ATS_Assessment/` |
+| Electrical Assessments — Containment (ZD-0089) | `03_Design_Files/Electrical/Containment_Assessment/` |
+| Electrical Assessments — MDPs (ZD-0090) | `03_Design_Files/Electrical/Current_Condition_MDP/` |
+| Electrical Assessments — Earthing (ZD-0091) | `03_Design_Files/Electrical/Earthing_Lightning/` |
+| Electrical Assessments — UPS (ZD-0092) | `03_Design_Files/Electrical/UPS_Assessment/` |
+| Fire Alarm & Suppression (ZD-0067) | `03_Design_Files/Electrical/Fire_Alarm_Suppression/` |
 | Material Board Review Comments | `03_Design_Files/FF&E_Material_Boards/` |
 | Patinated Brass / Material Finish Testing Letters | `03_Design_Files/FF&E_Material_Boards/` |
 | Door/Joinery Technical Reviews | `03_Design_Files/Architecture/Door_Schedule/` |
@@ -179,7 +189,6 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 | General Documents (ZD-*) | `04_Docs/02_Plans_and_Procedures/{folder}/` |
 | Weekly / Daily Reports | `00_Status/` |
 | Meeting Minutes (MOM) | `00_Status/` |
-| Material Board Review Comments | `03_Design_Files/FF&E_Material_Boards/` |
 | Management Plans Status | `04_Docs/09_Registers/` |
 | Design Management / Tracking | `03_Design_Files/` |
 | Safety / HSE Documents | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/` |
@@ -188,9 +197,12 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 | Schedule files (.xer) | `02_Schedule/` |
 | Risk Register | `04_Docs/09_Registers/23_Project_Risk_Register/` |
 | Invoices | `00_Contracts/Invoices/` |
+| General CVs (not tied to specific subcontractor) | `24_Subcontractors/09_General/01_Prequalification/` |
+| Rigging contractor proposals | `24_Subcontractors/10_Rigging/01_Prequalification/` |
 | Aconex notifications (no att) | Skip — CDE-based, reference only |
 | Ops/HR/ERP | Skip — not project-critical |
 | SharePoint link notifications | Skip — not project-critical |
+| Zamzam project files (ZAM-NWC prefix) | Route to `/Volumes/MIcro/Work/Zamzam-Visitor-Center/` |
 
 ## Step 4 — Update Repo Registers
 
@@ -250,5 +262,8 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 - **AppleScript -2700 error on some emails** — `osascript` returns `error -2700` (generic Outlook error) on certain messages, typically those with malformed attachment metadata or very long subject lines. This is an Outlook internal issue, not a script problem. Skip the email and move on; the attachment may still be accessible via SQLite `PathToDataFile` fallback. Do not retry the same email more than once per scan cycle.
 - **Duplicate attachments** (same file from different senders) — route both to same destination; don't deduplicate unless exact byte match confirmed
 - **Aconex notification emails** have no attachments and no email address — filter by `Message_SenderList LIKE '%Aconex%'`
-- **Non-project emails to filter out**: Saudi Wood Expo, Instagram, Cognito Forms, Bluebeam Events, Power Automate reminders, FJDynamics webinars, visitor registration, car/vehicle requests, ERP notifications (salary, tickets, leave, POs), SharePoint link notifications
+- **Non-project emails to filter out**: Saudi Wood Expo, Instagram, Cognito Forms, Bluebeam Events, Power Automate reminders, FJDynamics webinars, visitor registration, car/vehicle requests, ERP notifications (salary, tickets, leave, POs), SharePoint link notifications, Read AI meeting summaries, SPMS notifications, vacation notices
 - **Review log format**: Save to `~/aseer-museum-pm/03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML frontmatter, summary, key findings table, Aconex transmittals list, filtered-out items count, and registers-updated section
+- **Routing script: use document-code patterns, not email-ID prefixes.** The old `routing-script-pattern.py` used email-ID-prefixed regexes (e.g. `r"48608_.*ZD-0085"`). These are session-specific — they only match one scan cycle. Use document-code-based patterns (e.g. `r"ZD-0085"`) that work across all sessions. The routing script at `references/routing-script-pattern.py` now uses the document-code approach. When updating routes, add document codes, not email IDs.
+- **Review log is append-only, not overwrite.** When a second scan runs on the same calendar day, write a new review log with the same date filename — the existing file from the earlier scan is the session's record. Overwriting loses the earlier scan's findings. Use a distinct timestamp in the `last_updated` frontmatter to distinguish runs.
+- **Generator script must be read before write_file.** When a sibling subagent modifies `/tmp/gen_extract_scripts.sh` concurrently, `write_file` overwrites without merging. Read the file first, or use a unique temp path per session to avoid collisions.

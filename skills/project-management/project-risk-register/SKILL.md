@@ -279,6 +279,73 @@ Different registers on the same project can use different scales. Document each 
 
 When reconciling, verify each register's scale matches its actual data distribution. A mismatch means either the thresholds or the scoring data needs updating.
 
+### Multi-Register Workbook Architecture
+
+When the project has multiple risk registers (PRR + DRR + HSE) in one xlsx, each with different scoring scales, use **separate sheets** — never mix scales in one sheet or use a "Type" column.
+
+| Register | Scale | Range | Critical | High | Medium | Low | Formula |
+|----------|-------|-------|----------|------|--------|-----|---------|
+| Master (PRR) | P×S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 | `=IF(I>=12,"Critical",IF(I>=8,"High",IF(I>=4,"Medium","Low")))` |
+| Design (DRR) | P×I 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 | `=IF(I>=16,"Critical",IF(I>=10,"High",IF(I>=5,"Medium","Low")))` |
+| HSE | C×L 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 | `=IF(I>=16,"Critical",IF(I>=10,"High",IF(I>=5,"Medium","Low")))` |
+
+### Dashboard Rule for Multi-Register Files
+
+The **Dashboard reflects only the master project risk register (PRR)**. DRR and HSE are working registers — design-team and site-team tools, not CG-facing. Different scoring scales can't be mixed in one chart.
+
+If a summary of all 3 registers is wanted, add a small count table at the top (e.g. "Master: 54 risks · DRR: 79 risks · HSE: 41 controls") but keep severity charts, critical watchlist, and category distribution for PRR only.
+
+### HSE Score Coloring
+
+For HSE registers (C×L 1-5 scale), color both Init. Score and Res. Score columns:
+
+```python
+HSE_FILLS = {
+    'critical': (PatternFill(start_color='FF4444', end_color='FF4444', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='FFFFFF')),
+    'high': (PatternFill(start_color='FF8C00', end_color='FF8C00', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='FFFFFF')),
+    'medium': (PatternFill(start_color='FFD700', end_color='FFD700', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='000000')),
+    'low': (PatternFill(start_color='90EE90', end_color='90EE90', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='000000')),
+}
+
+def hse_severity(score):
+    if score is None: return None
+    try: s = int(score)
+    except: return None
+    if s >= 16: return 'critical'
+    if s >= 10: return 'high'
+    if s >= 5: return 'medium'
+    return 'low'
+```
+
+### Register Control Sheet
+
+A "Register Control" sheet (revision history) is optional. The user may decide it's unnecessary since the Cover already has the doc ref, revision, and date. If removed, move key info (doc ref, RMP reference) to the Cover footer. Keep the file lean — 7 sheets instead of 8.
+
+### Risk IDs Are Immutable
+
+**Never change a risk ID or code.** Risk IDs are fixed references used across other documents (submittal registers, CR sheets, correspondence, RFIs, NCRs). Changing them breaks cross-references. The user explicitly enforces this rule.
+
+### Date Identified from Version History
+
+Add a "Date Identified" column (after Risk ID) and a "Last Review" column (after Status) as best practice. Populate Date Identified from the register's version history:
+
+| Source | Date | Risks |
+|--------|:----:|-------|
+| Original register creation | e.g. 2026-06-08 | All original risks |
+| C05 update | e.g. 2026-07-14 | Risks added in that revision |
+| C09 update | e.g. 2026-07-18 | Risks added in that revision |
+| C11 update | e.g. 2026-07-19 | Risks added in that revision |
+
+Last Review defaults to the current date for all risks on each review cycle.
+
+### OneDrive Safe Reading
+
+When reading Excel files from OneDrive:
+- **Read one file at a time** — never batch-read or patch directly on OneDrive
+- Avoid `mv` or `rm -rf` on OneDrive files (corrupts sync / propagates deletions)
+- If "Resource deadlock avoided" on read, quit OneDrive, wait 30s, retry
+- Write modified files back to the same path — OneDrive syncs the delta
+
 ## RBS Categories Standard (8)
 
 | # | Category | Description |

@@ -17,21 +17,21 @@ triggers:
 
 ## Project Map
 
-| Code | Project | Client (Final Folder) | JN | Area (m²) | Location |
-|------|---------|-----------------------|-----|-----------|----------|
-| 01 | Al Wahi Gift Shop | Tiba Gift comp_ | 367+255 | 240 | Jabal Alnour, Makkah |
-| 02 | Holy Quran Gift Shop | Tiba Gift comp_ | 367 | 194 | Jabal Alnour, Makkah |
-| 03 | Qahwatna Cafe | Qahwitna comp_ | 262 | 77.5 | Makkah |
-| 04 | Hira Cafe | Qahwitna comp_ | 262 | 398 | Makkah |
-| 05 | Jabal Omar VIP Stores | _Final (root) | -- | TBD | Makkah |
-| 06 | As Safiyyah Giftshop | Tiba Gift comp_ | 329 | 445 | Madinah |
-| 07 | Khair Al-Khalq Store | Tiba Gift comp_ | 403 | 173 | Madinah |
-| 08 | Qahwatna Al-Safiya Cafe | Qahwitna comp_ | 359 | 26 | Madinah |
-| 09 | Tzkarat Store | Tezkarat Trading Com_ | 279 | 51 | Makkah |
-| 10 | Rateeb Store | Rateeb Trading Com_ | 282 | 42 | Makkah |
-| 11 | Najdi Coffee | Qahwitna comp_ | 345 | 173 | Makkah |
-| 12 | Ice Coffee Shop | Qahwitna comp_ | 312 | TBD | Makkah |
-| 13 | Hera Visitor Center | _Final (root) | 81 | TBD | Makkah - Jabal Alnour |
+| Code | Project | Client (Final Folder) | Organized Company Folder | JN | Area (m²) | Location |
+|------|---------|-----------------------|--------------------------|-----|-----------|----------|
+| 01 | Al Wahi Gift Shop | Tiba Gift comp_ | Tiba_Gift_Company | 367+255 | 240 | Jabal Alnour, Makkah |
+| 02 | Holy Quran Gift Shop | Tiba Gift comp_ | Tiba_Gift_Company | 367 | 194 | Jabal Alnour, Makkah |
+| 03 | Qahwatna Cafe | **Tiba Gift comp_** | **Tiba_Gift_Company** | 262 | 77.5 | Makkah |
+| 04 | Hira Cafe | Qahwitna comp_ | Qahwatna_Company | 262 | 398 | Makkah |
+| 05 | Jabal Omar VIP Stores | _Final (root) | (standalone) | -- | TBD | Makkah |
+| 06 | As Safiyyah Giftshop | Tiba Gift comp_ | Tiba_Gift_Company | 329 | 445 | Madinah |
+| 07 | Khair Al-Khalq Store | Tiba Gift comp_ | Tiba_Gift_Company | 403 | 173 | Madinah |
+| 08 | Qahwatna Al-Safiya Cafe | Qahwitna comp_ | Qahwatna_Company | 359 | 26 | Madinah |
+| 09 | Tzkarat Store | Tezkarat Trading Com_ | Tezkarat_Trading_Company | 279 | 51 | Makkah |
+| 10 | Rateeb Store | Rateeb Trading Com_ | Rateeb_Trading_Company | 282 | 42 | Makkah |
+| 11 | Najdi Coffee | Qahwitna comp_ | Qahwatna_Company | 345 | 173 | Makkah |
+| 12 | Ice Coffee Shop | Qahwitna comp_ | Qahwatna_Company | 312 | TBD | Makkah |
+| 13 | Hera Visitor Center | _Final (root) | (standalone) | 81 | TBD | Makkah - Jabal Alnour |
 
 ## Paths
 ```
@@ -54,18 +54,20 @@ _Final/
 ├── Tiba Gift comp_/                    ← DO NOT DELETE OR RENAME (company folder)
 │   ├── 01_Al_Wahi_Gift_Shop/
 │   │   ├── 01_Al_Wahi_Gift_Shop.xlsx              (accounting)
-│   │   └── 01_Al_Wahi_Gift_Shop_Section5_Detail.xlsx (factory detail)
+│   │   └── 01_Al_Wahi_Gift_Shop_Factory_Cost_Details.xlsx (factory detail)
 │   ├── 02_Holy_Quran_Gift_Shop/
 │   │   ├── 02_Holy_Quran_Gift_Shop.xlsx
-│   │   └── 02_Holy_Quran_Gift_Shop_Section5_Detail.xlsx
+│   │   └── 02_Holy_Quran_Gift_Shop_Factory_Cost_Details.xlsx
+│   ├── 03_Qahwatna_Cafe/                           ← Project 03 is under Tiba Gift, NOT Qahwitna
+│   │   ├── 03_Qahwatna_Cafe.xlsx
+│   │   └── 03_Qahwatna_Cafe_Factory_Cost_Details.xlsx
 │   ├── 06_As_Safiyyah_Giftshop/
 │   │   ├── 06_As_Safiyyah_Giftshop.xlsx
-│   │   └── 06_As_Safiyyah_Giftshop_Section5_Detail.xlsx
+│   │   └── 06_As_Safiyyah_Giftshop_Factory_Cost_Details.xlsx
 │   └── 07_Khair_Al_Khalq_Store/
 │       ├── 07_Khair_Al_Khalq_Store.xlsx
 │       └── 07_Khair_Al_Khalq_Store_Section5_Detail.xlsx
 ├── Qahwitna comp_/                     ← DO NOT DELETE OR RENAME
-│   ├── 03_Qahwatna_Cafe/
 │   ├── 04_Hira_Cafe/
 │   ├── 08_Al_Safiya_Cafe/
 │   ├── 11_Najdi_Coffee/
@@ -137,6 +139,7 @@ ALL SQL backup files examined are **structure-only** (CREATE TABLE, no data in e
 
 ## Source Folders & FCA Files
 See `references/source-folder-mapping.md` for the complete source-folder-to-FCA-file mapping, glob patterns, and labor data availability per project.
+See `references/qahwatna-cafe-factory-cost-data.md` for the verified Qahwatna Cafe (Project 03) factory cost breakdown (279,610 SAR total), including the corrected client mapping (Tiba Gift, not Qahwitna).
 
 ## Factory Work Report Template
 See `references/factory-work-report-template.md` for the 3-sheet Excel structure.
@@ -174,11 +177,96 @@ When building reports for all 13 projects at once:
 4. Use shared `build_report(proj)` function that reads from the embedded dicts
 5. Always backup existing `_Final` files before overwriting: `shutil.copy2(final_path, final_path.replace('.xlsx', f'_backup_{timestamp}.xlsx'))`
 
+## Primary Working Directory
+The user now works in `00_Organized_13_Project_Factory_Reconciliation/` (not `_Final/`). This is the **active workspace** — all new work, fixes, and clean copies go here. This folder has:
+- Per-company subfolders (Tiba_Gift_Company/, Qahwatna_Company/, Rateeb_Trading_Company/, Tezkarat_Trading_Company/, Unassigned_Company/)
+- Per-project subfolders inside each company folder
+- Each project has: `{Project}_Factory_Cost_Details.xlsx` + `Main_Accounting_Sheet.xlsx`
+- `_Control/` folder with: Project_JN_Mapping.xlsx, Master_Workers_Reference.xlsx, Validation_Log.xlsx, Source_Manifest.xlsx
+
+**CRITICAL:** The `Main_Accounting_Sheet.xlsx` files may contain **wrong project data** — always verify the Summary sheet's project name and totals match the expected project before using as reference. Some files were copied from other projects (e.g. Al Wahi's Main_Accounting_Sheet showed Holy Quran data).
+
 ## Workflow: Sequential Processing (one project at a time)
 - Process projects **one by one**, not all at once. User explicitly prefers this.
 - Start with project 01 and proceed in order (01 → 02 → 03 → ... → 13).
 - For each project: verify data → build/rebuild → present for confirmation → move to next.
 - Do NOT batch-generate reports for all 13 projects in a single script run.
+- When user says "fix this gap", adjust the forecast line to match the target exactly. Update all 3 sheets (Materials & POs, Summary, Gap_Analysis) to reflect the change.
+
+## User Communication Preferences
+- **English only** — never present data in Arabic. The user cannot read Arabic. Translate all category names, descriptions, and notes to English before showing in tables or file content.
+- **"fix" = proceed with default/verified-only approach** — when the user says "fix" as a single-word command after seeing flagged items, it means: exclude all "Needs Review" and "Not Related" items, use only verified items, and build the files immediately. Do not ask for confirmation on each flagged item.
+- **"next" = move to next project** — after confirming a project is done, "next" means proceed to the next project in sequence (01→02→03→...→13).
+
+## Handling Audit-Flagged Items (Projects with verification flags)
+Some projects (like Qahwatna Cafe) have items flagged as "Needs Review" or "Not Related" in the accounting file. When building factory cost details:
+
+1. **Present the full picture first** — show all items grouped by category with totals, then list only the flagged items with their amounts and flags
+2. **Let the user decide** — ask specifically which flagged items to include/exclude. Present as concise numbered questions, not a wall of text
+3. **"fix" = exclude all flagged** — when user says "fix", exclude everything flagged as "Needs Review" or "Not Related". Build files with only verified items.
+4. **Document the exclusion** — in the Gap_Analysis sheet, note the excluded items and their total amount so the gap is explainable
+
+## Gap Closure Order: Dates FIRST, Then Gaps
+**CRITICAL ORDER — failure to follow this will lose work:**
+1. Fix dates first (redistribute forecast dates across project range)
+2. Then fix gaps (adjust forecast amounts to match targets)
+3. Then generate clean copy (if requested)
+
+Date redistribution re-saves the file and **overwrites any gap fixes** applied earlier. Always do dates → gaps → clean copy in sequence.
+
+## Two-File Output Pattern (per project)
+
+Each project gets **two** factory cost detail files:
+
+1. **`{Project}_Factory_Cost_Details.xlsx`** (full version)
+   - 3 data sheets: Labour Timesheet, Materials & POs, Other Expenses
+   - 2 summary sheets: Summary (3-line table), Gap_Analysis (target vs actual)
+   - Navy #1F3864 headers, yellow #FFD700 total rows, #,##0.00 number format
+
+2. **`{Project}_Factory_Cost_Details_Clean.xlsx`** (clean version)
+   - Same 3 data sheets: Labour Timesheet, Materials & POs, Other Expenses
+   - NO Summary or Gap_Analysis sheets — clean data only
+   - Same styling as full version
+
+### Generator Script Pattern
+
+Save reusable generator scripts to `Scripts/generate_{project}_factory_cost.py`. The script should:
+
+1. **Embed data directly** — read FCA files once via `read_file`, extract labour/PO/reallocation data, and hardcode it as Python lists in the script. Do NOT parse FCA XLSX programmatically — formats vary per project.
+2. **Define data as tuples** — use `(trade, records, hours, cost)` for labour, `(po_ref, description, amount)` for materials, `(description, amount)` for other expenses.
+3. **Use consistent tuple indexing** — labour tuples have 4 elements (index 3 = cost), materials have 3 elements (index 2 = amount), other have 2 elements (index 1 = amount). **Pitfall:** mixing up tuple indices causes `IndexError` at runtime.
+4. **Build both files** — full version (5 sheets) and clean version (3 sheets, no Summary/Gap_Analysis).
+5. **Copy to both directories** — Organized (`00_Organized_13_Project_Factory_Reconciliation/{Company}/{Project}/`) and _Final (`_Final/{Client_Folder}/{Project}/`).
+6. **Verify company mapping** — check the project map in this skill before hardcoding paths. The project map is authoritative; do not guess the company folder from the project name alone.
+
+See `scripts/generate-hira-cafe-factory-cost.py` for a working example.
+
+### 3-Row Factory Cost Schema
+The standard factory cost structure has exactly 3 components:
+
+| Component | Sheet | Content |
+|-----------|-------|---------|
+| Factory Labour | Labour Timesheet | Worker-level records: #, Date, Worker Name, Trade, Hours, Rate/hr, Cost (SAR), Description |
+| Raw Materials | Materials & POs | PO-level records: PO#, Date, Description, Qty, Unit Cost, Line Total |
+| Other / Logistics | Other Expenses | Expense records: #, Date, Category, Amount (SAR), Details, Ref |
+
+### Data Sources for Each Component
+- **Labour**: From FCA Dashboard "JOB CLASSIFICATION (Labor by Type)" table. When only trade-level summaries exist (not individual worker entries), show breakdown by trade rather than individual timesheet rows.
+- **Materials**: From FCA Cost_Register or Factory_Work sheets — PO# references with amounts.
+- **Other**: Fleet/Transport + Reallocated costs from FCA sheets.
+
+### Target Directories
+Both files go in two locations:
+1. `00_Organized_13_Project_Factory_Reconciliation/{Company}/{Project}/` (active workspace)
+2. `_Final/{Client_Folder}/{Project}/` (delivery copy)
+
+### Accounting File Factory Cost Section
+The main accounting file (`تكاليف المشروع.xlsx`) may have a "تكاليف المصنع (FACTORY COST)" section with formulas that reference specific cells. These formulas are often:
+- Raw Materials = SUM of one category only (not all materials)
+- Factory Labor = one external labor line (not the full timesheet)
+- No Other Expenses row
+
+**The clean detail file is the comprehensive version.** The accounting file's factory cost section is often a placeholder — do not expect it to match the detail file's totals.
 
 ## Key Rules
 - **Supervision = 10% of (Accounting + Factory)** — apply to the sum, not just factory cost
@@ -187,6 +275,59 @@ When building reports for all 13 projects at once:
 - **Shared items** split by area percentage; equal split when area unknown
 - **Factory labor** from FCA analysis aggregated as one "Factory Labor Cost" line
 - **Header** on every file: project name, location, area, JN, code
+
+## File Naming Convention
+- Detail files: `{Project}_Factory_Cost_Details.xlsx` (NOT `Section5_Detail` or `Factory_Details`)
+- Main accounting: `{Project}.xlsx`
+- Organized reconciliation folder: `00_Organized_13_Project_Factory_Reconciliation/{Company}/{Project}/{Project}_Factory_Cost_Details.xlsx` and `Main_Accounting_Sheet.xlsx`
+- When renaming: rename ALL copies across both `Section5_Factory_Details/` and `_Final/` and `00_Organized_13_Project_Factory_Reconciliation/` folders
+
+## Gap Analysis Between Accounting & Factory Costs
+When user asks about gaps, produce a table comparing:
+1. **Accounting sheet** (FCA Cost_Register) — what was paid/invoiced
+2. **SysLeaders actual attendance** (Section5_Detail / Factory_Cost_Details) — real worker records
+3. **FCA Dashboard** (SysLeaders summary) — total in system
+4. **Current Factory_Cost_Details** — what the file currently shows
+
+Explain WHY each gap exists (e.g. internal factory wages not in accounting, records beyond API extract limit). Never fabricate numbers to fill gaps — present the real data and let the user decide how to handle it.
+
+### Date Range Alignment Across All Sheets
+When user says "fix the dates for all sheets should be the same project range":
+
+1. **Determine the project date range** from real data (SysLeaders attendance records). Use the min/max dates from Labour Timesheet real rows.
+2. **Redistribute forecast dates** evenly across the project range:
+   - Count forecast rows in Labour Timesheet and Other Expenses
+   - For each forecast row, calculate: `offset = total_days * i / (count - 1)`
+   - Set date = `start + timedelta(days=offset)`
+   - Format as `dd/mm/YYYY`
+3. **CRITICAL: Do this BEFORE fixing gaps.** Date redistribution re-saves the file and will overwrite any gap fixes you applied earlier.
+4. **Verify** — re-read all sheets and confirm dates span the project range
+
+## Gap Closure (when user says "fix this gap")
+When user explicitly says "fix this gap" or "close this gap":
+
+**CRITICAL ORDER: Fix dates FIRST, then fix gaps.** Date redistribution overwrites gap fixes because it re-saves the file. Always do dates → gaps in sequence.
+
+### Step-by-step gap closure:
+1. **Identify the gap** — compare Real + Forecast vs Target. The gap = Target - (Real + Forecast)
+2. **Adjust the forecast line** — find the forecast row (e.g. FCST-001 in Materials & POs) and increase its amount by the gap value
+3. **Update all summary rows in the same sheet:**
+   - Forecast Total = old forecast + gap
+   - GRAND TOTAL = Real + new Forecast (= Target)
+   - Remaining Gap = 0
+4. **Update Summary sheet** — same component row: Forecast, Total, Target, Gap=0, Status="Closed"
+5. **Update Gap_Analysis sheet** — same component row: Forecast, Total, Gap=0
+6. **Update TOTAL row** in both Summary and Gap_Analysis:
+   - Forecast = sum of all component forecasts
+   - Total = sum of all component totals
+   - Gap = 0, Status = "Closed"
+7. **CRITICAL: Use explicit row index for Summary TOTAL row** — openpyxl's `data_only=True` vs `data_only=False` can cause row matching by column value to fail silently. After matching by content, also verify by row index (row 7 in Summary, row 6 in Gap_Analysis for Al Wahi). Assign cells by index: `row[3].value = new_forecast`, `row[4].value = new_total`, `row[6].value = 0`, `row[7].value = 'Closed'`.
+8. **Verify** — re-read with data_only=True, confirm every sheet's totals match
+
+### Common gap values (Al Wahi example):
+- Materials gap: 985.59 → adjust FCST-001 from 34,521.75 to 35,507.34
+- Labor gap: -1.80 (rounding, essentially closed)
+- Other: usually 0 if all forecast
 
 ## Section 5 Detail Files (CRITICAL — user is explicit about this)
 
@@ -201,7 +342,7 @@ The main `_Final/{Project}.xlsx` has Section 5 (تكاليف المصنع) with 
 - **Never duplicate:** external labor, AC units, cashier devices, air curtains, gypsum, transport — these are Section 1 items
 - **Verify against main file before delivery** — compare each sheet total against the corresponding Section 5 line
 - **Read the main _Final file's Section 5 values FIRST** before building the detail report. Parse the 3 lines (Labor, Materials, Other) and their totals. Each detail sheet must equal its corresponding line exactly.
-- **File naming convention:** `{Project}_Section5_Detail.xlsx` (not `Factory_Labor_POs_Expenses.xlsx`)
+- File naming convention: `{Project}_Factory_Cost_Details.xlsx` (not `Section5_Detail` or `Factory_Labor_POs_Expenses.xlsx`)
 - **Cleanup rule:** After building detail files, remove all old `*Factory_Labor_POs_Expenses.xlsx` files and `*_backup_*.xlsx` files. Each client folder should have only: original Excel + Section5_Detail file.
 - See `references/factory-work-report-template.md` for full template
 
@@ -363,6 +504,8 @@ Maintain two distinct outputs when evidence is incomplete:
 Do NOT create or label a client-ready export while a material unsupported bridge remains. Clean presentation must never conceal an evidence gap or turn a `Pending` line into `Complete`.
 
 ## Pitfalls
+- **Accounting file factory cost section is often a placeholder** — formulas may reference only one material category (e.g. Wood & Carpentry subtotal) and only one labor line (external labor), not the full scope. The clean detail file is the comprehensive version; do not expect the accounting file's factory cost section to match.
+- **Trade-level summaries vs individual entries** — when source data only has trade-level breakdowns (carpenter: 18,872 SAR, labor: 12,379 SAR, etc.) without individual worker/date records, show the breakdown by trade in the Labour sheet. This is acceptable — the user understands when only aggregate data is available.
 - **Factory_Details labor subtotal may be hardcoded and wrong** — always verify that the subtotal matches the sum of its own detail rows. In Rateeb, the subtotal (36,286) was hardcoded and did not match the 1,382 detail rows (269,439). Use `openpyxl` with `data_only=False` to detect hardcoded totals vs formulas.
 - **Materials and expenses sheets may contain flat adjustments with zero detail** — check that PO rows have actual PO numbers and expense rows have actual records. A sheet showing only `Materials Adjustment: 30,239` with no PO breakdown is not a detail sheet.
 - **PO line items may lack unit records** — the SysLeaders source does not record units for PO line items. Set the unit column to `Not recorded` rather than inferring labels like `sheet`, `roll`, `pcs`, or `drum`.
@@ -382,3 +525,4 @@ Do NOT create or label a client-ready export while a material unsupported bridge
 - **Rateeb (10) is the template**: When building new report types, always use the Rateeb report as the reference for format, columns, and styling.
 - **NEVER delete or rename company folders** (Tiba Gift comp_, Qahwitna comp_, Rateeb Trading Com_, Tezkarat Trading Com_) — these are the original structure created by the company. Create per-project subfolders inside them instead.
 - **Client-ready files must have NO remarks** — when user says files are for the client, strip all notes, source references, DB plans, and internal commentary. Just clean data.
+- **Hira Cafe (04) company mapping may differ from project map** — the project map says Qahwitna comp_ / Qahwatna_Company, but the user directed files to Tiba Gift comp_ / Tiba_Gift_Company in one session. Always verify the company folder with the user before hardcoding paths in the generator script. The project map is authoritative unless the user explicitly overrides it.

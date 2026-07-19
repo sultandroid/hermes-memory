@@ -516,6 +516,10 @@ See `references/cg-response-triage-workflow.md` for the full workflow: receive C
 
 When CG requests action on a material submittal and the subcontractor simultaneously sends a letter with their position (e.g., GBH Letter 002 on patinated brass), use `references/subcontractor-letter-cr-risk-triage.md` for the triage workflow: OCR the scanned letter → cross-reference CR sheet response strategy → check risk register coverage → present options to user → update CR/risk register as needed.
 
+### CG Material Submittal Pushback Response
+
+When CG (e.g., Mansour Alrezeni) pushes back claiming insufficient or incorrect samples were submitted, use `references/cg-material-pushback-response.md`. Pattern: audit actual submission count → clarify alternatives as supplementary (not replacements) → propose split-track approval (Track A = shop drawings/other materials, Track B = specified finish) → reference CR sheet as main deliverable → reference risk register ID.
+
 ### Scope Clarification Response (NRS vs SAMAYA)
 When CG/PMC/NRS requests a breakdown of which specialist positions are covered by NRS vs SAMAYA (per SOW §5.5), follow `references/scope-clarification-response-pattern.md`. Workflow: cross-reference SMP Tier IDs + NRS Appendex A + subcontractor register → produce two-table reply with SMP refs.
 

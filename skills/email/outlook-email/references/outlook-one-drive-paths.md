@@ -1,31 +1,39 @@
-# Outlook SQLite Database Paths for OneDrive Users
+# Outlook SQLite Database Paths
 
-This document summarizes the possible locations for Outlook's SQLite database when using OneDrive for storage.
+## Primary Path (macOS Outlook 2019+)
 
-## Standard Locations (macOS)
+The Outlook database is at a fixed path under the Office Group Container:
 
-If the user has not configured a custom profile path, the database is typically stored in:
-- `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite`
+```
+~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite
+```
 
-## OneDrive-Specific Locations
+This is the **only** path that contains the `Mail`, `Folders`, `Blocks`, and `Mail_OwnedBlocks` tables. It is **not** on OneDrive — it lives in the local `Group Containers` directory.
 
-If the user is using OneDrive for Outlook storage, the database may be synced to:
-- `~/OneDrive/Work/Samaya/Tenders/` or similar OneDrive paths for project-specific Outlook profiles.
+## Schema Notes
 
-## Troubleshooting Steps
+| Table | Key Columns |
+|-------|-------------|
+| `Mail` | `Record_RecordID`, `Message_SenderList`, `Message_SenderAddressList`, `Message_NormalizedSubject`, `Message_TimeReceived` (Unix epoch), `Message_Preview`, `Message_HasAttachment`, `Conversation_ConversationID`, `Record_FolderID` |
+| `Folders` | `Record_RecordID`, `Folder_Name`, `Folder_ParentID`, `Folder_FolderType` |
+| `Blocks` | `BlockID`, `BlockTag`, `PathToDataFile` |
+| `Mail_OwnedBlocks` | `Record_RecordID`, `BlockID`, `BlockTag` |
 
-1. **Check OneDrive sync status**: Ensure Outlook is synced to OneDrive.
-2. **Search OneDrive manually**: Run:
-   ```bash
-   find ~/OneDrive/Work -name "Outlook.sqlite" -type f
-   ```
-3. **Verify Outlook profile**: Use AppleScript to list available Outlook profiles:
-   ```bash
-   osascript -e 'tell application "Microsoft Outlook" to get name of every profile'
-   ```
-4. **Check profile path**: If the user has a custom profile, inspect the profile's path in `~/Library/Preferences/com.microsoft.office.plist`.
+## Epoch Verification
 
-## Notes
+Always verify the timestamp column before querying:
 
-- If the database is not found in standard locations, the user may need to manually configure the correct Outlook profile path.
-- For project-specific databases, check the project folder structure in OneDrive (e.g., `~/OneDrive/Work/Samaya/Tenders/2021/`).
+```sql
+SELECT Message_TimeReceived,
+       datetime(Message_TimeReceived, 'unixepoch', 'localtime') as as_unix,
+       datetime(Message_TimeReceived + 978307200, 'unixepoch', 'localtime') as as_mac
+FROM Mail ORDER BY Message_TimeReceived DESC LIMIT 1;
+```
+
+The `as_unix` column showing today's date confirms standard Unix epoch. If `as_mac` is correct instead, add 978307200 to all timestamp columns.
+
+## Troubleshooting
+
+1. **TCC permission denied**: macOS sometimes blocks `sqlite3` access to the Group Container. Retry — the TCC grant is session-dependent. If it fails repeatedly, fall back to AppleScript.
+2. **Database not found**: Verify Outlook is installed at `/Applications/Microsoft Outlook.app`. The Group Container path is created on first launch.
+3. **No `.olk15Message` files in the container**: The new Outlook (2019+) stores messages in the `HxStore.hxd` file, not as individual `.olk15` files. The SQLite `Mail` table is the primary interface.
