@@ -45,3 +45,40 @@ Principles:
 - Use active voice
 - Start sections with the point, not a throat-clearing intro
 - Every claim must trace to an approved project source (ER/SoW/CG comment/submittal) - never cite external standards
+
+## DC Block — First Page
+
+Place after cover metadata, before revision table:
+- QC table with columns: (blank) | Prepared by | Reviewed by | Approved by
+- Use actual names (Eng. Mohamed Sultan, Eng. Waris Sultan, Eng. Adel Darwish), not role titles
+- Navy header row, alternating body rows
+
+## Revision Table — First Page
+
+Place after DC block:
+- Columns: Version | Date | Author | Changes
+- REV00 entry: "REV00 - First issue for CG review" (no internal formatting details)
+
+## Live Register Notes
+
+After any table showing register data, add halftone (9pt #64748B):
+"Data shown is a snapshot from the live Project Risk Register, which is the authoritative source and updated weekly."
+
+## Severity Schedule Thresholds
+
+Align to project remaining duration. For ~10-week project:
+- Low: <1 week
+- Medium: 1-2 weeks
+- High: 2-4 weeks
+- Very High: >4 weeks
+
+## Excel Register Template
+
+All register sheets must share IDENTICAL template:
+- 14 columns: ID, Category/Discipline, Risk Event, Cause/Hazard, Impact/Consequence, Probability, Severity, Score (formula), Rating (formula), Response Strategy (dropdown), Mitigation/Controls, Risk Owner, Target Close, Status
+- Same column widths, same header style (navy), same body font (Calibri 9pt)
+- Score = P x S formula
+- Rating = IF(score>=threshold, "Critical", ...) formula
+- Response Strategy = dropdown: Avoid, Transfer, Mitigate, Accept (Active), Accept (Passive), SOW-Protect
+- Auto-filter on all columns, frozen header row
+- Dashboard with formula-linked metrics (COUNTA/COUNTIF to PRR sheet)

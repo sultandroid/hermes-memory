@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-18 19:00:36
+Generated: 2026-07-19 07:00:23
 
 ---
 
@@ -42,7 +42,7 @@ On every project update/task completion, ALWAYS advise from 3 perspectives, expl
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Risk Mgmt Plan REV00: footer='Page X of Y\tSamaya Investment Company' (Word fields). Header: Samaya logo + title. TOC: Word TOC field (Heading 1-2, hyperlinked, page numbers). Cover: REV00 - Issue for CG Review, 18 Jul 2026. DC block: QC table. Rev table: 1.0, C01, C02, REV00. 31 tables, 169 paragraphs, 15 H1 + 34 H2 styles.
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
-Eng. Mohamed Sultan — Tech Office Mgr, Samaya, Aseer Museum. Engineer-to-engineer, no AI cliches/symbols. Simple English, active voice, British spelling. Client docs: no internal paths. Excel: formula-based. Fix existing files, don't recreate. CG-ready = no TBCs. Plan first, execute. Prefers .md. RFI status = CG answered (OPEN/CLOSED). SOW/ER extracts complete. Cron to Telegram. Arabic/English. Waris Sultan = Project Director (Exhibitions) since 13-Jun. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. SoW §2.2 for content/MoC items, not ER 2.5. Risk: show details then ask specific action. Scope: push back CG cost/schedule impact. Direct: 'fix' = execute immediately.
+Eng. Mohamed Sultan — Tech Office Mgr, Samaya Investment, Aseer Museum. Engineer tone: no AI cliches/symbols, active voice, British spelling. Prefers .md, formula-based Excel, fix existing files not recreate. CG-ready = no TBCs. Plan first, execute. Risk review: show full data then ask action. SOW-Protect out-of-scope items. Waris Sultan = Project Director. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. Repo = coordination hub with cross-references. All files need YAML frontmatter.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -64,7 +64,7 @@ keywords: Aseer, Graphics_Submittal_Register, RFI_Register.xlsx, Graphit, Sub-08
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Cron job 'Adel Darwish folder check' (5d1b58e4ef6f) runs daily 9AM/5PM KSA, delivers to Telegram. Need to verify Telegram chat ID is correct — user said 'telegram' without specifying chat_id, so it uses the default gateway channel.
-Eng. Mohamed Sultan — Tech Office Mgr, Samaya, Aseer Museum. Engineer-to-engineer, no AI cliches/symbols. Simple English, active voice, British spelling. Client docs: no internal paths. Excel: formula-based. Fix existing files, don't recreate. CG-ready = no TBCs. Plan first, execute. Prefers .md. RFI status = CG answered (OPEN/CLOSED). SOW/ER extracts complete. Cron to Telegram. Arabic/English. Waris Sultan = Project Director (Exhibitions) since 13-Jun. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. SoW §2.2 for content/MoC items, not ER 2.5. Risk: show details then ask specific action. Scope: push back CG cost/schedule impact. Direct: 'fix' = execute immediately.
+Eng. Mohamed Sultan — Tech Office Mgr, Samaya Investment, Aseer Museum. Engineer tone: no AI cliches/symbols, active voice, British spelling. Prefers .md, formula-based Excel, fix existing files not recreate. CG-ready = no TBCs. Plan first, execute. Risk review: show full data then ask action. SOW-Protect out-of-scope items. Waris Sultan = Project Director. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. Repo = coordination hub with cross-references. All files need YAML frontmatter.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
 - Aseer Excel CPM model rebuild: Aseer_Museum_Baseline_Schedule_Rev1.xlsx, build_aseer_rev1.py, verify_aseer_rev1.py, 0 FS violations
 - The folder is substantial and healthy: 610 files, 57 dirs, ~521 MB; major areas include schedule/BOQ, reference drawings, specs, RFIs, approvals, material submittals, purchasing, email extraction, and manager dashboards.
@@ -87,7 +87,6 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 
 Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 Cron job 'Adel Darwish folder check' (5d1b58e4ef6f) runs daily 9AM/5PM KSA, delivers to Telegram. Need to verify Telegram chat ID is correct — user said 'telegram' without specifying chat_id, so it uses the default gateway channel.
-Eng. Mohamed Sultan — Tech Office Mgr, Samaya, Aseer Museum. Engineer-to-engineer, no AI cliches/symbols. Simple English, active voice, British spelling. Client docs: no internal paths. Excel: formula-based. Fix existing files, don't recreate. CG-ready = no TBCs. Plan first, execute. Prefers .md. RFI status = CG answered (OPEN/CLOSED). SOW/ER extracts complete. Cron to Telegram. Arabic/English. Waris Sultan = Project Director (Exhibitions) since 13-Jun. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. SoW §2.2 for content/MoC items, not ER 2.5. Risk: show details then ask specific action. Scope: push back CG cost/schedule impact. Direct: 'fix' = execute immediately.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -105,6 +104,7 @@ task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
+- The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 
 ## Contracts & Documents
 
@@ -113,7 +113,9 @@ CG comment disposition: reference attached CR sheet only, never list full CG com
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Risk Mgmt Plan REV00: footer='Page X of Y\tSamaya Investment Company' (Word fields). Header: Samaya logo + title. TOC: Word TOC field (Heading 1-2, hyperlinked, page numbers). Cover: REV00 - Issue for CG Review, 18 Jul 2026. DC block: QC table. Rev table: 1.0, C01, C02, REV00. 31 tables, 169 paragraphs, 15 H1 + 34 H2 styles.
 Graphit (graphics) is a sister company — no PO/subcontract, direct execution after SoW approval.
-Eng. Mohamed Sultan — Tech Office Mgr, Samaya, Aseer Museum. Engineer-to-engineer, no AI cliches/symbols. Simple English, active voice, British spelling. Client docs: no internal paths. Excel: formula-based. Fix existing files, don't recreate. CG-ready = no TBCs. Plan first, execute. Prefers .md. RFI status = CG answered (OPEN/CLOSED). SOW/ER extracts complete. Cron to Telegram. Arabic/English. Waris Sultan = Project Director (Exhibitions) since 13-Jun. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. SoW §2.2 for content/MoC items, not ER 2.5. Risk: show details then ask specific action. Scope: push back CG cost/schedule impact. Direct: 'fix' = execute immediately.
+Eng. Mohamed Sultan — Tech Office Mgr, Samaya Investment, Aseer Museum. Engineer tone: no AI cliches/symbols, active voice, British spelling. Prefers .md, formula-based Excel, fix existing files not recreate. CG-ready = no TBCs. Plan first, execute. Risk review: show full data then ask action. SOW-Protect out-of-scope items. Waris Sultan = Project Director. RFI ref: MOC-MUS-ASE-1A0-TQ-XXXX. Repo = coordination hub with cross-references. All files need YAML frontmatter.
+Expects me to verify claims from source before stating them — push back if I say something isn't in the repo without checking emails/Outlook/attachments. Catches errors quickly in bilingual docs. Wants all CG responses tracked in repo as markdown.
+When responding to CG, CR sheet is the main deliverable — covering email is just a short summary. Frame claims as findings from the source (e.g. 'GBH identified' not 'only one exists') — CG may challenge absolute statements. Use concise natural English in CR sheets. References formal project documents (risk register, submittal numbers) in communications.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
 description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
@@ -136,12 +138,11 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
 - RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
-- **Contract:** Ministry of Culture (MoC) × Samaya Investment. Effective Date 2025-12-01, Term 10 months → 2026-09-30.
-- **Contract Type:** Lump-sum milestone-based (Annex 4). NOT unit-rate or re-measurable. No Value Engineering / Shared-Savings / Incentive clause anywhere.
 
 ## Locations
 
 Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
+When responding to CG, CR sheet is the main deliverable — covering email is just a short summary. Frame claims as findings from the source (e.g. 'GBH identified' not 'only one exists') — CG may challenge absolute statements. Use concise natural English in CR sheets. References formal project documents (risk register, submittal numbers) in communications.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -155,4 +156,3 @@ He prefers execution plus verification over explanation-only help. For printable
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
 rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl
-task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Subcontractors/03_Graphics_Contractor

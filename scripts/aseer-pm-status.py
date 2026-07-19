@@ -46,7 +46,7 @@ PM_CANDIDATES = [
 ]
 pm_source = None
 for p in PM_CANDIDATES:
-    if p.is_file():
+    if p.is_file() and os.access(str(p), os.R_OK):
         pm_source = p
         break
 if not pm_source:

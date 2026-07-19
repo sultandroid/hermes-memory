@@ -259,7 +259,75 @@ p = OxmlElement('w:p')
 body.insert(table_idx + 1, p)
 ```
 
-## Critical Pitfall: Formula Cells with No Cached Value
+## Modifying Existing Formatted Workbooks (Preserve-Format Pattern)
+
+When you need to update an existing formatted Excel file (CR Sheet, submittal form, template), **never rebuild from scratch or insert rows** — both destroy the original formatting, merged cells, column widths, and data validations.
+
+### Correct Pattern: Copy + Targeted Cell Edits
+
+```python
+import shutil
+from copy import copy
+
+# Step 1: Copy the original file
+shutil.copy(original_path, output_path)
+
+# Step 2: Open the copy
+wb = openpyxl.load_workbook(output_path)
+ws = wb['Sheet1']
+
+# Step 3: Make targeted cell value changes
+ws['A1'].value = 'Updated Title'
+ws['C5'].value = 'New reference source'
+
+# Step 4: Append to existing cell content (preserves formatting)
+old_val = ws['D10'].value
+ws['D10'].value = old_val + "\n\nUPDATE: New information added."
+
+# Step 5: Save
+wb.save(output_path)
+```
+
+### Pitfall: `ws.insert_rows()` Breaks Merged Cells
+
+`ws.insert_rows()` shifts all rows down but **does not shift merged cell ranges** — the old merged ranges stay at their original positions, causing `MergedCell` attribute errors when you try to read/write cells that are now inside a misaligned merge.
+
+**Never do this on a pre-formatted file with merged cells:**
+```python
+ws.insert_rows(11)  # Breaks merged cell ranges
+```
+
+**Instead, append new content to existing cells** or, if you must add a new row, rebuild the sheet from scratch using the Unified Register Template pattern above.
+
+### Pattern for Adding New Items to a CR Sheet
+
+A Comment Response Sheet (CR Sheet) typically has numbered items. To add a new item:
+
+```python
+# Option A: Append to the last existing cell (safe, preserves format)
+ws.cell(row=last_row + 1, column=1).value = new_item_number
+ws.cell(row=last_row + 1, column=2).value = "New CG comment"
+# Copy formatting from the row above
+for c in range(1, 8):
+    src = ws.cell(row=last_row, column=c)
+    dst = ws.cell(row=last_row + 1, column=c)
+    dst.font = copy(src.font)
+    dst.alignment = copy(src.alignment)
+    dst.border = copy(src.border)
+    dst.fill = copy(src.fill)
+```
+
+**Key insight:** The `copy()` from `copy` module copies openpyxl style objects correctly. Always use `from copy import copy` for style copying.
+
+### When to Rebuild vs. Modify
+
+| Situation | Approach |
+|-----------|----------|
+| Simple value/text updates | Copy + targeted edits |
+| Adding rows mid-table | Rebuild from scratch with Unified Register Template |
+| Changing column structure | Rebuild from scratch |
+| Updating formulas | Copy + edit formula strings |
+| Adding new items at end | Append to last row + copy styles |
 
 The most common issue when styling openpyxl workbooks: **formula cells created programmatically have no cached values**. Opening with `data_only=True` returns `None` for all formula cells — you cannot read the computed severity string.
 

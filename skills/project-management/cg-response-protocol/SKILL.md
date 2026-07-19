@@ -89,6 +89,58 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 - "CG want: loading notation schedule, load combo names. Loading tables in BOD per SBC. Need to clarify and resubmit."
 - "CG want: audit report for previous design stage. Under preparation. Will include in next package."
 
+## Multi-Round Code C Pattern — Rev.01 Still C, All Comments Open
+
+When a Rev.01 resubmission gets **Code C again** with all comments still marked Open by CG:
+
+### Pattern Recognition
+
+| Round | Submittal | CG Response | Comments Status |
+|-------|-----------|-------------|-----------------|
+| Rev.00 | First submission | Code C | 15 comments, all Open |
+| Rev.01 | Resubmission | **Code C (2nd time)** | Same 15 comments, **all still Open** |
+
+### What This Means
+
+- CG did **not** accept any of the contractor's responses from the CRS
+- Every comment that was Open in Rev.00 is still Open in Rev.01
+- The contractor's responses (explanations, references to SBC clauses, coordination meeting agreements) were **insufficient** to close any item
+- CG wants **physical evidence** (test results, reports, approved drawings), not explanations
+
+### Common Root Causes
+
+| Comment Type | Why Still Open | What CG Actually Wants |
+|-------------|----------------|----------------------|
+| Team approval | CVs submitted but not formally approved | Appointment letters + MoC acceptance |
+| Testing (core, rebar scan) | "Under preparation" response | Completed test reports with results |
+| Geotechnical | "Being arranged" response | Borehole logs + lab test results |
+| Loading notation | "Already in BOD per SBC" response | Load pattern/case/combination schedule matching analysis software |
+| Seismic study | "Need architect to confirm occupancy" response | Full SBC 301 study with occupancy classification, risk category, occupant load calc |
+| Architectural/MEP changes | "Will be in next stage" response | Current loading plans must reflect ALL known changes, not defer them |
+
+### Action Plan
+
+1. **Stop resubmitting explanations.** CG has rejected the explanation approach twice.
+2. **Complete the physical evidence** — core testing, rebar scan, geotechnical investigation must be done before Rev.02
+3. **For loading/seismic comments** — produce the exact schedule/study CG described, not a reference to existing BOD content
+4. **For team approval** — formalize the appointment and get MoC sign-off
+5. **Update the risk register** — this is now a High/Critical risk, not a routine resubmission
+
+### CRS Disposition for Multi-Round
+
+Use the consolidated disposition matrix pattern (see above) with a clear note:
+
+```
+| cat-row | Round 1 — CG comments (5-Jul-26) — Rev.00 Code C — all Open |
+| cat-row | Round 2 — CG comments (18-Jul-26) — Rev.01 Code C — all still Open |
+```
+
+Add a summary row at the top:
+
+```
+| SUMMARY | 2 rounds | 15 comments | 0 closed | All require physical evidence, not explanations |
+```
+
 ## Interpreting Mixed-Status CG Responses
 
 CG often returns a submittal with **different statuses at different levels**. Do not conflate them.
@@ -358,6 +410,101 @@ When supplier test reports/certifications take time (supplier lead time), but th
 - MA-0007 (patinated brass) — separate submittal, separate rejection
 - MA-0006 Rev.01 can proceed without MA-0007 approval
 
+### Track A/B Separation — When CG Blocks Over a Finish Material
+
+When CG rejects a submittal (Code C) specifically over a **finish material** issue (e.g., patinated brass), and the supplier confirms the material is single-source or high-risk, **split the response into two independent tracks**:
+
+| Track | What | CG Action Needed | Critical Path |
+|-------|------|-----------------|---------------|
+| **A — Shop Drawings / Fabrication** | Showcase construction, dimensions, integration points, production drawings | Approve independently — finish material does NOT affect fabrication | Production lead time — this is the time-critical path |
+| **B — Finish Material (MA-0007)** | Patinated brass sample, Oddy testing, certifications, alternative suppliers | Approve look & feel now; test reports to follow | End of August (Oddy results) |
+
+**When to use this pattern:**
+- CG rejects a submittal over a finish material that is a **small fraction** of the overall scope
+- The supplier confirms the finish does **not affect** fabrication/production
+- The finish material has **long-lead testing** (Oddy, fire, VOC) that will take weeks
+- The shop drawings are **otherwise ready** for approval
+
+**Email framing for Track A/B:**
+
+```
+We have split the approval process into two independent tracks:
+
+Track A — Shop Drawings (not affected by finish material):
+- [Supplier] has confirmed the [finish] is a surface finish only and does not affect fabrication.
+- We request CG to proceed with shop drawing approval independently — this is the critical path for production lead time.
+
+Track B — Finish Material (MA-0007):
+- Oddy testing in progress — results expected [date].
+- In parallel, developing [alternative] from local suppliers as lower-risk substitute — sample within 30 days.
+- This can serve as the alternative manufacturer option you requested.
+```
+
+**When the supplier advises AGAINST their own material (GBH Letter 002 pattern):**
+
+If the supplier's formal letter states they do NOT recommend the specified material:
+1. This strengthens the Track A/B argument — the supplier themselves says the finish shouldn't block fabrication
+2. Use the supplier's own words as evidence: "GBH has requested that patinated brass approval NOT hold shop drawing approval"
+3. The supplier's technical objections (single-source, colour inconsistency, conservation risk) become Samaya's evidence for proposing an alternative
+4. Update the CR sheet to reference the supplier's letter as a new supporting document
+5. The response shifts from "we're working on it" to "this material is high-risk, we recommend alternative path"
+
+**Handling CG's "2 alternative manufacturers" demand when supplier confirms single-source:**
+
+When CG asks for 2 alternative certified manufacturers but the supplier's letter confirms only 1 supplier exists globally:
+- State the fact directly: "GBH Letter 002 confirms: only ONE supplier exists globally for [material]. Therefore, providing 2 additional alternative manufacturers for the SAME material is not feasible."
+- Propose alternatives in a DIFFERENT material category (e.g., PVD-coated brass instead of patinated brass)
+- Reference the risk register entry (e.g., PRR-PRC-05, Score 12, Critical) to show the risk is already tracked
+- Offer: "Samaya will source [alternative material] alternatives from KSA suppliers as a functionally equivalent, lower-risk substitute — samples within 30 days."
+
+**Alternative submittal package scope:** When offering a PVD-coated or other alternative, the full submittal package must include: sample, manufacturer certificates, and test reports — not just a visual sample. State this explicitly in the email: "Full package to be submitted within 30 days including sample, manufacturer certificates, and test reports."
+
+**Email composition — which email to reply to and what to attach:**
+
+When CG sends a follow-up email (e.g., Mansour's 13-Jul reminder asking for 2 alternative manufacturers), reply to THAT specific email, not the original rejection. Attachments:
+
+1. **Updated CR Sheet** — reflecting the new information (GBH letter, Track A/B split, alternative proposal)
+2. **Supplier's letter** — the document that confirms single-source or advises against the material (e.g., GBH Letter 002)
+
+Do NOT attach the original submittal PDF, sample board photos, or data sheets — those were already submitted. The reply is a status update + proposal, not a full resubmission.
+
+**Email structure for this scenario:**
+
+```
+Subject: RE: [Original Subject]
+
+Dear Eng. [Name],
+
+Good day.
+
+We have received [Supplier Letter Ref] from [Supplier] regarding [topic]. The [material] risk is already registered in the Project Risk Register as [Risk ID] (Score [N], [Rating]).
+
+Regarding your request for two additional alternative certified manufacturers:
+[Supplier] confirms only ONE supplier exists globally for [material]. Providing two additional certified manufacturers for the same material is therefore not feasible.
+
+Current status of submitted finish samples:
+1. [Material A] — [N] samples already submitted under [Submittal Ref]. [Status].
+2. [Material B] — [description], already submitted with [Submittal Ref] for reference.
+3. [Material C] — being developed as a second alternative from local KSA suppliers. Full package (sample + certificates + tests) within 30 days.
+
+Our proposal — two independent tracks:
+
+Track A — [Submittal Ref] ([Scope]) & Shop Drawings:
+We will resubmit [Submittal Ref] with all requested supporting documents for your approval. The [finish material] is a surface finish only and does not affect [fabrication/production] — [Supplier] has confirmed this. We request CG to proceed with [Submittal Ref] and shop drawing approval independently.
+
+Track B — [Submittal Ref] ([Finish Material]):
+- [Testing] in progress — results [date]
+- [Alternative] in development — full submittal package within 30 days
+- To be finalized separately without blocking Track A
+
+We have updated the CR Sheet ([Ref], dated [date]) reflecting this approach and will submit it with the resubmission package.
+
+Best regards,
+[Name]
+```
+
+**Before composing the email, verify the baseline:** Check what was in the first submission (data sheets, samples, TDS) vs what's new in the resubmission. The first submission may already have all technical data sheets complete — the resubmission is about responding to CG's open conditions, not adding missing TDS. List the baseline clearly so the email doesn't claim to be submitting things that were already submitted.
+
 See `references/ma-0006-showcase-resubmission-case.md` for the full worked example.
 
 ## Plan-Level CG Comment Audit Against Contractual Obligations
@@ -366,6 +513,7 @@ When CG returns a management plan (SMP, DMP, HSE Plan, QMP) with Code C, audit e
 
 See `references/plan-cg-comment-audit.md` for the full workflow: extracting comments, mapping to ER/SoW clauses, checking the submitted document, determining priority, and producing the audit table.
 See `references/crs-to-drawing-register.md` for extracting per-drawing review codes from CG CRS Excel files and updating the drawing register with floor-by-floor DD Gate status tables.
+See `references/crs-excel-extraction-from-outlook.md` for extracting CRS Excel files from Outlook .olk15MsgAttachment attachments — base64 boundary markers, XLSX parsing from ZIP, and multi-round Code C pattern analysis.
 
 ### Key ER References for Plan Audits
 
@@ -405,6 +553,60 @@ If the SMP includes a Yes/No MOSTADAM credit selection table and CG asks for sel
 | CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER §3.7.XIII. No specific certification level is contractually required." |
 
 **Do NOT** add a rationale column or fill rows with justifications — that implies we are pursuing certification, which we are not. The existing Yes/No table (if kept) is sufficient for awareness.
+
+## CG Scope Creep — Three Patterns to Watch
+
+CG frequently asks the contractor (Samaya) to produce deliverables that belong to the design team (NRS, ZNA, AD Engineering). Three distinct patterns:
+
+| Pattern | Example | RIBA Issue |
+|---------|---------|------------|
+| **Stage Regression** | CG asks Samaya to present "scenography concepts, narrative, interdisciplinary integration" | Stage 2 (Concept) work requested during Stage 4 (Technical Design) |
+| **Full Design Package** | CG demands 10-drawing scenography set (Master Plan, Showcase Details, Lighting, Signage, Multimedia, Circulation, Finishes, Maintenance Access, Environmental Control) | Stage 3 (Spatial Coordination) work — NRS's A2742 contractual deliverable |
+| **Role Confusion** | CG uses Material Board review to demand full AV/IT/Lighting engineering schedules (projectors, speakers, CCTV, access control, lighting controls, dimming systems, RCP coordination) | Stage 4 but belongs to designers (NRS/ZNA/AD), not contractor |
+
+### RIBA 2020 Stage Regression Argument
+
+The strongest defense is RIBA 2020 stage classification:
+
+| CG Request | Belongs To | RIBA Stage | Samaya's Stage |
+|------------|-----------|-----------|----------------|
+| Scenography presentation (concept, narrative, vision) | NRS | Stage 2 — Concept | Stage 4 — Technical Design |
+| 10-drawing scenography package (master plan, showcase layout, circulation, signage) | NRS | Stage 3 — Spatial Coordination | Stage 4 — Technical Design |
+| AV/IT/Lighting engineering schedules & control drawings | NRS/ZNA/AD | Stage 4 — Technical Design (designers' scope) | Stage 4 — Samaya executes, doesn't author design |
+
+**Key message:** Samaya is the contractor executing the design. The design intent, scenography narrative, and detailed engineering belong to the design team. Requesting Samaya to produce design documents creates a liability gap — we cannot warrant design decisions that belong under the designer's professional seal.
+
+### Consulting NRS on Scope Boundaries — Email Framing
+
+When you need NRS's opinion on whether a CG request is scope creep, **do not** phrase it as "would you handle this directly?" — that sounds like you're asking them to take work off your hands. Instead, **consult them as the design authority**:
+
+**Correct framing:**
+- "Is this something NRS should present, or should Samaya prepare it?"
+- "Is this within NRS's current design deliverables, or is CG asking for something new?"
+- "We see the material board as our scope, but the engineering schedules as design team scope. Your advice on where each sits would help us respond correctly."
+
+**Wrong framing (avoid):**
+- "Would you handle this directly?" — sounds like delegating
+- "We need NRS to prepare the formal response" — too directive for a consultant
+- "CG should receive this directly from NRS" — telling them what to do
+
+### NRS Already Responded But CG Wasn't Satisfied
+
+When NRS has already responded to a CG request (e.g., "this is within our scope") but CG sent a follow-up reminder, the email to NRS should:
+
+1. **Acknowledge the previous response** — "I understand NRS previously responded that these are within your scope"
+2. **State the new fact** — "but CG sent a follow-up reminder, so it seems they expect a more concrete response"
+3. **Ask for advice** — "Could you advise how we should handle this?"
+
+This avoids blaming NRS for an insufficient response while making it clear the issue isn't resolved.
+
+### Evidence for Scope Creep Claims
+
+When CG rejects a material board (Code C) because specialists demand engineering schedules, the rejection document itself is the evidence. Attach it to the email to NRS:
+
+- The CG response shows AV/IT/Lighting specialists requesting full equipment schedules per gallery
+- A Material Board shows finishes, samples, and visible equipment appearance — not engineering design
+- Equipment schedules, control drawings, and system coordination are design engineering deliverables
 
 ## Scope Creep Protection — CR Sheet with Cost/Schedule Impact
 

@@ -725,6 +725,350 @@ After the post-approval audit identifies changes needed, produce the revision sy
 - **Sub-agents add broken asset references** — When versioning an HTML file (Rev N → Rev N+1), the sub-agent copies the old file including `<img src="assets/...">` references. These assets may not exist in the new location. After sub-agent output, grep for `src="assets/` and verify each path exists. If not, either copy the assets or remove the broken image tags.
 - **Cover page still verbose after sub-agent** — The sub-agent may add a long change list to the cover page despite instructions. After sub-agent output, check the cover page description. It should only state which revisions it supersedes and which reference docs it aligns with. No change listing. Fix if needed.
 
+## 6.8 Plan Folder Template Initialization
+
+When setting up a new plan library or initializing empty plan subdirectories, create 4 standard files per folder:
+
+| File | Purpose | Key Fields |
+|------|---------|------------|
+| `README.md` | Folder overview, purpose, owner, status, contract refs | YAML frontmatter + purpose + owner + status + contract references + linked documents |
+| `plan_summary.md` | Overview, key dates, approvals | YAML frontmatter + overview + key dates table + approvals required table |
+| `checklist.md` | Compliance checklist vs CONSTITUTION | YAML frontmatter + frontmatter compliance table + content compliance table + repo compliance table |
+| `approval_log.md` | Approval dates, sign-offs, revision history | YAML frontmatter + revision history + approval sign-offs + CG response history + key decisions |
+
+Two template formats are available. Use the **simple format** (below) for quick initialization, or the **detailed format** (§6.8.1) when the user explicitly requests a richer template with RACI, PMBOK alignment, and decision log sections.
+
+#### Simple Template Pattern (default)
+
+Every file must have YAML frontmatter:
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: <agent name>
+status: active
+source: 08_Document_Index/00_plan_tracker.md; 03_Plans/99_Consolidated/project_plan_operating_model.md
+---
+```
+
+### README.md Structure
+
+```markdown
+# {NN_Plan} — {Plan Name}
+
+## Purpose
+
+{One-paragraph description of the plan's function}
+
+## Owner
+
+{Role or person responsible}
+
+## Status
+
+{CG status: Code B / Draft / Submitted / etc.}
+
+## Key Contract References
+
+{SoW §X.X; ER §X.X; Contract §X Art. X}
+
+## Linked Documents
+
+- Plan Tracker: `08_Document_Index/00_plan_tracker.md`
+- Operating Model: `03_Plans/99_Consolidated/project_plan_operating_model.md`
+- Constitution: `CONSTITUTION.md`
+
+## Folder Contents
+
+| File | Purpose |
+|------|---------|
+| `README.md` | This file — folder overview and purpose |
+| `plan_summary.md` | Overview, key dates, approvals |
+| `checklist.md` | Compliance checklist vs CONSTITUTION |
+| `approval_log.md` | Approval dates, sign-offs, revision history |
+```
+
+### plan_summary.md Structure
+
+```markdown
+# {Plan Name} — Plan Summary
+
+## Overview
+
+{One-paragraph description}
+
+## Key Dates
+
+| Event | Date | Status |
+|-------|------|--------|
+| Draft Complete | TBD | Pending |
+| Internal Review | TBD | Pending |
+| CG Submission | TBD | Pending |
+| CG Approval | TBD | Pending |
+
+## Approvals Required
+
+| Approver | Role | Status |
+|----------|------|--------|
+| PMC (ACE Moharram-Bakhoum) | Reviewing Authority | Pending |
+| CG (Consultant Group) | Technical Approval | Pending |
+| MoC (Ministry of Culture) | Final Authority | Pending |
+
+## Linked Documents
+
+- Contract: {SoW §X.X; ER §X.X; Contract §X Art. X}
+- Constitution: `CONSTITUTION.md`
+- Plan Tracker: `08_Document_Index/00_plan_tracker.md`
+```
+
+### checklist.md Structure
+
+Three compliance tables:
+1. **Frontmatter Compliance** — `last_updated`, `owner_agent`, `status`, `source`
+2. **Content Compliance** — purpose defined, owner identified, contract articles referenced, source traceability, no AI clichés, British English, active voice, no emoji
+3. **Repository Compliance** — markdown format, no binary files, append-only, entity isolation, cross-references
+
+### approval_log.md Structure
+
+```markdown
+## Revision History
+
+| Rev | Date | Author | Status | Notes |
+|-----|------|--------|--------|-------|
+| C01 | TBD | {Owner} | Draft | Initial draft |
+
+## Approval Sign-Offs
+
+| Approver | Role | Date | Decision | Reference |
+|----------|------|------|----------|-----------|
+| PMC | Reviewing Authority | TBD | Pending | |
+| CG | Technical Approval | TBD | Pending | |
+| MoC | Final Authority | TBD | Pending | |
+
+## CG Response History
+
+| Submission Ref | Rev | Date | CG Code | Comments |
+|---------------|-----|------|---------|----------|
+| {Doc Ref} | {Rev} | TBD | Pending | — |
+```
+
+### Batch Creation Pattern
+
+For 15+ plan folders, use a Python script to generate all files at once:
+
+```python
+plans = [
+    ("01_DMP", "Design Management Plan", "Design Lead (NRS)", "Code B",
+     "SoW §6.22; ER §2.4; Contract §4 Art. 2",
+     "Establish design control procedures per RIBA 4 / LOD 400 compliance."),
+    # ... all 15 plans
+]
+
+for folder, name, owner, status, refs, purpose in plans:
+    # Write README.md, plan_summary.md, checklist.md, approval_log.md
+    # Each with YAML frontmatter + plan-specific content
+```
+
+### Pitfalls
+
+- **Existing READMEs may use a different format** (e.g., folder structure index instead of plan metadata). Check before overwriting — some folders already have READMEs that serve a different purpose.
+- **Plan status must match the plan tracker** (`08_Document_Index/00_plan_tracker.md`). Don't guess — read the tracker first.
+- **Contract references must be specific** — cite exact SoW/ER/Contract sections, not generic "Contract §4".
+- **Owner field should use the role title** (e.g., "BIM Manager (Dr. Waleed Salah)") not just the person's name, so the template stays valid if personnel changes.
+- **Approval log starts with current revision** — don't leave it empty. Fill in the known revision from the plan tracker.
+
+#### 6.8.1 Detailed Template Format (advanced)
+
+Use this format when the user explicitly requests a richer template with RACI, PMBOK alignment, decision log, and compliance tracking. This format was specified for a 16-folder initialization across 03_Plans/.
+
+**README.md YAML frontmatter:**
+```yaml
+---
+title: [PLAN_NAME] — [Full Plan Title]
+owner_agent: [Responsible Discipline/Agent]
+last_updated: YYYY-MM-DD
+status: draft | in-review | approved | active
+access: read-write
+compliance_ref: CONSTITUTION.md §3
+---
+```
+
+**README.md body:**
+```markdown
+# [PLAN_NAME] — [Plan Title]
+
+## Metadata
+
+| Attribute | Value |
+|-----------|-------|
+| Plan Name | [XX_DescriptiveTitle] |
+| Owner Agent | [Name/Role] |
+| Status | 🟡 Draft (ready for population) |
+| Last Updated | YYYY-MM-DD |
+| Approval Status | ⏳ Pending PMC Review |
+| Contract Reference | SoW §[X.X] / ER Section [X] |
+
+## Purpose
+
+[1-2 sentence description of this plan's purpose per PMBOK framework]
+
+## Key Dates (Estimated)
+
+| Milestone | Date | Status |
+|-----------|------|--------|
+| Draft Completion | TBD | ⏳ |
+| Internal Review | TBD | ⏳ |
+| Stakeholder Review | TBD | ⏳ |
+| PMC Approval | TBD | ⏳ |
+| Implementation | TBD | ⏳ |
+
+## Linked Documents
+
+- Primary: [Link to relevant register or charter section]
+- Secondary: [Cross-reference to related plans]
+- Supporting: [Reference to OneDrive/Aconex location]
+
+## Contents Index
+
+See files in this directory:
+- plan_summary.md — Executive summary & key decisions
+- checklist.md — Compliance checklist vs CONSTITUTION + PMBOK
+- approval_log.md — Approval dates and sign-offs
+
+---
+
+Status: 🟡 To Be Populated — Awaiting plan content development
+```
+
+**plan_summary.md YAML:**
+```yaml
+---
+title: "[PLAN_NAME] — Summary"
+owner_agent: "[Agent]"
+last_updated: YYYY-MM-DD
+status: draft
+---
+```
+
+Sections: Executive Overview (placeholder), Key Responsibilities (RACI table with Role/Activity/Level columns), Critical Success Factors (3 checkboxes), Known Constraints, Approval Chain table.
+
+**checklist.md YAML:**
+```yaml
+---
+title: "[PLAN_NAME] — Compliance Checklist"
+owner_agent: "[Agent]"
+last_updated: YYYY-MM-DD
+status: active
+---
+```
+
+Sections:
+1. **CONSTITUTION Compliance** — 7 checkboxes (one per compliance workflow step)
+2. **PMBOK Knowledge Area Alignment** — 9 checkboxes (Scope, Time, Cost, Quality, Resource, Communications, Risk, Procurement, Stakeholder)
+3. **Document Quality Standards** — 6 checkboxes (YAML frontmatter, owner agent, status, cross-links, tables, all sections populated)
+4. **Approval Gates** — 3 checkboxes (Draft, Review, Approval)
+
+Footer: `Overall Compliance: 🟡 50% (To Be Completed)`
+
+**approval_log.md YAML:**
+```yaml
+---
+title: "[PLAN_NAME] — Approval Log"
+owner_agent: "[Agent]"
+last_updated: YYYY-MM-DD
+status: active
+---
+```
+
+Sections:
+1. **Approval History** — table with Date, Version, Approver, Status, Comments
+2. **Decision Log** — 2 template Decision entries (Date, Decision, Rationale, Approved By, Impact, Status)
+3. **Change Requests** — table with Date, Change, Requested By, Status, Resolution
+
+Footer: `Approval Status: 🟡 Draft — Awaiting first review`
+
+**Batch creation for detailed format:** Delegate to a sub-agent via `delegate_task` with the full plan data array and the exact template strings from this section. The sub-agent creates all 64 files (16 folders × 4 files) in a single pass.
+
+**Pitfalls for detailed format:**
+- Has more YAML fields (`title`, `access`, `compliance_ref`) than the simple format — don't omit them
+- Status indicators: use 🟡 for "Draft", ⏳ for "Pending", ✅ for "Complete" — keep consistent across all 4 files
+- When delegating to a sub-agent, pass the exact template strings as context — the sub-agent should not invent its own format
+- Verify a sample folder's output after the sub-agent finishes
+
+### 6.9 Populating Existing Templates with Real Data
+
+When templates already exist with placeholder data ("TBD", "Pending") and need to be filled with actual project data, follow this extraction workflow. This is distinct from §6.8 (creating empty templates) — here the templates already exist and need their placeholders replaced with real values.
+
+#### Data Sources (in order of authority)
+
+| Source | What It Provides | Location |
+|--------|-----------------|----------|
+| **Plan Tracker** | CG status, doc ref, revision, owner, priority, next action | `08_Document_Index/00_plan_tracker.md` |
+| **Actual plan files** | Purpose/scope descriptions, section structure, contract references | `03_Plans/<NN_Plan>/<plan_name>.md` |
+| **CG status files** | Approval history, CG comment details, reviewer names | `03_Plans/<NN_Plan>/CG_STATUS.md` (if exists) |
+| **Change logs** | Revision history, new stakeholders, org changes | `03_Plans/<NN_Plan>/RevNN_Change_Log.md` (if exists) |
+| **AGENTS.md** | Project facts, team roster, contract value, handover date | Repo root `AGENTS.md` |
+
+#### Extraction Pattern
+
+For each plan folder, extract these fields from the sources above:
+
+| Template Field | Source | Extraction Rule |
+|----------------|--------|-----------------|
+| **Purpose** | Plan file §1 or README | First paragraph of the actual plan document. Include section count and scope breadth. |
+| **Owner** | Plan tracker + plan file frontmatter | Role title first, person name in parentheses if known. E.g., "BIM Manager (Dr. Waleed Salah)" |
+| **Status** | Plan tracker CG status column | Exact CG code + qualifier. E.g., "Code B — Approved w/ comments" or "Draft — Not yet submitted to CG" |
+| **Doc Ref** | Plan tracker ref column | Full document code. E.g., "MOC-MUS-ASE-1K0-PL-0029" |
+| **Contract Refs** | Plan file frontmatter or §2 | Specific SoW/ER/Contract sections. E.g., "SoW §6.22; ER §2.4; Contract §4 Art. 2" |
+| **Key Dates** | Plan tracker + plan file revision history | Actual submission/approval dates, not "TBD". For draft plans, note the planned submission week. |
+| **Approval History** | Plan tracker + CG status files | Every revision with date, author, CG code, and key comments. Include Code C/D history for plans that went through revision cycles. |
+| **CG Response History** | Plan tracker | Submission ref, revision, date, CG code, summary of comments. |
+| **Key Decisions** | Plan tracker + change logs | Major milestones: approval dates, submission dates, conflict resolutions. |
+
+#### Batch Update Pattern
+
+For 15+ plan folders, process in a single pass:
+
+1. **Read the plan tracker** once — it has all 15 plans' status, refs, owners, and CG codes
+2. **Read each plan's actual files** — extract purpose, scope, section structure, contract refs
+3. **Read CG status files** where they exist — extract approval history and comment details
+4. **Write all 4 template files** per folder in one batch
+
+Each file gets:
+- YAML frontmatter with `last_updated`, `owner_agent`, `status`, `source:` pointing to actual plan files
+- Real plan purpose/scope descriptions from source documents
+- Actual document reference numbers and revision codes
+- Real CG status codes and dates from the plan tracker
+- Named owners (not generic roles where known)
+- Actual approval history with dates and CG response codes
+- Contract references specific to each plan
+
+#### What to Replace in Templates
+
+| Old Placeholder | Replace With |
+|----------------|--------------|
+| `TBD` in Key Dates | Actual date or "TBD (Week of DD-Mon)" for planned submissions |
+| `Pending` in Status | Actual CG code: "Code B — Approved", "Draft — Not yet submitted", "Submitted — Awaiting response" |
+| `TBD` in Approval Log | Actual revision code, date, author, and CG code from plan tracker |
+| Generic "Owner" | Named role + person: "BIM Manager (Dr. Waleed Salah)" |
+| Generic contract refs | Specific sections: "Contract §4 Art. 13; ER §3.2; SoW §6.21; DMP §5.3" |
+| Empty Key Decisions | Actual milestones: approval dates, submission dates, conflict resolutions |
+
+#### Verification
+
+After populating all templates:
+1. Spot-check 3-5 folders — verify status, owner, and doc ref match the plan tracker
+2. Verify approval log revision history matches the plan tracker's per-plan rows
+3. Check that draft plans have "Pending" CG status and approved plans have actual dates
+4. Ensure every file has valid YAML frontmatter (no unclosed `---` blocks)
+
+#### Additional Pitfalls for Template Population
+
+- **CG status files may be in a different folder** — some plans have `CG_STATUS.md` in the plan folder (e.g., 02_Stakeholder), others don't. Check with `ls` before assuming.
+- **Plan files may have multiple sections** — the purpose description should reflect the full scope (e.g., "Covers 14 sections including...") not just the first paragraph.
+- **Some plans are internal control systems, not CG-submitted** — e.g., 15_Subcontractor_Deliverables. These don't have CG codes or submission dates. Mark as "Active — Operational" with a note about their internal nature.
+- **HSE folder contains 12+ sub-plans** — the overarching HSE plan is Code B approved, but individual sub-plans range from Code B to Code D. The approval log must reflect this mixed status, not a single blanket status.
+- **Plan tracker may have more detail than individual plan files** — the tracker is the authoritative source for CG status, revision codes, and next actions. Always prefer the tracker over plan file frontmatter for status information.
+
 ## 7. Pitfalls
 
 - **OneDrive placeholder files (0 bytes)**: PDFs in OneDrive may appear as 0-byte files when accessed via the local filesystem. Always check file size before attempting to read. Use the repo's `99_Archive/` copies or download from OneDrive web.

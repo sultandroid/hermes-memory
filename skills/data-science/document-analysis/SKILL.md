@@ -65,6 +65,8 @@ marker_single document.pdf --output_dir ./output
 
 When pymupdf returns empty text (scanned / image-based pages) and marker-pdf is too heavy:
 
+**Route A — PyMuPDF render (multi-page, any PDF):**
+
 ```python
 import fitz, pytesseract
 from PIL import Image
@@ -76,6 +78,57 @@ img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 text = pytesseract.image_to_string(img, lang='eng', config='--psm 12')
 ```
 
+**Route B — sips render (simpler, macOS-only, single-page or simple PDFs):**
+
+For scanned letter PDFs (not tables, not books — just letter text), `sips` is simpler than PyMuPDF:
+
+```bash
+# Convert PDF page 1 to PNG
+sips -s format png "/path/to/letter.pdf" --out /tmp/letter.png
+
+# Then OCR with tesseract
+tesseract /tmp/letter.png stdout -l eng
+```
+
+**Critical: tesseract /tmp path issue on macOS.** Tesseract can fail with `fopenReadStream` errors when the image is in `/tmp` due to sandboxed filesystem isolation. The error looks like:
+
+```
+Error in fopenReadStream: failed to open locally with tail letter.png for filename /tmp/letter.png
+Leptonica Error in findFileFormat: image file not found: /tmp/letter.png
+```
+
+**Workaround — `cd /tmp` first (simplest):**
+
+The root cause is that tesseract resolves relative paths from its own working directory, not the shell's CWD. Changing the working directory to `/tmp` before running tesseract fixes it:
+
+```bash
+cd /tmp && tesseract letter.png stdout -l eng
+```
+
+**Fallback — copy to CWD:**
+
+```bash
+cp /tmp/letter.png ./letter.png && tesseract ./letter.png stdout -l eng
+```
+
+Or use Python + pytesseract (avoids the CLI path issue entirely):
+
+```python
+from PIL import Image
+import pytesseract
+img = Image.open('/tmp/letter.png')
+text = pytesseract.image_to_string(img, lang='eng')
+```
+
+**When to use which route:**
+
+| Situation | Route |
+|-----------|-------|
+| Multi-page PDF, need page-by-page | A (PyMuPDF) |
+| Single-page scanned letter, macOS | B (sips) — fewer deps |
+| Tables / structured data | A (PyMuPDF) + TSV reconstruction |
+| tesseract CLI fails on /tmp | Use Python pytesseract or copy to CWD |
+
 **PSM selection guide**: `3`=default, `4`=single column, `6`=single block, `11`=sparse text, `12`=single block variable orient (best for tables/forms), `13`=raw line.
 
 **Pre-processing for difficult scans:**
@@ -85,6 +138,52 @@ gray = img.convert('L')
 enhancer = ImageEnhance.Contrast(gray)
 gray_high = enhancer.enhance(2.0)
 ```
+
+### Multi-Pass OCR Cross-Referencing (Difficult Scans)
+
+When a single OCR pass produces garbled output (common with scanned letters, faxes, or low-quality images), run OCR on **multiple image variants** of the same page and cross-reference the results to reconstruct the correct text:
+
+**Strategy — render the same page at different quality levels and compare:**
+
+```bash
+# Pass 1: Original render
+tesseract page1.png stdout -l eng > /tmp/pass1.txt
+
+# Pass 2: Enhanced contrast (grayscale, 2-3x contrast)
+python3 -c "
+from PIL import Image, ImageEnhance
+img = Image.open('page1.png').convert('L')
+img = ImageEnhance.Contrast(img).enhance(2.0)
+img.save('/tmp/page1_enhanced.png')
+"
+tesseract /tmp/page1_enhanced.png stdout -l eng > /tmp/pass2.txt
+
+# Pass 3: Aggressive binarization
+python3 -c "
+from PIL import Image
+img = Image.open('page1.png').convert('L')
+img = img.point(lambda x: 0 if x < 180 else 255, '1')
+img.save('/tmp/page1_binary.png')
+"
+tesseract /tmp/page1_binary.png stdout -l eng > /tmp/pass3.txt
+```
+
+**Cross-reference rules:**
+- **Consensus text** (same words in 2+ passes) → accept as correct
+- **Unique text** (only in one pass) → likely noise or OCR hallucination — flag for manual review
+- **Character-level disagreements** (e.g. "GLASBAU bH" vs "GLASBAU HAHN") → the longer/more specific variant is usually correct
+- **Known artifacts** (e.g. "§@" from logo graphics, "hare ?" for "Page 2") → recognize and discard
+
+**When to use which variant:**
+
+| Variant | Best for | Trade-off |
+|---------|----------|-----------|
+| Original render | General purpose, good contrast pages | May miss faint text |
+| Enhanced contrast (2-3x) | Faint/light text, low-contrast scans | Can amplify noise |
+| Aggressive binarization | Very faint text, pencil marks | Destroys thin strokes |
+| Inverted (dark bg) | White-on-dark text, watermarks | Only for specific layouts |
+
+**Pitfall — don't trust a single pass.** OCR on the same image can produce different results depending on contrast, binarization, and PSM mode. Always run at least 2-3 variants and cross-reference. The most reliable text is the intersection of multiple passes.
 
 ### Table Reconstruction from Garbled OCR
 
@@ -919,7 +1018,7 @@ See `references/bma-cad-pdf-extraction.md` for full fixture legend libraries and
 5. **OneDrive lock affects ALL syscalls**: `shutil.copy2`, `open(...,'rb')`, `os.stat` — all fail with `Resource deadlock avoided`. There is no partial-read workaround for dataless placeholders.
 6. **OneDrive-locked PDFs differ from .xlsb**: Excel .xlsb files need the Excel conversion workaround. PDFs can be hydrated via `open` (Preview) then read with `pdftotext` — do not try the AppleScript/Excel route for PDFs.
 7. **System python3 vs venv**: `pdfplumber` may be installed under `/usr/local/bin/python3` but not under the hermes venv python. Use explicit path or check both.
-8. **Tesseract /tmp access**: Tesseract can fail with `fopenReadStream` errors when the image is in `/tmp` on locked-down systems. Save rendered PNGs to the current working directory instead.
+8. **Tesseract /tmp access**: Tesseract can fail with `fopenReadStream` errors when the image is in `/tmp` on locked-down systems. **Fix: `cd /tmp && tesseract ...`** — changing the working directory to `/tmp` before running tesseract resolves the path resolution issue. Copying to CWD also works.
 9. **No text layer detection is not an error**: PyMuPDF `page.get_text()` returning empty string is valid for image-based PDFs. Always check text length first before deciding the route.
 10. **Encrypted PDFs may decrypt with empty password**: Many national-adoption PDFs (SIST, DIN, BSI previews) use 128-bit RC4 encryption with no user password. Try `pypdf.PdfReader(path).decrypt('')` before giving up.
 11. **Incomplete PDFs (TOC says 42 pages, file has 15)**: National adoptions of European standards often only include the front matter and first few clauses. Always check: (a) page count vs TOC, (b) whether the last page ends mid-sentence or mid-clause. Supplement with web sources (ANSI previews, iTeh standards, academic reviews) for the missing sections.

@@ -985,7 +985,36 @@ body.insert(idx + 1, p)
 
 **Pitfall:** When inserting after a table, check if a note already exists after it (e.g., an RBS note). If so, insert after the existing note, not between the table and the note. Use `idx + 1` and verify the next element's content before inserting.
 
-## 23. Plan documents describe methodology, not live data
+## 23. Revision entries must be client-appropriate
+
+**Hard rule:** Revision entries describe what changed that affects the content, NOT internal formatting details. The user explicitly corrected this.
+
+| Wrong (internal) | Right (client-facing) |
+|---|---|
+| "Format revision — unified table styles, halftone remarks, page breaks, removed internal references. REV00 issue for CG review." | "REV00 - First issue for CG review" |
+| "Fixed table column widths, added cantSplit, removed markdown paths" | "Updated risk distribution data from departmental reviews" |
+| "Removed internal file paths and repo references" | "REV00 - First issue for CG review" |
+
+**User correction signal:** "dont tell such information like this its not usful for the client" — if you wrote formatting/internal details in a revision entry, the user will call it out. The revision log is for the client/CG reviewer, not for the internal team.
+
+## 24. Scanned PDF OCR Workflow
+
+When a supplier letter arrives as a scanned PDF (images only, no text layer):
+
+1. Extract images from PDF using PyMuPDF: `page.get_pixmap(matrix=fitz.Matrix(3, 3))`
+2. Save as PNG, convert to JPEG for tesseract
+3. Run tesseract with `--psm 6` for single uniform block of text
+4. For 1-bit images (black/white), invert before OCR: `ImageOps.invert(img)`
+5. Cross-reference multiple OCR runs on different image variants to resolve noise
+6. If tesseract fails due to encoding issues, run it directly in shell (not via subprocess in Python)
+
+## 25. SOW-Protect Out-of-Scope Items in Plans
+
+When a plan section mixes in-scope and out-of-scope items, split them. Keep Samaya's scope in the document, flag Employer/third-party scope as SOW-Protect or remove entirely.
+
+Example: PRR-CNS-01 originally had "artifact damage liability, ICOM accreditation, loan conditions" — those are Employer responsibilities, not Samaya's. The in-scope part (dust control, temp/humidity during construction) stayed as a Medium risk.
+
+## 26. Plan documents describe methodology, not live data
 
 **Critical distinction for risk plans, resource plans, and similar methodology documents:**
 

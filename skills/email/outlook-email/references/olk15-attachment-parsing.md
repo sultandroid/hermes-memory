@@ -109,3 +109,29 @@ def extract_from_olk15(path, output_dir):
 3. **Magic bytes `d00d`**: Not all files starting with `d00d` are valid — check file size (> 500 bytes minimum).
 
 4. **AppleScript error -1741**: "An error of type -1741 has occurred" = Outlook/Accessibility permissions not granted. Fix: System Settings > Privacy & Security > Automation > allow Terminal/Agent to control Microsoft Outlook. This affects `properties of theMsg` reads AND `save att in saveFile` — both fail silently or with misleading error codes.
+
+5. **Large files (10MB+) timeout in multi-attachment scripts**: When extracting multiple attachments in a single Python script, a single large file (e.g., 17.5MB PDF) can cause the entire script to hit the 300s timeout. **Fix:** Extract one attachment per script call with a short timeout (30s). The base64 decode is fast even for large files — the timeout is from the file read + decode loop, not the decode itself. Pattern:
+
+   ```python
+   # One file per call, timeout=30
+   python3 -c "
+   import base64
+   with open('file.olk15MsgAttachment', 'rb') as f:
+       data = f.read()
+   b64_start = data.find(b'base64\r\r')
+   b64_data = data[b64_start+8:]
+   end = 0
+   for i, byte in enumerate(b64_data):
+       c = chr(byte)
+       if c not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\r\n':
+           end = i; break
+   if end == 0: end = len(b64_data)
+   b64_str = b64_data[:end].decode('ascii').strip()
+   padding = 4 - len(b64_str) % 4
+   if padding != 4: b64_str += '=' * padding
+   decoded = base64.b64decode(b64_str)
+   with open('/tmp/output.pdf', 'wb') as f:
+       f.write(decoded)
+   print(f'Saved: {len(decoded)} bytes')
+   " 2>&1
+   ```

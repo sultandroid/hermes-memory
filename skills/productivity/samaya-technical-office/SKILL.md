@@ -512,6 +512,10 @@ When CG returns a submittal with Code C and Comment #4 requiring a RACI matrix, 
 
 See `references/cg-response-triage-workflow.md` for the full workflow: receive CG response → extract comments → verify against schedule data → coordinate with NRS → update Odoo/register/memory → draft formal response. Includes a worked example from the Arch Viz Package 01 submittal (C status, FI_ME_01 brass spec dispute, G7/G10/G13 scope exclusion).
 
+### Subcontractor Letter → CR Sheet → Risk Register Triage
+
+When CG requests action on a material submittal and the subcontractor simultaneously sends a letter with their position (e.g., GBH Letter 002 on patinated brass), use `references/subcontractor-letter-cr-risk-triage.md` for the triage workflow: OCR the scanned letter → cross-reference CR sheet response strategy → check risk register coverage → present options to user → update CR/risk register as needed.
+
 ### Scope Clarification Response (NRS vs SAMAYA)
 When CG/PMC/NRS requests a breakdown of which specialist positions are covered by NRS vs SAMAYA (per SOW §5.5), follow `references/scope-clarification-response-pattern.md`. Workflow: cross-reference SMP Tier IDs + NRS Appendex A + subcontractor register → produce two-table reply with SMP refs.
 

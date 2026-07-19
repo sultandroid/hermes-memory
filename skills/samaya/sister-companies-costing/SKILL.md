@@ -174,6 +174,12 @@ When building reports for all 13 projects at once:
 4. Use shared `build_report(proj)` function that reads from the embedded dicts
 5. Always backup existing `_Final` files before overwriting: `shutil.copy2(final_path, final_path.replace('.xlsx', f'_backup_{timestamp}.xlsx'))`
 
+## Workflow: Sequential Processing (one project at a time)
+- Process projects **one by one**, not all at once. User explicitly prefers this.
+- Start with project 01 and proceed in order (01 → 02 → 03 → ... → 13).
+- For each project: verify data → build/rebuild → present for confirmation → move to next.
+- Do NOT batch-generate reports for all 13 projects in a single script run.
+
 ## Key Rules
 - **Supervision = 10% of (Accounting + Factory)** — apply to the sum, not just factory cost
 - **All totals formula-based** — no hardcoded numbers in _Final files
@@ -364,6 +370,8 @@ Do NOT create or label a client-ready export while a material unsupported bridge
 - **A workbook that ties arithmetically is not reconciled** — zero variance with an unsupported bridge is `Pending`, not `Complete`. Keep source-backed records, approved allocations, and unsupported bridges in separate rows. Never rename a residual to force a zero variance.
 - **Maintain two distinct outputs when evidence is incomplete** — an internal evidence workbook (exact source paths, unsupported bridges, reconciliation controls) and a client export (clean presentation, no internal paths or DB plans). Do not label a client export as ready while a material unsupported bridge remains.
 - **Detail files MUST NOT duplicate Section 1 items** — verify against main file before delivery
+- **_Final main accounting files may have wrong project data** — the `01_Al_Wahi_Gift_Shop.xlsx` in `_Final` contained Holy Quran (02) data (175,152.36 total) instead of Al Wahi (01) data (329,047.82). Always verify the Summary sheet's project name and totals match the expected project before using it as a reference.
+- **Two Section5_Detail files may exist** — one in `Section5_Factory_Details/` (central) and one in `_Final/{client}/{project}/` (per-project). They may differ. The `Section5_Factory_Details/` version is the more complete one with genuine labor records. The `_Final/` version may be a stub with only adjustment lines.
 - SysLeaders project dropdown uses Arabic names — search by "التمور" for Rateeb, not "Rateeb"
 - SysLeaders POs page path=49 is for project 49 (Rateeb) — path varies per project
 - Archived task data may have labor costs embedded in BOQ unit prices — cross-check with FCA

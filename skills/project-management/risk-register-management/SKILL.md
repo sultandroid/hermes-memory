@@ -676,6 +676,85 @@ This applies to:
 
 If the person is unknown, use the role title as a placeholder but flag it for the PM to fill in the real name.
 
+### Revision Entries Must Be Client-Appropriate
+
+**Hard rule:** Revision entries describe what changed that affects the content, NOT internal formatting details. The user explicitly corrected this.
+
+| Wrong (internal) | Right (client-facing) |
+|---|---|
+| "Format revision — unified table styles, halftone remarks, page breaks, removed internal references" | "REV00 - First issue for CG review" |
+| "Fixed table column widths, added cantSplit, removed markdown paths" | "Updated risk distribution data from departmental reviews" |
+| "Removed internal file paths and repo references" | "REV00 - First issue for CG review" |
+
+**User correction signal:** "dont tell such information like this its not usful for the client" — if you wrote formatting/internal details in a revision entry, the user will call it out. The revision log is for the client/CG reviewer, not for the internal team.
+
+### SOW-Protect Out-of-Scope Items
+
+When a risk mixes in-scope and out-of-scope items, split them. Keep Samaya's scope as a risk, flag Employer/third-party scope as SOW-Protect.
+
+Example: PRR-CNS-01 originally had "artifact damage liability, ICOM accreditation, loan conditions" — those are Employer responsibilities, not Samaya's. The in-scope part (dust control, temp/humidity during construction) stayed as a Medium risk owned by HSE Manager.
+
+### CG Response Forecasting for Risk Plans
+
+When the user asks to forecast CG response on a risk plan, evaluate against these criteria:
+
+| Code | Meaning | Typical triggers |
+|---|---|---|
+| A | Accepted | Standard methodology (PMBOK-aligned), no factual errors |
+| B | Minor comments | Missing notes on empty categories, role titles instead of names, vague contingency figures |
+| C | Revise & Resubmit | Unfilled data placeholders ("To be confirmed"), incomplete register architecture, contradictions between sections |
+| D | Rejected | Wrong methodology, missing required sections, factual errors |
+
+**Key insight for methodology plans:** CG evaluates whether the plan describes a workable process, not whether the live data is complete. "To be recalculated from PRR" is acceptable for EMV values because EMV lives in the register. But "AV Register in progress" while claiming "4-register architecture" is a contradiction that triggers Code B/C.
+
+### Scanned PDF OCR Workflow
+
+When a supplier letter arrives as a scanned PDF (images only, no text layer):
+
+1. Extract images from PDF using PyMuPDF: `page.get_pixmap(matrix=fitz.Matrix(3, 3))`
+2. Save as PNG, convert to JPEG for tesseract
+3. Run tesseract with `--psm 6` for single uniform block of text
+4. For 1-bit images (black/white), invert before OCR: `ImageOps.invert(img)`
+5. Cross-reference multiple OCR runs on different image variants to resolve noise
+6. If tesseract fails due to encoding issues, run it directly in shell (not via subprocess in Python)
+
+### Unified Register Template
+
+All 4 register sheets (PRR, DDR, HSE, AV) must use the SAME 14-column template:
+
+| # | Column | Type |
+|---|--------|------|
+| 1 | ID | Text |
+| 2 | Category / Discipline | Text |
+| 3 | Risk Event | Text |
+| 4 | Cause / Hazard | Text |
+| 5 | Impact / Consequence | Text |
+| 6 | Probability | Number |
+| 7 | Severity | Number |
+| 8 | Score | **Formula** (P × S) |
+| 9 | Rating | **Formula** (IF) |
+| 10 | Response Strategy | **Dropdown** (6 options) |
+| 11 | Mitigation / Controls | Text |
+| 12 | Risk Owner | Text |
+| 13 | Target Close | Text |
+| 14 | Status | Text |
+
+Column widths: [14, 22, 35, 30, 30, 10, 10, 10, 10, 18, 40, 20, 14, 14]
+
+**Dropdown options:** Avoid, Transfer, Mitigate, Accept (Active), Accept (Passive), SOW-Protect
+
+**Scoring formulas by register:**
+- PRR: `=F{r}*G{r}`, Rating: `=IF(H{r}>=12,"Critical",IF(H{r}>=8,"High",IF(H{r}>=4,"Medium","Low")))`
+- DDR: `=F{r}*G{r}`, Rating: `=IF(H{r}>=16,"Critical",IF(H{r}>=10,"High",IF(H{r}>=5,"Medium","Low")))`
+- HSE: `=F{r}*G{r}`, Rating: `=IF(H{r}>=16,"Critical",IF(H{r}>=10,"High",IF(H{r}>=5,"Medium","Low")))`
+- AV: `=IF(F{r}="","",F{r}*G{r})`, Rating: `=IF(H{r}="","",IF(H{r}>=12,"Critical",IF(H{r}>=8,"High",IF(H{r}>=4,"Medium","Low"))))`
+
+**Dashboard formulas reference PRR sheet:**
+- Total: `=COUNTA('Master Risk Register'!A2:A100)`
+- Critical: `=COUNTIF('Master Risk Register'!I2:I100,"Critical")`
+- High: `=COUNTIF('Master Risk Register'!I2:I100,"High")`
+- Category distribution: `=COUNTIF('Master Risk Register'!B:B,"*{cat}*")`
+
 ### Cleanup Stale Dropdowns
 
 The `build_unified_sheet()` function may leave duplicate dropdowns from the old template. After rebuilding, clear all existing data validations and add a single one:
@@ -1159,6 +1238,42 @@ git commit -m "Risk register reconciliation C{NN} — {date}
 | **Overdue decision, extend target** | PRR-FLS-02: Fire Pump Room, target_close 16-Jul | 7-option study still undecided | Extend to 22-Jul, add history note |
 | **New evidence received** | PRR-PRC-05: Patinated brass Oddy risk | GBH Letter 002 received 16-Jul | Add to evidence array |
 | **No change, just review** | PRR-APP-01: Renovation licence | Still pending per MoM-14 section 4 | Update last_reviewed, add history note |
+
+### Rescoring Based on Risk Manager Decision with Exit Criteria
+
+When the Risk Manager (user) issues a formal rescoring decision, the change must be precise and documented with clear exit criteria for further downgrade.
+
+#### Decision Pattern
+
+| Element | What to Capture | Example |
+|---------|----------------|---------|
+| **Who decided** | Role, not name | "Risk Manager" or "Kimi (Risk Manager)" |
+| **What changed** | Which dimension(s) moved | Probability 4→3 (appointment done, PO issued, kick-off held) |
+| **What stayed** | Which dimension(s) unchanged | Severity stays 4 (first deliverables missed, SOW not CG-approved, critical-path chain) |
+| **Why unchanged** | Specific consequence chain | "Blocks IFC-0004 Life Safety (16) and Fire Pump (12)" |
+| **Exit criteria** | Conditions for next downgrade | "CG SOW approval + first package delivered → High (9)" |
+| **History entry** | Formal record | `{"date": "2026-07-18", "action": "Reframed + Rescored", "by": "Kimi (Risk Manager)", "note": "..."}` |
+
+#### Rules for Rescoring
+
+- **Probability drops** when the root cause threat is eliminated or materially reduced (appointment done, PO issued, kick-off held, first submittal approved)
+- **Severity stays** when the consequence chain is unchanged — the same downstream risks (IFC-0004, Fire Pump) are still blocked
+- **Do not reduce both dimensions simultaneously** unless the risk event itself has fundamentally changed
+- **Exit criteria must be specific and measurable** — not "when things improve" but "CG SOW approval + first package delivered"
+- **Document in both risks.json history AND treatment file** — the treatment file gets a "Reconciliation note" section with the full rationale
+
+#### Treatment File Update Pattern
+
+```markdown
+## Exit criteria (→ High 9)
+
+1. CG approves MEP SOW under design plan
+2. First MEP deliverables package delivered
+
+## Reconciliation note (2026-07-18)
+
+Rescored 4×4→3×4 per Risk Manager decision. Probability reduced (appointment done, PO issued, kick-off held, ZD-0068 Code B). Severity unchanged (first deliverables missed, SOW not CG-approved, critical-path dependency on IFC-0004 and Fire Pump). Exit criteria defined for downgrade to High (9).
+```
 
 ### Worked Example: PRR-DES-01 Reconciliation (2026-07-18)
 

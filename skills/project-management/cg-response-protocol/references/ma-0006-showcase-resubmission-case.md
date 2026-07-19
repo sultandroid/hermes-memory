@@ -108,6 +108,39 @@ When supplier test reports/certifications take time (supplier lead time), but th
 5. **Look & feel first** — visual approval can proceed while technical docs catch up
 6. **CR Sheet goes to CG** — email thread + checklist stay outside the support folder for direct sending
 
+## GBH Letter 002 — Supplier Advises Against Own Material (Extended Pattern)
+
+When the supplier's formal letter states they do NOT recommend the specified material, this changes the response strategy:
+
+### What GBH Letter 002 contained
+- No existing Oddy test reports/certificates available for patinated brass
+- Will submit sample for independent Oddy testing in Germany — results expected end of August
+- **GBH does NOT recommend patinated brass** for 5 reasons: single-source supply (1 supplier globally), unguaranteed chemical patination results, colour consistency impossible, cross-batch matching difficult, time-consuming manual process
+- GBH explicitly requested that patinated brass approval NOT hold shop drawing approval
+
+### How this changed the CR Sheet response
+
+| Before GBH Letter 002 | After GBH Letter 002 |
+|----------------------|----------------------|
+| "Test reports in progress with supplier" | "GBH confirms NO existing Oddy certs. Supplier advises against this material." |
+| "Alternative PVD-coated sample in parallel" | "PVD-coated alternative is the RECOMMENDED path forward, not a fallback." |
+| "CG's 2 alternative manufacturers request — working on it" | "Only 1 global supplier exists for patinated brass. 2 alternatives for the SAME material is not feasible. Proposing PVD-coated alternatives instead." |
+| "Look & feel approval now, test reports to follow" | Same, but with supplier's own letter as supporting evidence |
+
+### CR Sheet update pattern for GBH Letter 002
+
+1. **Item 4 (Brass finish):** Append "UPDATE 16-Jul-2026: GBH Letter 002 received. [summary of key points]"
+2. **Item 5 (MA-0007 strategy):** Replace the "working on it" response with a REVISED PROPOSAL that:
+   - States the single-source reality
+   - Proposes PVD-coated KSA alternative as primary path
+   - References risk PRR-PRC-05 (Score 12, Critical)
+3. **New Item 11 (CG 13-Jul request):** Insert a new row addressing Mansour's request for 2 alternative manufacturers, referencing GBH Letter 002 as the source confirming single-source
+4. **Status change:** "REQUESTED - awaiting CG reply" → "REVISED - awaiting CG direction"
+
+### Risk register cross-reference
+
+The patinated brass risk was already registered as PRR-PRC-05 (Score 12, Critical) in the Master Risk Register. The CR Sheet should reference this to show the risk is tracked and being managed.
+
 ## Canonical File Locations (verified 2026-07-14)
 
 **The same MA-0006 PDF is filed in 10+ locations.** When searching, the **canonical register** is `~/aseer-museum-pm/01_Registers/material_submittal_register.md` (row 24 = MA-0006, status C). The **canonical support package** is:
@@ -157,3 +190,37 @@ The 5-comment pattern (above) covers only CG rejection items. The **real** CR sh
 - CR sheet + checklist are dated 2026-07-13 — submission is staged, not sent
 - The 6 OPEN items (items 4 partial + 6, 7, 8, 9, 10) need either (a) closure before issue, or (b) cover-letter commitment to close post-approval
 - **Critical-path risk:** the 169-row procurement Excel (`ASM_Material_Procurement_Schedule_ARCH.xlsx`) lists 13 showcase lines all submittal-rejected under MA-0006 with delivery target 2027-12-03 — 14 months AFTER the 30-Sep-2026 contract handover. MA-0006 Rev.01 must be issued + approved fast or it becomes the showcase installation's binding constraint.
+
+## First Submission Baseline (MA-0006 Rev.00)
+
+The first submission already had all technical data sheets complete. The resubmission is about responding to CG's open conditions, not adding missing TDS.
+
+| Material | Data Sheet Submitted |
+|----------|-------------------|
+| Silicone sealant | Dow Corning 993 TDS |
+| Silicone sealant | EGO TDS |
+| Brass (patinated) | CuZn37 spec + EDEN Patination |
+| Silicone gasket | BSP Sipro 60 Shore A |
+| Corian | Corian Spec Data |
+| Fabric | Hallingdal 65 (Kvadrat) specs |
+| Glass (AR) | Guardian Clarity 55.4 |
+| Glass back paint | Peter Lacke datasheet |
+| Glass hood motor-pump | Ergoswiss Pumps |
+| Lighting | ATTO-S spec + Atto |
+| Powder coating | Akzonobel + IGP 591T PARKOUR |
+| Labels/samples | GBH Labels_Sample_2 |
+| + sample board PDF | |
+
+**CG closed items 1-3** (materials compliance, glass, SI-007) — those were accepted.
+
+**What's still open from CG (Rev.00 rejection):**
+- Item 6: 3 alternative suppliers (for glass/Guardian)
+- Item 7: Conservation/Oddy test certificates
+- Item 8: Shop drawings HVAC/electrical/humidity
+- Item 9: Full-scale mock-up
+- Item 10: On-site GBH team
+
+**What's new in Rev.01 resubmission:**
+- The **CR Sheet** addressing all CG comments
+- The **split strategy** — brass finish separated to Track B so materials + shop drawings can proceed
+- No new data sheets needed — all 14 materials were already complete and accepted
