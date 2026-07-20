@@ -38,6 +38,44 @@ ids = call('purchase.order', 'search', [domain], {'limit': 200})
 pos = call('purchase.order', 'read', [ids], {'fields': fields})
 ```
 
-## 4. `search_read` limit is 500 by default
+## 4. `'not in'` domain operator CRASHES
+
+**Error:** `TypeError: BaseModel.search_read() got multiple values for argument 'fields'`
+
+**Root cause:** The `'not in'` operator in Odoo 18 XML-RPC causes a parsing error in `expression.py` that misinterprets the domain structure.
+
+**Workaround — use positive `'in'` list instead:**
+```python
+# BROKEN:
+pos = call('purchase.order', 'search_read',
+    [['state','not in',['draft','cancel','sent']]], {'fields': fields})
+
+# WORKS:
+pos = call('purchase.order', 'search_read',
+    [['state','in',['purchase','done']]], {'fields': fields})
+```
+
+## 5. `search_read` domain format — extra list wrapper
+
+The domain must be wrapped in an extra list `[domain]` not passed as `domain`:
+
+```python
+# CORRECT:
+models.execute_kw(db, uid, apikey, model, 'search_read', [domain], {'fields': fields})
+#                                                          ^^^^^^^^^
+# The domain is a list of lists. search_read expects it as the first element of the args list.
+```
+
+## 6. `account.move.read()` for bill lookup
+
+Use `read()` with single ID instead of `search_read()` to avoid domain operator bugs:
+
+```python
+# CORRECT:
+b = models.execute_kw(db, uid, apikey, 'account.move', 'read', [inv_id],
+    {'fields': ['name','amount_total','amount_residual','payment_state','state']})
+```
+
+## 7. `search_read` limit is 500 by default
 
 Set to 2000 to catch all POs (1895 total in Samaya Odoo as of Jul 2026).

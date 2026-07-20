@@ -20,6 +20,47 @@ CG comments come in two distinct types. **Never merge them into one response.**
 | **Submission Plan Comments** | CG review of submission plan/register (e.g. Mohammad Elbaz) | **CR Sheet** (Excel) - sent to CG for agreement | CG + internal |
 | **Detailed Technical Review** | CG review of technical deliverables (e.g. Abdrabo Shahin, Code C) | **Consultant Comment Register** (Excel) - internal tracking | Internal only until resubmission |
 
+## Mandatory: Run the 7 Lenses on Every CG Interaction
+
+This protocol integrates with the **CG Analysis & Lessons Learned System** (`cg-analysis-and-lessons` skill). Every CG response handler MUST run the 7 lenses:
+
+### Pre-Submit Gate (before sending anything to CG)
+
+| Lens | Check |
+|------|-------|
+| 🔴 Rejection | Has this submittal type been rejected before? Check `cg_rejection_patterns.md` |
+| 🟡 Condition | Are all previous Code B conditions closed? Check `cg_code_b_conditions.md` |
+| 📋 Checklist | Run the pre-submission checklist in `cg_forecast_engine.md` §3 |
+| 💡 Improvement | Is there a lesson from a similar past submittal? Check `lessons_learned_register.md` |
+
+If any check fails → **do not submit**. Flag the blocker and resolve first.
+
+### Post-Response Capture (when CG replies)
+
+| Lens | Action |
+|------|--------|
+| 🔴 Rejection | Code C or D? → Capture CG comment verbatim → Log as lesson |
+| 🟡 Condition | Code B with conditions? → Add to `cg_code_b_conditions.md` |
+| ⏰ Delay | Response took >14 days? → Flag as DA risk in submittal register |
+| ⚠️ NCR | New NCR issued? → Root cause analysis → Log as lesson |
+| 🔄 Rework | Does the response require rework? → Capture the process gap |
+| 📋 Checklist | Did we miss a checklist item? → Update the checklist |
+| 💡 Improvement | Any positive finding? → Capture for future projects |
+
+### Lessons Learned: Client-Sharable Only
+
+When logging a lesson from a CG interaction, remember the lessons learned register is a **formal project deliverable** shared with the client. Only capture project-relevant lessons — no internal process notes, tool quirks, or session-specific events. See `cg-analysis-and-lessons` skill for the full lessons learned workflow and what to exclude.
+
+### CG Reviewer Behavior Patterns (Quick Reference)
+
+| Reviewer | Type | Strategy |
+|----------|------|----------|
+| **Mansour Alrezeni** | Code enforcer | Submit only what spec says. Do not propose alternatives or splits — he will reject. Escalate structural decisions to Elbaz. |
+| **CG (general)** | Conflates deliverables | When CG returns Code C with cross-discipline comments, check if comments are in-scope before accepting them all |
+| **CG (general)** | Unaware of NRS-MoC deliverables | Before responding to design-stage requests, verify if already delivered under original design contract |
+
+See `cg-analysis-and-lessons` skill for full reviewer profiles, forecast engine, and lessons learned register.
+
 ## Stream 1: Submission Plan CR Sheet
 
 - Covers comments about **what to submit, when, and by whom**
@@ -235,6 +276,42 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 - "CG want: loading notation schedule, load combo names. Loading tables in BOD per SBC. Need to clarify and resubmit."
 - "CG want: audit report for previous design stage. Under preparation. Will include in next package."
 
+## Deemed Approval — CG Silence = Approval
+
+When CG does **not respond** to a submittal within the contractual review period (typically 14–21 working days per DMP/SoW), the submittal is **deemed approved** per standard construction practice.
+
+### When to Apply
+
+| Condition | Action |
+|-----------|--------|
+| CG silent for > contractual review period | Mark as **Deemed Approved** in the register |
+| CG silent for > 30 days with no acknowledgment | Flag in status report — unreasonable delay |
+| CG silent for > 60 days (as in this session) | **Confirmed deemed approved** — proceed as if Code A |
+| CG eventually responds after deemed approval date | Log the response but do not retroactively change status unless CG explicitly overrides |
+
+### Register Entry
+
+Update the submittal register with:
+
+| Field | Value |
+|-------|-------|
+| Status | **Deemed Approved** (not "Pending") |
+| Date Approved | Last day of contractual review period (or date you declared it) |
+| Remarks | "CG did not respond within [N] days. Deemed approved per [DMP/SoW clause if available]." |
+
+### Email Record
+
+Keep the email thread showing:
+1. Date of submission (e.g., 21 May 2026)
+2. Date range with no CG response (e.g., 21 May → 20 Jul = 60 days)
+3. Your declaration of deemed approval
+
+### Risk
+
+- CG may later claim they were still reviewing — document your declaration date clearly
+- For **critical-path items** (shop drawings, long-lead materials), send a follow-up email before declaring deemed approval: "We have not received a response within the review period. Please advise if you require more time, otherwise we will proceed per the deemed approval provision."
+- For **non-critical items** (management plans, informational submittals, CV packs), deemed approval is safer to declare without follow-up
+
 ## Status Definitions
 
 | Status | Meaning | Color |
@@ -243,6 +320,7 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 | Open | Action required, pending | Red |
 | Noted | Acknowledged, no action needed | Blue |
 | C:Resubmit | CG returned with comments, blocked until resubmission | Yellow + "BLOCKED" prefix |
+| Deemed Approved | CG did not respond within review period | Green (same as Approved) |
 
 ## CRS Triage — Filtering Comments Before Forwarding to Designer
 
@@ -529,6 +607,7 @@ When CG returns a management plan (SMP, DMP, HSE Plan, QMP) with Code C, audit e
 See `references/plan-cg-comment-audit.md` for the full workflow: extracting comments, mapping to ER/SoW clauses, checking the submitted document, determining priority, and producing the audit table.
 See `references/crs-to-drawing-register.md` for extracting per-drawing review codes from CG CRS Excel files and updating the drawing register with floor-by-floor DD Gate status tables.
 See `references/crs-excel-extraction-from-outlook.md` for extracting CRS Excel files from Outlook .olk15MsgAttachment attachments — base64 boundary markers, XLSX parsing from ZIP, and multi-round Code C pattern analysis.
+See `references/cg-rejection-patterns-and-reviewer-profiles.md` for the methodology to build a consolidated CG rejection pattern register and per-reviewer profiles from scattered project registers and CG response documents. Covers the 7-phase workflow (extract C/D submittals, identify patterns, calculate rates, analyse cycle times, build profiles, forecast responses, write recommendations) and the canonical output structure for both files.
 
 ### Key ER References for Plan Audits
 

@@ -1148,6 +1148,35 @@ After extracting, display as compact tables — the user prefers drill-down filt
 print(f"  PR-{n:03d} | {status:20s} | {updated if updated else '-':12s} | {desc:40s}")
 ```
 
+### Deemed Approval Rule (ER §2.4.A)
+
+When a submittal has been with CG for **14+ calendar days** with no response, it is **deemed approved** per ER §2.4.A. Any agent updating the submittal register MUST apply this rule:
+
+1. **Check elapsed time** — compare `submission_date` to today. If >14 days and no CG response date recorded, flag as DA.
+2. **Mark status as `DA`** (Deemed Approved) — not A, B, C, or D.
+3. **Add note**: `"CG silent N+ days (14-day review period per ER §2.4.A). Deemed approved."`
+4. **Update `last_updated`** in frontmatter.
+5. **Log in decision log** — record the deemed-approval event so it's auditable.
+
+**Status code definition** (add to register legend):
+```
+DA=Deemed Approved (CG silent >14 days per ER §2.4.A)
+```
+
+**Example** (from 2026-07-20):
+```
+| ASR-SAM-KP-CV-PACK-BIM-001 | BIM Unit Key Personnel CV Submittal Pack | BIM | 2026-05-21 | — | DA | CG silent 60+ days (14-day review period per ER §2.4.A). Deemed approved. 8 CVs: Dr. Waleed Salah, et al. |
+```
+
+**When to NOT apply DA:**
+- Submittal was explicitly rejected (Code D) — DA does not override a rejection
+- Submittal was returned Code C (Revise & Resubmit) — the clock resets on resubmission
+- CG has acknowledged receipt but not yet reviewed — still counts as "no response" after 14 days
+- The submittal is a stage-gate deliverable with a different review period specified in the contract
+
+**Implementation in repo:**
+The `10_Manager_Lanes/10_Document_Controller/dashboard.md` in the aseer-museum-pm repo has an Auto-Rules section codifying this. Any agent working on the submittal register should check that dashboard first. The submittal register's status legend now includes `DA`.
+
 ### Register mtime check (efficiency)
 
 Before deep-scanning Outlook for register updates, check `os.path.getmtime()` on the Excel file. If modified within 3-5 days, skip scanning and report current. Register files are often already current — don't waste time on SQLite + attachment extraction when nothing has changed since last modification.

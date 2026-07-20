@@ -6,19 +6,15 @@ trigger: user asks to create/clean/organize a submittal register, add dates, fix
 tags: [bim, submittal-register, aseer, openpyxl, excel, schedule]
 ---
 
+## Deemed-Approval Rule
+
+See `references/deemed-approval-rule.md` for the full rule: ER §2.4.A 14-day review period, DA status code, note format, retroactive application, auto-rule for Document Controller dashboard, and daily cron job setup.
+
+## Design Tracker Excel
+
+See `references/design-tracker-excel.md` for populating Design Tracker workbooks from repo registers + Odoo — source priority chain, phase-to-date mapping, Odoo package IDs, Arabic remarks, 7-day KSA CG review period, and pitfalls. discipline-specific overrides, Validation Summary formulas, and the no-placeholder rule.
+
 ## RFI/TQ Register — Status Semantics
-
-**Critical rule: RFI status = whether CG answered, not the folder it sits in.**
-
-| Status | Meaning |
-|--------|---------|
-| OPEN | Submitted, no CG answer yet |
-| CLOSED | CG answered (any outcome) |
-| REJECTED | CG rejected the query itself |
-
-Never use "PENDING APPROVAL" or "PENDING REVIEW" — those describe folder state, not answer state. An RFI in an "Approval/" subfolder is still OPEN until CG responds.
-
-See `references/rfi-register-design.md` for the full pattern: column design, revision handling, Adel's folder bank cross-check, and naming anomalies to watch for.
 
 ## AV Prequalification Package Handling
 

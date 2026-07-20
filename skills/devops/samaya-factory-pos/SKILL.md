@@ -70,5 +70,9 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") \
 ## Pitfalls
 - Odoo 18 `search_read` with `project_id` in domain crashes — always fetch all + Python filter
 - Odoo 18 `['name','in',list]` domain crashes — same workaround
+- **`'not in'` domain operator crashes** — `[['state','not in',['draft','cancel']]]` causes `TypeError: BaseModel.search_read() got multiple values for argument 'fields'`. Use positive list instead: `[['state','in',['purchase','done']]]`
+- **`search_read` domain format** — must wrap domain in an extra list: `[domain]` not `domain`. Correct: `models.execute_kw(db, uid, apikey, model, 'search_read', [domain], {'fields': fields})` — the extra `[]` around domain is critical.
+- **`account.move.read()` for bill lookup** — use `read()` with single ID, not `search_read()`, to avoid the `'in'` operator crash: `models.execute_kw(db, uid, apikey, 'account.move', 'read', [inv_id], {'fields': ['name','amount_total','amount_residual','payment_state','state']})`
 - `search_read` limit defaults to 500 — set to 2000 to catch old POs
 - OneDrive path has Arabic characters — use exact path from `read_file` output
+- **Workshop vendor list** — when filtering workshop POs by vendor name, use the comprehensive list in `references/workshop-vendors.md`. The list covers all known workshop suppliers (carpentry, paint, fiber, metal, upholstery, wood, veneer, outsourcing, expenses).

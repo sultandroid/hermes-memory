@@ -134,6 +134,57 @@ Add the materials register entries to `01_Registers/submittal_register.md` under
 | MOC-MUS-ASE-1A0-MA-0008 | Metal SS PVD Coated Patinated Brass Effect — SAM-FIN-SS-002 | Materials | **In Preparation** | ... |
 ```
 
+## Cross-Register Material Submittal Pipeline Audit
+
+When the user asks to "track" materials submittals and prequalifications, the answer spans **four registers** that must be cross-referenced:
+
+| Register | File | What it tracks |
+|----------|------|----------------|
+| Material Submittal (MA) | `01_Registers/material_submittal_register.md` | Material submittals submitted to CG, with codes |
+| Prequalification (PQ) | `01_Registers/prequalification_register.md` | Supplier/vendor prequalifications, with codes |
+| Compliance Gaps | `Technical_Office/Compliance_System/compliance_gaps.md` | Gaps between approved PQs and missing MAs |
+| Risk Register | `01_Registers/risk_register.md` | Formal risks with PxS scoring and treatment plans |
+
+### Audit Workflow
+
+1. **Read all four registers** to get the full picture
+2. **Identify materials with no MA submission** — cross-reference the MA register against the Finishes Schedule. Materials specified in design but not in the MA register are "not yet submitted."
+3. **Identify PQs with no corresponding MA** — a supplier may be prequalified (PQ Code B) but the material submittal (MA) may not have been made yet. This is a compliance gap.
+4. **Identify compliance gaps not in the risk register** — each open gap should have a corresponding risk ID. If not, create one.
+5. **Report the consolidated picture** — use a table like:
+
+| Status | Count | Details |
+|--------|-------|---------|
+| MA submitted, Code B | N | Approved w/ comments |
+| MA submitted, Code C/D | N | Needs resubmission |
+| PQ approved, no MA | N | Compliance gap — submit MA |
+| No PQ, no MA | N | Need to source + PQ + MA |
+| Not yet in any pipeline | N | From design schedule, not started |
+
+### Common Findings Pattern
+
+| Finding | Action |
+|---------|--------|
+| MA-0006/0007 Code C with outstanding conditions | Build resubmission support folder; decouple look-and-feel from certifications |
+| PQ approved (Code B) but no MA submitted | Create compliance gap; submit MA per spec |
+| Material in design schedule but no PQ or MA | Add to procurement pipeline; assign MA ref |
+| Compliance gap exists but no risk ID | Create new risk (PRR-PRC-08 style) with treatment plan |
+| Risk exists but no treatment plan | Create treatment file in `03_Plans/08_Risk/treatment/` |
+
+### Pitfall — MA Register is Sparse
+
+The MA register typically has only 8-10 entries while the design schedule specifies 100+ materials. This is normal for early stages — most materials haven't entered the submittal pipeline yet. The audit should distinguish between:
+- **Materials that should have been submitted** (critical path, long lead, CG-chasing) — flag as risk
+- **Materials that are not yet due** (per programme) — note but don't flag
+- **Materials with no procurement path at all** (no supplier identified, no PQ) — flag as critical gap
+
+### Pitfall — Prequalification Register Has 125+ Entries
+
+The PQ register is large (110+ from old log + 15+ recent). Most are historical (Jan-Jun 2026). The active PQs to watch are the recent ones (PQ-0100 onwards) under the current `MOC-MUS-ASE-` prefix. Filter by:
+- Status = U (Under Review) — actively pending
+- Status = C (Revise & Resubmit) — needs action
+- Recent date (Jul 2026+) — current pipeline
+
 ## Supplier Technical Datasheet Risk Analysis
 
 Supplier datasheets contain risk signals that are easy to miss but critical for museum-grade materials. When a supplier submits a datasheet, analyze it for disclaimers before relying on it for CG submission or procurement.

@@ -59,6 +59,8 @@
 | PRR-PRC-04 | SI-13 (ICT PQ), NC-1E0-0010 (ICT delay), NC-1L0-0011 (landscape) | SI + NCR folders |
 | PRR-SEC-01 | SI-13, NC-1E0-0010 | SI + NCR folders |
 | PRR-MEP-01 | SI-19 (EL assessment delayed) | SI folder |
+| **PRR-CON-03** | **TQ-0021 Code B (14-Apr-2026) — CG approved drywall alternative** | **RFI Approval subfolder** |
+| **DB-X-003** | **Stamped-A2742-1800 type 01.pdf (14-Jun-2026) — NRS K10 specs stamped** | **Outlook (Talha Yousaf)** |
 
 ## OneDrive Read Safety
 

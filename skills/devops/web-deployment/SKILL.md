@@ -298,6 +298,7 @@ $dataDir = __DIR__ . '/../../hotspot-data';  // OUTSIDE deploy dir
 | Hostinger 403 Forbidden | SCP uploads create files with `-rw-------` (600) permissions. Web server cannot read them. Always `chmod -R 755` after upload on Hostinger/LiteSpeed. |
 | Hostinger subfolder 404 (htaccess rewrite) | Hostinger sometimes has a root `.htaccess` that rewrites everything to a `/build/` subdirectory via `RewriteRule ^(.*)$ /build/$1 [L]`. Your files must go inside `/build/` as well. See [`references/hostinger-htaccess-rewrite.md`](references/hostinger-htaccess-rewrite.md) for the exact rule and fix. |
 | Apple extended attributes | Use `COPYFILE_DISABLE=1` or strip with `dot_clean` |
+| SSH pipe silently fails to write | `cat file | ssh ... cat > remote` may complete with exit 0 but leave the file unchanged. The pipe can silently drop data on some shared hosts. **Reliable pattern:** `scp -P port file user@host:/tmp/file && ssh -p port user@host "cp /tmp/file /target"` — scp to /tmp/ first, then cp to final destination. Always verify with `grep -c 'expected_string' /target` after deploy. |
 
 ### Deploying Named HTML Files (not index.html)
 

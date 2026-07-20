@@ -29,8 +29,8 @@ triggers:
 | 08 | Qahwatna Al-Safiya Cafe | Qahwitna comp_ | Qahwatna_Company | 359 | 26 | Madinah |
 | 09 | Tzkarat Store | Tezkarat Trading Com_ | Tezkarat_Trading_Company | 279 | 51 | Makkah |
 | 10 | Rateeb Store | Rateeb Trading Com_ | Rateeb_Trading_Company | 282 | 42 | Makkah |
-| 11 | Najdi Coffee | Qahwitna comp_ | Qahwatna_Company | 345 | 173 | Makkah |
-| 12 | Ice Coffee Shop | Qahwitna comp_ | Qahwatna_Company | 312 | TBD | Makkah |
+| 11 | Najdi Coffee | **Tiba Gift comp_** (actual) / Qahwitna comp_ (map) | **Tiba_Gift_Company** (actual) / Qahwatna_Company (map) | 345 | 173 | Makkah |
+| 12 | Ice Coffee Shop | **Tiba Gift comp_** (actual) / Qahwitna comp_ (map) | **Tiba_Gift_Company** (actual) / Qahwatna_Company (map) | 312 | TBD | Makkah |
 | 13 | Hera Visitor Center | _Final (root) | (standalone) | 81 | TBD | Makkah - Jabal Alnour |
 
 ## Paths
@@ -70,7 +70,8 @@ _Final/
 ├── Qahwitna comp_/                     ← DO NOT DELETE OR RENAME
 │   ├── 04_Hira_Cafe/
 │   ├── 08_Al_Safiya_Cafe/
-│   ├── 11_Najdi_Coffee/
+│   ├── 11_Najdi_Coffee/                          ← User placed Project 11 under Tiba Gift, NOT Qahwitna
+│   │   └── 11_Cafe_4_Najdi_Coffee_Factory_Cost_Details_Clean.xlsx
 │   └── 12_Ice_Coffee_Shop/
 ├── Tezkarat Trading Com_/              ← DO NOT DELETE OR RENAME
 │   └── 09_Tzkarat_Store/
@@ -194,9 +195,10 @@ The user now works in `00_Organized_13_Project_Factory_Reconciliation/` (not `_F
 - When user says "fix this gap", adjust the forecast line to match the target exactly. Update all 3 sheets (Materials & POs, Summary, Gap_Analysis) to reflect the change.
 
 ## User Communication Preferences
-- **English only** — never present data in Arabic. The user cannot read Arabic. Translate all category names, descriptions, and notes to English before showing in tables or file content.
-- **"fix" = proceed with default/verified-only approach** — when the user says "fix" as a single-word command after seeing flagged items, it means: exclude all "Needs Review" and "Not Related" items, use only verified items, and build the files immediately. Do not ask for confirmation on each flagged item.
-- **"next" = move to next project** — after confirming a project is done, "next" means proceed to the next project in sequence (01→02→03→...→13).
+- **English only** — never present data in Arabic. The user cannot read Arabic. Translate ALL category names, descriptions, and notes to English before showing in tables or file content. This includes column headers, category groupings, audit flags, and item descriptions. Even if the source file has Arabic names, translate them to English equivalents before presenting to the user.
+- **"fix" = proceed with default/verified-only approach** — when the user says "fix" as a single-word command after seeing flagged items, it means: exclude all "Needs Review" and "Not Related" items, use only verified items, and build the files immediately. Do not ask for confirmation on each flagged item. Just build and report.
+- **"next" = move to next project immediately** — after confirming a project is done, "next" means proceed to the next project in sequence (01→02→03→...→13). Do NOT ask "ready for next?" or "want me to start the next one?" — just look at the next project's data and present it. The user is driving the sequence; your job is to keep moving.
+- **Parallel dispatch pattern** — when dispatching a subagent to build files for the current project, immediately start examining the next project's data in the same turn. Don't wait for the subagent to finish before looking ahead. This keeps the conversation moving while files are being built in the background.
 ## Handling Audit-Flagged Items (Projects with verification flags)
 
 Some projects (like Qahwatna Cafe) have items flagged as "Needs Review" or "Not Related" in the accounting file. When building factory cost details:
@@ -244,7 +246,7 @@ Save reusable generator scripts to `Scripts/generate_{project}_factory_cost.py`.
 
 1. **Embed data directly** — read FCA files once via `read_file`, extract labour/PO/reallocation data, and hardcode it as Python lists in the script. Do NOT parse FCA XLSX programmatically — formats vary per project.
 2. **Define data as tuples** — use `(trade, records, hours, cost)` for labour, `(po_ref, description, amount)` for materials, `(description, amount)` for other expenses.
-3. **Use consistent tuple indexing** — labour tuples have 4 elements (index 3 = cost), materials have 3 elements (index 2 = amount), other have 2 elements (index 1 = amount). **Pitfall:** mixing up tuple indices causes `IndexError` at runtime.
+3. **Use consistent tuple indexing** — labour tuples have 4 elements (index 3 = cost), materials have 3 elements (index 2 = amount), other have 2 elements (index 1 = amount). **Pitfall:** mixing up tuple indices causes `IndexError` at runtime. When this happens, the same wrong index may appear in multiple functions (labour total, summary total, gap analysis total). Use `patch(replace_all=True)` to fix all occurrences at once rather than patching each function individually — the error will surface the next function that uses the same wrong index on the next run.
 4. **Build both files** — full version (5 sheets) and clean version (3 sheets, no Summary/Gap_Analysis).
 5. **Copy to both directories** — Organized (`00_Organized_13_Project_Factory_Reconciliation/{Company}/{Project}/`) and _Final (`_Final/{Client_Folder}/{Project}/`).
 6. **Verify company mapping** — check the project map in this skill before hardcoding paths. The project map is authoritative; do not guess the company folder from the project name alone.
@@ -535,4 +537,8 @@ Do NOT create or label a client-ready export while a material unsupported bridge
 - **Rateeb (10) is the template**: When building new report types, always use the Rateeb report as the reference for format, columns, and styling.
 - **NEVER delete or rename company folders** (Tiba Gift comp_, Qahwitna comp_, Rateeb Trading Com_, Tezkarat Trading Com_) — these are the original structure created by the company. Create per-project subfolders inside them instead.
 - **Client-ready files must have NO remarks** — when user says files are for the client, strip all notes, source references, DB plans, and internal commentary. Just clean data.
-- **Hira Cafe (04) company mapping may differ from project map** — the project map says Qahwitna comp_ / Qahwatna_Company, but the user directed files to Tiba Gift comp_ / Tiba_Gift_Company in one session. Always verify the company folder with the user before hardcoding paths in the generator script. The project map is authoritative unless the user explicitly overrides it.
+- **Company mapping discrepancies are common** — several projects have been placed under different company folders than the project map says. Always verify with `ls` on the actual organized directory before hardcoding paths. The directory listing is ground truth. Known discrepancies:
+  - **Hira Cafe (04)**: Map says Qahwitna comp_ / Qahwatna_Company, but user directed files to Tiba Gift comp_ / Tiba_Gift_Company in one session.
+  - **Najdi Coffee (11)**: Map says Qahwitna comp_ / Qahwatna_Company, but user placed files under Tiba Gift comp_ / Tiba_Gift_Company (2026-07-20 session).
+  - **Ice Coffee Shop (12)**: Map says Qahwitna comp_ / Qahwatna_Company, but actual directory structure has it under Tiba Gift comp_ / Tiba_Gift_Company alongside projects 01-10.
+  The user appears to be consolidating all projects under Tiba Gift. Always check before hardcoding.

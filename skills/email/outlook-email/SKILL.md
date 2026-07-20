@@ -885,12 +885,14 @@ After extracting and reading the content, build a structured submission plan map
 See `references/email-to-submission-plan.md` for the full workflow with classification tables, mapping heuristics, DIS reading patterns, and pitfalls.
 
 ### Phase 4 — Cross-reference & Update
-After filing, update:
+After filing, update ALL relevant registers — not just the obvious ones. The user expects a comprehensive sweep:
 1. **Situation Reports** — document status in _MANAGER_DASHBOARD/
 2. **Master Submittal Register** (Excel) — Dashboard status cells
 3. **Subcontractor Prequal Register** — log prequal submissions
-4. **Odoo tasks** — create/update under correct package parent
-5. **Memory** — key actionable findings (C-status docs, new submissions)
+4. **Lessons Learned Register** — capture new lessons from every email batch. Each significant event (CG rejection, personnel change, process failure, overdue submission, escalation) is a lesson. Do not skip this register — the user will call it out.
+5. **Odoo tasks** — create/update under correct package parent
+6. **Memory** — key actionable findings (C-status docs, new submissions)
+6. **Memory** — key actionable findings (C-status docs, new submissions)
 
 ### Phase 4b — Optional: Create a CG Submission Plan (Excel)
 
@@ -992,3 +994,4 @@ See `references/cron-24h-email-scan.md` for the autonomous cron-job pattern — 
 See `references/cron-email-to-register-sync.md` for the 4× daily cron-job pattern — SQLite scan → classify → update all repo registers → commit → push → Telegram delivery.
 See `references/icloud-edeadlk-workaround.md` for the iCloud EDEADLK workaround — `cat > /tmp/` for reads, `python3 /tmp/script.py` for writes, `osascript` bridge as fallback.
 See `references/exportmailin-analysis.md` for processing Outlook ExportMailIn-*.xlsx files — classify rows, compare against repo, identify delta, update registers, commit.
+See `references/tnef-utf16le-body-extraction.md` for extracting full email body from .olk15Message files when AppleScript fails and Message_Preview is truncated — Python-based UTF-16LE HTML extraction from TNEF containers.

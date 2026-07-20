@@ -60,6 +60,23 @@ description: Manage the Aseer Museum compliance system — update compliance_mat
 2. Move the gap from Open Gaps to Resolved Gaps
 3. Add Closed Date and Closed By
 4. Update the compliance matrix row to 🟢
+5. **If the gap had a linked risk ID** (in Notes column), update the risk register to reflect the gap closure — either close the risk or downgrade its score
+
+### Creating a new risk from a compliance gap
+
+When a compliance gap is identified that has no corresponding risk in the risk register:
+
+1. **Score the gap** per RMP scale (PxS 1-4). Use the gap's Severity as a guide:
+   - Critical/High gap -> P=3-4, S=3-4
+   - Medium gap -> P=2-3, S=2-3
+   - Low gap -> P=1-2, S=1-2
+2. **Assign a risk ID** — next available in the PRC (Procurement) category: `PRR-PRC-{NN}`
+3. **Add the risk** to `01_Registers/risk_register.md` — append after the last risk row
+4. **Create a treatment plan** at `03_Plans/08_Risk/treatment/PRR-PRC-{NN}.md`
+5. **Update header counts** — total, open, critical/high/medium/low, and PRC category count
+6. **Link the gap to the risk** — add the risk ID to the gap's Notes column in `compliance_gaps.md`
+
+**Pitfall — the `patch` tool may fail on risk register rows** due to escape-drift (backslash-escaped quotes in `=IF(...)` formulas). Use Python string replacement via `execute_code` instead.
 
 ### Daily sync (cron)
 

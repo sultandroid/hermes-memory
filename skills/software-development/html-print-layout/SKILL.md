@@ -1450,7 +1450,11 @@ Add `a[href*=\"#\"], a[href*=\"javascript\"]::after { content:none !important; }
 | Screen layout | Not the priority | MUST preserve unchanged |
 | Deployment | Surge.sh / local file | FTP/SSH replace on hosting server |
 
-### Related Skills
+### Reference Files
+
+- `references/modal-print-pattern.md` — Pattern for printing individual records (lessons, risks, submittals) as A4 documents from a modal overlay in a single-file HTML app. Covers CSS `@media print` rules, `.print-mode` class toggling, and fixed confidentiality footers.
+
+## Related Skills
 
 - `samaya-proposals` — full lifecycle for bilingual Samaya tender proposals (research, build, deploy, iterate). This skill handles overflow fixing and print tuning; `samaya-proposals` covers the complete proposal workflow.
 - `sketch` — throwaway HTML mockups (different purpose — one-off creative prototypes)

@@ -98,9 +98,56 @@ if po['name'] in FORCE_INCLUDE:
 - `fitToWidth = 1`
 - `fitToPage = True`
 
+### 7. Chatter Payment Evidence Check
+
+POs may show as unpaid in Odoo bills but actually be paid outside Odoo (from allowance/عهده). Always check chatter for payment evidence before finalizing the cashout amount.
+
+**How to read chatter (via message_ids):**
+```python
+po_full = models.execute_kw(db, uid, apikey,
+    'purchase.order', 'read', [po_id],
+    {'fields': ['name', 'message_ids']})
+msg_ids = po_full[0].get('message_ids', [])
+for mid in msg_ids[:15]:
+    msg = models.execute_kw(db, uid, apikey,
+        'mail.message', 'read', [mid],
+        {'fields': ['body', 'date']})
+    body = msg[0].get('body', '')
+    if body:
+        clean = re.sub(r'<[^>]+>', '', body).strip()
+```
+
+**Payment evidence keywords (Arabic):**
+| Keyword | Meaning |
+|---------|---------|
+| صورة التحويل | Transfer image (proof of payment) |
+| مرفق لكم صورة التحويل | Transfer image attached for you |
+| مدفوع من العهده | Paid from allowance (Ibrahim's petty cash) |
+| تم الدفع / تم التحويل | Payment/transfer done |
+| يرجي ارفاق الفاتورة الضريبية | Please attach tax invoice (payment sent, waiting for invoice) |
+
+**Adjusted totals:** `truly_unpaid = total_unpaid_bill - chatter_evidence_paid`. Report both numbers so user can verify.
+
+**Common POs paid from allowance (عهده):** Small-value POs (under 1,000 SAR) for supplies, paint, stationery — often marked "مدفوع من العهده" in chatter. Paid by Ibrahim Shaaban from workshop allowance, not through Odoo invoice workflow.
+
+### 8. Workshop Purchasing Tracker Update
+
+The workshop purchasing tracker at `.../شراء/ورشة المشتريات.xlsx` lists ALL workshop POs (not just Factory project 244). To update with Odoo payment data:
+
+1. Query Odoo for all POs (state in purchase/done, 2026 onwards)
+2. Build a PO lookup dict with bill payment info
+3. Load the tracker with `openpyxl`
+4. Add 2 new columns: "Odoo Pay State" (col J) and "Odoo Bills" (col K)
+5. Color-code: green=paid, yellow=draft_bill, red=no_bill
+6. Update title with today's date
+7. Save and open
+
 ## Pitfalls
 
 - **Odoo domain bugs:** Never use `project_id` or `'in'` operator in `search_read`/`search` domains on Odoo 18.0+e. Fetch all and filter in Python.
+- **`'not in'` domain operator crashes** — `[['state','not in',['draft','cancel']]]` causes `TypeError: BaseModel.search_read() got multiple values for argument 'fields'`. Use positive list: `[['state','in',['purchase','done']]]`.
+- **`search_read` domain format** — must wrap domain in an extra list: `[domain]` not `domain`. Correct: `models.execute_kw(db, uid, apikey, model, 'search_read', [domain], {'fields': fields})`.
+- **`account.move.read()` for bill lookup** — use `read()` with single ID, not `search_read()`, to avoid the `'in'` operator crash: `models.execute_kw(db, uid, apikey, 'account.move', 'read', [inv_id], {'fields': ['name','amount_total','amount_residual','payment_state','state']})`.
 - **Limit too low:** Odoo has ~1895 POs total. Use `limit=2000` or higher.
 - **Credit suppliers:** User explicitly wants them as statement balances, not individual POs. Do NOT include Mada Aljezera or Saba Najad POs in the main list. Show them as statement balances with opening/payment/closing breakdown.
 - **Credit supplier balance from statement PDF, not Odoo:** The balance comes from the supplier's PDF statement, not from summing Odoo POs. Use `pdftotext -layout` to extract the PDF and find the closing balance line.

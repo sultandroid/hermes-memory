@@ -20,6 +20,94 @@ metadata:
 - Any task involving the project risk register (Excel or MD), the RMP markdown or DOCX, the DRR Excel, or their cross-document consistency
 - Adding, updating, or closing risks in the live register
 - Updating the RMP DOCX for formal CG submittal
+- User asks to "audit" or "verify" the risk register against real evidence — see `references/risk-register-audit-methodology.md`
+
+## Owner Assignment Rule
+
+| Risk Type | Default Owner | Rationale |
+|-----------|---------------|----------|
+| Site-work risks (structural, site investigations, testing, installation) | **Construction Manager** | Site execution is CM's domain |
+| Design risks (DD packages, IFC, drawing approvals) | **Technical Office Manager** | Design coordination is Tech Office's domain |
+| Procurement risks (supplier, PQ, long-lead) | **Procurement Lead** | |
+| Commercial/contract risks | **Commercial Manager** | |
+| HSE risks | **HSE Manager** | |
+| AV/technical risks | **AV Lead** | |
+
+**User correction (2026-07-20):** PRR-DES-07 (Structural DD 2nd Code C) was originally assigned to Technical Office Mgr. User corrected: site-work risks belong to Construction Manager. Always assign site investigation, structural testing, and on-site execution risks to Construction Manager, not Technical Office Manager.
+
+## PDF Risk Record Format
+
+When generating a formal risk record PDF (single risk per page), use this structure:
+
+```
+Aseer Regional Museum
+ASR-SAM-RMP-001 · Risk Record · Contract 0010003521
+
+Rev: C11
+YYYY-MM-DD
+
+RISK RECORD · {RISK_ID}
+{Short title / one-line description}
+
+RISK ID:    {PRR-XXX}
+CATEGORY:   {DES / PRC / SIT / CON / STK / TCH / COM}
+RATING:     {Critical / High / Medium / Low}
+SCORE:      {P×S} (P{1-4} × S{1-4})
+STATUS:     {Open / In Progress / Closed}
+OWNER:      {Role}
+TARGET CLOSE:  {YYYY-MM-DD}
+LAST REVIEWED: {YYYY-MM-DD}
+CREATED:       {YYYY-MM-DD}
+REFERENCE:     ASR-SAM-RMP-001 Rev C{NN}
+
+1. RISK DESCRIPTION
+   CAUSE:    {What causes the risk}
+   EVENT:    {What happens}
+   CONSEQUENCE: {What are the downstream effects}
+
+2. RESPONSE / MITIGATION
+   {Bullet list of mitigation actions}
+
+3. ACTION PLAN
+   ACTION | OWNER | DUE | STATUS
+   {Table of actions}
+
+4. EVIDENCE & SOURCE REFERENCES
+   {List of source documents, CG emails, risk register refs}
+
+5. REVIEW HISTORY (NTP → NOW)
+   DATE | EVENT
+   {Timeline of key events from NTP to present}
+
+LIVE REGISTER · SNAPSHOT DOWNLOAD
+{URL to live register}
+```
+
+## Multi-Source Risk Metadata Updates
+
+When changing a risk's metadata (created date, owner, category, etc.), update ALL of these files:
+
+| Source | File path | Notes |
+|--------|-----------|-------|
+| Master JSON | `06_Risk_System/risks.json` | **Edit first** — post-commit hook regenerates index.html from this |
+| Dashboard JSON | `06_Risk_System/dashboards/risks.json` | Separate copy, must patch independently |
+| Backup JSON | `06_Risk_System/risks.json.bak` | Mirror of master at last rebuild |
+| Webapp HTML | `06_Risk_System/webapp/src/index.html` | Embedded JSON on line ~423; post-commit hook auto-rebuilds this from risks.json |
+| Treatment file | `03_Plans/08_Risk/treatment/<risk_id>.md` | Frontmatter (YAML between `---` markers) |
+| Excel register | `06_Risk_System/webapp/src/Aseer_Museum_Risk_Register_C11_*.xlsx` | `Date Identified` column in `Risk Register` sheet |
+| Live site | `samaya-factory.com/aseer/registers/Risk/` | Deploy via scp after local edits |
+
+**Order of operations:**
+1. Edit `risks.json` first (master source)
+2. Patch `dashboards/risks.json`, `risks.json.bak`, treatment `.md` frontmatter
+3. Update Excel register via openpyxl (Date Identified column, row 43 for PRR-SCH-01)
+4. Deploy `index.html` + `.xlsx` to server via scp
+5. Git add all changed files, commit (post-commit hook auto-rebuilds index.html)
+6. Git push
+
+**Pitfall:** The post-commit hook regenerates `index.html` from `risks.json`, so if you manually edited `index.html` first, the hook will overwrite your change. Always edit `risks.json` first and let the hook propagate.
+
+**Pitfall:** `risks.json.bak` is a full copy — use enough context in the patch string to uniquely identify the target risk entry (include surrounding fields like `"id"`, `"category"`, `"title"`).
 
 ## System Architecture
 
@@ -106,6 +194,24 @@ When the user asks to check risks one by one and update based on evidence:
 6. **Update repo markdown** — patch `01_Registers/risk_register.md` with new status and evidence
 7. **Move to next risk** without asking for confirmation (user explicitly wants this)
 
+### Risk-by-Risk Sequential Check Pattern
+
+When the user says "check risk one by one, search for evidence, update, go next without asking":
+
+1. Get all risk IDs and current statuses from the xlsx
+2. For each risk that is Open/Watch:
+   a. Search repo markdown files for the risk ID
+   b. Search Outlook SQLite for key evidence keywords
+   c. If evidence found that justifies status change → update xlsx + repo
+   d. If no evidence found → leave as-is
+   e. **Do NOT pause to ask** — the user explicitly wants continuous flow
+3. After all risks checked, report summary of what changed
+
+**Key evidence signals that justify status change:**
+- **Mitigated:** Design direction formalised (email from NRS), contract signed (ZNA), protocol issued (drawing numbering), report deployed (weekly report #19)
+- **Closed:** CG approved alternative (drywall VE via TQ-0021), deadline passed (kick-off), numbering system adopted
+- **No change:** Permit still pending, EOT still disputed, Code C still open, specialist not appointed
+
 ### Evidence Column Population Rule
 
 Replace generic placeholder evidence (e.g. "PM Consolidated Risk Register (Jul 2026)") with real project-specific references:
@@ -138,6 +244,74 @@ When searching for evidence that a risk has been resolved (e.g. CG approved an a
 The Approval PDF contains the CG response with the code (A/B/C/D), signatory, and date. This is the definitive evidence for design/construction methodology approvals.
 
 **Example:** PRR-CON-03 (blockwork vs drywall) — TQ-0021 Approval PDF showed Code B (Approved with Comments) signed by Haitham Elhussein and Mohammed Afifi on 14-Apr-2026. This closed the risk.
+
+### NRS Stamped Specs Evidence Pattern
+
+When searching for evidence that NRS has stamped/approved specifications (e.g. A2742-K10 dry lining specs), search Outlook for "Stamped-A2742" or "K10" in subject lines:
+
+```python
+cur.execute('SELECT datetime(Message_TimeSent, "unixepoch", "localtime") as sent, Message_NormalizedSubject FROM Mail WHERE Message_NormalizedSubject LIKE "%Stamped-A2742%" OR Message_NormalizedSubject LIKE "%K10%" ORDER BY Message_TimeSent DESC LIMIT 5')
+```
+
+**Example:** DB-X-003 (NRS A2742-K10 stamping delay) — "Stamped-A2742-1800 type 01.pdf" shared by Talha Yousaf on 14-Jun-2026. This closed the risk.
+
+### Risk Close vs Mitigate — Formal Evidence Required
+
+When a risk's root cause is eliminated (the specific threat no longer exists), set status to **Closed**, not Mitigated:
+
+| Status | Meaning | Example |
+|--------|---------|---------|
+| **Mitigated** | Risk still exists but controls have reduced it | Drawing protocol issued, contract signed, design direction formalised |
+| **Closed** | Risk event cannot happen anymore | CG approved alternative via formal TQ/RFI, deadline passed, numbering system adopted |
+
+**Evidence for closure must be a formal CG approval document** (TQ/RFI Approval PDF with Code A or B, signed by CG), not just an internal email or meeting note. Check the Approval subfolder inside the RFI/TQ folder in Adel Darwish's OneDrive for the definitive CG response.
+
+**Residual work is not a risk:** After closure, any remaining coordination or verification tasks are normal design development, not a risk. Do not keep a risk open for "residual coordination" — that is project management, not risk management.
+
+### Blockwork-Related Risks
+
+Two risks relate to blockwork/partition construction:
+
+| Risk | Register | Description | Status | Evidence |
+|------|----------|-------------|:------:|----------|
+| PRR-CON-03 | Master (PRR) | CG blockwork mandate — resolved via drywall approval | **Closed** | TQ-0021 Code B (14-Apr-2026) |
+| DB-X-003 | Design (DRR) | NRS A2742-K10 stamping delay | **Closed** | Stamped-A2742-1800 type 01.pdf (14-Jun-2026) |
+
+Both are now closed. No active blockwork risks remain.
+
+### NRS Stamped Specs Evidence Pattern
+
+When searching for evidence that NRS has stamped/approved specifications (e.g. A2742-K10 dry lining specs), search Outlook for "Stamped-A2742" or "K10" in subject lines:
+
+```python
+cur.execute('SELECT datetime(Message_TimeSent, "unixepoch", "localtime") as sent, Message_NormalizedSubject FROM Mail WHERE Message_NormalizedSubject LIKE "%Stamped-A2742%" OR Message_NormalizedSubject LIKE "%K10%" ORDER BY Message_TimeSent DESC LIMIT 5')
+```
+
+**Example:** DB-X-003 (NRS A2742-K10 stamping delay) — "Stamped-A2742-1800 type 01.pdf" shared by Talha Yousaf on 14-Jun-2026. This closed the risk.
+
+### Risk Close vs Mitigate — Formal Evidence Required
+
+When a risk's root cause is eliminated (the specific threat no longer exists), set status to **Closed**, not Mitigated:
+
+| Status | Meaning | Example |
+|--------|---------|---------|
+| **Mitigated** | Risk still exists but controls have reduced it | Drawing protocol issued, contract signed, design direction formalised |
+| **Closed** | Risk event cannot happen anymore | CG approved alternative via formal TQ/RFI, deadline passed, numbering system adopted |
+
+**Evidence for closure must be a formal CG approval document** (TQ/RFI Approval PDF with Code A or B, signed by CG), not just an internal email or meeting note. Check the Approval subfolder inside the RFI/TQ folder in Adel Darwish's OneDrive for the definitive CG response.
+
+**Residual work is not a risk:** After closure, any remaining coordination or verification tasks are normal design development, not a risk. Do not keep a risk open for "residual coordination" — that is project management, not risk management.
+
+### Blockwork-Related Risks
+
+Two risks relate to blockwork/partition construction:
+
+| Risk | Register | Description | Status | Evidence |
+|------|----------|-------------|:------:|----------|
+| PRR-CON-03 | Master (PRR) | CG blockwork mandate — resolved via drywall approval | **Closed** | TQ-0021 Code B (14-Apr-2026) |
+| DB-X-003 | Design (DRR) | NRS A2742-K10 stamping delay | **Closed** | Stamped-A2742-1800 type 01.pdf (14-Jun-2026) |
+
+Both are now closed. No active blockwork risks remain.
 
 ### Risk-by-Risk Sequential Check Pattern
 
@@ -373,6 +547,37 @@ The RMP MD has these sections that may need updating after a register change:
 | Document Control | Add new version row |
 
 Use `patch()` for each section with unique context lines to ensure correct matching.
+
+### Compliance Gap → Risk Register Cross-Check
+
+When the user asks to "track" or "audit" materials, prequalifications, or submittals, the result often reveals compliance gaps that should be formal risks. Follow this cross-check:
+
+1. **Read the compliance gaps register** (`Technical_Office/Compliance_System/compliance_gaps.md`)
+2. **For each open gap**, search the risk register for a corresponding risk ID. A gap is "covered" if a risk exists with the same root cause, even if the ID differs.
+3. **Gaps not in the risk register** need new risk entries. Common patterns:
+   - `GAP-MAT-001` (rejected material submittal) → `PRR-PRC-08` style (procurement risk)
+   - `GAP-MEP-001` (installer not awarded) → `PRR-PRC-10` style (critical path procurement)
+   - `GAP-ODD-001` (testing lab not appointed) → `PRR-PRC-11` style (blocking MA re-submission)
+4. **Score each new risk** per RMP scale (PxS 1-4). Use the gap's severity as a guide but re-evaluate against the risk register's own criteria.
+5. **Create treatment plan** for each new risk in `03_Plans/08_Risk/treatment/PRR-{CAT}-{NN}.md`
+6. **Update header counts** — total, open, critical/high/medium/low, and the affected RBS category count
+7. **Update the compliance gaps register** to link each gap to its new risk ID in the Notes column
+
+**Pitfall — the `patch` tool may fail on risk register rows** due to escape-drift (backslash-escaped quotes in the old_string/new_string). When this happens, use `execute_code` with Python string replacement instead:
+
+```python
+with open("01_Registers/risk_register.md", "r") as f:
+    content = f.read()
+content = content.replace(old_section, new_section)
+# Also update header counts
+content = content.replace("| 54 | 47 | ...", "| 59 | 52 | ...")
+with open("01_Registers/risk_register.md", "w") as f:
+    f.write(content)
+```
+
+The escape-drift occurs because the risk register rows contain literal double-quotes inside `=IF(...)` formulas, and the `patch` tool's fuzzy matching misinterprets them. Python string replacement is deterministic and avoids this.
+
+**CG rejection reason extraction** — when a risk says "Code D" without the reason, extract the verbatim CG comment from the Approval PDF in Adel Darwish's bank. See `references/cg-rejection-reason-extraction.md` for the full workflow: finding the Approval subfolder, extracting text with pdftotext, cross-referencing the underlying PQ, and updating the risk register cause/evidence columns.
 
 ### Step 2a: Add New Risks from External Intel (User Input / Supplier Data / Project Update)
 
@@ -887,7 +1092,9 @@ The RMP (repo) says DRR has 37 risks. The actual DRR Excel (P03) has 76 risks. A
 
 When a risk's root cause is eliminated (the specific threat no longer exists), set status to **Closed**, not Mitigated. "Mitigated" means the risk still exists but controls have reduced it. "Closed" means the risk event cannot happen anymore.
 
-Example: PRR-CON-03 (blockwork mandate) — CG approved drywall, so the blockwork threat is gone → **Closed**. The residual coordination work (MEP/AV routing, slab verification) is normal design development, not a risk.
+Example: PRR-CON-03 (blockwork mandate) — CG approved drywall via TQ-0021 (Code B, 14-Apr-2026), so the blockwork threat is gone → **Closed**. The residual coordination work (MEP/AV routing, slab verification) is normal design development, not a risk.
+
+**Evidence for closure must be a formal CG approval document** (TQ/RFI Approval PDF with Code A or B, signed by CG), not just an internal email or meeting note. Check the Approval subfolder inside the RFI/TQ folder in Adel Darwish's OneDrive for the definitive CG response.
 
 ### Owner Names — Use Real People, Not Role Titles
 
@@ -1327,6 +1534,8 @@ For large design packages spanning many disciplines (e.g. full museum fit-out wi
 ### Reference Files
 
 - `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
+- `references/action-plan-audit-workflow.md` — Audit all risk action plans against RMP response time periods and project stage logic; common non-compliance patterns and fix workflow
+- `references/action-plan-compliance-audit.md` — Audit all risk action plans against RMP §8.2 response time standards and project stage reality (target close dates, stage-mismatched responses, vague actions for severity)
 - `references/consolidated-register-audit-workflow.md` — Audit old consolidated Excel registers against live register: find gaps, add missing master risks, copy DRR/HSE sheets as separate tabs with correct scoring scales
 - `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
 - `references/register-merge-id-collisions.md` — ID collision patterns and resolutions from the C08→C09 merge, with field structure reference and param order pitfalls
