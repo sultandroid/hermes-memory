@@ -28,6 +28,36 @@ Include emails matching ANY of:
 
 Silently skip ops/logistics: car requests, shipments, housing, technician transport, promotions.
 
+### Two-Phase Scan Pattern
+
+**Phase 1 — Project folders (SQLite):** Query the project sub-folders (Asher Regional Museum, Zamzam Projects) for emails matching the criteria above. This catches emails already filed by Outlook rules.
+
+**Phase 2 — Inbox fallback (SQLite):** Query the Inbox separately for project-critical emails that haven't been filed to project folders yet. Use the same sender/subject criteria but target `f.Folder_Name = 'Inbox'`. Important emails (NCRs, design gateways, PM appointments) often sit in Inbox before being filed.
+
+```sql
+-- Phase 1: Project folders
+SELECT ... FROM Mail m JOIN folders f ON ...
+WHERE f.Folder_Name IN ('Asher Regional Museum', 'Zamzam Projects')
+  AND m.Message_TimeReceived >= strftime('%s', 'now', '-24 hours')
+  AND (subject/sender criteria)
+ORDER BY m.Message_TimeReceived DESC;
+
+-- Phase 2: Inbox fallback
+SELECT ... FROM Mail m JOIN folders f ON ...
+WHERE f.Folder_Name = 'Inbox'
+  AND m.Message_TimeReceived >= strftime('%s', 'now', '-24 hours')
+  AND (subject/sender criteria)
+ORDER BY m.Message_TimeReceived DESC;
+```
+
+### Pitfall: `Message_Preview` truncation hides WeTransfer links
+
+The `Message_Preview` column stores only ~300-500 chars of the email body (Outlook truncates at source). WeTransfer links (`https://we.tl/t-...`) often appear later in the body and are **cut off** by the truncation. An email with `Message_HasAttachment = 0` may still have a WeTransfer link in the truncated portion.
+
+**Detection:** If an email has `Message_HasAttachment = 0` but the subject or sender suggests deliverables (e.g., "Submittal", "Drawings", "Submission"), query the full preview with progressively larger `substr()` limits. If the content doesn't grow beyond ~500 chars, the column is source-truncated and the link is lost.
+
+**Action:** Flag such emails as "⚠️ Possible WeTransfer — check manually" rather than concluding no deliverables exist.
+
 ## Report Format
 
 Use emoji status column:
@@ -36,6 +66,29 @@ Use emoji status column:
 - ℹ️ INFO — admin/backlog, no action needed
 
 Keep one line per item unless critical action needed. Translate Arabic subjects to English.
+
+### Key Sender Verification (QA step)
+
+After the item table, explicitly state which monitored projects/senders had **zero** emails. This proves the scan ran and the absence was detected, not missed:
+
+```
+### RCRC Exhibition
+No emails found matching RCRC Exhibition in the last 24h.
+```
+
+### Summary Table
+
+End with a summary table showing counts per project and a 🔴 Top 3 Actions section:
+
+| Project | New Items | Action Required |
+|---------|:---------:|:--------------:|
+| Aseer Museum | N | M |
+| Zamzam VC | N | M |
+| RCRC Exhibition | 0 | 0 |
+
+### 🔴 Top 3 Actions Today
+
+Numbered list of the 3 most critical items requiring immediate response, with one-line explanation each.
 
 ## Key Sender Verification
 

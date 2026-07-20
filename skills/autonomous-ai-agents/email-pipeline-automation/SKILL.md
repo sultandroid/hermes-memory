@@ -153,8 +153,8 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 | Document Type | Routing Folder (Aseer Museum root) |
 |---|---|
 | NCR / Safety Instruction (SE-*) | `04_Docs/10_Test_and_Inspection/10.3_NCRs/{NCR-ID}/` |
-| Subcontractor Prequal (PQ-*) | `24_Subcontractors/{NN}_{Specialist}/01_Prequalification/` |
-| Subcontractor SOW (ZD-0085, ZD-0087) | `24_Subcontractors/{NN}_{Specialist}/01_Scope_of_Work/` |
+| Subcontractor Prequal (PQ-*) | `24_Subcontractors/{NN}_{Specialist}/01_Prequalification/` — verify folder number from actual listing |
+| Subcontractor SOW (ZD-0085, ZD-0087) | `24_Subcontractors/{NN}_{Specialist}/01_Scope_of_Work/` — verify folder number from actual listing |
 | Graphics Specialist SOW (ZD-0085) | `24_Subcontractors/04_Graphics_Graphite/01_Scope_of_Work/` |
 | Mechanical Engineer CV / Replacement (ZD-0087) | `24_Subcontractors/05_Mechanical_Engineer/01_Scope_of_Work/` |
 | Contracts/Agreements (main contract) | `00_Contracts/` |
@@ -260,10 +260,13 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
   ```
   This pushes the sanitization into `sed` inside the shell command, keeping the AppleScript body short.
 - **AppleScript -2700 error on some emails** — `osascript` returns `error -2700` (generic Outlook error) on certain messages, typically those with malformed attachment metadata or very long subject lines. This is an Outlook internal issue, not a script problem. Skip the email and move on; the attachment may still be accessible via SQLite `PathToDataFile` fallback. Do not retry the same email more than once per scan cycle.
-- **Duplicate attachments** (same file from different senders) — route both to same destination; don't deduplicate unless exact byte match confirmed
+- **Duplicate attachments** (same file from different senders) — route both to same destination; don't deduplicate unless exact byte match confirmed. Use `_dup` suffix on filename collision.
+- **Strip email ID prefix from destination filenames.** The staging directory uses `{emailID}_{originalName}` to avoid collisions during extraction. When routing to project folders, strip the `^\d+_` prefix so the destination has clean filenames. The routing script's `clean_filename()` function handles this.
 - **Aconex notification emails** have no attachments and no email address — filter by `Message_SenderList LIKE '%Aconex%'`
 - **Non-project emails to filter out**: Saudi Wood Expo, Instagram, Cognito Forms, Bluebeam Events, Power Automate reminders, FJDynamics webinars, visitor registration, car/vehicle requests, ERP notifications (salary, tickets, leave, POs), SharePoint link notifications, Read AI meeting summaries, SPMS notifications, vacation notices
 - **Review log format**: Save to `~/aseer-museum-pm/03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML frontmatter, summary, key findings table, Aconex transmittals list, filtered-out items count, and registers-updated section
 - **Routing script: use document-code patterns, not email-ID prefixes.** The old `routing-script-pattern.py` used email-ID-prefixed regexes (e.g. `r"48608_.*ZD-0085"`). These are session-specific — they only match one scan cycle. Use document-code-based patterns (e.g. `r"ZD-0085"`) that work across all sessions. The routing script at `references/routing-script-pattern.py` now uses the document-code approach. When updating routes, add document codes, not email IDs.
+- **Subcontractor folder numbering drifts.** `24_Subcontractors/` has multiple folders for the same specialist (e.g. 02_Landscaping, 06_Landscaping, 07_Landscaping, 50_Landscaping). Always `ls 24_Subcontractors/` and pick the correct numbered folder before routing. The routing script's hardcoded numbers may be stale.
 - **Review log is append-only, not overwrite.** When a second scan runs on the same calendar day, write a new review log with the same date filename — the existing file from the earlier scan is the session's record. Overwriting loses the earlier scan's findings. Use a distinct timestamp in the `last_updated` frontmatter to distinguish runs.
+- **`_dup` suffix accumulates on repeated scans.** If the same document arrives in multiple scan cycles, the routing script appends `_dup` each time (e.g. `file_dup_dup.pdf`). This is acceptable for cron — the original is always the first copy. For cleanup, run a dedup pass comparing file sizes.
 - **Generator script must be read before write_file.** When a sibling subagent modifies `/tmp/gen_extract_scripts.sh` concurrently, `write_file` overwrites without merging. Read the file first, or use a unique temp path per session to avoid collisions.

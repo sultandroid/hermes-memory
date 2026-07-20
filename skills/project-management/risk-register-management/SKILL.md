@@ -106,6 +106,57 @@ When the user asks to check risks one by one and update based on evidence:
 6. **Update repo markdown** — patch `01_Registers/risk_register.md` with new status and evidence
 7. **Move to next risk** without asking for confirmation (user explicitly wants this)
 
+### Evidence Column Population Rule
+
+Replace generic placeholder evidence (e.g. "PM Consolidated Risk Register (Jul 2026)") with real project-specific references:
+
+| Generic Placeholder | Replace With |
+|-------------------|--------------|
+| `PM Consolidated Risk Register (Jul 2026)` | Specific SI/NCR/MoM/email references, dates, and parties involved |
+| `RMP APP; FLS dependency` | Add specific document refs (e.g. IFC-0004 Code C, Fire Pump options) |
+| `Contract Art. 14` | Add specific change register or VO references |
+
+**Sources for real evidence:**
+- CG Site Instructions (SI-01 to SI-20) — from Adel Darwish's OneDrive folder
+- NCRs (NC-001 to NC-021) — from NCR register
+- RFIs/TQs (TQ-005 to TQ-026) — from RFI register
+- MoMs (MOM-02 to MOM-15) — from meeting minutes
+- Outlook emails — search SQLite database for appointments, approvals, submissions
+- Letters (LT-0001, LT-0002) — formal CG warning letters
+- Submittal status (ZD-XXXX, PQ-XXXX) — from submittal register
+- Decisions log — from `00_Status/decisions_log.md`
+- Look-ahead — from `02_Schedule/look_ahead.md`
+
+### TQ/RFI Approval Subfolder Evidence Pattern
+
+When searching for evidence that a risk has been resolved (e.g. CG approved an alternative), check the **Approval subfolder** inside the RFI/TQ folder in Adel Darwish's OneDrive:
+
+```
+05- Request For Information-RFI/21- MOC-ASEER-SIC-1A0-TQ-0021/Approval/MOC-ASEER-SIC-1A0-TQ-0021.pdf
+```
+
+The Approval PDF contains the CG response with the code (A/B/C/D), signatory, and date. This is the definitive evidence for design/construction methodology approvals.
+
+**Example:** PRR-CON-03 (blockwork vs drywall) — TQ-0021 Approval PDF showed Code B (Approved with Comments) signed by Haitham Elhussein and Mohammed Afifi on 14-Apr-2026. This closed the risk.
+
+### Risk-by-Risk Sequential Check Pattern
+
+When the user says "check risk one by one, search for evidence, update, go next without asking":
+
+1. Get all risk IDs and current statuses from the xlsx
+2. For each risk that is Open/Watch:
+   a. Search repo markdown files for the risk ID
+   b. Search Outlook SQLite for key evidence keywords
+   c. If evidence found that justifies status change → update xlsx + repo
+   d. If no evidence found → leave as-is
+   e. **Do NOT pause to ask** — the user explicitly wants continuous flow
+3. After all risks checked, report summary of what changed
+
+**Key evidence signals that justify status change:**
+- **Mitigated:** Design direction formalised (email from NRS), contract signed (ZNA), protocol issued (drawing numbering), report deployed (weekly report #19)
+- **Closed:** CG approved alternative (drywall VE), deadline passed (kick-off), numbering system adopted
+- **No change:** Permit still pending, EOT still disputed, Code C still open, specialist not appointed
+
 ## Construction Stage Sheet
 
 Add a separate "Construction Stage" sheet for site-level operational risks (C-001 to C-060). Same logic as DRR and HSE:

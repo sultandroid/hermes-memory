@@ -197,14 +197,24 @@ The user now works in `00_Organized_13_Project_Factory_Reconciliation/` (not `_F
 - **English only** — never present data in Arabic. The user cannot read Arabic. Translate all category names, descriptions, and notes to English before showing in tables or file content.
 - **"fix" = proceed with default/verified-only approach** — when the user says "fix" as a single-word command after seeing flagged items, it means: exclude all "Needs Review" and "Not Related" items, use only verified items, and build the files immediately. Do not ask for confirmation on each flagged item.
 - **"next" = move to next project** — after confirming a project is done, "next" means proceed to the next project in sequence (01→02→03→...→13).
-
 ## Handling Audit-Flagged Items (Projects with verification flags)
+
 Some projects (like Qahwatna Cafe) have items flagged as "Needs Review" or "Not Related" in the accounting file. When building factory cost details:
 
 1. **Present the full picture first** — show all items grouped by category with totals, then list only the flagged items with their amounts and flags
 2. **Let the user decide** — ask specifically which flagged items to include/exclude. Present as concise numbered questions, not a wall of text
-3. **"fix" = exclude all flagged** — when user says "fix", exclude everything flagged as "Needs Review" or "Not Related". Build files with only verified items.
+3. **"fix" = exclude all flagged** — when user says "fix", exclude everything flagged as "Needs Review" or "Not Related". Build files with only verified items. Do NOT ask for confirmation on each flagged item — "fix" is an instruction to proceed with the default approach.
 4. **Document the exclusion** — in the Gap_Analysis sheet, note the excluded items and their total amount so the gap is explainable
+
+## Projects with No Factory Cost Data
+
+Some projects (e.g. Jabal Omar VIP Stores — Project 05) have the accounting file's factory cost section explicitly stating "No data" (0 SAR), and the FCA analysis file is also empty (no labor records, no materials, no POs).
+
+When this happens:
+1. **Present the situation** — show the accounting total and note that factory cost = 0 per the source
+2. **Offer options** — (1) classify manually from accounting categories, (2) leave as 0, (3) use full accounting total as factory cost base
+3. **If user chooses option 2** — create both files (full + clean) with empty data sheets showing "No factory labor data" / "No factory materials data" / "No other expenses data" and Summary/Gap_Analysis sheets all showing 0
+4. **Document the gap** — in Gap_Analysis, show the full accounting total as the target with 0 actual, so the gap is visible and explainable
 
 ## Gap Closure Order: Dates FIRST, Then Gaps
 **CRITICAL ORDER — failure to follow this will lose work:**
