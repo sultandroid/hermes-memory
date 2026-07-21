@@ -35,14 +35,14 @@ STAGE_NAMES = {35: "Initiation", 36: "DD", 39: "Procurement",
 
 # ── Source: PROJECT_MEMORY.md ──
 PM_CANDIDATES = [
-    # Primary: CloudStorage (interactive shell)
-    Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/_Project_Memory/PROJECT_MEMORY.md",
-    Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/PROJECT_MEMORY.md",
-    # Fallback: symlink (works in cron when CloudStorage is TCC-blocked)
+    # 1st: repo archive copy (always accessible, no OneDrive lock)
+    Path("/Users/mohamedessa/aseer-museum-pm/99_Archive/00_Project_Overview/PROJECT_MEMORY.md"),
+    # 2nd: symlink (works in cron when CloudStorage is TCC-blocked)
     Path.home() / "OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/_Project_Memory/PROJECT_MEMORY.md",
     Path.home() / "OneDrive - SAMAYA INVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/PROJECT_MEMORY.md",
-    # Fallback: repo archive copy
-    Path("/Users/mohamedessa/aseer-museum-pm/99_Archive/00_Project_Overview/PROJECT_MEMORY.md"),
+    # 3rd: CloudStorage (interactive shell, may deadlock in cron)
+    Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/_Project_Memory/PROJECT_MEMORY.md",
+    Path.home() / "Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/PROJECT_MEMORY.md",
 ]
 pm_source = None
 for p in PM_CANDIDATES:
@@ -144,7 +144,14 @@ def find_odoo_ids(text):
 # ── Sync: PROJECT_MEMORY.md → Odoo ──
 def push_memory_to_odoo(state):
     """Push new milestones from PROJECT_MEMORY.md Section 0 to Odoo."""
-    text = pm_source.read_text(encoding="utf-8", errors="replace")
+    source = pm_source
+    try:
+        text = source.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        print(f"  ⚠️  Deadlock reading {source.name}: {e}")
+        print(f"  → Falling back to archive copy")
+        source = Path("/Users/mohamedessa/aseer-museum-pm/99_Archive/00_Project_Overview/PROJECT_MEMORY.md")
+        text = source.read_text(encoding="utf-8", errors="replace")
     current_hash = hashlib.md5(text.encode()).hexdigest()
     hash_file = REPO_DIR / ".last_project_memory_hash"
     previous_hash = hash_file.read_text().strip() if hash_file.exists() else ""

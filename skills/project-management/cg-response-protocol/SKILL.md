@@ -82,6 +82,11 @@ See `cg-analysis-and-lessons` skill for full reviewer profiles, forecast engine,
 
 ## CR Sheet Response Framing
 
+- **Quotes must be verbatim** - when quoting CG comments, ER/SoW text, or contract clauses, copy the original text exactly as written. Do NOT paraphrase, rephrase, or "clean up" the quote. The user explicitly said: "when qoute write the orginal text as it dont rewrite."
+- **No `§` symbol** — never use `§`. Use `Sec` instead (e.g., `ER Sec 3.7.XIII` not `ER §3.7.XIII`). The user has repeatedly corrected this across multiple sessions.
+- **No AI symbols** — no arrows (`→`, `←`), bullets (`•`, `·`), em dashes (`—`), en dashes (`–`), middle dots (`·`), or any decorative Unicode symbols. Plain ASCII only.
+- **Plain engineer English ("hummadize")** — short, direct sentences. No fluff, no AI clichés, no "seamlessly", "robust", "holistic", "leverage", "streamline", "facilitate". Write like an engineer writing to another engineer.
+- **NRS is Samaya's sub-consultant** — never frame NRS as separate or independent. Samaya directs NRS. Say "We direct NRS to..." not "NRS will..." or "NRS is responsible for...". Samaya is the D&B contractor; NRS works under Samaya's umbrella.
 - "This was completed at Stage 3. NRS draft (XXXX) for reference. Included in submission plan and drawing register." - for items already done
 - "This will be in the Life Safety registers and submittals (Namaa), not in the current architectural package." - for scope handoffs
 - "Bespoke setwork furniture shown on GA with setwork codes. Remaining FF&E to be coordinated from 50% to 90% to IFC." - for phased items
@@ -704,6 +709,17 @@ When CG rejects a material board (Code C) because specialists demand engineering
 
 ## Scope Creep Protection — CR Sheet with Cost/Schedule Impact
 
+### User Review Gate — Do NOT Send Directly
+
+**The CR sheet is a collaborative document, not a dispatch.** After producing the CR sheet and content changes file:
+
+1. **Present both files to the user** — open them in the editor or show the key decisions
+2. **Flag the decisions the user needs to make** — especially push-back items (scope creep) and any comments where the response strategy has options
+3. **Wait for user confirmation** before sending to the specialist
+4. **Do NOT send the CR sheet to the specialist** without the user reviewing it first
+
+The user explicitly corrected: "I didnt send the CR sheet please open we have to work on it again to send to fida" — meaning the CR sheet is reviewed and potentially modified by the user before it goes out.
+
 When CG returns a plan with Code C, not all comments are equal. Some are valid contractual obligations, others are scope creep. Before sending instructions to the specialist, triage each comment into one of three lanes:
 
 | Lane | Criteria | Action | Example |
@@ -717,29 +733,30 @@ When CG returns a plan with Code C, not all comments are equal. Some are valid c
 When sending instructions to the specialist, structure the CR sheet as:
 
 ```
-## CG Comment N — [Title]
+## CG Comment N - [Title]
 
 | Field | Detail |
 |-------|--------|
 | CG Comment | [exact text] |
 | ER/SoW Reference | [clause] |
-| Our Obligation | ✅ On our shoulder / ❌ Push back — [reason] |
-| Cost Impact | None / ⚠️ Minor / 🔴 Yes — [amount] |
-| Schedule Impact | None / 🔴 Yes — [duration] |
+| Our Obligation | Our responsibility / Push back - [reason] |
+| Schedule Impact | None / [duration] |
 | Action for Fida | [specific copy-paste instructions] |
 | Response to CG | [exact text to use] |
 ```
 
-### When to Push Back
+**IMPORTANT - Do NOT include Cost Impact column when sending to the specialist.** The user explicitly removed the Cost Impact column from the CR sheet before sending to Fida. The specialist only needs to know: what to do, where to put it, and what to say to CG. Cost information is internal Samaya data.
 
-Push back when the CG comment would create a **new deliverable** not listed in ER/SoW, or when compliance would require **additional cost or schedule** beyond what was priced. Key arguments:
+### User Review Gate - Do NOT Send Directly
 
-1. **Not in ER/SoW as a named deliverable** — the ER and SoW define the required documents. If it's not listed, it's not a contractual deliverable.
-2. **Not in the specialist's PO** — the specialist was engaged for a specific scope. A new deliverable requires a new PO.
-3. **Requires multi-specialist input** — if the deliverable needs input from specialists not yet appointed or not part of the original scope, it's a new scope.
-4. **Cost impact** — if compliance requires additional hours, materials, or sub-consultant fees, flag it.
-5. **Schedule impact** — if compliance would delay the approval timeline, flag it.
+**The CR sheet is a collaborative document, not a dispatch.** After producing the CR sheet and content changes file:
 
+1. **Present both files to the user** - open them in the editor or show the key decisions
+2. **Flag the decisions the user needs to make** - especially push-back items (scope creep) and any comments where the response strategy has options
+3. **Wait for user confirmation** before sending to the specialist
+4. **Do NOT send the CR sheet to the specialist** without the user reviewing it first
+
+The user explicitly corrected: "I didnt send the CR sheet please open we have to work on it again to send to fida" - meaning the CR sheet is reviewed and potentially modified by the user before it goes out.
 ### Middle Ground: Offer a Subsection Instead of a Standalone Document
 
 When CG asks for a new standalone document, offer to add a brief subsection to the existing plan at no cost. This:

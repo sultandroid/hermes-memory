@@ -82,7 +82,18 @@ Add a summary section with:
 - Key findings (patterns, critical gaps)
 - Key ER/SoW references used
 
-### 7. Produce the CR Sheet for the Specialist
+### 7. User Review Gate — Do NOT Send Directly
+
+**The CR sheet is a collaborative document, not a dispatch.** After producing the audit table and CR sheet:
+
+1. **Present both files to the user** — open them in the editor or show the key decisions
+2. **Flag the decisions the user needs to make** — especially push-back items (scope creep) and any comments where the response strategy has options
+3. **Wait for user confirmation** before sending to the specialist
+4. **Do NOT send the CR sheet to the specialist** without the user reviewing it first
+
+The user explicitly corrected: "I didnt send the CR sheet please open we have to work on it again to send to fida" — meaning the CR sheet is reviewed and potentially modified by the user before it goes out.
+
+### 8. Produce the CR Sheet for the Specialist
 
 For each comment, provide copy-paste instructions:
 

@@ -124,19 +124,24 @@ const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 
 ### 8. Deployment
 
+**CRITICAL: Use two-step deploy on LiteSpeed hosts.** SCP directly to the target path can silently return exit code 0 while the server file remains unchanged. Always verify after deploy.
+
 ```bash
-# Build single HTML file
-# Deploy to server — use TWO-STEP method (scp to /tmp, then cp on server)
-# scp directly to the target path can silently fail on LiteSpeed hosts
-scp -P 65002 -o ConnectTimeout=10 /tmp/register-app/index.html u517606786@samaya-factory.com:/tmp/register_index.html
-ssh -p 65002 u517606786@samaya-factory.com "cp /tmp/register_index.html /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html && echo OK"
+# STEP 1: Copy to /tmp on server
+scp -P 65002 -o ConnectTimeout=10 /tmp/register-app/index.html \
+    u517606786@samaya-factory.com:/tmp/register_index.html
 
-# Verify the server has the correct file (grep on server, NOT curl from browser)
-# curl can return cached content even after the file is updated
-ssh -p 65002 u517606786@samaya-factory.com "grep -c 'const lessons =' /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html"
+# STEP 2: Copy from /tmp to target (this is the reliable step)
+ssh -p 65002 u517606786@samaya-factory.com \
+    "cp /tmp/register_index.html /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html && echo OK"
 
-# Verify via HTTP (may show cached version — use ?v=N to bypass)
-curl -s -o /dev/null -w "%{http_code}" https://samaya-factory.com/build/aseer/registers/{NAME}/?v=$(date +%s)
+# STEP 3: Verify server has the correct file (grep on server, NOT curl)
+ssh -p 65002 u517606786@samaya-factory.com \
+    "grep -c 'const lessons =' /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html"
+
+# STEP 4: Verify via HTTP (may show cached version — use ?v=N to bypass)
+curl -s -o /dev/null -w "%{http_code}" \
+    "https://samaya-factory.com/build/aseer/registers/{NAME}/?v=$(date +%s)"
 ```
 
 ### 8b. LiteSpeed cache busting

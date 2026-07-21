@@ -63,9 +63,65 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") \
   python3 ~/.hermes/skills/devops/samaya-factory-pos/scripts/build_cashout_report.py
 ```
 
+## Chatter Payment Evidence Detection
+
+POs may show as unpaid in Odoo bills but actually be paid outside Odoo (from workshop allowance/عهده by Ibrahim Shaaban). Always check chatter before finalizing cashout.
+
+**How to read chatter (via message_ids):**
+```python
+po_full = models.execute_kw(db, uid, apikey,
+    'purchase.order', 'read', [po_id],
+    {'fields': ['name', 'message_ids']})
+msg_ids = po_full[0].get('message_ids', [])
+for mid in msg_ids[:15]:
+    msg = models.execute_kw(db, uid, apikey,
+        'mail.message', 'read', [mid],
+        {'fields': ['body', 'date']})
+    body = msg[0].get('body', '')
+    if body:
+        clean = re.sub(r'<[^>]+>', '', body).strip()
+```
+
+**Payment evidence keywords (Arabic):**
+| Keyword | Meaning |
+|---------|---------|
+| صورة التحويل | Transfer image (proof of payment) |
+| مرفق لكم صورة التحويل | Transfer image attached |
+| مدفوع من العهده | Paid from allowance (Ibrahim's petty cash) |
+| تم الدفع / تم التحويل | Payment/transfer done |
+| يرجي ارفاق الفاتورة الضريبية | Payment sent, waiting for tax invoice |
+
+**Known chatter-paid POs (paid outside Odoo):** P01924, P01939, P01894, P01977 — these have transfer images in chatter or "مدفوع من العهده" note. Maintain this set and update as new evidence emerges.
+
+**Adjusted cashout:** `truly_unpaid = total_unpaid_bill - chatter_evidence_paid`. Report both numbers so user can verify.
+
+## Daily Cron Job
+
+A cron job runs daily at 2:00 PM KSA to refresh both reports. It:
+1. Runs `build_cashout_report.py` — refreshes Factory POs with bill + chatter payment status
+2. Runs `update_workshop_tracker.py` — updates workshop purchasing tracker with Odoo payment data
+3. Runs `new_pos_last_3_days.py` — checks for new POs
+4. Delivers a formatted summary to all channels (Telegram + CLI)
+
+The cron job is named "Factory PO Daily Update" and delivers to `all` channels.
+
+## New POs Detection
+
+To find new POs in the last N days:
+```python
+three_days_ago = (date.today() - timedelta(days=3)).isoformat()
+domain = [['date_order', '>=', three_days_ago]]
+rows = call('purchase.order', 'search_read', [domain],
+    {'fields': fields, 'limit': 50})
+```
+Filter for Factory (project 244) or workshop vendors using the workshop vendor list. New POs are typically in `draft` state and not yet included in the cashout report.
+
 ## Linked Files
 - `references/odoo-18-domain-quirks.md` — Odoo 18 XML-RPC workarounds
+- `references/workshop-vendors.md` — comprehensive workshop vendor name list
 - `scripts/build_cashout_report.py` — reusable report builder
+- `scripts/update_workshop_tracker.py` — updates workshop purchasing tracker with Odoo payment data
+- `scripts/new_pos_last_3_days.py` — detects new POs created recently
 
 ## Pitfalls
 - Odoo 18 `search_read` with `project_id` in domain crashes — always fetch all + Python filter
