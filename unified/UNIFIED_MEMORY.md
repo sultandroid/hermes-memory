@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-20 19:23:32
+Generated: 2026-07-21 07:02:20
 
 ---
 
@@ -19,6 +19,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
+Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
 Eng. Mohamed Sultan (Mohamed Essa) — Technical Office Manager, Samaya Investment, Aseer Museum. Bilingual Arabic/English, prefers concise factual responses with tables. Expects all data verified against real sources (repo, Odoo, Adel Darwish bank) — never fabricated. Corrected: site/construction risk owners = Construction Manager, not Technical Office Manager. CG review = 7 working days (KSA Sun-Thu). Submittals >14d no CG response → Deemed Approved (DA). Auto-rules should be coded into repo so any agent applies them. Samaya brand: navy #1F3864, gold #C9A84C, Calibri. British English, plain engineer English, no AI clichés. Short directive commands. OneDrive: write /tmp first then copy.
 User insists on real data from repo sources (submittal register, drawing register) — never placeholders or example rows in deliverables. 'Bring real dates from the repo' is a hard rule.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
@@ -35,7 +36,6 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
-Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
 
 ## Active Projects
 
@@ -64,6 +64,7 @@ task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYA
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Risk register owner rule: site/construction/FLS risks (PRR-DES-07, PRR-FLS-01, etc.) must have owner "Construction Manager", not "Technical Office Mgr". Technical Office Mgr handles document-control/design risks only.
+Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
 Eng. Mohamed Sultan (Mohamed Essa) — Technical Office Manager, Samaya Investment, Aseer Museum. Bilingual Arabic/English, prefers concise factual responses with tables. Expects all data verified against real sources (repo, Odoo, Adel Darwish bank) — never fabricated. Corrected: site/construction risk owners = Construction Manager, not Technical Office Manager. CG review = 7 working days (KSA Sun-Thu). Submittals >14d no CG response → Deemed Approved (DA). Auto-rules should be coded into repo so any agent applies them. Samaya brand: navy #1F3864, gold #C9A84C, Calibri. British English, plain engineer English, no AI clichés. Short directive commands. OneDrive: write /tmp first then copy.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
 - Aseer Excel CPM model rebuild: Aseer_Museum_Baseline_Schedule_Rev1.xlsx, build_aseer_rev1.py, verify_aseer_rev1.py, 0 FS violations
@@ -81,7 +82,6 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
 - **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
 You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
-1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 
 ## Agents & Tools
 
@@ -111,6 +111,7 @@ task_group: Hermes Agent configuration
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
+Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
 Eng. Mohamed Sultan (Mohamed Essa) — Technical Office Manager, Samaya Investment, Aseer Museum. Bilingual Arabic/English, prefers concise factual responses with tables. Expects all data verified against real sources (repo, Odoo, Adel Darwish bank) — never fabricated. Corrected: site/construction risk owners = Construction Manager, not Technical Office Manager. CG review = 7 working days (KSA Sun-Thu). Submittals >14d no CG response → Deemed Approved (DA). Auto-rules should be coded into repo so any agent applies them. Samaya brand: navy #1F3864, gold #C9A84C, Calibri. British English, plain engineer English, no AI clichés. Short directive commands. OneDrive: write /tmp first then copy.
 User confirmed deemed-approval rule: submittals with no CG response after 14 days (per ER §2.4.A) are Deemed Approved (DA). This applies retroactively to all pending submittals.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
@@ -137,7 +138,6 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 - RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
 - **Contract:** Ministry of Culture (MoC) × Samaya Investment. Effective Date 2025-12-01, Term 10 months → 2026-09-30.
 - **Contract Type:** Lump-sum milestone-based (Annex 4). NOT unit-rate or re-measurable. No Value Engineering / Shared-Savings / Incentive clause anywhere.
-- **Employer:** MoC. **PMC:** ACE Moharram-Bakhoum.
 
 ## Locations
 

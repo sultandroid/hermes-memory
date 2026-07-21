@@ -331,12 +331,13 @@ Documents must not betray AI generation:
 ## Style rules
 
 - **H1:** 18pt Bold Navy `#1E293B`, uppercase, bottom border
-- **H2:** 14pt Bold Navy, numbered, uppercase, bottom border
+- **H2:** 14pt Bold Navy, numbered, uppercase, bottom border — auto pageBreakBefore via `save()`
 - **H3:** 12pt Bold Dark Gray `#334155`, uppercase, bottom border
-- **Body:** 11pt Calibri justified, 6pt space after
-- **Tables:** Navy header (9.5pt white bold), alternating rows `#F1F5F9`/white
-  - All table cells: left-aligned. Header row stays bold on navy background. Body cells: plain black text (no bold), no emoji icons.
-  - Column widths set via `set_table_widths()` after creation — NEVER via `col_widths_cm` parameter
+- **Body:** 11pt Calibri, justified, line spacing 13pt
+- **Remark/Note:** 9pt italic `MEDIUM_GRAY` (`#64748B`), compact spacing 11pt — use `add_remark()`
+- **Tables:** Navy header row, alternating white/light gray rows, 9.5pt cell text
+- **Page:** A4 portrait, margins 2.5cm top/left, 2.0cm bottom/right
+- **Colours:** Navy `#1E293B` headers, Gold `#C9A84C` accents (minimal)
   - **ALL tables in a document must have the SAME style** — navy header, alternating rows, cantSplit on every row, proportional column widths
 - **Margins:** A4 portrait, 2.5cm top/left, 2.0cm bottom/right
 - **Colors:** Navy `#1E293B`, Red `#B01E2F`, Dark Gray `#334155`, Medium Gray `#64748B`

@@ -19,3 +19,5 @@ Risk register multi-source update: when changing risk metadata, update ALL of: r
 PRR-SCH-01 created = 2025-12-01 (NTP date), not 2026-07-12 (system stand-up).
 §
 Risk register owner rule: site/construction/FLS risks (PRR-DES-07, PRR-FLS-01, etc.) must have owner "Construction Manager", not "Technical Office Mgr". Technical Office Mgr handles document-control/design risks only.
+§
+Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.

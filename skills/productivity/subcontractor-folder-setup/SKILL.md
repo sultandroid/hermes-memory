@@ -310,6 +310,11 @@ Use standalone python-docx (not SamayaDoc) with navy color scheme. The document 
 - A supplier profile is received and assessed (see Supplier Profile Receipt workflow)
 - The user asks "make a doc for the supplier to stamp"
 - A prequalification process is initiated for a new sub
+- CG rejects a prequalification because SOW and RACI were not attached — generate a combined SOW+RACI support doc (see `references/acoustic-prequalification-pattern.md`)
+
+### Generation script
+
+A reusable generation script is at `templates/gen_acoustic_prequal.py`. It produces a 10-section Samaya-branded DOCX with full SOW, 21 deliverables, RACI matrix (11 activities × 6 roles), prequalification requirements, submission forms, coordination interfaces, standards, and declaration. Adapt the COMPANIES list and BASE path for other specialist types.
 
 ## Domain: Subcontractor Prequalification Doc Generation (absorbed from session learnings)
 
@@ -757,4 +762,6 @@ After the quotation gap analysis confirms which scope items belong to this sub v
 - `references/appendix-b-packages.md` — Canonical subcontractor list (absorbed from `subcontractor-submittal-registers`)
 - `references/zna-quotation-review-pattern.md` — Worked example: ZNA Studio lighting designer quotation review against ER/SOW/DMP, including email thread tracing, CG Code B handling, scope split clarification, and gap analysis
 - `references/contract-drafting-pack.md` — Worked example: assembling the document pack for ZNA Studio contract drafting, including DMP sourcing from email, scope baseline rule, and who-owns-what cross-check
+- `references/acoustic-prequalification-pattern.md` — Acoustic specialist prequalification with SOW + RACI matrix (worked example from CG rejection fix)
+- `templates/gen_acoustic_prequal.py` — Reusable generation script for prequalification support documents with SOW, RACI, deliverables, and submission forms
 ---

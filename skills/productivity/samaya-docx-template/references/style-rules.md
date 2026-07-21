@@ -19,3 +19,12 @@
 - **Colours**: Navy #1E293B headers, Gold #C9A84C accents
 - **Page**: A4 portrait, margins 2.5cm top/left, 2.0cm bottom/right
 - **Tables**: Navy header row, alternating white/light gray (#F1F5F9) rows
+
+## Remark/Note style
+- **Remarks, evidence, caveats**: 9pt italic MEDIUM_GRAY (#64748B), compact spacing (Pt 11 line height)
+- Use `doc.add_remark()` for compliance evidence, assessment notes, and secondary text
+- Compliance matrix evidence column: 9pt italic gray, not body font
+
+## Section page breaks
+- Every H2 heading (14pt bold navy) auto-gets `pageBreakBefore` via `SamayaDoc.save()`
+- No section starts near the bottom of a page — always at the top of a new page

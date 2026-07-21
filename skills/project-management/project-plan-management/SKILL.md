@@ -619,6 +619,8 @@ Present findings as a structured table with:
 
 See `references/stakeholder-plan-post-approval-audit.md` for a worked example (Aseer Museum Stakeholder Plan ZD-0020 Rev.02, approved Jun 18-24, audited Jul 13 with 6 new stakeholders identified).
 
+See `references/plan-audit-scmp-zd-0094.md` for a worked example (Subcontract Management Plan ZD-0094 Rev.00 — 12 issues found, verdict: NOT READY for submission).
+
 ## 6.7 Producing a Plan Revision (Rev N+1)
 
 After the post-approval audit identifies changes needed, produce the revision systematically.
