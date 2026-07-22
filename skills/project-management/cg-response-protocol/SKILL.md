@@ -55,7 +55,7 @@ When logging a lesson from a CG interaction, remember the lessons learned regist
 
 | Reviewer | Type | Strategy |
 |----------|------|----------|
-| **Mansour Alrezeni** | Code enforcer | Submit only what spec says. Do not propose alternatives or splits — he will reject. Escalate structural decisions to Elbaz. |
+| **Mansour Alrezeni** | Code enforcer + bypasses Samaya | Submit only what spec says. Do not propose alternatives or splits — he will reject. Escalate structural decisions to Elbaz. **Known to email sub-consultants (NRS, ZNA) directly, bypassing Samaya's project management role. Flag any direct communication with specialists as a communication plan violation per PL-0018 Sec 12.6 S-1 (direct subcontractor-to-CG communication not permitted).** |
 | **CG (general)** | Conflates deliverables | When CG returns Code C with cross-discipline comments, check if comments are in-scope before accepting them all |
 | **CG (general)** | Unaware of NRS-MoC deliverables | Before responding to design-stage requests, verify if already delivered under original design contract |
 
@@ -788,6 +788,105 @@ For each push-back item, add a risk to the project risk register:
         ├── 03_Registers/            # Updated submission plans
         └── 04_Correspondence/       # CG emails
 ```
+
+## CG Communication Plan Violation Detection
+
+CG frequently bypasses Samaya and contacts subcontractors/specialists directly. This is a breach of the project communication plan (PL-0018 Rev C02, Sec 12.6 S-1: "All subcontractor correspondence must flow through the Samaya channel — direct subcontractor-to-CG communication is not permitted."). Run this check when the user asks to audit CG communication.
+
+See `references/cg-communication-plan-violation-detection.md` for:
+- SQLite queries to detect CG-to-specialist direct emails
+- Queries to detect specialist-to-CG direct emails
+- Violation severity classification (HIGH/MEDIUM/LOW)
+- PL-0018 clause references for each violation type
+- Known violations log for Aseer Museum
+- Report template with clause citations
+
+### Key patterns to watch
+
+| Pattern | What to check |
+|---------|---------------|
+| CG emails NRS/ZNA/AD Engineering directly | Query Mansour's To field for @nissenrichards, @studiozna, @adeng |
+| Subcontractor emails CG without Samaya managing | Query non-Samaya senders with CG in To but no Samaya in CC |
+| CG directs specialist to act | Look for "Dear [specialist], please..." language in CG emails |
+| Specialist CC's CG on internal reply | Check if specialist replies to Samaya with CG reviewer in CC |
+
+### When to run
+
+- User says "check mails for communication plan violations"
+- User says "Mansour is contacting subcontractors directly"
+- Weekly compliance audit
+- Before raising a formal complaint about CG conduct
+
+### Pitfall — Samaya team may initiate the bypass
+
+Before blaming CG for direct communication, check who started it. In one case (Jul 2026), Waris CC'd ZNA (Dogan) on his reply to Mansour. Mansour then exploited that opening by putting Dogan in To. The violation report initially blamed Mansour alone — the full thread showed Waris opened the door.
+
+**Always trace the full email thread** (via Conversation_ConversationID) before assigning fault. The first person to include a specialist on a CG thread is the one who breached protocol, even if CG later escalated it.
+
+### Email draft templates for raising violations
+
+When a violation is confirmed, three emails are typically needed:
+
+**1. Internal email to Samaya team member (if they initiated):**
+```
+Subject: Communication Protocol — [Specialist] CC on CG Thread
+
+[Name],
+
+During the email audit for [period], I found that on [date] you [CC'd/emailed] [specialist] on your reply to [CG person] regarding [topic].
+
+Per PL-0018 Sec 12.6 S-1, all specialist correspondence must flow through the Samaya channel. CC'ing a specialist on a CG thread creates a direct line that bypasses Samaya's project management role.
+
+Going forward, please route all specialist communication with CG through Samaya's project management team. If CG needs specialist input, we coordinate it internally and issue the response ourselves.
+
+Regards,
+[Name]
+```
+
+**2. Email to CG PM (when CG initiated):**
+```
+Subject: Communication Protocol — Direct Contact with [Specialist]
+
+Dear Eng. [CG PM Name],
+
+During our email review, we observed that Eng. [CG reviewer] has been adding [specialist email] directly to the To line on the [subject] thread — [N] emails to date.
+
+Per the approved Communication & Reporting Plan (PL-0018 Rev C02, Section 12.6), all correspondence with Samaya's sub-consultants must flow through Samaya. [Specialist] is Samaya's [role] and operates under our contract.
+
+Direct CG-to-[specialist] communication:
+- Bypasses Samaya's technical review before forwarding
+- Creates liability — Samaya cannot warrant design decisions made under direct CG instruction
+- Undermines the communication protocol agreed and approved by all parties
+
+We request that all future communication with [specialist] be routed through Samaya's project management team. We will ensure timely forwarding and technical completeness.
+
+Regards,
+[Name]
+```
+
+**3. Email to subcontractor (when they contacted CG directly):**
+```
+Subject: Communication Protocol — Direct Contact with CG
+
+[Name],
+
+On [date], you [action] to [CG person] regarding [topic].
+
+Per the project Communication & Reporting Plan (PL-0018 Rev C02, Section 12.6), all subcontractor correspondence with CG must go through Samaya. Direct subcontractor-to-CG communication is not permitted.
+
+Going forward, please route all external communication with CG through our project management team. We will handle the submission and coordination.
+
+Regards,
+[Name]
+```
+
+### Monitoring setup
+
+Set up a daily cron job that checks Mansour's emails for direct contact with sub-consultants. The script at `~/.hermes/scripts/monitor_cg_comm_protocol.sh` runs two checks:
+1. Mansour's To field for specialist domains (NRS, ZNA, Rawasin, Glasbau, etc.)
+2. Non-Samaya senders emailing CG without Samaya in CC
+
+Schedule: daily at 9 AM via `cronjob action=create schedule="0 9 * * *" script=monitor_cg_comm_protocol.sh`.
 
 ## Project Repo Convention
 

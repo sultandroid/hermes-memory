@@ -16,8 +16,10 @@ OneDrive: write /tmp first then cp to path. Read files one by one to avoid sync 
 §
 Risk register multi-source update: when changing risk metadata, update ALL of: risks.json (master), dashboards/risks.json, risks.json.bak, index.html (auto-rebuilt by post-commit hook from risks.json), treatment/<risk_id>.md frontmatter, and Excel register. Deploy to server + git commit.
 §
-PRR-SCH-01 created = 2025-12-01 (NTP date), not 2026-07-12 (system stand-up).
+PRR-SCH-01 created = 2025-12-01 (NTP date).
 §
-Risk register owner rule: site/construction/FLS risks (PRR-DES-07, PRR-FLS-01, etc.) must have owner "Construction Manager", not "Technical Office Mgr". Technical Office Mgr handles document-control/design risks only.
+Risk owner rule: site/construction/FLS risks = Construction Manager, not Technical Office Mgr.
 §
-Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
+Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
+§
+User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.

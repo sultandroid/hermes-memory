@@ -427,8 +427,8 @@ The repo SMP uses a **code-compliance-based approach**, not a rating-target appr
 
 Before generating any document, register, or email, run this mental checklist:
 
-1. **No `Sec` symbol** — use `Section` or `Clause`. The user has corrected this many times. `Sec` is the #1 recurring error.
-2. **Quotes must be verbatim** — when quoting CG comments, ER/SoW text, contract clauses, or any source, copy the original text exactly as written. Do NOT paraphrase, rephrase, or "clean up" the quote. The user explicitly said: "when qoute write the orginal text as it dont rewrite."
+1. **No `§` symbol** — never use the Unicode section sign `§` (U+00A7) in any document, Excel, email, or markdown. The user has corrected this many times and it is the #1 recurring error. Use `Section` or `Clause` instead. Write `Section 5.3` not `Sec 5.3` and never `§5.3`. This applies to ALL output formats: HTML, DOCX, XLSX, MD, email text.
+2. **Quotes must be verbatim** — when quoting CG comments, ER/SoW text, contract clauses, or any source, copy the original text exactly as written. Do NOT paraphrase, rephrase, or "clean up" the quote. The user explicitly said: "when qoute write the orginal text as it dont rewrite." If the source says "targeted points/guidelines", write exactly that — not "sustainability targets" or "compliance goals".
 3. **No AI symbols** — no `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`, `★`, `◆`, `▪`, `▸`, `►`, `●`, `○`, `※`, `⁂`, `–` (en dash), `…`, `×`, `°`, `±`, `©`, `®`, `™`. Use plain ASCII alternatives: `-` for dashes, `to` for arrows, `,` or `/` for separators.
 4. **No AI jargon** — no "seamlessly", "synergistic", "cutting-edge", "state-of-the-art", "holistic", "leverage", "robust", "innovative", "bespoke", "delighted to", "committed to excellence", "establishes the framework", "strategic pivot", "overarching", "comprehensive", "demonstrably", "in accordance with", "as per".
 5. **Write like an engineer** — short sentences, active voice, plain language. "We keep a register" not "A register shall be maintained." "Cuts environmental impact" not "minimises environmental impact through resource efficiency."

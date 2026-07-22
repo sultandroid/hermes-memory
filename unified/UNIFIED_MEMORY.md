@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-21 19:00:34
+Generated: 2026-07-22 07:07:35
 
 ---
 
@@ -19,7 +19,8 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
-Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
+Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
+User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
 Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
@@ -35,7 +36,6 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
-Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
 
 ## Active Projects
 
@@ -43,6 +43,7 @@ AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is f
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
 Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. British English, plain engineer language, active voice. No AI fingerprints: no § (use 'Section'), no emoji in formal docs, no AI clichés. Short directive responses. 'fix' means just do it. Real data from repo sources only — no placeholders. OneDrive: write /tmp first then copy. Lessons learned must be project-level and client-shareable.
 Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
+User is Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment. Project Director is Eng. Muhammad Waris Sultan Khan (PD Exhibitions). Reports to PD should be concise, factual, with clear evidence and recommended actions.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -58,15 +59,15 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 rollout_summary_file: 2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md
 description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
  task_group: samaya_aseer_hermes
-keywords: Aseer, Graphics_Submittal_Register, RFI_Register.xlsx, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, NOUS_BASE_URL, nous auth, oauth_device_code, read-only audit, path drift
 
 ## Key People
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Risk register owner rule: site/construction/FLS risks (PRR-DES-07, PRR-FLS-01, etc.) must have owner "Construction Manager", not "Technical Office Mgr". Technical Office Mgr handles document-control/design risks only.
-Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
+Risk owner rule: site/construction/FLS risks = Construction Manager, not Technical Office Mgr.
+Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
 Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. British English, plain engineer language, active voice. No AI fingerprints: no § (use 'Section'), no emoji in formal docs, no AI clichés. Short directive responses. 'fix' means just do it. Real data from repo sources only — no placeholders. OneDrive: write /tmp first then copy. Lessons learned must be project-level and client-shareable.
 Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
+User is Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment. Project Director is Eng. Muhammad Waris Sultan Khan (PD Exhibitions). Reports to PD should be concise, factual, with clear evidence and recommended actions.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
 - Aseer Excel CPM model rebuild: Aseer_Museum_Baseline_Schedule_Rev1.xlsx, build_aseer_rev1.py, verify_aseer_rev1.py, 0 FS violations
 - The folder is substantial and healthy: 610 files, 57 dirs, ~521 MB; major areas include schedule/BOQ, reference drawings, specs, RFIs, approvals, material submittals, purchasing, email extraction, and manager dashboards.
@@ -81,7 +82,6 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
-- **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
 
 ## Agents & Tools
 
@@ -111,7 +111,7 @@ task_group: Hermes Agent configuration
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Mohamed Samir (Construction Manager) — user considers him lazy, copy-pastes from other projects without changing dates/contract type. ZD-0094 (Subcontract Management Plan) was a Red Book template for a Design & Build project with wrong dates. User says he's useless. Don't rely on his submissions being accurate — always audit dates, contract type, and project-specific content before submission.
+Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
 Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor

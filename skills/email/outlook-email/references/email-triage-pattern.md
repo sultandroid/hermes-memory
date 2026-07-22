@@ -174,6 +174,70 @@ end try
 
 This applies to ALL senders, not just Aconex. The skill's earlier Aconex-specific note was too narrow.
 
+### `considering case` Block Causes Syntax Errors
+
+```applescript
+-- ❌ FAILS: "Expected ',' but found class name" (-2741)
+considering case
+    if subj contains "ASEER" then ...
+end considering
+```
+
+The `considering case` block is not supported inside `tell application` blocks in Outlook's AppleScript dictionary. Use uppercase-only string matching instead:
+
+```applescript
+-- ✅ WORKS: match uppercase subjects directly
+if subj contains "ASEER" or subj contains "MOC-MUS" then ...
+```
+
+Or use a `toLower` handler (but keep it outside the `tell` block):
+
+```applescript
+on toLower(str)
+    set chars to characters of str
+    set result to ""
+    repeat with c in chars
+        set cid to id of c
+        if cid >= 65 and cid <= 90 then
+            set result to result & (character id (cid + 32))
+        else
+            set result to result & c
+        end if
+    end repeat
+    return result
+end toLower
+```
+
+### `.applescript` File ~700-Byte Script Body Limit
+
+When writing `.applescript` files to disk and running with `osascript /path/to/file.applescript`, the script body (inside `tell` blocks) is limited to approximately 700 bytes. Scripts exceeding this fail with `Expected "," but found class name` (-2741) or similar syntax errors that mislead debugging.
+
+**Workaround:** Use per-index one-liners via `osascript -e` (each is a separate process, no body limit):
+
+```bash
+# ✅ WORKS for any complexity — each call is independent
+for i in 2 4 6 8; do
+  subj=$(osascript -e "tell application \"Microsoft Outlook\" to get subject of message $i of inbox" 2>/dev/null)
+  sndr=$(osascript -e "tell application \"Microsoft Outlook\" to try
+    set sndr to name of sender of (message $i of inbox)
+  on error
+    set sndr to \"?\"
+  end try
+  return sndr" 2>/dev/null)
+  att=$(osascript -e "tell application \"Microsoft Outlook\" to try
+    set attFlag to (has attachment of (message $i of inbox)) as text
+  on error
+    set attFlag to \"?\"
+  end try
+  return attFlag" 2>/dev/null)
+  echo "$i||$subj||$sndr||$att"
+done
+```
+
+**Why this works:** Each `osascript -e` is a separate process invocation. The ~700-byte limit applies per file, not per process. One-liners stay well under the limit. The trade-off is speed — each call takes ~6 seconds, so 20 emails × 3 properties = 60 calls = ~6 minutes.
+
+For extracting attachments, the `.applescript` file approach is still needed (too complex for one-liners), but keep the script body minimal — just the `save` loop, no complex conditionals.
+
 ### Unread Count is Reliable
 
 ```applescript
