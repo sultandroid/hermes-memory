@@ -51,7 +51,53 @@ If any check fails → **do not submit**. Flag the blocker and resolve first.
 
 When logging a lesson from a CG interaction, remember the lessons learned register is a **formal project deliverable** shared with the client. Only capture project-relevant lessons — no internal process notes, tool quirks, or session-specific events. See `cg-analysis-and-lessons` skill for the full lessons learned workflow and what to exclude.
 
-### CG Reviewer Behavior Patterns (Quick Reference)
+### Markup-Only CG Responses (YELLOW Highlights, No Extractable Text)
+
+CG sometimes returns Code C with comments as **PDF markup annotations** (hand-drawn highlights, stamps, handwritten notes) that text extraction tools (pdfminer, pdftotext) cannot read. The email body says only "C - Revise and Resubmit" with no detail.
+
+### Detection
+
+| Signal | What It Means |
+|--------|---------------|
+| Email body says "C - Revise and Resubmit" with no comment text | Comments are in the attached PDF as markup |
+| pdfminer/pdftotext returns empty or only the submittal form text | Comments are handwritten/stamped, not typed |
+| PM forwards saying "comments highlighted in YELLOW" | Confirms markup-only response |
+| Two PDFs in Outlook attachments (same ZD ref, different sizes) | One is the submitted document, one is the CG-marked version |
+
+### Workflow
+
+1. **Extract both PDFs** from Outlook attachments — the CG response is usually the larger file (contains markup layers)
+2. **Save to `02_CG_Responses/`** with descriptive filename: `MOC-MUS-ASE-1K0-ZD-0086_CG_Response_CodeC_22Jul2026.pdf`
+3. **Read the email thread** to understand what the comments relate to — the PM's forwarding email often says "comments related to baseline and Design"
+4. **Open the PDF visually** (the user must do this — markup annotations cannot be extracted programmatically)
+5. **Update CG_STATUS.md** with the Code C status and note: "Comments are PDF markup annotations — open PDF to view"
+6. **Track the resubmission** — the PM's email asking for "comments response for each point highlighted in YELLOW" means the team is already working on responses
+
+### Finding the CG Response PDF in Outlook Attachments
+
+CG response PDFs are stored in Outlook's proprietary attachment store. Search by document code:
+
+```bash
+find "/Users/mohamedessa/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Files" -name "*ZD-0086*" 2>/dev/null
+```
+
+Two files typically exist:
+- Smaller file (2.3MB) — the clean submitted document
+- Larger file (6.1MB) — the CG-marked version with markup layers
+
+Copy both to the CG_Responses folder for reference.
+
+### Pitfalls
+
+- **Do NOT claim you read the CG comments** from a markup-only PDF. Text extraction tools cannot read handwritten/stamped annotations. Say "CG returned Code C — comments are markup annotations on the PDF, open to view."
+- **Do NOT assume the smaller PDF is the CG response.** The CG response is usually the larger file (contains the submitted document + markup layers). The smaller file may be the original submission without markup.
+- **Check both PDFs** — one may be the clean submitted document, the other the CG-marked version. Both have the same ZD ref but different file sizes.
+- **The email preview is severely truncated** — Outlook's `Message_Preview` column stores only ~258 bytes (not ~500 chars as commonly assumed). The full email body with the comment table, section references, and detailed instructions is NOT accessible via the SQLite preview. Use AppleScript `plain text content` for the full body, or rely on the PM's forwarding email context clues (e.g., "below table", "highlighted in YELLOW", "related to baseline and Design").
+- **PM's "TODAY" deadline** — when the PM says "finalize it TODAY so we can resubmit by end of day", the resubmission is already in progress. Do not suggest a multi-day review cycle.
+- **Check which version was actually submitted** — the repo version (prepared by Technical Office) may differ from the submitted version (prepared by Construction Manager). Compare: prepared by, checked by, approved by, dates, BIM consultant, and revision number. The submitted version may have regressed to Rev 00 while the repo was at P01.
+- **CG reviewer may differ from the usual contact** — PEP Code C came from Hossam Mabrouk (hmabrouk@cg.com.sa), not the usual primary reviewer Mohammad Elbaz. Check the sender on every CG response — don't assume the same person always reviews the same document type.
+
+## CG Reviewer Behavior Patterns (Quick Reference)
 
 | Reviewer | Type | Strategy |
 |----------|------|----------|
@@ -822,6 +868,10 @@ See `references/cg-communication-plan-violation-detection.md` for:
 Before blaming CG for direct communication, check who started it. In one case (Jul 2026), Waris CC'd ZNA (Dogan) on his reply to Mansour. Mansour then exploited that opening by putting Dogan in To. The violation report initially blamed Mansour alone — the full thread showed Waris opened the door.
 
 **Always trace the full email thread** (via Conversation_ConversationID) before assigning fault. The first person to include a specialist on a CG thread is the one who breached protocol, even if CG later escalated it.
+
+### Pitfall — reference emails by date+subject, not internal IDs
+
+When writing violation reports, use date and subject line to identify emails — not internal SQLite Record_RecordID numbers. Internal IDs are meaningless to anyone outside the agent session. Recipients need to find the email in their own Outlook. Correct: "9 Jul 2026, subject: A large stone mentioned in Art Commission Schedule". Wrong: "Email ID 48008".
 
 ### Email draft templates for raising violations
 

@@ -126,17 +126,50 @@ Save to `Technical_Office/Submission_Tracker/SOW_Compliance_Audit.md`. Structure
 
 When a SOW exists on OneDrive but not in the repo:
 
+### Step 1: Search all possible locations
+
+The `24_Subcontractors/` folder is the canonical map, but SOW documents are often in legacy paths:
+
 ```bash
-# Find the SOW files
+# Primary location
 find "/Volumes/MIcro/Work/Aseer-Museum/24_Subcontractors/<name>/" -type f -not -name "._*" | head -20
 
-# Copy to repo
-cp "/Volumes/MIcro/Work/Aseer-Museum/24_Subcontractors/<name>/<file>" "03_Scope/<name>/<file>"
+# Legacy source bank (most reliable for older documents)
+find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/07_Subcontractors/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*contract*" -o -iname "*agreement*" \) 2>/dev/null | head -20
+
+# Procurement folders
+find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/06_Procurement/General/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*status*" \) 2>/dev/null | head -20
+
+# Archive scope management
+find "/Volumes/MIcro/Work/Aseer-Museum/99_Archive/02_Scope_Management/" -type f -not -name "._*" 2>/dev/null | head -20
+
+# Broad search by firm name
+find "/Volumes/MIcro/Work/Aseer-Museum" -type f -not -name "._*" -iname "*<firm>*" 2>/dev/null | head -20
 ```
 
-Then update:
-1. `03_Scope/<name>/README.md` — add filed docs table
-2. `specialist_register.md` — change SOW status to ✅
+### Step 2: When no formal SOW exists, file evidence documents
+
+If no formal SOW PDF is found, search for these partial-evidence documents and file them as the best available SOW reference:
+
+| Document Type | What It Provides | Example |
+|---------------|-----------------|---------|
+| Scope request / engagement letter | Formal scope definition | `SCOPE_REQUEST_NAMA.md` |
+| Status register | Deliverable list + progress | `FLS_STATUS_REGISTER.md` |
+| Email database | Correspondence trail | `Structural_Email_Database.md` |
+| Prequalification submittal | Company capability + scope statement | `Rawasin_PQ-0027_Prequalification.pdf` |
+| BOQ / schedule | Technical scope detail | `Rawasin_Technology_BOQ.xlsx` |
+| Contract / agreement | Legal scope + exclusions | `ZNA_Consultancy_Agreement_FINAL.pdf` |
+
+### Step 3: Copy to repo
+
+```bash
+cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "03_Scope/<name>/<file>"
+```
+
+### Step 4: Update registers
+
+1. `03_Scope/<name>/README.md` — add filed docs table with compliance gaps
+2. `specialist_register.md` — change SOW status to ✅, add gap notes
 3. `subcontractor_sow_raci_register.md` — change status to "filed in repo"
 4. `SOW_Compliance_Audit.md` — update the audit
 

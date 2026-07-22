@@ -1,64 +1,61 @@
-# SOW Compliance Audit — Worked Example
+# Worked Example: Full SOW Audit & Filing (2026-07-21)
 
-This reference captures the methodology used in the 21-Jul-2026 audit of 30 specialist packages against 5 governing sources.
+## Context
+Full audit of 30 specialist packages against Project SOW, ER, Appendix A/B, and Compliance Matrix. Built 3-layer system (SOW, submission plan, tracker) for all packages. Filed SOW documents from OneDrive for 6 packages.
 
-## Source Files Read
+## Packages Filed This Session
 
-| File | Purpose |
-|------|---------|
-| `03_Scope/sow_summary.md` | Project SOW summary + ZNA scope |
-| `03_Scope/er_summary.md` | ER sections (MEP, electrical, HVAC) |
-| `03_Plans/15_Subcontractor_Deliverables/project_sow_appendix_a_b_extraction.md` | Appendix A (106 rows) + Appendix B package map |
-| `Technical_Office/Compliance_System/compliance_matrix.md` | 51 compliance rows, 13 open gaps |
-| `Technical_Office/Compliance_System/compliance_gaps.md` | 18 gaps (9 open, 11 in progress, 1 resolved) |
-| `01_Registers/subcontractor_sow_raci_register.md` | 21 package SOW production statuses |
-| `01_Registers/subcontractor_package_register.md` | 19 package folder map |
-| `03_Plans/15_Subcontractor_Deliverables/subcontractor_sow_control_system.md` | 9 issue gates, 21 package control rows |
-| `03_Plans/15_Subcontractor_Deliverables/SOW_RACI_Conflict_Matrix.md` | 6 open interface conflicts |
-| `Technical_Office/Specialist_Management/specialist_register.md` | 27 specialists with status |
+| Package | Source Location | Files Found | Key Gaps |
+|---------|----------------|-------------|----------|
+| AD Engineering | Email attachments (Outlook) | Signed agreement, MEP SOW, Electrical SOW draft, CVs, cert | MEP installer not awarded |
+| Studio ZNA | `24_Subcontractors/ZNA/02_Contract/` | Contract (Arabic), Consultancy Agreement (English) | ApxA 4.02 spares, 4 CG conditions, supplier TBD |
+| Rawasin AV/IT | `24_Subcontractors/AV_IT/` + `90_Legacy_Source_Bank/07_Subcontractors/04_AV_IT_Contractor/` | PQ-0027, BOQ, PQ submittal | Media/software exclusion, spares, Q-Sys Code C, Audinate PQ |
+| Graphics | `24_Subcontractors/Graphics_Specialist_Scope_of_Work.pdf` (root level) | SOW PDF | Content/copyright exclusions not in SOW |
+| Nama FLS | `90_Legacy_Source_Bank/07_Subcontractors/_MANAGER_DASHBOARD/` + `06_Procurement/General/11_FLS/` | Scope request, status register | No signed contract, design not triggered, IFC-0004 blocked |
+| Structural | `90_Legacy_Source_Bank/06_Procurement/General/12_Structural/Email_Data_Extraction/` | Email database | Not appointed, DD rejected twice, 2 conflicts |
 
-## Key Distinction: SOW Exists vs SOW Filed in Repo
+## OneDrive Search Patterns That Worked
 
-The SOW register uses "package SOW exists" to mean the SOW exists on OneDrive (`24_Subcontractors/<name>/`). The audit must distinguish:
+1. **Canonical folder** `24_Subcontractors/<name>/` — often has only contract/PQ
+2. **Legacy source bank** `90_Legacy_Source_Bank/07_Subcontractors/<name>/` — most reliable for older documents
+3. **Procurement folders** `90_Legacy_Source_Bank/06_Procurement/General/<name>/` — has status registers, email DBs
+4. **Root-level files** in `24_Subcontractors/` — some SOWs are loose PDFs (e.g. `Graphics_Specialist_Scope_of_Work.pdf`)
+5. **Archive** `99_Archive/02_Scope_Management/<name>/` — deep research docs (e.g. `AV_Deep_Research.md`)
 
-- **✅ Filed in repo** — actual documents in `03_Scope/<name>/`
-- **🟢 Approved (on OneDrive)** — SOW exists but not in repo (ZNA, Interactive, CITC, Acoustic)
-- **🟡 Draft RACI only** — no formal package SOW, only draft RACI in `Draft_SOW_RACI/`
-- **❌ Missing** — no SOW anywhere
+## Common OneDrive Path Issues
+- `24_Subcontractors/` uses canonical folder numbers (02_Lighting_Designer, 04_AV_IT_Contractor, etc.)
+- `90_Legacy_Source_Bank/07_Subcontractors/` uses same numbering but has more content
+- Some folders exist in legacy but not in canonical (e.g. `08_Rawasin_AV` only in legacy)
+- `._*` Apple Double files must be filtered out with `-not -name "._*"`
+- OneDrive EDEADLK errors: use `osascript` bridge for reads, `cp` for writes
 
-## Common Gaps Found
+## SOW Status Conventions Used
+- ✅ Filed in repo (actual documents present in `03_Scope/<name>/`)
+- 🟢 Approved (exists on OneDrive, not yet filed)
+- 🟡 Draft RACI only (no formal package SOW)
+- ❌ Missing
 
-### Against Appendix A
-- ApxA 4.02: Lighting spares 1 year — not in ZNA SOW
-- ApxA 2.13: Media/AV software by MoC — not documented in Rawasin SOW
-- ApxA 4.01: AV hardware spares 1 year — not confirmed
-- ApxA 2.12, 3.01-3.05: Content/copyright/translation by MoC — not in Graphics SOW
-- ApxA 4.03: Interactive spares — not addressed
-
-### Against ER
-- ER §2.4.D: Oddy testing — Oddy Lab not appointed
-- ER §3.0: MEP installation — MEP Contractor not awarded
-
-### Against Project SOW
-- PS §3: Interactives, setworks, joinery — no specialists appointed
+## Key Gaps Discovered
+- ApxA 4.02: Lighting spares not confirmed in ZNA SOW
+- ApxA 2.13: Media/AV software by MoC not documented in Rawasin SOW
+- ApxA 4.01: AV spares not confirmed
+- ApxA 2.12/3.01-3.05: Content/copyright by MoC not documented in Graphics SOW
+- 6 open interface conflicts (SRC-001 through SRC-006) blocking SOW finalisation
 
 ## 3-Layer System Created
-
 ```
-03_Scope/                          ← 27 folders (1 with actual SOW files)
-02_Schedule/                       ← 27 folders (3 with actual plans)
-Technical_Office/Submission_Tracker/ ← 27 folders (1 populated with live log)
+03_Scope/                          ← 27 folders (6 with actual documents)
+02_Schedule/                       ← 27 folders (1 with actual plan: AD Engineering)
+Technical_Office/Submission_Tracker/ ← 27 folders (1 populated: AD Engineering)
 ```
 
 ## Files Updated
-
 | File | Change |
 |------|--------|
-| `specialist_register.md` | Added SOW/Plan columns with folder paths for all 14 Tier 2 specialists |
-| `subcontractor_sow_raci_register.md` | Updated ZNA, Graphics, MEP Designer statuses |
+| `specialist_register.md` | Added SOW/Plan columns to Tier 2 + Tier 3; all 27 specialists have paths |
+| `subcontractor_sow_raci_register.md` | Updated ZNA, Graphics, Rawasin, MEP Designer statuses |
 | `subcontractor_package_register.md` | Updated MEP Designer row with repo paths |
 | `PROJECT_MEMORY.md` | AD Engineering entry with file paths |
 
 ## Audit Output
-
-Saved to `Technical_Office/Submission_Tracker/SOW_Compliance_Audit.md` — 280 lines covering all 30 packages with per-source compliance tables, gap documentation, and priority actions.
+`Technical_Office/Submission_Tracker/SOW_Compliance_Audit.md` — 280 lines, 30 packages, per-source compliance tables, gap documentation, priority actions.

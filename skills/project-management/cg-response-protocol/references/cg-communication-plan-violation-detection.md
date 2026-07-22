@@ -89,11 +89,11 @@ AND (m.Message_ToRecipientAddressList LIKE '%@studiozna%'
 
 ### 1. [Reviewer] Emailing [Specialist] Directly — [Severity]
 
-| Date | Sender | To | CC |
-|------|--------|----|----|
-| [date] | [sender] | [to_list] | [cc_list] |
+| Date | Subject | To | CC |
+|------|---------|----|----|
+| [date] | [subject] | [to_list] | [cc_list] |
 
-**Evidence:** [email subject, preview excerpt]
+**Evidence:** [email subject, date]
 **Issue:** [what the violation is — e.g., "CG bypassing Samaya to direct NRS"]
 **Action needed:** [e.g., "Raise with CG PM. All communication to sub-consultants must go through Samaya."]
 
@@ -101,6 +101,8 @@ AND (m.Message_ToRecipientAddressList LIKE '%@studiozna%'
 
 ...
 ```
+
+**IMPORTANT — reference emails by date + subject, not internal email IDs.** Internal email IDs (Record_RecordID from SQLite) are not meaningful to anyone outside the agent session. Use date and subject line so the recipient can find the email in their own Outlook. Example: "9 Jul 2026, subject: A large stone mentioned in Art Commission Schedule" not "Email ID 48008".
 
 ## Known Violations (Aseer Museum, Jul 2026)
 

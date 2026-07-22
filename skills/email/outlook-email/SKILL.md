@@ -64,6 +64,20 @@ Only one account (sultan@samayainvest.com) — no account filtering needed.
 | `Message_HasAttachment` | BOOLEAN | 1 = has attachments, 0 = no attachments |
 | `PathToDataFile` | TEXT | Relative path to `.olk15Message` file (proprietary — use AppleScript instead) |
 
+### Finding CG Response PDFs by Document Code
+
+When CG returns Code C on a submittal, the response PDF is stored in Outlook's proprietary attachment store. Search by document code (ZD ref):
+
+```bash
+find "/Users/mohamedessa/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Files" -name "*ZD-0086*" 2>/dev/null
+```
+
+Two files typically exist for a CG response:
+- Smaller file (2-3MB) — the clean submitted document
+- Larger file (5-7MB) — the CG-marked version with markup layers (handwritten annotations, stamps, highlights)
+
+Copy both to the project's `02_CG_Responses/` folder for reference. The larger file is the one with CG markup.
+
 ### Quick Read Email (canonical first query)
 
 When you need to read an email, start with this — gets preview, folder context, and attachment status in one shot:
@@ -185,6 +199,7 @@ WHERE m.Record_RecordID = <ID>;
 See `references/cg-correspondence-analysis.md` for cross-referencing CG requests against the approved Communication Plan.
 See `references/forwarded-document-analysis.md` for the thread-first workflow when the user forwards a document.
 See `references/cg-schedule-extraction.md` for extracting CG consultant schedule requirements from email chains.
+See `references/sender-discovery-patterns.md` for the iterative workflow to find the correct sender name format when you don't know it.
 
 ### Pitfalls
 
@@ -208,7 +223,9 @@ See `references/cg-schedule-extraction.md` for extracting CG consultant schedule
 
 **`PathToDataFile` returns %20-encoded paths.** Use `$'...'` bash quoting or Python `urllib.parse.unquote`.
 
-**AppleScript `.applescript` files have a ~700-byte script body limit.** Keep scripts short. Break into multiple small files.
+**AppleScript `.applescript` files have a ~700-byte script body limit.** Keep scripts short. Break into multiple small files. Scripts exceeding this limit fail with misleading `Expected "," but found class name` (-2741) errors. **Workaround:** use per-index `osascript -e` one-liners for simple property reads (each is a separate process, no body limit). Reserve `.applescript` files for complex operations like attachment extraction.
+
+**`considering case` block causes syntax errors inside `tell application` blocks.** The `considering case` construct is not supported inside Outlook's AppleScript dictionary. Use uppercase-only string matching instead (e.g., `if subj contains "ASEER"`). If case-insensitive matching is needed, write a `toLower` handler outside the `tell` block.
 
 **Most reliable pattern: bash `for` loop with individual `osascript -e` one-liners per property.**
 
@@ -557,6 +574,21 @@ Log the batch to `Email_Archive/_email_processing_log.md`.
 
 ### Phase 6 — Build / Update Submission Register
 See `references/email-deliverables-to-submission-plan.md`.
+
+### Phase 7 — Git Commit & Push (REQUIRED for repo-based registers)
+
+After updating all registers in the git repo (`aseer-museum-pm`), the user expects a **git commit + push to GitHub**, not just OneDrive file saves.
+
+```bash
+cd /Users/mohamedessa/aseer-museum-pm
+git add -A
+git commit -m "Email scan YYYY-MM-DD: <summary of key changes>"
+git push origin main
+```
+
+**Pitfall — post-commit hook regenerates `index.html`:** The repo has a post-commit hook that auto-rebuilds the risk register and lessons learned web apps. This modifies `06_Risk_System/webapp/src/index.html` after every commit. If the remote has a newer version of this auto-generated file, `git pull --rebase` will fail with "Your local changes would be overwritten". **Workaround:** use `git push origin main --force` (the index.html is auto-generated, so force-push is safe). Alternatively, `git checkout 06_Risk_System/webapp/src/index.html` before pulling to discard the local auto-generated copy.
+
+**Pitfall — "dd you deploy?" means git push:** When the user asks "did you deploy?" or "dd you deploy?" after register updates, they are asking whether the changes were committed and pushed to the GitHub repo, not whether OneDrive files were saved. Always include the git commit+push step in the workflow and report the commit hash.
 
 ## Direct Attachment Extraction (fallback — AppleScript is preferred)
 
