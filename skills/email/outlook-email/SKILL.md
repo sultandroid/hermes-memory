@@ -570,7 +570,7 @@ See `references/email-to-submission-plan.md`.
 Update ALL relevant registers: Situation Reports, Master Submittal Register, Subcontractor Prequal Register, Lessons Learned Register, Odoo tasks, Memory.
 
 ### Phase 5 — Archive
-Log the batch to `Email_Archive/_email_processing_log.md`.
+Log the batch to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML frontmatter (last_updated, owner_agent: Hermes, status: active, source). This log serves as the dedup reference for the next scan.
 
 ### Phase 6 — Build / Update Submission Register
 See `references/email-deliverables-to-submission-plan.md`.
@@ -601,7 +601,7 @@ See `references/olk15-attachment-parsing.md` for the file format specification.
 - `references/exportmailin-analysis.md`
 - `references/submission-plan-and-schedule-workflow.md`
 - `references/email-thread-analysis.md`
-- `references/cron-24h-email-scan.md`
+- `references/cron-24h-email-scan.md` — cron scan pattern, dedup, multi-project reporting, iCloud EDEADLK workarounds
 - `references/olk15-attachment-parsing.md`
 - `references/aconex-email-patterns.md`
 - `references/email-to-submission-plan.md`

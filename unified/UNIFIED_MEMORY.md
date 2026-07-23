@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-22 19:00:30
+Generated: 2026-07-23 07:00:50
 
 ---
 
@@ -19,9 +19,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
-Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
-Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -36,14 +34,14 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 2. **NEVER use `rm -rf`** on any path — OneDrive propagates deletions immediately.
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
+7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
+Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
 
 ## Active Projects
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. British English, plain engineer language, active voice. No AI fingerprints: no § (use 'Section'), no emoji in formal docs, no AI clichés. Short directive responses. 'fix' means just do it. Real data from repo sources only — no placeholders. OneDrive: write /tmp first then copy. Lessons learned must be project-level and client-shareable.
-Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
-User is Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment. Project Director is Eng. Muhammad Waris Sultan Khan (PD Exhibitions). Reports to PD should be concise, factual, with clear evidence and recommended actions.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only — no Arabic text. British English, plain engineer language, active voice. No AI clichés. 'fix' means just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. Supply-only packages (materials/equipment) don't need SOWs — only specialists/contractors (design, install, consultancy) need SOWs. Wants complete 3-layer systems (SOW + submission plan + tracker) for all packages. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -59,15 +57,14 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
   - desc: Use for `samaya-profile` visual fixes, asset swaps, typography parity between versions, and exact rollback work in this repo.
 rollout_summary_file: 2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md
 description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
+ task_group: samaya_aseer_hermes
+keywords: Aseer, Graphics_Submittal_Register, RFI_Register.xlsx, Graphit, Sub-08, Subcontractors/03_Graphics_Contractor, NOUS_BASE_URL, nous auth, oauth_device_code, read-only audit, path drift
 
 ## Key People
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Risk owner rule: site/construction/FLS risks = Construction Manager, not Technical Office Mgr.
-Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. British English, plain engineer language, active voice. No AI fingerprints: no § (use 'Section'), no emoji in formal docs, no AI clichés. Short directive responses. 'fix' means just do it. Real data from repo sources only — no placeholders. OneDrive: write /tmp first then copy. Lessons learned must be project-level and client-shareable.
-Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
-User is Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment. Project Director is Eng. Muhammad Waris Sultan Khan (PD Exhibitions). Reports to PD should be concise, factual, with clear evidence and recommended actions.
+PEP CG response 22 Jul 2026: Code C from Hossam Mabrouk. CG Comments field blank on PDF. Yellow highlights are document template elements, not CG annotations. Comments communicated via email attachments. Submitted version (by Construction Manager) differs from repo version (by Technical Office) — different prepared by, dates, BIM consultant, revision.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only — no Arabic text. British English, plain engineer language, active voice. No AI clichés. 'fix' means just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. Supply-only packages (materials/equipment) don't need SOWs — only specialists/contractors (design, install, consultancy) need SOWs. Wants complete 3-layer systems (SOW + submission plan + tracker) for all packages. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
 - OneDrive HTML print QA and chart unification: EPERM, aser_museum_resource_mgmt_plan_RevC01_CG_REVIEW.html, duplicated Section 3, Engineering-Deck-HTML-Style-Guide.md, section svg direction:ltr
@@ -82,6 +79,9 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Ali Abdelrahman** (BIM Lead)
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
+- **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
+- **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
+You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
 
 ## Agents & Tools
 
@@ -111,8 +111,8 @@ task_group: Hermes Agent configuration
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
-Document style: NEVER use Sec symbol — use "Section" or "Clause". Quotes verbatim — never paraphrase CG/ER/SoW text. No AI symbols (arrows, em dashes, bullets). Plain engineer English — short sentences, active voice. NRS is Samaya's sub-consultant — never frame as separate. CR sheets: user reviews before sending to specialist. 'Bring real dates from the repo' is a hard rule. When filling Excel files, only write data values — never modify formatting, styles, column widths, borders, fonts, or header styling. Preserve original file appearance exactly as-is.
+PEP CG response 22 Jul 2026: Code C from Hossam Mabrouk. CG Comments field blank on PDF. Yellow highlights are document template elements, not CG annotations. Comments communicated via email attachments. Submitted version (by Construction Manager) differs from repo version (by Technical Office) — different prepared by, dates, BIM consultant, revision.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only — no Arabic text. British English, plain engineer language, active voice. No AI clichés. 'fix' means just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. Supply-only packages (materials/equipment) don't need SOWs — only specialists/contractors (design, install, consultancy) need SOWs. Wants complete 3-layer systems (SOW + submission plan + tracker) for all packages. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -143,7 +143,7 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 
 Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 OneDrive: write /tmp first then cp to path. Read files one by one to avoid sync corruption.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. British English, plain engineer language, active voice. No AI fingerprints: no § (use 'Section'), no emoji in formal docs, no AI clichés. Short directive responses. 'fix' means just do it. Real data from repo sources only — no placeholders. OneDrive: write /tmp first then copy. Lessons learned must be project-level and client-shareable.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only — no Arabic text. British English, plain engineer language, active voice. No AI clichés. 'fix' means just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. Supply-only packages (materials/equipment) don't need SOWs — only specialists/contractors (design, install, consultancy) need SOWs. Wants complete 3-layer systems (SOW + submission plan + tracker) for all packages. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.

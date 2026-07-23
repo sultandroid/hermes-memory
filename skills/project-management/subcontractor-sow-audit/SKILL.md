@@ -20,6 +20,19 @@ metadata:
 - User asks to check what's missing per package
 - User asks to build a complete SOW/submission plan/tracker system
 
+## Classification Rule (CRITICAL)
+
+Before auditing, classify each package by TYPE. This determines whether a SOW is needed:
+
+| Type | SOW Needed | Examples |
+|------|:----------:|----------|
+| **Specialist/contractor** (design, install, consultancy) | ✅ Required | AD Eng, ZNA, Rawasin, GBH, Structural, Acoustic, Fit-Out, MEP Contractor |
+| **Supply-only** (materials, equipment) | ⚪ Not needed | Panasonic (AV equipment), FF&E (furniture), Material Testing Lab |
+| **Authority service** | 🟡 Minimal scope note | Namaa (licence), Oddy Lab, SEC NOC |
+| **Internal** (Samaya staff) | ⚪ Not needed | Project Director, BIM Manager, HSSE Manager |
+
+Do NOT mark supply-only packages as "SOW missing" in the register. Mark them ⚪.
+
 ## The 5 Governing Sources
 
 | Source | Abbrev | File | What it covers |
@@ -126,28 +139,31 @@ Save to `Technical_Office/Submission_Tracker/SOW_Compliance_Audit.md`. Structure
 
 When a SOW exists on OneDrive but not in the repo:
 
-### Step 1: Search all possible locations
+### Step 1: Search all possible locations in priority order
 
-The `24_Subcontractors/` folder is the canonical map, but SOW documents are often in legacy paths:
+The `24_Subcontractors/` folder is the canonical map, but SOW documents are often in legacy paths. Search in this order:
 
 ```bash
-# Primary location
+# 1. Canonical folder (most recent)
 find "/Volumes/MIcro/Work/Aseer-Museum/24_Subcontractors/<name>/" -type f -not -name "._*" | head -20
 
-# Legacy source bank (most reliable for older documents)
-find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/07_Subcontractors/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*contract*" -o -iname "*agreement*" \) 2>/dev/null | head -20
+# 2. Legacy source bank (most reliable for older documents)
+find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/07_Subcontractors/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*contract*" -o -iname "*agreement*" -o -iname "*status*" -o -iname "*register*" \) 2>/dev/null | head -20
 
-# Procurement folders
-find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/06_Procurement/General/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*status*" \) 2>/dev/null | head -20
+# 3. Procurement folders (status registers, email DBs)
+find "/Volumes/MIcro/Work/Aseer-Museum/90_Legacy_Source_Bank/06_Procurement/General/" -type f -not -name "._*" \( -iname "*sow*" -o -iname "*scope*" -o -iname "*status*" -o -iname "*register*" \) 2>/dev/null | head -20
 
-# Archive scope management
+# 4. Archive scope management
 find "/Volumes/MIcro/Work/Aseer-Museum/99_Archive/02_Scope_Management/" -type f -not -name "._*" 2>/dev/null | head -20
 
-# Broad search by firm name
+# 5. Root-level files in 24_Subcontractors/ (some SOWs are loose PDFs)
+find "/Volumes/MIcro/Work/Aseer-Museum/24_Subcontractors" -maxdepth 1 -type f -not -name "._*" 2>/dev/null | head -20
+
+# 6. Broad search by firm name
 find "/Volumes/MIcro/Work/Aseer-Museum" -type f -not -name "._*" -iname "*<firm>*" 2>/dev/null | head -20
 ```
 
-### Step 2: When no formal SOW exists, file evidence documents
+### Step 2: When no formal SOW PDF exists, file evidence documents
 
 If no formal SOW PDF is found, search for these partial-evidence documents and file them as the best available SOW reference:
 
@@ -175,7 +191,9 @@ cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "03_Scope/<name>/<file>"
 
 ## Pitfalls
 
+- **User wants ALL output in English only** — no Arabic text in responses. Translate Arabic subject lines, sender names, and document titles to English when displaying.
 - **SOW exists on OneDrive but not in repo** — the SOW register may say "package SOW exists" meaning it's on OneDrive. Check `24_Subcontractors/<name>/` before marking as missing.
+- **Supply-only packages don't need SOWs** — Panasonic (AV equipment), FF&E (furniture), Material Testing Lab are supply-only. Mark them ⚪, not ❌.
 - **Appendix A exclusions are often not documented in package SOWs** — MoC responsibilities (text, media, copyright, mounts) must be explicitly excluded in each package SOW.
 - **Spares obligations** — ApxA 4.01-4.03 assign 1-year spares to Fit Out for AV, lighting, and interactives. These are often missing from package SOWs.
 - **Interface conflicts block SOW finalisation** — 6 open conflicts (SRC-001 through SRC-006) need PM decisions before affected SOWs can move from draft to approved.

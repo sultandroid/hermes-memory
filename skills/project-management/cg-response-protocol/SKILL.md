@@ -51,6 +51,45 @@ If any check fails → **do not submit**. Flag the blocker and resolve first.
 
 When logging a lesson from a CG interaction, remember the lessons learned register is a **formal project deliverable** shared with the client. Only capture project-relevant lessons — no internal process notes, tool quirks, or session-specific events. See `cg-analysis-and-lessons` skill for the full lessons learned workflow and what to exclude.
 
+### Blank CG Comments Field — Code C with No Written Comments
+
+CG sometimes returns Code C with the "CG Comments" field on the cover page **completely blank** — no handwritten notes, no typed comments, no markup annotations on the PDF itself. The only signal is the "C" status checkmark.
+
+#### Detection
+
+| Signal | What It Means |
+|--------|---------------|
+| Cover page shows "C" checked but "CG Comments" field is empty | Comments were communicated separately (email, review sheet, meeting) |
+| PDF has no native annotations AND no embedded image overlays | The PDF is the clean submitted document, not the CG-marked version |
+| Two PDFs exist (same ref, different sizes) | The larger one may be the CG-marked version with overlay images |
+| Both PDFs have blank CG Comments field | CG did not write comments on the PDF at all |
+
+#### Investigation Steps
+
+1. **Check both PDFs** — one may be the clean submitted document, the other the CG-marked version. Compare file sizes and embedded image counts.
+2. **Render pages at high resolution** and scan for yellow highlights, red/blue stamps, or any colored pixels that aren't part of the document template (see `image-analysis` skill §9 for the pixel-level detection workflow).
+3. **Check the email thread** — the CG reviewer may have sent comments in the email body, as a separate attachment (CRS Excel file), or in a meeting minutes document.
+4. **Check the Outlook SQLite database** for the full email body — the preview in the SQLite `Message_Preview` column is severely truncated (~258 bytes). Use AppleScript `plain text content` for the full body.
+5. **Check for a separate CRS (Comments Resolution Sheet)** — CG often sends comments as a separate Excel file rather than writing on the PDF.
+6. **If nothing found after all checks**, report: "CG returned Code C with no written comments on the PDF. Comments were likely communicated via [email / meeting / separate document — specify which if found]."
+
+#### Root Causes
+
+| Cause | How to Confirm | Action |
+|-------|---------------|--------|
+| Comments in email body | Check Outlook SQLite or AppleScript for full email text | Extract and log comments |
+| Comments in separate CRS | Search Outlook attachments for Excel files with matching submittal ref | Extract CRS and process per Stream 2 |
+| Comments in meeting minutes | Check recent meeting minutes for the submittal review | Cross-reference with meeting schedule |
+| CG did not provide comments (rare) | No comments found in any channel | Escalate to PM — request written comments from CG |
+| Yellow highlights ARE the comments | Pixel analysis shows yellow on reference lines that are document template elements | Verify by checking if highlighted text is standard template content vs. CG-specific marks |
+
+#### Pitfalls
+
+- **Do NOT claim you read CG comments** from a PDF with a blank CG Comments field. You cannot read what isn't there.
+- **Do NOT assume the yellow highlights are CG annotations** without verifying they're not document template elements. In the PEP case, all yellow highlights were standard "Reference:" callouts in the document template.
+- **Do NOT assume the larger PDF is the CG response** — both PDFs may be clean versions (one original, one revised). Check embedded image counts and modification dates.
+- **The CG Comments field may appear blank in text extraction but have handwritten content** — render the cover page at high resolution and scan for non-white, non-black pixels in the CG Comments area before concluding it's blank.
+
 ### Markup-Only CG Responses (YELLOW Highlights, No Extractable Text)
 
 CG sometimes returns Code C with comments as **PDF markup annotations** (hand-drawn highlights, stamps, handwritten notes) that text extraction tools (pdfminer, pdftotext) cannot read. The email body says only "C - Revise and Resubmit" with no detail.
@@ -69,9 +108,53 @@ CG sometimes returns Code C with comments as **PDF markup annotations** (hand-dr
 1. **Extract both PDFs** from Outlook attachments — the CG response is usually the larger file (contains markup layers)
 2. **Save to `02_CG_Responses/`** with descriptive filename: `MOC-MUS-ASE-1K0-ZD-0086_CG_Response_CodeC_22Jul2026.pdf`
 3. **Read the email thread** to understand what the comments relate to — the PM's forwarding email often says "comments related to baseline and Design"
-4. **Open the PDF visually** (the user must do this — markup annotations cannot be extracted programmatically)
-5. **Update CG_STATUS.md** with the Code C status and note: "Comments are PDF markup annotations — open PDF to view"
-6. **Track the resubmission** — the PM's email asking for "comments response for each point highlighted in YELLOW" means the team is already working on responses
+4. **Attempt programmatic visual analysis first** (before asking the user to open the PDF):
+   - Use `delegate_task` to a subagent with browser tools
+   - The subagent navigates to the PDF via `file://` URL in the browser
+   - Renders all pages at high resolution (up to 300 DPI)
+   - Takes screenshots of each page
+   - Detects yellow highlight regions via pixel color analysis
+   - Detects red/blue stamp regions via pixel color analysis
+   - OCRs highlighted and stamped regions (English + Arabic)
+   - Compares both PDFs page-by-page to identify what changed
+5. **Interpret the results correctly** — this is the critical step. The PM's email is the authoritative source, not the subagent's pixel analysis:
+
+   | Subagent Finding | PM Said | Correct Conclusion |
+   |------------------|---------|-------------------|
+   | CG Comments field blank, yellow highlights found | "comments highlighted in YELLOW related to baseline and Design" | The yellow highlights ARE the comments. They mark the sections to fix. Report: "CG returned Code C. Comments are visual markup (yellow highlights) on the PDF pages, relating to [topic per PM]. Open the PDF to view the highlighted sections." |
+   | CG Comments field blank, yellow highlights are document template elements | "comments highlighted in YELLOW" | The PM's email overrides the subagent's analysis. The highlights mark sections to fix even if they look like template elements. Report as markup-only response. |
+   | CG Comments field blank, no yellow highlights | No mention of highlights | CG did not provide markup. Escalate to PM. |
+
+   **Key rule:** When the PM explicitly says "comments highlighted in YELLOW", the yellow highlights ARE the comments. Do NOT conclude "comments were communicated elsewhere" just because the subagent says the highlights look like template elements. The PM knows what they sent to CG and what came back.
+
+6. **Update CG_STATUS.md** with the Code C status and note: "CG returned Code C — comments are visual markup (yellow highlights) on the PDF pages. Highlights relate to [topic per PM email]."
+7. **Track the resubmission** — the PM's email asking for "comments response for each point highlighted in YELLOW" means the team is already working on responses
+
+### Programmatic Visual Analysis — Subagent Prompt Template
+
+When delegating to a subagent for visual PDF analysis:
+
+```
+Read the CG response PDF for the [DOCUMENT NAME] and extract all CG comments/annotations from it. The PDF has yellow highlights and handwritten/stamped annotations that text extraction cannot read — you need to view it visually.
+
+The PDF is at: [absolute path to PDF]
+
+This is a [N]-page PDF. The CG returned Code [C/D] on [date]. The comments are marked in YELLOW on the PDF pages and relate to "[topic]" per the email from [sender].
+
+Use the browser tool to navigate to the PDF (use a file:// URL), take screenshots of each page, and read the handwritten/stamped comments. Also check the second PDF at the v2 path for any additional markup.
+
+Report back ALL comments you find, exactly as written, with the page number and section of the document they relate to.
+```
+
+### Pitfalls — Visual Analysis
+
+- **Yellow highlights may be document template elements**, not CG annotations. In the PEP case, all yellow highlights were standard "Reference:" callouts in the document template. Verify by checking if highlighted text is standard template content vs. CG-specific marks.
+- **The "CG Comments" field may be completely blank** even on a Code C response. The only signal may be the "C" status checkmark. Do not claim you read CG comments from a blank field.
+- **Both PDFs may be clean versions** (one original, one revised) with no markup. Check embedded image counts and modification dates. The larger file is not always the CG-marked version.
+- **The email preview is severely truncated** — Outlook's `Message_Preview` column stores only ~258 bytes. The full email body with the comment table, section references, and detailed instructions is NOT accessible via the SQLite preview. Use AppleScript `plain text content` for the full body, or rely on the PM's forwarding email context clues.
+- **PM's "TODAY" deadline** — when the PM says "finalize it TODAY so we can resubmit by end of day", the resubmission is already in progress. Do not suggest a multi-day review cycle.
+- **Check which version was actually submitted** — the repo version (prepared by Technical Office) may differ from the submitted version (prepared by Construction Manager). Compare: prepared by, checked by, approved by, dates, BIM consultant, and revision number.
+- **CG reviewer may differ from the usual contact** — check the sender on every CG response. Don't assume the same person always reviews the same document type.
 
 ### Finding the CG Response PDF in Outlook Attachments
 

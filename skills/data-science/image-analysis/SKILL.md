@@ -331,6 +331,145 @@ print(f"Measured aspect: {stone_aspect:.2f}")
 print(f"Match: {'YES' if abs(stone_aspect - known_aspect) < 0.2 else 'NO'}")
 ```
 
+## 9. PDF Annotation Analysis — Yellow Highlights, Stamps & Handwritten Marks
+
+When a PDF has **no native PDF annotations** (PyMuPDF `page.annots()` returns empty) but the user says there are yellow highlights, stamps, or handwritten comments, the annotations are embedded as **images** in the PDF — typically a scanned/overlay layer added by the reviewer.
+
+### Detection Workflow
+
+```python
+import fitz  # PyMuPDF
+
+doc = fitz.open("document.pdf")
+
+# Step 1: Check for native PDF annotations
+for page_num in range(doc.page_count):
+    page = doc[page_num]
+    annots = list(page.annots())
+    if annots:
+        print(f"Page {page_num+1}: {len(annots)} native annotations")
+        for a in annots:
+            print(f"  Type: {a.type} ({a.type_name}), Content: {a.info.get('content','')}")
+    else:
+        # Step 2: Check for embedded images (potential annotation overlay)
+        images = page.get_images()
+        if images:
+            print(f"Page {page_num+1}: {len(images)} embedded images — annotations may be here")
+```
+
+**Key insight**: If `page.annots()` returns empty but the PDF has embedded images on content pages, the annotations are rendered as image overlays. The v1 PDF (CG response) had extra images on 15 pages that the v2 (clean) PDF did not — those were the annotation overlay.
+
+### Step 3: Render Pages at High Resolution
+
+```python
+# Render at 200-300 DPI for pixel analysis
+mat = fitz.Matrix(3.0, 3.0)  # ~216 DPI
+pix = page.get_pixmap(matrix=mat)
+pix.save(f"/tmp/page_{page_num+1:02d}.png")
+```
+
+### Step 4: Detect Colored Regions (Yellow Highlights, Red/Blue Stamps)
+
+```python
+from PIL import Image
+
+img = Image.open(f"/tmp/page_{page_num+1:02d}.png")
+if img.mode != 'RGB':
+    img = img.convert('RGB')
+pixels = img.load()
+w, h = img.size
+
+# Yellow highlights (R>200, G>180, B<150)
+yellow_pixels = [(x,y) for y in range(h) for x in range(w)
+                 if pixels[x,y][0] > 200 and pixels[x,y][1] > 180 and pixels[x,y][2] < 150]
+
+# Red stamps (R>180, G<100, B<100)
+red_pixels = [(x,y) for y in range(h) for x in range(w)
+              if pixels[x,y][0] > 180 and pixels[x,y][1] < 100 and pixels[x,y][2] < 100]
+
+# Blue stamps (R<100, G<100, B>180)
+blue_pixels = [(x,y) for y in range(h) for x in range(w)
+               if pixels[x,y][0] < 100 and pixels[x,y][1] < 100 and pixels[x,y][2] > 180]
+
+if yellow_pixels:
+    min_y = min(p[1] for p in yellow_pixels)
+    max_y = max(p[1] for p in yellow_pixels)
+    min_x = min(p[0] for p in yellow_pixels)
+    max_x = max(p[0] for p in yellow_pixels)
+    print(f"YELLOW highlight: ({min_x},{min_y})-({max_x},{max_y}) — {len(yellow_pixels)} pixels")
+```
+
+**Sampling for speed**: For large pages, sample every 5th pixel instead of scanning every pixel:
+```python
+yellow_pixels = 0
+for y in range(0, h, 5):
+    for x in range(0, w, 5):
+        r, g, b = pixels[x, y]
+        if r > 200 and g > 180 and b < 150:
+            yellow_pixels += 1
+```
+
+### Step 5: Extract & OCR the Colored Regions
+
+```python
+import pytesseract
+
+if yellow_pixels:
+    # Get bounding box with padding
+    pad = 30
+    min_x = max(0, min(p[0] for p in yellow_pixels) - pad)
+    max_x = min(w, max(p[0] for p in yellow_pixels) + pad)
+    min_y = max(0, min(p[1] for p in yellow_pixels) - pad)
+    max_y = min(h, max(p[1] for p in yellow_pixels) + pad)
+
+    # Crop the highlighted region
+    region = img.crop((min_x, min_y, max_x, max_y))
+
+    # OCR with appropriate language
+    text = pytesseract.image_to_string(region, lang='eng')  # or 'ara+eng' for bilingual
+    print(f"Highlighted text: {text.strip()}")
+```
+
+### Step 6: Cross-Reference with Full Page Text
+
+Always get the full page text to understand what the highlighted region contains:
+
+```python
+# Get full page text for context
+full_text = page.get_text()
+# The highlighted region text + surrounding context tells you what CG marked
+```
+
+### Step 7: Compare v1 (annotated) vs v2 (clean) PDFs
+
+When two PDFs exist with the same document reference but different sizes, the larger one is usually the CG-marked version:
+
+```python
+doc1 = fitz.open("v1_annotated.pdf")
+doc2 = fitz.open("v2_clean.pdf")
+
+for i in range(min(doc1.page_count, doc2.page_count)):
+    t1 = doc1[i].get_text().strip()
+    t2 = doc2[i].get_text().strip()
+    im1 = doc1[i].get_images()
+    im2 = doc2[i].get_images()
+
+    if len(im1) != len(im2):
+        print(f"Page {i+1}: v1 has {len(im1)} images, v2 has {len(im2)} — annotation overlay here")
+    if t1 != t2:
+        print(f"Page {i+1}: text differs — content was revised")
+```
+
+### Pitfalls
+
+1. **Yellow highlights may be document template, not CG annotations.** In the PEP case, every yellow highlight was a "Reference:" callout that was part of the document template, not a CG mark. Always verify by checking if the highlighted text is a standard document element (section headers, reference lines) vs. something CG would specifically flag.
+2. **Red stamps may be section responsibility assignments, not CG stamps.** In the PEP, red marks in section headers like "(PM + P.D.)" were template elements showing who's responsible for that section.
+3. **The CG Comments field may be blank.** CG sometimes returns Code C with no written comments on the PDF itself — the comments were communicated separately via email or a review sheet.
+4. **Sampling misses small annotations.** If you sample every 5th pixel, a small handwritten note (10-20px) may be missed. For critical pages, scan every pixel.
+5. **OCR on colored regions is unreliable for handwritten text.** pytesseract handles printed text well but will garble handwriting. Note "handwritten — cannot OCR" when the colored region contains cursive marks.
+6. **Blue stamps are often PMC/owner stamps, not CG.** Check the stamp text: "شركة ذات مسؤولية محدودة / إدارة المشاريع" = PMC (Moharram Bakhoum), not CG.
+7. **v2 may be a revised version, not the CG response.** The v2 PDF may be Samaya's revised resubmission, not the CG's annotated version. Check the modification date and revision history.
+
 ## 10. Text Extraction via ASCII Pixel Rendering (Tiny Text Images)
 
 When `vision_analyze()` fails and the image is small (<500px wide, <50px tall) with text content, traditional OCR often garbles the output. Use pixel-level ASCII rendering combined with pytesseract and cross-character comparison.

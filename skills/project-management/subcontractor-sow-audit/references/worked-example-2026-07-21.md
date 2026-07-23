@@ -42,6 +42,9 @@ Full audit of 30 specialist packages against Project SOW, ER, Appendix A/B, and 
 - ApxA 2.12/3.01-3.05: Content/copyright by MoC not documented in Graphics SOW
 - 6 open interface conflicts (SRC-001 through SRC-006) blocking SOW finalisation
 
+## Classification Lesson
+User corrected: supply-only packages (materials/equipment) don't need SOWs. Only specialists/contractors (design, install, consultancy) need SOWs. Panasonic (AV equipment), FF&E (furniture), and Material Testing Lab are supply-only — mark ⚪, not ❌. This was added to the skill as a mandatory pre-audit classification step.
+
 ## 3-Layer System Created
 ```
 03_Scope/                          ← 27 folders (6 with actual documents)

@@ -58,6 +58,32 @@ The `Message_Preview` column stores only ~300-500 chars of the email body (Outlo
 
 **Action:** Flag such emails as "⚠️ Possible WeTransfer — check manually" rather than concluding no deliverables exist.
 
+## Scan Log Persistence
+
+Write a scan log to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with:
+- YAML frontmatter (last_updated, owner_agent: Hermes, status: active, source)
+- Summary section stating whether new items were found
+- Table of all project-critical emails in the window
+- Table of filtered-out items (non-project, ops/logistics)
+- Registers updated section
+- Items flagged for user attention
+
+This log serves as the dedup reference for the next scan — compare against the most recent log file to avoid re-reporting already-captured items.
+
+## Dedup Against Previous Scan
+
+Before reporting, check the most recent scan log at `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` (previous day). Cross-reference by email ID and subject. Only report items NOT already captured in the previous scan. This prevents duplicate reports when the same emails appear in overlapping time windows.
+
+## Multi-Project Reporting
+
+When scanning covers multiple projects (Aseer Museum, Zamzam VC, RCRC Exhibition), structure the report with separate sections per project:
+
+1. **Aseer Museum** — primary focus, full detail with emoji status
+2. **Zamzam VC** — secondary, brief table (these are operational site submissions, not project-critical for Aseer)
+3. **RCRC Exhibition** — explicit "No emails found" statement to prove the scan covered it
+
+If Aseer Museum has no new items but other projects do, report the other projects' activity and state "No new Aseer Museum activity" — do NOT output [SILENT] when other projects have items.
+
 ## Report Format
 
 Use emoji status column:
@@ -66,6 +92,33 @@ Use emoji status column:
 - ℹ️ INFO — admin/backlog, no action needed
 
 Keep one line per item unless critical action needed. Translate Arabic subjects to English.
+
+### Key Sender Verification (QA step)
+
+After the item table, explicitly state which monitored projects/senders had **zero** emails. This proves the scan ran and the absence was detected, not missed:
+
+```
+### RCRC Exhibition
+No emails found matching RCRC Exhibition in the last 24h.
+```
+
+### Summary Table
+
+End with a summary table showing counts per project and a 🔴 Top 3 Actions section:
+
+| Project | New Items | Action Required |
+|---------|:---------:|:--------------:|
+| Aseer Museum | N | M |
+| Zamzam VC | N | M |
+| RCRC Exhibition | 0 | 0 |
+
+### 🔴 Top 3 Actions Today
+
+Numbered list of the 3 most critical items requiring immediate response, with one-line explanation each.
+
+## Key Sender Verification
+
+After scanning, explicitly state which key senders were NOT seen (e.g., "❌ Mimon Allitou — no emails"). This proves the scan ran and the absence was detected, not missed.
 
 ### Key Sender Verification (QA step)
 

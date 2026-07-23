@@ -46,6 +46,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | 1A0-1G-0006 | `02_Submittals/01_DD_Gate/Architecture/` |
 | 1A0-1G-0007 | `02_Submittals/01_DD_Gate/Architecture/` |
 | 1A0-1G-0008 | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0007 | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0008 | `02_Submittals/01_DD_Gate/Architecture/` |
 | 1C0-1G-0001 | `02_Submittals/01_DD_Gate/Civil/` |
 | 1M0-1G-0001 | `02_Submittals/01_DD_Gate/MEP/` |
 
@@ -53,19 +55,23 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 
 | Doc Code | Specialist | Destination |
 |----------|------------|-------------|
-| 1A0-PQ-0123 | ACOUSTIEG | `24_Subcontractors/Acoustieg/01_Prequalification/` |
-| 1A0-PQ-0124 | AME | `24_Subcontractors/Acoustic_Specialist_AME/01_Prequalification/` |
-| 1A0-PQ-0125 | JOCAVI | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
+| 1A0-PQ-0123 | ACOUSTIEG | `24_Subcontractors/11_Acoustic/01_Prequalification/` |
+| 1A0-PQ-0124 | AME | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
+| 1A0-PQ-0125 | JOCAVI | `24_Subcontractors/07_Acoustic/01_Prequalification/` |
+| 1A0-PQ-0128 | TransOrient Solutions | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
 | 1C0-PQ-0120 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
 | 1C0-PQ-0121 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
-| 1L0-PQ-0122 | Landscaping | `24_Subcontractors/Landscaping/01_Prequalification/` |
-| 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/Landscaping/01_Prequalification/` |
+| 1L0-PQ-0122 | Landscaping | `24_Subcontractors/02_Landscaping/01_Prequalification/` |
+| 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/12_Landscaping/01_Prequalification/` |
+| 1L0-PQ-0127 | Landscaping (TLC) | `24_Subcontractors/07_Landscaping/01_Prequalification/` |
 
 ### General Documents (ZD-*)
 
 | Doc Code | Description | Destination |
 |----------|-------------|-------------|
+| ZD-0020 | Stakeholder Management Plan Rev.03 | `04_Docs/02_Plans_and_Procedures/02.19_Stakeholder_Management_Plan/01_Source_Files/` |
 | ZD-0067 | Fire Alarm & Suppression | `03_Design_Files/Electrical/Fire_Alarm_Suppression/` |
+| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Resource_Management_Plan/01_Source_Files/` |
 | ZD-0082 | Sustainability Management Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | ZD-0085 | Graphics Specialist SOW | `24_Subcontractors/04_Graphics_Graphite/01_Scope_of_Work/` |
 | ZD-0086 | Project Execution Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
@@ -85,6 +91,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 |----------|-------------|-------------|
 | PL-02.17 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
 | PL-0046 | HSE Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Resource_Management_Plan/01_Source_Files/` |
+| ZD-0020 | Stakeholder Management Plan | `04_Docs/02_Plans_and_Procedures/02.19_Stakeholder_Management_Plan/01_Source_Files/` |
 
 ### Other Document Types
 
@@ -100,7 +108,41 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *Design_Tracker*.xlsx | Design Tracker | `03_Design_Files/` |
 | *stakeholder* | Stakeholder List | `00_Status/` |
 | *lookahead* | Lookahead | `00_Status/` |
-| *Prequalification_Submission_CG* | Prequal Submission | `24_Subcontractors/AME_Acoustic/01_Prequalification/` |
+| *Prequalification_Submission_CG* | Prequal Submission | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
+| *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/02_Landscaping/01_Prequalification/` |
+| *TOS-ASEER-TP* | TransOrient Acoustic Prequal | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
+| *AME Company Profile* | AME Company Profile | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
+| *Patinated Brass* or *GBH Letter* | Material Finish Testing | `03_Design_Files/FF&E_Material_Boards/` |
+| *CG Requests*Scenography* | CG Scenography Request | `03_Design_Files/FF&E_Material_Boards/` |
+| *PROPOSAL*ASIR* | Civil/Structural Proposal | `24_Subcontractors/08_Civil_Structural/08_RFP_and_Proposals/` |
+| *Baffle Ceiling RFQ* | Ceiling Systems RFQ | `24_Subcontractors/ASM_Ceiling_Systems/08_RFP_and_Proposals/` |
+| *USGME-Quotation* | USG Ceiling Quotation | `24_Subcontractors/ASM_Ceiling_Systems/08_RFP_and_Proposals/` |
+| *Archaeological Museums* | AV/IT Proposal | `24_Subcontractors/AV_IT/08_RFP_and_Proposals/` |
+| *MediaCast* or *GS324P* | AV/IT Prequal | `24_Subcontractors/AV_IT/01_Prequalification/` |
+| *Calibration Certificates* | Calibration Docs | `04_Docs/09_Registers/22_Procurement_Schedule/` |
+| *Lighting_Submittal_Register* | Lighting Submittal | `04_Docs/09_Registers/22_Procurement_Schedule/` |
+| *Technology BOQ* | Technology BOQ | `04_Docs/09_Registers/22_Procurement_Schedule/` |
+| *QT-SGL* | Lab Prequal (Rayat Alnajah) | `24_Subcontractors/01_Materials_Testing_Lab/01_Prequalification/` |
+| *Rigging* | Rigging Contractor | `24_Subcontractors/10_Rigging/01_Prequalification/` |
+| *Aseer -Package 2* | Rigging Package | `24_Subcontractors/06_Rigging/01_Prequalification/` |
+| *TFP_Engineering* | Engineering Design Check | `00_Contracts/` |
+| *AD Engineering* or *AGREEMENT* | MEP Agreement | `00_Contracts/` |
+| *DESIGN CALCULATION*ASIR* | Drywall Design Calc | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
+| *Drywall Compliance* | Drywall Compliance Sheet | `02_Submittals/01_DD_Gate/` |
+| *ASM_Ceiling_Systems_Compliance* | Ceiling Compliance | `02_Submittals/01_DD_Gate/` |
+| *Equipment 00[1-3]* | HSE Equipment Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *6930_Finishes_Schedule* or *A2742-M60* | Paint/Finishes Samples | `03_Design_Files/FF&E_Material_Boards/` |
+| *MA-0006*CR_Sheet* | Material CR Sheet | `03_Design_Files/FF&E_Material_Boards/` |
+| *Asir Museum*Hesham*Outlook* | Hesham Outlook Export | `00_Status/` |
+| *Asir Project-Mechanical Submission Plan* | Mechanical Submission Plan | `02_Schedule/` |
+| *Rehabilitate*Schedule* | Updated Schedule | `02_Schedule/` |
+| *Main stakeholders* | Stakeholder List | `00_Status/` |
+| *Design_Tracker* | Design Tracker | `03_Design_Files/` |
+| *NRS Comments* | CG Comments on Submission Plan | `02_Submittals/01_DD_Gate/` |
+| *LOGO MOC* | Skip (logo image) | Skip |
+| *invite.ics* | Skip (calendar invite) | Skip |
+| *فواتير* or *ماكينة* or *معدات* | Skip (ops/finance) | Skip |
+| *Unconfirmed*.crdownload | Skip (partial download) | Skip |
 | Daily_Report* | Daily Report | `00_Status/` |
 | WEEKLY* | Weekly Report | `00_Status/` |
 | *.xer | Schedule | `02_Schedule/` |
@@ -116,6 +158,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | Mohamed Samir | Construction Manager — coordination, procurement, prequal | High |
 | Hesham Abdelhameed | Design submittals, daily reports, material boards | High |
 | Francesco Bitelli (NRS) | Design Lead — CG Comments on Arch Submission Plan | High |
+| Jim Richards | CG Requests — Scenography & Material Board | High |
+| Maged Zamzam | URGENT Resubmission Requests | High |
 | Soliman Obiya / Shihab Mohamed | Rawasin (AV/IT subcontractor) — proposals, prequal | Medium |
 | Aconex Notification | CDE transmittals — document submissions | Medium |
 | Amro Mohammed | MEP — material lists, technical | Medium |

@@ -16,10 +16,6 @@ OneDrive: write /tmp first then cp to path. Read files one by one to avoid sync 
 §
 Risk register multi-source update: when changing risk metadata, update ALL of: risks.json (master), dashboards/risks.json, risks.json.bak, index.html (auto-rebuilt by post-commit hook from risks.json), treatment/<risk_id>.md frontmatter, and Excel register. Deploy to server + git commit.
 §
-PRR-SCH-01 created = 2025-12-01 (NTP date).
-§
-Risk owner rule: site/construction/FLS risks = Construction Manager, not Technical Office Mgr.
-§
-Mohamed Samir (Construction Manager): always audit his submissions — copy-pastes from other projects with wrong dates/contract type.
-§
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
+§
+PEP CG response 22 Jul 2026: Code C from Hossam Mabrouk. CG Comments field blank on PDF. Yellow highlights are document template elements, not CG annotations. Comments communicated via email attachments. Submitted version (by Construction Manager) differs from repo version (by Technical Office) — different prepared by, dates, BIM consultant, revision.
