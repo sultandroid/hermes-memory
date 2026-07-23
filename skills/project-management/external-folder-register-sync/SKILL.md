@@ -25,6 +25,12 @@ The script output is massive (600K+ chars). Do NOT try to register everything. I
 - Use `ls -lt` on each subfolder to see actual modification dates
 - Cross-reference against existing registers to avoid duplicates
 
+### 2a. 7-Day Recency Filter (Script-Level)
+
+The detection script (`check_adel_files.sh`) now includes a **7-day recency filter** that silently suppresses files older than 7 days. This prevents false positives when the snapshot file is reset or re-deployed. The filter uses `date -v -7d` on macOS to compare file mtime against the cutoff.
+
+**Do NOT remove this filter.** Without it, a snapshot reset causes ALL files (including Feb–Apr 2026 historicals) to appear as "new" in the next cron run.
+
 ### 3. Subfolder-to-Register Mapping
 
 | Adel Subfolder | Repo Register | Notes |
@@ -68,6 +74,7 @@ Always bump the `last_updated` field in the YAML frontmatter of every register y
 ## Pitfalls
 
 - **First-run noise**: The script's first scan after a long gap flags ALL files as "new". Filter by modification date. Only items from the last 7 days are genuinely new.
+- **Old files re-appearing after snapshot reset**: If the snapshot file is deleted or the script is re-deployed, ALL files appear as "new" again — including files from Feb–Apr 2026. The detection script now includes a **7-day recency filter** (`date -v -7d`) that silently suppresses files older than 7 days. This prevents false positives from snapshot resets. The filter is in `check_adel_files.sh` — if you modify the script, preserve this filter.
 - **Empty subfolders**: Several subfolders (13-Weekly Report, 14-IR, 15-SNA, 17-SOR) are consistently empty in Adel's OneDrive. Don't flag them as missing — they're expected to be empty.
 - **NCRs in Letters**: NCR documents may appear as attachments in the Letters folder (e.g., `01- Letters/IN/CG/01-/مرفقات الخطاب/NCR-CG-001.pdf`) rather than in a dedicated 12-NCR folder.
 - **CG Reply in Approval subfolders**: Many TQ folders have an `Approval/` subfolder containing CG response PDFs. When this appears, update the TQ status from "Open" to "CG response received".

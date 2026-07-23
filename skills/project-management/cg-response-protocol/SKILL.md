@@ -529,6 +529,7 @@ The study PDF is extracted from Outlook via AppleScript. Team action templates (
 
 ## Pitfalls
 
+- **Plan vs Register distinction** — When CG returns Code C on a management plan (RMP, SMP, DMP, etc.), not all comments are valid. Some ask for operational data that belongs in live registers, not the plan itself. Before complying, ask: "Is this methodology or data?" If data (risk scores, P6 IDs, specific risk entries, register snapshots), push back — the plan is methodology, the register has the data. The user explicitly confirmed this position after initially agreeing to comply. See `references/rmp-cg-response-patterns.md` for the full worked example.
 - **Never add unapproved names to documents.** If a person's name hasn't been formally approved by CG/MoC (via CV submission, KPR update, or formal appointment), list the role only with a note: "Per live KPR" or "TBC — appointment pending." Adding unapproved names creates liability — CG will hold Samaya to that person's qualifications even if they were never formally accepted. The user explicitly corrected: "dont add names are not approved."
 - **Never merge submission plan comments with detailed technical reviews** — they are two separate streams with different audiences and response formats.
 - **cat-row separators** must use `.cat-row td` class (dark background, white text), not blank rows. Blank rows break table continuity.

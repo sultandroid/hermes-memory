@@ -60,17 +60,33 @@ WHERE Message_SenderList LIKE '%Aconex%'
 ORDER BY Message_TimeReceived DESC;
 ```
 
-## Epoch Offset Issue
+## Epoch Verification (MANDATORY before any query)
 
-Outlook SQLite timestamps use **Mac absolute time** (seconds since 2001-01-01), not Unix epoch (1970-01-01). The offset is **978307200 seconds**.
+**Do NOT assume the epoch.** The active database at `Data/Outlook.sqlite` (with `Mail`/`folders` tables) uses **Unix epoch** — no offset needed. The old root-level `Outlook.sqlite` (0 bytes) is a stub. Always verify:
 
-| Expression | Result |
-|------------|--------|
-| `datetime(col, 'unixepoch')` | ❌ Wrong — interprets as Unix epoch |
-| `datetime(col + 978307200, 'unixepoch')` | ✅ Correct — adds Mac→Unix offset |
+```sql
+SELECT Message_TimeReceived,
+       datetime(Message_TimeReceived, 'unixepoch', 'localtime') as as_unix,
+       datetime(Message_TimeReceived + 978307200, 'unixepoch', 'localtime') as as_mac
+FROM Mail ORDER BY Message_TimeReceived DESC LIMIT 1;
+```
+
+The one showing today's date is correct.
+
+| Expression | When to use |
+|------------|-------------|
+| `datetime(col, 'unixepoch', 'localtime')` | ✅ When `as_unix` shows today's date |
+| `datetime(col + 978307200, 'unixepoch', 'localtime')` | ✅ When `as_mac` shows today's date |
+
+## Other Aconex System Notifications
+
+| Subject Pattern | Purpose |
+|----------------|---------|
+| `Aconex Metadata Template download ready` | Metadata export completed |
+| `Aconex Docs Export to Excel ready` | Document register export ready |
+| `Your Aconex account has been created` | New user account |
 | `Historical back log: Historical information - BACK LOG` | Bulk historical data import |
 | `Request for Previous Aconex Transactions` | CG request to upload backlog transactions — multi-week thread with reminders |
-| `Aconex Docs Export to Excel ready` | Document register export ready |
 
 ## "Request for Previous Aconex Transactions" Thread Pattern
 

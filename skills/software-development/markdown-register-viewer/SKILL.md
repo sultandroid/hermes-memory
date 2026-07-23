@@ -231,13 +231,221 @@ const $ = s => document.querySelector(s);
 ```
 
 ### Variable Name Mismatch (case-sensitive)
-If the data array is declared as `const LESSONS = [...]` (uppercase) but all functions reference `lessons` (lowercase), every filter, render, and KPI function operates on `undefined`. The page appears structurally complete but shows zero data. **Always verify the variable name used in functions matches the declaration.** Use a single grep to check: `grep -n 'lessons\.\|lessons\.length\|lessons\.filter\|lessons\.find\|lessons\.forEach\|lessons\.some'` — if the declaration is `LESSONS`, every reference must be `LESSONS` too. The safest approach: declare as `const DATA = [...]` and reference `DATA` everywhere, avoiding case confusion entirely.
+If the data array is declared as `const LESSONS = [...]` (uppercase) but all functions reference `lessons` (lowercase), every filter, render, and KPI function operates on `undefined`. The page appears structurally complete but shows zero data. **Always verify the variable name used in functions matches the declaration.** Use a single grep to check: `grep -n 'lessons\\.\\|lessons\\.length\\|lessons\\.filter\\|lessons\\.find\\|lessons\\.forEach\\|lessons\\.some'` — if the declaration is `LESSONS`, every reference must be `LESSONS` too. The safest approach: declare as `const DATA = [...]` and reference `DATA` everywhere, avoiding case confusion entirely.
 
 ### Modal Scroll Position
 When opening a modal on a long page, the body scroll position is preserved. Set `document.body.style.overflow = 'hidden'` when modal is open, restore on close.
 
 ### Print Mode State
 The `.print-mode` class must be added before `window.print()` and removed after. The print dialog is synchronous in most browsers, but the class removal should happen in a `setTimeout` or after print completes (use `window.onafterprint` event).
+
+## Hardcoded-Data Dashboards (No Markdown Parsing)
+
+Not all dashboards need markdown parsing. When the data is static (known at build time), embed it directly as a JS object. This is simpler and avoids parser bugs.
+
+### Pattern
+
+```javascript
+const DATA = {
+  total: 217,
+  categories: {
+    "Pre-Qual":    { total:101, B:67, C:22, D:11, U:1,  F:0 },
+    "Documents":   { total:76,  B:49, C:15, D:3,  U:6,  F:3 },
+    // ...
+  },
+  deemedApproved: [
+    { ref:"IFC-0003", subject:"Flooring", days:92, risk:"HIGH" },
+    // ...
+  ],
+  ifc: [
+    { pkg:"IFC-0003", subject:"Flooring", submitted:"22-Apr", code:"DA", days:92, status:"Deemed Approved" },
+    // ...
+  ],
+  hse: [
+    { ref:"PL-0041", plan:"Emergency Response / Preparedness", code:"B", status:"Approved" },
+    // ...
+  ],
+  overdue: [
+    { ref:"—", subject:"HVAC Complete Submittal Package", submitted:"02-Jul", days:21, risk:"HIGH", status:"DA" },
+    // ...
+  ]
+};
+```
+
+### When to use hardcoded vs parsed
+
+| Situation | Approach |
+|-----------|----------|
+| Data changes daily, source is markdown in repo | Parse from markdown |
+| Data is stable, or source is a PDF/email/Excel | Hardcode in JS |
+| Dashboard needs auto-update via cron | Parse from markdown + rebuild script |
+| One-off report / snapshot | Hardcode in JS |
+
+### Chart.js Integration
+
+For interactive charts, load Chart.js from CDN and create charts in `window.onload` or at the bottom of the `<script>` block:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+```
+
+**Chart types commonly used in project dashboards:**
+
+| Chart Type | Use Case | Example |
+|------------|----------|---------|
+| `bar` | Category totals, approval rates | Submittals per category |
+| `doughnut` | Code/status distribution | B vs C vs D vs U |
+| `bar` (stacked) | Multi-dimension breakdown | Category × Code heatmap |
+| `bar` (horizontal, `indexAxis: 'y'`) | Timelines, ranked data | Deemed approval days, approval rates |
+| `line` | Trends over time | Submission rate per week |
+
+**Key Chart.js options for dashboards:**
+
+```javascript
+options: {
+  responsive: true,
+  maintainAspectRatio: false,  // let CSS control height
+  plugins: {
+    legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
+    tooltip: { backgroundColor: '#0F172A' }
+  },
+  scales: {
+    y: { beginAtZero: true, grid: { color: '#E2E8F0' } },
+    x: { grid: { display: false } }
+  }
+}
+```
+
+**Doughnut with percentage in tooltip:**
+```javascript
+tooltip: {
+  callbacks: {
+    label: ctx => ctx.label + ': ' + ctx.parsed + ' (' + (ctx.parsed / DATA.total * 100).toFixed(1) + '%)'
+  }
+}
+```
+
+**Horizontal bar for timelines:**
+```javascript
+options: {
+  indexAxis: 'y',  // horizontal bars
+  scales: {
+    x: { beginAtZero: true },
+    y: { grid: { display: false } }
+  }
+}
+```
+
+### Snapshot Timestamp (Frozen at Page Load)
+
+Every dashboard should display a snapshot timestamp that freezes at page load, so printed copies are traceable:
+
+```html
+<div class="snapshot-stamp">
+  Snapshot taken: <strong id="snapStamp">—</strong>
+</div>
+```
+
+```javascript
+function fmtDateLong() {
+  const d = new Date();
+  return d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) +
+    ' at ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+document.getElementById('snapStamp').textContent = fmtDateLong();
+```
+
+### Print Button with SVG Icon
+
+Add a print button in the header bar:
+
+```html
+<button class="print-btn" onclick="window.print()">
+  <svg viewBox="0 0 24 24"><path d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 14H8v-4h8v4zm2-4v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z"/></svg>
+  Print
+</button>
+```
+
+```css
+.print-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.print-btn:hover { background: rgba(255,255,255,0.25); }
+.print-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+@media print {
+  .print-btn { display: none; }
+}
+```
+
+### A4 Landscape Print Styles for Dashboards
+
+Dashboards with wide tables and charts benefit from A4 landscape orientation:
+
+```css
+@media print {
+  @page { size: A4 landscape; margin: 12mm 10mm; }
+  body { background: white; font-size: 9pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .header { position: static; box-shadow: none; }
+  .kpi-card, .chart-card, .table-card { box-shadow: none; border: 1px solid #CBD5E1; }
+  .chart-wrap { max-height: 260px; page-break-inside: avoid; }
+  .table-card { page-break-inside: avoid; }
+  thead th { background: #0F172A !important; color: white !important; }
+  .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .kpi-value { font-size: 24pt; }
+  table { font-size: 8pt; }
+  thead th { font-size: 7.5pt; padding: 6px 8px; }
+  tbody td { padding: 5px 8px; }
+}
+```
+
+### Auto-Update via Cron + Rebuild Script
+
+When the dashboard data changes over time, wire a daily cron that rebuilds the HTML and redeploys:
+
+**Rebuild script** (`scripts/update_dashboard.py`):
+```python
+import re, json
+# 1. Parse source data (markdown register, JSON, etc.)
+# 2. Read the HTML template
+# 3. Replace the DATA object in the HTML
+# 4. Write updated HTML
+```
+
+**Cron job:**
+```bash
+cronjob action=create name="dashboard-daily-update" schedule="0 8 * * *" \
+  prompt="Run update script, copy to /tmp/, deploy to Surge.sh"
+```
+
+**Deploy step in cron:**
+```bash
+cp dashboard.html /tmp/deploy-dir/index.html
+cd /tmp/deploy-dir && surge --domain my-domain.surge.sh ./
+```
+
+### Cache Issues After Deploy
+
+When a user reports the print button or other feature "not working" after deploy, the most likely cause is **browser cache** — Surge.sh CDN caches aggressively. Steps:
+
+1. **Hard refresh** — Cmd+Shift+R (or Ctrl+F5)
+2. **Incognito/private window** — bypasses all cache
+3. **Verify deployed file** — check the live URL directly:
+   ```bash
+   curl -s https://domain.surge.sh | grep -c 'print-btn'
+   ```
+4. If the file is correct on server but user still sees old version, wait 30s for CDN propagation, then hard refresh again
 
 ## Verification
 

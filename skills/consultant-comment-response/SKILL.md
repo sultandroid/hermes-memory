@@ -236,11 +236,11 @@ This means:
 |--------|---------|---------|
 | Spec Clause | Exact clause reference | 061000 2.1.A |
 | Parameter | What is being measured | Density (air-dry) |
-| Required Value | From the spec | ≥ 640 kg/m³ |
+| Required Value | From the spec | >= 640 kg/m³ |
 | Achieved Value | From the datasheet | 680 kg/m³ |
 | Test Standard | ASTM/BS/EN ref | ASTM D2395 |
 | Source Reference | File name + page | Garnica_Duraply_TDS.pdf p.3 |
-| Compliance | ✓ or ✗ only | ✓ |
+| Compliance | Y or N only | Y |
 
 ### Workflow
 
@@ -254,7 +254,7 @@ This means:
 
 | Gap | What's Needed |
 |-----|--------------|
-| Fire test report | Product TDS is NOT a fire test report. Need a lab report (UL, Intertek, Warringtonfire) explicitly stating Class A flame spread (≤ 25) and smoke developed (≤ 450) per ASTM E84 or equivalent. |
+| Fire test report | Product TDS is NOT a fire test report. Need a lab report (UL, Intertek, Warringtonfire) explicitly stating Class A flame spread (<= 25) and smoke developed (<= 450) per ASTM E84 or equivalent. |
 | Metal component datasheets | Blum hinges/runners alone are not enough. Need datasheets for ALL metal: brackets, anchors, screws, tracks, connectors, fasteners. |
 | Adhesive TDS | Brand-family evidence is not enough. Need the exact product TDS showing EN 204 D3 or ASTM D4317 Type II compliance. |
 | Hardware schedule | No itemized project hardware schedule = gap. Need a schedule listing every handle, lock, hinge, runner, and fixing with model numbers. |
@@ -262,7 +262,7 @@ This means:
 
 ### Pitfalls (MAR-specific)
 - **"Compliant" is not a value.** The engineer will reject any compliance sheet that uses words instead of numbers.
-- **Product TDS ≠ test report.** A manufacturer datasheet states design values; a test report from a recognized lab proves actual performance. Fire ratings especially need the latter.
+- **Product TDS != test report.** A manufacturer datasheet states design values; a test report from a recognized lab proves actual performance. Fire ratings especially need the latter.
 - **Partial compliance = non-compliance.** If even one clause lacks a verified achieved value, the whole submission gets Code C.
 - **Metal components are often forgotten.** The spec requires all metal to have datasheets — not just the branded hardware (Blum) but also generic brackets, screws, and anchors.
 - **Check the MAR checklist too.** The consultant's checklist items (Testing, Certifications, Method Statement) must all be upgraded to "Yes" with evidence, not left as "No" or "N/A".
@@ -414,6 +414,56 @@ Before forwarding, verify which floor(s) the CRS covers:
    - `GEN` = General (cross-floor)
 3. If all drawing numbers use one prefix, the CRS covers that floor only
 4. Name the correct floor in the email subject line
+
+## Plan-Level CG Comment Audit Against Contractual Obligations
+
+When CG returns a management plan (SMP, DMP, HSE Plan, QMP, RMP) with Code C, audit each comment against the actual ER/SoW/SBC text before drafting responses. This determines which comments are valid, which are already addressed, and what specific action is needed.
+
+### RMP-Specific CG Comment Audit (Common Patterns)
+
+Risk Management Plans attract a predictable set of CG comments. When auditing RMP comments, check these 5 patterns:
+
+| Comment Type | What CG Wants | Common Root Cause | Fix |
+|-------------|---------------|-------------------|-----|
+| **Missing registers** | PRR, DDR, HSE, AV registers attached alongside the methodology | RMP submitted as standalone document without appendices | Attach all 4 registers as appendices to Rev 01 |
+| **Scoring scale inconsistency** | Uniform scale (5x5 recommended) across all registers | PRR uses 4x4, HSE uses 5x5, DDR uses unclear pairing | Standardise all registers to 5x5 (P 1-5 x S 1-5, max 25). Update severity bands: Critical 16-25, High 10-15, Medium 5-9, Low 1-4 |
+| **Quantitative analysis placeholders** | Defer Section 7, don't fill with "To be calculated" | BOQ not finalised, lump-sum packages, no firm cost inputs | Replace placeholders with deferral statement: quantitative analysis follows when BOQ is finalised; qualitative scoring governs until then |
+| **Schedule integration not demonstrated** | Worked example linking PRR entry to P6 Activity ID, WBS, float | RMP mentions schedule risk analysis but no concrete example | Add sample: Risk ID -> P6 Activity ID -> WBS -> Total Float -> Schedule Impact |
+| **Missing shipping/logistics risk** | Specific risk for current Middle East shipping disruption | PRR-PRC-06 exists but scores too low; no specific Red Sea risk | Add new risk PRR-PRC-07 (Critical), update Section 2 Project Risk Profile |
+
+### Audit Methodology
+
+1. **Extract CG comments** from the PDF or email
+2. **Read the actual plan document** — check if the comment is valid by comparing against the plan's own content, not just ER/SoW
+3. **Classify each comment**:
+   - **Valid** — plan genuinely missing the item or has a quality issue
+   - **Already addressed** — plan covers it but CG missed it (rare)
+   - **Scope creep** — not a contractual obligation (push back)
+4. **Determine effort** — cost impact, schedule impact, and whether it's a desk exercise or requires external input
+5. **Produce CRS Excel** with 2 sheets: (1) CR Register with obligation assessment, (2) Action Tracker with assignments and target dates
+6. **Fix the plan document** — apply all changes directly to the plan, not just the CRS
+
+### CRS Excel Structure for Plan-Level Comments
+
+Use a 2-sheet workbook:
+
+**Sheet 1: CR Register** — Columns: CG Comment #, CG Comment (verbatim), ER/SoW Reference, Our Obligation (on our shoulder / push back), Cost Impact, Schedule Impact, Action Required, Proposed Response to CG. Colour-code rows: green (comply), amber (comply limited), red (push back).
+
+**Sheet 2: Action Tracker** — Columns: Item, CG Comment, Action Required, Assigned To, Target Date, Status, Evidence, Remarks. This is the execution plan for the team.
+
+### Fixing the Plan Document
+
+After producing the CRS, apply changes directly to the plan document:
+
+| Change | Where | What |
+|--------|-------|------|
+| Frontmatter | YAML header | Update revision, date, conflict_resolution |
+| Scoring tables | Section 6 | Replace 4x4 with 5x5 probability, severity, matrix, bands |
+| Quantitative section | Section 7 | Replace placeholders with deferral statement |
+| Schedule integration | Section 5 | Add worked example with P6 Activity ID, WBS, float |
+| Risk profile | Section 2 | Add missing risk factors (shipping, etc.) |
+| Register summary | Section 13 | Update scoring scale, count, date for all registers |
+| Contingency tables | Section 7.2, 8.2 | Update score ranges to match new 5x5 bands |
 
 ## Pitfalls
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks

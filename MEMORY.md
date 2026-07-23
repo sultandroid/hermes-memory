@@ -18,4 +18,6 @@ Risk register multi-source update: when changing risk metadata, update ALL of: r
 §
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
 §
-PEP CG response 22 Jul 2026: Code C from Hossam Mabrouk. CG Comments field blank on PDF. Yellow highlights are document template elements, not CG annotations. Comments communicated via email attachments. Submitted version (by Construction Manager) differs from repo version (by Technical Office) — different prepared by, dates, BIM consultant, revision.
+RMP scoring scales: user designed each register with a different scale (PRR 4x4, DDR 5-point, HSE 5x5, AV 4x4) per PMBOK Ch. 11.3. I validated this. When CG challenges it, defend the original design — don't flip to comply. User will correct me if I do.
+§
+@SulKimiClaw_bot is the correct Telegram handle for the SulKimiClaw agent.

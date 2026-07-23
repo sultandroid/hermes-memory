@@ -96,6 +96,72 @@ repo-root/
 └── update_status.py              # Lives in ~/.hermes/scripts/
 ```
 
+## Bidirectional sync: repo status → Odoo progress
+
+The sync script can also **write corrected progress values back to Odoo** based on plan tracker status.
+
+### Pattern: PLAN_PROGRESS_MAP
+
+```python
+PLAN_PROGRESS_MAP = {
+    # Odoo ID: (progress_float, reason_string)
+    2947: (0.5, 'SMP submitted to CG, awaiting response'),
+    3019: (0.5, 'PEP submitted, awaiting CG response'),
+    3020: (0.2, 'BEP still in draft, not submitted'),
+    2976: (0.3, 'Fire Prevention Code C — needs revision'),
+    2962: (0.1, 'Site Security Code D — full rewrite required'),
+}
+```
+
+### Sync function pattern
+
+```python
+def sync_plan_progress_to_odoo(call, dry_run=False):
+    """Read PLAN_PROGRESS_MAP, compare with Odoo, write if different."""
+    updates = []
+    for task_id, (correct_progress, reason) in PLAN_PROGRESS_MAP.items():
+        current = call('project.task', 'read', [[task_id]], {'fields': ['progress', 'name']})
+        if not current:
+            continue
+        current_progress = current[0].get('progress', 0) or 0
+        if abs(current_progress - correct_progress) < 0.01:
+            continue  # Already correct
+        if not dry_run:
+            call('project.task', 'write', [[task_id], {'progress': correct_progress}])
+        updates.append((task_id, current_progress, correct_progress))
+    return updates
+```
+
+### CLI flags for the sync script
+
+Add argparse to the main() function:
+
+```python
+parser = argparse.ArgumentParser()
+parser.add_argument('--dry-run', action='store_true', help='Preview changes without writing')
+parser.add_argument('--skip-fetch', action='store_true', help='Skip fetching tasks (only sync progress)')
+parser.add_argument('--skip-progress', action='store_true', help='Skip progress sync (only fetch tasks)')
+```
+
+Usage:
+```bash
+# Preview what would change
+python3 scripts/odoo_sync_aseer.py --dry-run
+
+# Apply fixes only (skip task dump)
+python3 scripts/odoo_sync_aseer.py --skip-fetch
+
+# Fetch only (skip progress sync)
+python3 scripts/odoo_sync_aseer.py --skip-progress
+```
+
+### When to update PLAN_PROGRESS_MAP
+
+- After a plan is submitted to CG → set to 50%
+- After CG response (Code B) → set to 100%
+- After CG response (Code C/D) → set to 10-30% depending on rework needed
+- When a draft is ready for submission → set to 80%
+
 ## Cron setup
 
 ```bash
