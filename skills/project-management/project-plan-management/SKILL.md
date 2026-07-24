@@ -25,7 +25,7 @@ For a construction/museum fit-out project (D&B), the standard plan set includes:
 | 01 | **DMP** — Design Management Plan | PL-0029 | Project context, contractual framework, design control, scope summary, technical specs, BIM, testing, handover |
 | 02 | **Stakeholder** — Stakeholder Management Plan | PL-0020 | Identification, analysis, engagement planning, communication requirements, RACI, integration |
 | 03 | **Communication** — Communication Plan | PL-0018 | Objectives, communication matrix, meeting protocols, reporting cadence, escalation, channels |
-| 04 | **HSE** — HSE Plans (10+ sub-plans) | PL-0036 to PL-0054 | Site security, welfare, fire prevention, emergency response, temp electrical, heat stress, lifting ops, training, etc. |
+| 04 | **HSE** — HSE Plans (10+ sub-plans) | PL-0036 to PL-0054 | Site security, welfare, fire prevention, emergency response, temp electrical, heat stress, lifting ops, training, etc. HSE is a multi-plan category — each sub-plan is a separate document. |
 | 05 | **PEP** — Project Execution Plan | PL-0015 | Project overview, org chart, phases, design integration, procurement, construction, quality, HSE, risk, handover |
 | 06 | **BEP** — BIM Execution Plan | PL-0015 Att | PIR, EIR, MIDP, TIDPs, LOD matrix, CDE structure, clash detection, approval workflow |
 | 07 | **Mobilization** — Mobilization Plan | MI-0001 / ZD-0051 | Phases, personnel, equipment, temporary facilities, site establishment, HSE, demobilization |
@@ -626,7 +626,141 @@ Present findings as a structured table with:
 - **Project Director vs Projects Director** — Waris Sultan is project-level PD (Exhibitions). Adel Darwish is Samaya-level Projects Director. They are different roles. The plan should show Waris as PD.
 - **Sub-agent output must be verified against repo sources.** Sub-agents don't have access to specialist_register.md or resource_management_plan.md unless you pass them in context. After the sub-agent produces the Rev N+1 HTML, grep for every name and verify against the authoritative sources above.
 
-### Reference
+### RMP Document Structure (Aseer Museum)
+
+The Risk Management Plan (MOC-MUS-ASE-1KH-PL-02.17) follows this exact structure:
+
+### Document Architecture
+- **31 tables** (T0-T30), each with a specific purpose
+- **Paragraph styles:** Heading 1 (section titles), Heading 2 (subsection titles), Normal (body text), toc 1/2 (TOC entries)
+- **TOC** is auto-generated from Heading styles (P0-P60)
+- **Body sections** start at P65 (after TOC)
+
+### Table Map
+| T# | Header | Rows | Cols | Purpose |
+|----|--------|------|------|---------|
+| T0 | Document Reference | 10 | 2 | Cover page metadata |
+| T1 | QC | 4 | 3 | Prepared/Reviewed/Approved by |
+| T2 | Version | 6 | 4 | Revision history (add rows for new revs) |
+| T3 | OBJECTIVE | 7 | 2 | Risk management objectives |
+| T4 | Risk Factor | 12 | 3 | **Risk factor table** — add rows for new risks |
+| T5 | Total | 2 | 5 | Risk count summary |
+| T6 | Principle | 7 | 2 | Risk principles |
+| T7 | Tool | 7 | 2 | Tools & systems |
+| T8 | Level 1 Category | 18 | 4 | RBS hierarchy |
+| T9 | Category | 13 | 3 | Risk distribution by category |
+| T10 | Technique | 9 | 4 | Identification techniques |
+| T11 | Rating | 5 | 4 | Probability scale (1-4) |
+| T12 | Rating | 5 | 5 | Severity scale (1-4) |
+| T13 | P x S | 5 | 5 | Probability x Severity matrix |
+| T14 | Score Range | 5 | 3 | Severity bands (PRR/AV 4x4) |
+| T15 | Score Range | 5 | 3 | Severity bands (HSE 5x5) |
+| T16 | TECHNIQUE | 5 | 3 | Quantitative techniques |
+| T17 | RISK LEVEL | 5 | 2 | Contingency by risk level |
+| T18 | Metric | 6 | 3 | **Key Quantitative Metrics** — update values for new revs |
+| T19 | Strategy | 7 | 4 | Response strategies |
+| T20 | SEVERITY | 6 | 4 | Response requirements by severity |
+| T21 | Register | 5 | 4 | Register structure (PRR/DDR/HSE/AV) |
+| T22 | Status | 6 | 2 | Status definitions |
+| T23 | REVIEW | 8 | 4 | Review cadence |
+| T24 | REPORT | 5 | 4 | Reporting schedule |
+| T25 | ACTIVITY | 10 | 8 | RACI matrix |
+| T26 | ROLE | 9 | 2 | Role descriptions |
+| T27 | TYPE | 4 | 4 | Contingency types |
+| T28 | STEP | 8 | 3 | Contingency draw-down protocol |
+| T29 | Register | 5 | 4 | Register status summary |
+| T30 | ABBREVIATION | 33 | 2 | Abbreviations |
+
+### Key Tables for Updates
+- **T2 (Version):** Add new row for each revision
+- **T4 (Risk Factor):** Add row for new risk factors (3 cols: Risk Factor, Detail, Severity)
+- **T18 (Metric):** Update Value and Source/Note columns for each revision
+
+### Section Map (Body)
+| P# | Heading | Style |
+|----|---------|-------|
+| P65 | 1 PURPOSE & SCOPE | H1 |
+| P66 | 1.1 PURPOSE | H2 |
+| P69 | 1.2 SCOPE | H2 |
+| P75 | 1.3 OBJECTIVES | H2 |
+| P77 | 2 PROJECT RISK PROFILE | H1 |
+| P80 | 2.1 CURRENT RISK SNAPSHOT | H2 |
+| P84 | 3 RISK MANAGEMENT APPROACH | H1 |
+| P85 | 3.1 PHILOSOPHY | H2 |
+| P87 | 3.2 KEY PRINCIPLES | H2 |
+| P88 | 3.3 TOOLS & SYSTEMS | H2 |
+| P89 | 3.4 RISK MANAGEMENT PROCESS FLOW | H2 |
+| P92 | 4 RISK CATEGORIES (RBS) | H1 |
+| P93 | 4.1 RBS HIERARCHY | H2 |
+| P95 | 4.2 CURRENT RISK DISTRIBUTION | H2 |
+| P96 | 5 RISK IDENTIFICATION METHODOLOGY | H1 |
+| P97 | 5.1 IDENTIFICATION TECHNIQUES | H2 |
+| P100 | 5.2 RISK IDENTIFICATION TRIGGERS | H2 |
+| P113 | 5.3 RISK STATEMENT FORMAT | H2 |
+| P115 | 6 QUALITATIVE RISK ANALYSIS | H1 |
+| P116 | 6.1 PROBABILITY SCALE | H2 |
+| P117 | 6.2 SEVERITY (IMPACT) SCALE | H2 |
+| P119 | 6.3 PROBABILITY X SEVERITY MATRIX | H2 |
+| P120 | 6.4 SEVERITY BANDS | H2 |
+| P122 | 6.5 HSE RISK REGISTER SCORING | H2 |
+| P127 | 7 QUANTITATIVE RISK ANALYSIS | H1 |
+| P128 | 7.1 APPROACH | H2 |
+| P130 | 7.2 CONTINGENCY CALCULATION | H2 |
+| P131 | 7.3 KEY QUANTITATIVE METRICS (CURRENT) | H2 |
+| P133 | 8 RISK RESPONSE PLANNING | H1 |
+| P134 | 8.1 RESPONSE STRATEGIES | H2 |
+| P135 | 8.2 RESPONSE PLANNING MATRIX | H2 |
+| P136 | 8.3 SECONDARY & RESIDUAL RISK | H2 |
+| P142 | 9 RISK REGISTER STRUCTURE | H1 |
+| P143 | 9.1 REGISTER STRUCTURE | H2 |
+| P151 | 9.2 REGISTER OWNERSHIP AND LINKS | H2 |
+| P152 | 9.3 RISK ID CONVENTION | H2 |
+| P153 | 9.4 STATUS DEFINITIONS | H2 |
+| P154 | 10 RISK REVIEW CADENCE | H1 |
+| P155 | 10.1 SCHEDULED REVIEWS | H2 |
+| P156 | 10.2 AD-HOC REVIEWS | H2 |
+| P158 | 10.3 REPORTING | H2 |
+| P159 | 11 ROLES & RESPONSIBILITIES | H1 |
+| P160 | 11.1 RISK MANAGEMENT RACI | H2 |
+| P161 | 11.2 ROLE DESCRIPTIONS | H2 |
+| P162 | 11.3 ESCALATION PATH | H2 |
+| P165 | 12 RISK BUDGET & CONTINGENCY | H1 |
+| P166 | 12.1 CONTINGENCY TYPES | H2 |
+| P167 | 12.2 CONTINGENCY DRAW-DOWN PROTOCOL | H2 |
+| P168 | 12.3 CONTINGENCY REVIEW | H2 |
+| P172 | 14 REGISTER STATUS SUMMARY | H1 |
+| P175 | C ABBREVIATIONS | H1 |
+
+### Insertion Rules
+- **New body text:** Always insert `before` the next Heading paragraph (not after), using `p.insert_paragraph_before()`
+- **New sections (5.4 etc):** Insert before the next sequential heading (e.g. before 5.2)
+- **Table rows:** Use `table.add_row()` then set `row.cells[i].text`
+- **TOC:** Never insert inside TOC block (P8-P60). Use `body_heading_idx()` which filters for `style.startswith('Heading')` to find body headings only
+- **Version table:** T2 — add row at bottom
+
+### Manual Formatting Applied (REV01)
+The user manually formatted the REV01 document. Key formatting choices to preserve in future:
+- **T0 (Document Reference):** Revision field still shows "REV00 - Issue for CG Review" — do NOT auto-update this. The user updates it manually.
+- **T1 (QC):** "Technical office" (lowercase 'o'), "QC manager" (lowercase), "Project Manager" (title case) — preserve these exact capitalisations.
+- **T2 (Version):** REV01 row added at bottom. Author = "Technical Office" (not "Samaya Technical Office"). Changes column = brief description, not full paragraph.
+- **T4 (Risk Factor):** New row appended at bottom, not inserted alphabetically. "Middle East Shipping Disruption" — Critical.
+- **T5 (Total):** Counts are static (29 total, 10 Critical, 10 High, 7 Medium, 2 Low) — do NOT auto-update from register. User updates manually.
+- **T18 (Metric):** All 5 rows: Value = "Deferred — to be calculated when BOQ is finalised", Source/Note = "Quantitative analysis deferred until BOQ is finalised and firm cost inputs per risk are available". No CG reference in body text.
+- **T29 (Register):** Counts are static (PRR 29, DDR 77, HSE 41, AV 30) — do NOT auto-update.
+- **New body paragraphs** (Section 5.4, 6.5 scoring rationale, 7.3 deferral, 9.1 appendix refs): Normal style, 10pt, no indent. Italic for deferral notes. No "Per CG comment" references in plan body — those go in the CRS sheet only.
+- **TOC:** Must remain clean — no body text paragraphs with toc style. Verify after every edit.
+
+### CRS Update Pattern
+When updating RMP per CG comments:
+1. Add REV01 row to T2 (Version table)
+2. For new risk factors: add row to T4 (Risk Factor table) — append at bottom. Do NOT add as body paragraph — the user will correct you. The Risk Factor table is the correct location.
+3. For new sections: insert before next body heading using `body_heading_idx()` (filters for Heading style, not toc)
+4. For table content updates: update T18 cells directly — both Value (col 2) and Source/Note (col 3) columns. Never put "Per CG comment" references in plan body — CRS sheet only.
+5. Always verify TOC is clean (no body text leaked into toc-styled paragraphs)
+6. Never auto-update static counts (T5, T29) — user updates manually
+7. After writing back to OneDrive, verify the content actually changed by re-reading the file. OneDrive may silently revert writes even with the /tmp copy pattern if the file path differs between the source and destination.
+
+## Reference
 
 See `references/stakeholder-plan-post-approval-audit.md` for a worked example (Aseer Museum Stakeholder Plan ZD-0020 Rev.02, approved Jun 18-24, audited Jul 13 with 6 new stakeholders identified).
 
@@ -1082,8 +1216,88 @@ After populating all templates:
 - **HSE folder contains 12+ sub-plans** — the overarching HSE plan is Code B approved, but individual sub-plans range from Code B to Code D. The approval log must reflect this mixed status, not a single blanket status.
 - **Plan tracker may have more detail than individual plan files** — the tracker is the authoritative source for CG status, revision codes, and next actions. Always prefer the tracker over plan file frontmatter for status information.
 
+## 6.10 DOCX Patching from CG Comments — python-docx Workflow
+
+When CG returns Code C on a management plan (DOCX), the workflow is:
+
+1. **Read the CRS** — extract all CG comments and the agreed responses
+2. **Copy the source DOCX** to a Rev01 path
+3. **Apply changes** using python-docx:
+   - **Revision history table** — find the table with "Version" header, `table.add_row()`, set cell text
+   - **Section content** — use `find_para()` to locate the section heading, then `insert_after()` to add content
+   - **New sections** — insert before the next existing section heading
+
+### Key Functions
+
+```python
+def find_para(doc, text_start):
+    """Find paragraph by exact text start."""
+    for i, p in enumerate(doc.paragraphs):
+        if p.text.strip().startswith(text_start):
+            return i, p
+    return None, None
+
+def insert_after(doc, after_idx, text, bold=False, italic=False, size=10, color_rgb=None):
+    """Insert paragraph after given index by inserting before the next one.
+    python-docx has insert_paragraph_before() but NOT insert_paragraph_after().
+    """
+    if after_idx + 1 < len(doc.paragraphs):
+        new_p = doc.paragraphs[after_idx + 1].insert_paragraph_before('')
+    else:
+        new_p = doc.add_paragraph('')
+    run = new_p.add_run(text)
+    run.font.size = Pt(size)
+    run.font.bold = bold
+    run.font.italic = italic
+    if color_rgb:
+        run.font.color.rgb = RGBColor(*color_rgb)
+    return new_p
+```
+
+### Change Categories
+
+| CG Comment Type | DOCX Change | Example |
+|----------------|-------------|---------|
+| **Content gap** (e.g., missing risk factor) | Add paragraph to existing section | Section 2 — Middle East shipping risk |
+| **Methodology clarification** (e.g., scoring rationale) | Add subsection or expand existing | Section 6.5 — PMBOK Ch. 11.3 rationale |
+| **Deferral** (e.g., quantitative analysis) | Replace placeholder text with deferral statement | Section 7.3 — "will follow when BOQ finalised" |
+| **New section** (e.g., schedule integration) | Insert before next existing section heading | Section 5.4 — Schedule-Risk Integration |
+| **Appendix references** (e.g., register snapshots) | Add bullet list to existing section | Section 9.1 — Appendix A-D references |
+| **Revision history** | Add row to version table | REV01 row |
+
+### Verification
+
+After saving, verify by re-reading the DOCX and grepping for key phrases:
+
+```python
+doc = Document(output_path)
+for i, p in enumerate(doc.paragraphs):
+    t = p.text.strip()
+    if any(kw in t for kw in ['5.4', 'Middle East Shipping', 'Quantitative risk analysis', 'PMBOK 6th', 'Appendix A', 'REV01']):
+        print(f'P{i}: {t[:200]}')
+```
+
+Also verify the revision table:
+```python
+for table in doc.tables:
+    if table.rows[0].cells[0].text.strip() == 'Version':
+        for row in table.rows:
+            print(' | '.join(c.text.strip()[:40] for c in row.cells))
+```
+
+### Pitfalls
+
+- **`insert_paragraph_after()` does not exist** in python-docx. Use `insert_paragraph_before()` on the NEXT paragraph instead.
+- **Revision tables may not have a "Version" header** — check the actual first cell text. Some tables use "Rev" or "Revision" instead.
+- **Section headings may have different whitespace** — `find_para()` uses `startswith()`, so `"5.1  IDENTIFICATION"` (two spaces) won't match `"5.1 IDENTIFICATION"` (one space). Check the actual text first.
+- **Multiple tables may match** — iterate all tables and check the first cell of the first row, not just the first table.
+- **Inserting before the next paragraph changes indices** — if you insert multiple items, do them in reverse order (last item first) so indices don't shift.
+- **Font size and color must be set on the run, not the paragraph** — `new_p.runs[0].font.size = Pt(10)`.
+- **OneDrive write pattern** — copy to /tmp first, modify, then copy back. Direct writes to OneDrive paths may be silently reverted.
+
 ## 7. Pitfalls
 
+- **Plan folder cleanup**: When the plan library has accumulated duplicates, misclassified folders, and empty directories, see `references/plan-folder-cleanup-pattern.md` for the detection, merge, and delete workflow. Key rules: Method Statements are not plans (move to operational docs), HSE is a multi-plan category, and duplicate stakeholder/resource/sustainability folders should be merged into the one with the most content.
 - **OneDrive placeholder files (0 bytes)**: PDFs in OneDrive may appear as 0-byte files when accessed via the local filesystem. Always check file size before attempting to read. Use the repo's `99_Archive/` copies or download from OneDrive web.
 - **PDF extraction quality**: `pymupdf` may produce garbled text from scanned PDFs. For scanned documents, use OCR (tesseract) or extract from the DOCX source instead.
 - **Plan version tracking**: Multiple revisions exist (R00, R01, R02). Always use the latest approved version (Code A or B) as the source. Mark superseded revisions in the frontmatter.

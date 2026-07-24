@@ -71,6 +71,57 @@ For each genuinely new item:
 
 Always bump the `last_updated` field in the YAML frontmatter of every register you modify.
 
+### 7. Daily Reports (04- Daily Report subfolder)
+
+The `04- Daily Report/` subfolder contains daily site reports in Arabic/English PDF format. These are **not registered in any repo register** — no daily report register exists.
+
+**When new daily reports appear:**
+
+1. **Hydrate PDFs one at a time** — OneDrive cloud-only placeholders (0 blocks on disk) must be hydrated individually. **NEVER batch-download** — opening multiple files simultaneously causes "Resource deadlock avoided" errors. One-by-one only:
+   ```bash
+   ADEL_DIR="/path/to/Adel/04- Daily Report/05- May 2026/"
+   for f in "Daily Report 13-05-2026.pdf" "Daily Report 14-05-2026.pdf"; do
+     open -a Preview "$ADEL_DIR/$f"
+     sleep 20
+     stat -f "%b" "$ADEL_DIR/$f"  # Verify blocks > 0 (1808 = hydrated)
+   done
+   ```
+   **Alternative if Preview fails:** kill OneDrive (`killall OneDrive`), wait 30s, restart (`open -a OneDrive`), wait 20s, then open with Preview again.
+   See `bulk-file-organization` skill → `references/onedrive-hydration-one-by-one.md`
+
+2. **Extract text** with `pdftotext -layout`:
+   ```bash
+   pdftotext -layout "$ADEL_DIR/$f" "/tmp/${f%.pdf}.txt"
+   ```
+
+3. **Analyze content** — standard Arabic daily report format with:
+   - Report number (101, 102, ...)
+   - Date, weather, temperature
+   - Manpower tables (consultant + contractor teams)
+   - Work activities (HVAC assessment, BMS, Mobilization, demolition prep, floor protection, fire fighting)
+   - Safety notes
+   - Photos section
+   - Sign-off (Adel Darwish or Mohamed Samir)
+
+4. **Key data to extract** for project tracking:
+   - Report date and number
+   - Activities performed (Arabic: اعمال التقييم, اعمال الهدم, اعمال حماية, etc.)
+   - Manpower counts (planned vs actual)
+   - Safety issues
+   - Signatory (indicates PM transition — e.g. Adel Darwish → Mohamed Samir from 20-May)
+
+5. **No register to update** — daily reports are site records, not submittals. Advise user on content and flag any notable items (manpower gaps, safety issues, activity changes).
+
+### 8. Detection Script is no_agent
+
+The cron job (`check_adel_files.sh`) is `no_agent: true` — it only compares file lists (name|size|mtime) against a stored snapshot. It does NOT:
+- Open or read any file
+- Extract text from PDFs
+- Update any register
+- Make any decisions
+
+The script outputs a list of new/changed files and a suggestion to run `hermes -z` for processing. Actual content analysis and register updates require a separate agent session.
+
 ## Pitfalls
 
 - **First-run noise**: The script's first scan after a long gap flags ALL files as "new". Filter by modification date. Only items from the last 7 days are genuinely new.
@@ -80,3 +131,5 @@ Always bump the `last_updated` field in the YAML frontmatter of every register y
 - **CG Reply in Approval subfolders**: Many TQ folders have an `Approval/` subfolder containing CG response PDFs. When this appears, update the TQ status from "Open" to "CG response received".
 - **DDD packages span multiple subfolders**: A single 1G-xxxx package may have a main folder (PDF+XLSX) and an `Approval/` subfolder (CG-reviewed PDFs + CRS xlsx + BS rar). Both are part of the same submittal — don't double-count.
 - **Script output truncation**: The script output can exceed 600K chars. Use `ls -ltR` on specific subfolders to get focused views rather than relying on the full script output.
+- **OneDrive deadlock on cloud-only files**: Files with 0 blocks on disk (cloud-only placeholders) cannot be read by any tool (`pdftotext`, `cp`, `head`, `python`) — they return "Resource deadlock avoided". The fix is to open each file individually with Preview (`open -a Preview "$file"`), wait 20s for hydration, then verify blocks > 0 with `stat -f "%b"`. Kill and restart OneDrive if Preview also fails.
+- **Daily report register**: When daily reports are found, create a new register at `01_Registers/daily_report_register.md` with YAML frontmatter, a table of all reports (date, report no, prepared by, key activities, manpower, issues), and a gap analysis section showing which months have reports and which are missing.

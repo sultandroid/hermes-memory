@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-24 07:14:10
+Generated: 2026-07-24 16:23:23
 
 ---
 
@@ -17,7 +17,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
+CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
@@ -41,7 +41,7 @@ Always NAME which labor does each task. Labors MUST cross-audit each other at Ph
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only. British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -63,7 +63,7 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
 ## Key People
 
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only. British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -85,10 +85,7 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 
 ## Agents & Tools
 
-Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
-@SulKimiClaw_bot is the correct Telegram handle for the SulKimiClaw agent.
-Aconex email scan cron: last check was this run. Previous Aconex findings stored in memory entries with "Aconex" prefix.
-Aconex scan 2026-07-24: no prior Aconex findings in memory — this is the first scan run.
+SulKimiClaw Telegram: @SulKimiClaw_bot
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -105,14 +102,16 @@ task: inspect Hermes auth/config for Nous credential storage and prepare to add 
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
+- `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
+- The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
+- `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
 
 ## Contracts & Documents
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
+CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Strong preference for clear document boundaries: RMP (methodology plan) should NOT contain operational data (risk IDs, scores, P6 IDs, register snapshots). Those belong in live registers. Push back on CG comments that confuse plan content with register data.
-Strong preference: methodology plans (RMP, SMP, etc.) describe process, not operational data. CG comments asking for register-level data (risk scores, P6 IDs, risk entries) in the plan are push-back candidates. Plans = methodology, registers = live data. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category — use as justification.
+Methodology plans (RMP, SMP) describe process, not operational data. CG comments asking for register-level data in the plan are push-back candidates. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -138,12 +137,12 @@ Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submit
 No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
+- RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
 
 ## Locations
 
-Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 OneDrive: write /tmp first then cp to path. Read files one by one to avoid sync corruption.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. ALL output in English only. British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources only. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Data snapshots as Excel/CSV, not PDF. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -156,3 +155,4 @@ He prefers execution plus verification over explanation-only help. For printable
 - Pi config, macOS storage, and museum ELV review: ~/.pi/agent/settings.json, /System/Volumes/Data, Library/CloudStorage 25G, BMA, VESDA, technical earth
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
+rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl

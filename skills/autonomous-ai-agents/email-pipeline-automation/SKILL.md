@@ -13,7 +13,7 @@ tags:
 
 Run every 3 hours via cron. Scans last 48h of Outlook, identifies project-critical emails, extracts attachments, routes to correct project folders, updates repo registers.
 
-Project root: `/Volumes/MIcro/Work/Aseer-Museum/`
+Project root: `/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/`
 Repo root: `~/aseer-museum-pm/`
 
 ## WORKFLOW RULE (MANDATORY)
@@ -150,6 +150,39 @@ ls -la /tmp/email_attachments/
 
 Use a Python routing script (see `references/routing-script-pattern.py` for the reusable template). The script defines regex-based classification rules mapping filename patterns to destination folders, then copies files with `shutil.copy2()`.
 
+### CRITICAL: Verify ROOT path before routing
+
+The routing script's `ROOT` variable must point to the **actual project root on OneDrive**, not a stale mount path. Before running the routing script, verify:
+
+```bash
+ls "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/"
+```
+
+If this path doesn't exist, the ROOT is wrong — fix it in the routing script first. The correct ROOT is the OneDrive path, NOT `/Volumes/MIcro/Work/Aseer-Museum/` (which is a stale mount that doesn't match the actual folder structure).
+
+### Verify routing actually worked
+
+After running the routing script, spot-check that files actually landed in their destinations:
+
+```bash
+# Check at least 3 key destinations
+ls "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/02_CG_Responses/"
+ls "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/"
+ls "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/02_Schedule/"
+```
+
+If files are missing, the routing script's ROOT or pattern is wrong — do NOT report "routed" until files are confirmed landed.
+
+### Clean up stranded files
+
+After routing, check for any files still in `/tmp/email_attachments/` that should have been routed but weren't:
+
+```bash
+ls -la /tmp/email_attachments/ | grep -v "\.eml\|WhatsApp\|\.jpeg\|\.jpg\|\.png\|\.gif"
+```
+
+If non-image, non-eml files remain, they missed routing — investigate why and route manually.
+
 | Document Type | Routing Folder (Aseer Museum root) |
 |---|---|
 | NCR / Safety Instruction (SE-*) | `04_Docs/10_Test_and_Inspection/10.3_NCRs/{NCR-ID}/` |
@@ -229,7 +262,7 @@ Use a Python routing script (see `references/routing-script-pattern.py` for the 
 
 ## Pitfalls
 
-- **Check emails before repo edits** — PM instructions, CG comments, or deadlines in email may change what files need updating. Always scan first.
+- **Verify routing actually landed files.** After running the routing script, spot-check 2-3 key destinations. The script may report "routed N files" but the ROOT path could be wrong, leaving files stranded in `/tmp/email_attachments/`. Check with `ls` on actual destination folders. If files are missing, the ROOT variable in the routing script is stale — fix it and re-run. — PM instructions, CG comments, or deadlines in email may change what files need updating. Always scan first.
 - **Epoch verification is mandatory** — run the Step 0 query every session. The DB may have been rebuilt with a different epoch.
 - `Message_NormalizedSubject` comparison is case-sensitive — use `LIKE '%keyword%'`
 - `Message_TimeReceived` epoch varies — verify with `datetime(col + 978307200, 'unixepoch')` (Mac absolute) vs `datetime(col, 'unixepoch')` (Unix)

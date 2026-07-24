@@ -124,22 +124,25 @@ const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 
 ### 8. Deployment
 
-**CRITICAL: Use two-step deploy on LiteSpeed hosts.** SCP directly to the target path can silently return exit code 0 while the server file remains unchanged. Always verify after deploy.
+**CRITICAL: Use SSH pipe deploy on LiteSpeed hosts.** SCP directly to the target path can silently return exit code 0 while the server file remains unchanged. Always verify after deploy.
 
 ```bash
-# STEP 1: Copy to /tmp on server
+# PREFERRED METHOD (most reliable — SSH pipe):
+ssh -p 65002 u517606786@samaya-factory.com \
+    "cat > /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html" \
+    < /tmp/register-app/index.html
+
+# FALLBACK METHOD (two-step via /tmp):
 scp -P 65002 -o ConnectTimeout=10 /tmp/register-app/index.html \
     u517606786@samaya-factory.com:/tmp/register_index.html
-
-# STEP 2: Copy from /tmp to target (this is the reliable step)
 ssh -p 65002 u517606786@samaya-factory.com \
     "cp /tmp/register_index.html /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html && echo OK"
 
-# STEP 3: Verify server has the correct file (grep on server, NOT curl)
+# VERIFY server has the correct file (grep on server, NOT curl):
 ssh -p 65002 u517606786@samaya-factory.com \
     "grep -c 'const lessons =' /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/{NAME}/index.html"
 
-# STEP 4: Verify via HTTP (may show cached version — use ?v=N to bypass)
+# VERIFY via HTTP (may show cached version — use ?v=N to bypass):
 curl -s -o /dev/null -w "%{http_code}" \
     "https://samaya-factory.com/build/aseer/registers/{NAME}/?v=$(date +%s)"
 ```
@@ -296,31 +299,59 @@ array_end = end_idx + len(end_marker)
 new_html = html[:array_start] + compact + html[array_end:]
 ```
 
-### 13. Pitfalls
+## 13. Pitfalls
+
+### JavaScript structure (most common failure modes)
 
 - **Variable name must match exactly**: The data array variable name in the `<script>` tag (e.g. `const LESSONS = [...]`) must match the variable name used in every function (e.g. `lessons.filter(...)`). A single uppercase/lowercase mismatch causes all rendering to silently produce empty output — no console error, just blank KPIs and table. Always declare as `const lessons = [...]` (lowercase) to match the function references, or add `const lessons = LESSONS;` as an alias immediately after the data block.
-- **`$` helper must be defined before `init()`**: The `const $ = s => document.querySelector(s);` line must appear before `function init()` or every `$('#kpis')` call throws. Add it as the first line inside the `<script>` block, right before `function init()`. Verify by checking `typeof $` in browser console after page load.
-- **Browser cache after deploy**: After deploying a fixed HTML to the server, the browser may serve a cached version. Verify server has the fix with `curl -s URL | grep -c 'const \\$ ='`. If server has it but browser doesn't, hard refresh (Cmd+Shift+R) or add `?v=N` cache-buster. Also add `.htaccess` with `CacheDisable public /` and `<meta http-equiv>` cache-busting tags in the HTML head.
 - **`const lessons = LESSONS.slice()` must be at TOP LEVEL, not inside a function**: If you place the slice inside `function filtered() { ... }`, the `lessons` variable is scoped to that function and all other functions (`renderKPIs`, `renderTable`, `openDrawer`, etc.) will throw `ReferenceError: lessons is not defined`. The browser console shows no error for this — the page just renders blank. Always place `const lessons = LESSONS.slice();` immediately after the data array, before any function declarations. Verify by checking `typeof lessons` in browser console after page load — it should return `'object'`, not `'undefined'`.
 - **`function filtered()` must have proper opening/closing braces**: If the `const lessons` line is accidentally placed where the `filtered()` function opening brace should be, the entire JS block breaks. After `const lessons = LESSONS.slice();`, the next line must be `function filtered(){` with a proper opening brace. Check browser console for syntax errors.
+- **`$` helper must be defined before `init()`**: The `const $ = s => document.querySelector(s);` line must appear before `function init()` or every `$('#kpis')` call throws. Add it as the first line inside the `<script>` block, right before `function init()`. Verify by checking `typeof $` in browser console after page load.
+- **`init()` must be called**: The last line of the `<script>` block must be `init();`. If missing, the page loads but nothing renders. Verify by checking `typeof init` in browser console — if `'function'`, call it manually. If `'undefined'`, the script has a syntax error.
+- **JSON syntax error in data array**: A trailing comma in the JSON array or a missing quote causes the entire script block to fail silently. Validate with `JSON.parse(JSON.stringify(LESSONS))` in browser console.
+- **Sort stability**: `Array.sort()` must return 0 for equal values to preserve original order. Without this, the table order can shuffle on every sort click.
+- **Modal scroll**: Set `document.body.style.overflow = 'hidden'` when modal is open, restore on close.
+
+### Deployment (LiteSpeed hosting quirks)
+
 - **SCP can silently fail on LiteSpeed hosts**: `scp` may return exit code 0 but the server file remains unchanged. Always verify after deploy with `ssh server "grep -c 'marker' path"`. Use SSH pipe as the primary deploy method: `ssh server "cat > path" < local_file`.
+- **LiteSpeed cache persists after file update**: Hostinger uses LiteSpeed which aggressively caches HTML. Add `.htaccess` with `CacheDisable public /` and `Header set Cache-Control "no-cache, no-store, must-revalidate"`. Also add `<meta http-equiv>` cache-busting tags in the HTML `<head>`.
+- **Browser cache after deploy**: After deploying a fixed HTML to the server, the browser may serve a cached version. Verify server has the fix with `curl -s URL | grep -c 'const $ ='`. If server has it but browser doesn't, hard refresh (Cmd+Shift+R) or add `?v=N` cache-buster.
+- **Deploy verification sequence**: After any deploy, run this sequence: (1) `ssh server "grep -c 'marker' path"` to confirm server file is correct, (2) `curl -s URL | grep -c 'marker'` to confirm HTTP response has the fix, (3) open browser with `?v=$(date +%s)` cache-buster. If (1) and (2) pass but browser still shows old version, the issue is browser cache — hard refresh.
+
+### Git / CI
+
 - **Post-commit hook breaks git pull --rebase**: The hook fires on every commit, including rebase commits. During `git pull --rebase`, the hook rebuilds `index.html` which creates uncommitted changes that conflict with the rebase. Fix: temporarily disable the hook before rebasing: `chmod -x .git/hooks/post-commit && git pull --rebase && chmod +x .git/hooks/post-commit`.
 - **Register validation CI fails if YAML frontmatter is removed**: The GitHub Actions workflow `validate-registers.yml` runs `scripts/validate-registers.py` which checks every file in `01_Registers/` for required YAML frontmatter fields (`last_updated`, `owner_agent`, `status`). If a register is rewritten in plain English format (e.g. `risk_register.md`), the frontmatter must be preserved or the CI will fail. Either (a) keep the `---` frontmatter block in every register file, or (b) update the validator to accept the new format.
-- **LiteSpeed cache persists after file update**: Hostinger uses LiteSpeed which aggressively caches HTML. Add `.htaccess` with `CacheDisable public /` and `Header set Cache-Control "no-cache, no-store, must-revalidate"`. Also add `<meta http-equiv>` cache-busting tags in the HTML `<head>`.
+- **Odoo sync workflow fails on PR if script missing**: The `odoo-sync.yml` workflow runs on `pull_request` trigger. If the PR branch doesn't have `scripts/odoo_sync_aseer.py`, the workflow fails. Fix: add a `check_script` step that checks if the script exists before running, and guard all subsequent steps with `if: steps.check_script.outputs.script_exists == 'true'`.
+- **Approval logs are placeholder TBD by default**: Every plan folder in `03_Plans/` has an `approval_log.md` with placeholder rows (TBD dates, Draft/Under Review/Approved). These must be updated with real data when CG responses arrive. The submittal reference (ZD-XXXX) and CG code (A/B/C/D) should be recorded immediately upon receipt.
+
+### Auto-update script
+
+- **Auto-update script must generate valid JS**: The Python rebuild script replaces the LESSONS array content but must NOT remove the `const lessons = LESSONS.slice();` line or the `function filtered(){...}` declaration. After replacement, the script should validate that both exist. The template file is the source of truth — the script only replaces the array data, not the surrounding JS structure. If the template is manually fixed (e.g. adding `const lessons`), the script preserves it. If the template is regenerated from scratch, the script must include these lines.
+- **Markdown parsing: never hardcode column indices**: The markdown table may have leading/trailing empty cells from pipe syntax. Always find the ID cell by scanning parts, then map other columns relative to it. Use `ll_idx = next(i for i, p in enumerate(parts) if p.startswith('LL-'))` pattern.
+- **Multi-line cells**: Pipe-delimited markdown breaks if cells contain pipes. Pre-process to handle this.
+- **CSV escaping**: Fields with commas or quotes must be wrapped in `"` and internal quotes doubled.
+
+### Style (user will reject violations)
+
+- **No `§` symbol** anywhere — use "Section" instead (e.g. "DMP Section 3" not "DMP §3")
+- **No AI fingerprints** — plain English, engineer language. Never use: seamlessly, robust, cutting-edge, bespoke, leveraging, delve, navigate, holistic, streamline, game-changer, state-of-the-art, world-class, innovative, dynamic
+- **No AI phrasing** — never use: "It is worth noting that", "It is important to mention", "Please be advised", "In the realm of", "When it comes to", "It should be noted"
+- **Active voice** — "Samaya will install..." not "Installation will be carried out by..."
+- **British English** — natural, direct, Level 6 (B2-C1) readability
+- **Samaya** (not "the Contractor") when referring to ourselves
+- **No emoji in print mode** — strip emoji from status labels when rendering the print sheet
+- **No `**` bold markers** in data values — strip markdown bold syntax from parsed table cells
+- **Write like a human engineer** — short sentences, direct statements, no fluff
+
+### General
+
 - **Font loading**: Always preconnect to Google Fonts for Inter + IBM Plex Mono
 - **Print color**: Use `-webkit-print-color-adjust: exact` for colored table headers in print
 - **Sticky headers**: Toolbar sticky at `top: 72px` (below topbar). On mobile, set to `position: static`
 - **Drawer width**: Use `min(560px, 94vw)` for responsive drawer
 - **No build tools**: Single HTML file, vanilla JS, CDN-loaded fonts only
 - **Data embedding**: If the source repo is private, embed data directly; if public, fetch from raw.githubusercontent.com
-- **No `Section` in data values**: governing plan references must use "Section" not the symbol
 - **Snapshot is CSV, not PDF**: the full-register download button must produce a CSV file, not a print-to-PDF
-- **Column position variance**: never hardcode column indices — find the ID cell by scanning parts, then map other columns relative to it
-- **Multi-line cells**: pipe-delimited markdown breaks if cells contain pipes. Pre-process to handle this
-- **Sort stability**: `Array.sort()` must return 0 for equal values to preserve original order
-- **Modal scroll**: set `document.body.style.overflow = 'hidden'` when modal is open, restore on close
 - **Print mode cleanup**: use `window.onafterprint` event to remove `.printing` class, not just setTimeout
-- **CSV escaping**: fields with commas or quotes must be wrapped in `"` and internal quotes doubled
-- **Auto-update script must generate valid JS**: The Python rebuild script replaces the LESSONS array content but must NOT remove the `const lessons = LESSONS.slice();` line or the `function filtered(){...}` declaration. After replacement, the script should validate that both exist. The template file is the source of truth — the script only replaces the array data, not the surrounding JS structure. If the template is manually fixed (e.g. adding `const lessons`), the script preserves it. If the template is regenerated from scratch, the script must include these lines.
-- **Odoo sync workflow fails on PR if script missing**: The `odoo-sync.yml` workflow runs on `pull_request` trigger. If the PR branch doesn't have `scripts/odoo_sync_aseer.py`, the workflow fails. Fix: add a `check_script` step that checks if the script exists before running, and guard all subsequent steps with `if: steps.check_script.outputs.script_exists == 'true'`.
-- **Approval logs are placeholder TBD by default**: Every plan folder in `03_Plans/` has an `approval_log.md` with placeholder rows (TBD dates, Draft/Under Review/Approved). These must be updated with real data when CG responses arrive. The submittal reference (ZD-XXXX) and CG code (A/B/C/D) should be recorded immediately upon receipt.

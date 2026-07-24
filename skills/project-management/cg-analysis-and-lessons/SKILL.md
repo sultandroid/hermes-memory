@@ -179,6 +179,7 @@ Technical_Office/CG_Analysis/
 
 - `references/cg-reviewer-behavior-patterns.md` — Condensed CG behavior patterns from 13 lessons learned. Quick reference for "what will CG reject/approve" and per-reviewer tendencies.
 - `references/lesson-entry-template.md` — Template for appending new lessons to the register. Includes category options, status codes, and governing plan references.
+- `references/team-dynamics-analysis.md` — Structured framework for assessing project team attitude, morale, and interpersonal friction. Covers data sources (PROJECT_MEMORY, email scans, submittal registers), analytical dimensions (internal health, consultant relationship, subcontractor stability, external pressure), output format, and climate labels. Use when asked "how is the team doing" or "team attitude analysis".
 
 ## Key Commands
 
@@ -217,6 +218,14 @@ Every lesson must pass ALL of these checks:
 - ❌ "Lessons" that are really just internal workflow improvements
 
 **If a lesson wouldn't be shared with MoC/CG, it does not go in the register.** Period. The user will remove it and correct you.
+
+### Style rules for the register
+
+- **No `§` symbol** — use "Section" (e.g. "Procurement Plan Section 6.1" not "Procurement Plan §6.1")
+- **No AI fingerprints** — plain engineer English, short sentences, active voice
+- **No emoji in print/export** — strip emoji from status labels when generating CSV or PDF
+- **No `**` bold markers** in data values — strip markdown bold syntax from parsed table cells
+- **Write like a human engineer** — natural, direct, Level 6 (B2-C1) readability
 
 ### Lesson Structure
 

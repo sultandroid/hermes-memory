@@ -2,11 +2,9 @@ Repo is source of truth for plan content. ER/SoW compliance only. Fida's SMP: fi
 §
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 §
-CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
+CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
 §
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-§
-Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 §
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
 §
@@ -18,10 +16,6 @@ Risk register multi-source update: when changing risk metadata, update ALL of: r
 §
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
 §
-Outlook 16.90+ AppleScript regression: `subject of message id N` fails. Use `item N of (every message of mail folder id <ID>)` instead. SQLite DB locked while Outlook runs — skip to AppleScript immediately.
+Outlook 16.90+: AppleScript `subject of message id N` fails. Use `item N of (every message of mail folder id <ID>)`. SQLite DB locked while Outlook runs.
 §
-@SulKimiClaw_bot is the correct Telegram handle for the SulKimiClaw agent.
-§
-Aconex email scan cron: last check was this run. Previous Aconex findings stored in memory entries with "Aconex" prefix.
-§
-Aconex scan 2026-07-24: no prior Aconex findings in memory — this is the first scan run.
+SulKimiClaw Telegram: @SulKimiClaw_bot

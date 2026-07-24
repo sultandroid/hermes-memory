@@ -61,9 +61,9 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | 1A0-PQ-0128 | TransOrient Solutions | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
 | 1C0-PQ-0120 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
 | 1C0-PQ-0121 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
-| 1L0-PQ-0122 | Landscaping | `24_Subcontractors/02_Landscaping/01_Prequalification/` |
-| 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/12_Landscaping/01_Prequalification/` |
-| 1L0-PQ-0127 | Landscaping (TLC) | `24_Subcontractors/07_Landscaping/01_Prequalification/` |
+| 1L0-PQ-0122 | Landscaping | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
+| 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
+| 1L0-PQ-0127 | Landscaping (TLC) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
 
 ### General Documents (ZD-*)
 
@@ -71,7 +71,7 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 |----------|-------------|-------------|
 | ZD-0020 | Stakeholder Management Plan Rev.03 | `04_Docs/02_Plans_and_Procedures/02.3_Stakeholder_Management_Plan/01_Source_Files/` |
 | ZD-0067 | Fire Alarm & Suppression | `03_Design_Files/Electrical/Fire_Alarm_Suppression/` |
-| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
+| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Resource_Management_Plan/01_Source_Files/` |
 | ZD-0082 | Sustainability Management Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | ZD-0085 | Graphics Specialist SOW | `24_Subcontractors/04_Graphics_Graphite/01_Scope_of_Work/` |
 | ZD-0086 | Project Execution Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
@@ -84,8 +84,18 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | ZD-0093 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
 | ZD-0094 | Subcontract Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Subcontract_Management_Plan/01_Source_Files/` |
 | ZD-0095 | QA/QC CV (Aftab Adeel) | `24_Subcontractors/09_General/01_Prequalification/` |
-| ZD-0096 | Architectural Title Block Template | `02_Submittals/01_DD_Gate/Architecture/` |
-| ZD-0098 | EMDP and SDP Assessment Report | `03_Design_Files/Electrical/EMDP_SDP_Assessment/` |
+| ZD-0096 | Architectural Title Block Template | `03_Design_Files/Architecture/Title_Block/` |
+| ZD-0097 | MCC Assessment Report | `03_Design_Files/Electrical/MCC_Assessment/` |
+| ZD-0098 | EMDP and SDP Assessment Report | `03_Design_Files/Electrical/` |
+
+### General Documents (ZD-*) — continued
+
+| Doc Code | Description | Destination |
+|----------|-------------|-------------|
+| ZD-0088/89/90/91/92 | Electrical Assessment (ATS/Containment/MDP/Earthing/UPS) | `03_Design_Files/Electrical/{AssessmentName}/` |
+| ZD-0093 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
+| ZD-0095 | QA/QC CV | `24_Subcontractors/09_General/01_Prequalification/` |
+| ZD-0096 | Architectural Title Block Template | `03_Design_Files/Architecture/` |
 
 ### Plans (PL-*)
 
@@ -111,27 +121,13 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *stakeholder* | Stakeholder List | `00_Status/` |
 | *lookahead* | Lookahead | `00_Status/` |
 | *Prequalification_Submission_CG* | Prequal Submission | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
-| *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/02_Landscaping/01_Prequalification/` |
-| *SMP*CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *RE CG*IR-0001* | CG Response to Inspection Request | `04_Docs/10_Test_and_Inspection/10.2_Inspection_Requests/` |
+| *RE CG*ZD-0091* or *RE CG*ZD-0092* | CG Response to Electrical Assessment | `03_Design_Files/Electrical/` |
+| *SMP_CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | *SOR-* or *HSE SOR* | Safety Observation Report | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
-| *TU-261848* or *Chain block* or *Wire Rope* or *Bow Shackles* | Rigging Prequal (MITSUBISHI certs) | `24_Subcontractors/10_Rigging/01_Prequalification/` |
-| *Executive Level Minutes* or *Executive level minutes* | Meeting Minutes | `00_Status/Meeting_Minutes/` |
-| *PROJECT EXECUTION PLAN* (no doc code) | Project Execution Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
-| *TB for approval* | Title Block for Approval | `03_Design_Files/Architecture/` |
-| *Authorized Distributor Certificate* or *GS324P* or *MediaCast* or *gs724tpv2* | AV/IT Prequal (Netgear/MediaCast) | `24_Subcontractors/09_General/01_Prequalification/` |
-| *Molitor*scope* or *Molitor-2026* | Molitor Scope of Work | `24_Subcontractors/09_General/01_Prequalification/` |
-| *6930_Finishes_Schedule* or *A2742-1910C* | Baffle Ceiling RFQ Companion | `24_Subcontractors/09_General/08_RFP_and_Proposals/` |
-| *Submission Plan for Reports* | Submission Plan | `04_Docs/09_Registers/` |
-| *Design_Phase_Deliverables_Tracker* | Design Tracker | `04_Docs/09_Registers/` |
-| *CRS.xlsx* or *ZD-0086 CRS* | CRS Sheet | `04_Docs/09_Registers/` |
-| *Main_stakeholders* | Stakeholder List | `04_Docs/09_Registers/` |
-| *TOS-ASEER-TP* | TransOrient Acoustic Prequal | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
-| *AME Company Profile* | AME Company Profile | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
-| *Patinated Brass* or *GBH Letter* | Material Finish Testing | `03_Design_Files/FF&E_Material_Boards/` |
-| *CG Requests*Scenography* | CG Scenography Request | `03_Design_Files/FF&E_Material_Boards/` |
-| *PROPOSAL*ASIR* | Civil/Structural Proposal | `24_Subcontractors/08_Civil_Structural/08_RFP_and_Proposals/` |
-| *Baffle Ceiling RFQ* | Ceiling Systems RFQ | `24_Subcontractors/ASM_Ceiling_Systems/08_RFP_and_Proposals/` |
-| *USGME-Quotation* | USG Ceiling Quotation | `24_Subcontractors/ASM_Ceiling_Systems/08_RFP_and_Proposals/` |
+| *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
+| *Daily_Report* or *Daily Report* | Daily Report | `00_Status/Daily_Reports/` |
+| *WEEKLY* | Weekly Report | `00_Status/` |
 | *Archaeological Museums* | AV/IT Proposal | `24_Subcontractors/AV_IT/08_RFP_and_Proposals/` |
 | *MediaCast* or *GS324P* | AV/IT Prequal | `24_Subcontractors/AV_IT/01_Prequalification/` |
 | *Calibration Certificates* | Calibration Docs | `04_Docs/09_Registers/22_Procurement_Schedule/` |
@@ -154,12 +150,13 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *Main stakeholders* | Stakeholder List | `00_Status/` |
 | *Design_Tracker* | Design Tracker | `03_Design_Files/` |
 | *NRS Comments* | CG Comments on Submission Plan | `02_Submittals/01_DD_Gate/` |
-| *LOGO MOC* | Skip (logo image) | Skip |
-| *invite.ics* | Skip (calendar invite) | Skip |
-| *فواتير* or *ماكينة* or *معدات* | Skip (ops/finance) | Skip |
-| *Unconfirmed*.crdownload | Skip (partial download) | Skip |
-| Daily_Report* | Daily Report | `00_Status/` |
-| WEEKLY* | Weekly Report | `00_Status/` |
+| *RE CG*IR-0001* | CG Response to Inspection Request | `04_Docs/10_Test_and_Inspection/10.2_Inspection_Requests/` |
+| *RE CG*ZD-0091* or *RE CG*ZD-0092* | CG Response to Electrical Assessment | `03_Design_Files/Electrical/` |
+| *SMP_CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *SOR-* or *HSE SOR* | Safety Observation Report | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
+| *Daily_Report* or *Daily Report* | Daily Report | `00_Status/Daily_Reports/` |
+| *WEEKLY* | Weekly Report | `00_Status/` |
 | *.xer | Schedule | `02_Schedule/` |
 | *ZNA* or *عقد* | Contract | `00_Contracts/` |
 | *MATERIAL-BOARD* | Material Board | `03_Design_Files/FF&E_Material_Boards/` |

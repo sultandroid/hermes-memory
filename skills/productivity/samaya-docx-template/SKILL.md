@@ -780,6 +780,7 @@ When creating a formal project plan (SMP, BEP, DMP, MOS, Risk Plan), **prefer th
 - A4 print layout via CSS @page rules
 - PDF generation via WeasyPrint
 
+See `references/toc-insertion-pitfall.md` for the TOC insertion pattern when editing existing DOCX files.
 See `references/samaya-html-print-template.md` for the full design system.
 
 ### Project folder creation

@@ -21,7 +21,7 @@ are current as of Jul 2026 but may shift.
 import shutil, os, re
 
 STAGING = "/tmp/email_attachments/"
-ROOT = "/Volumes/MIcro/Work/Aseer-Museum/"
+ROOT = "/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/"
 
 # Classification rules: (filename_pattern, destination_subfolder)
 # Order matters — first match wins
