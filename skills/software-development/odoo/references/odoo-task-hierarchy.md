@@ -156,6 +156,27 @@ models.execute_kw(db, uid, pw, 'project.task', 'create', [{
 }])
 ```
 
+## Marking Tasks as Done — Do NOT Move Stages
+
+**Rule (updated 2026-07-24):** When the user asks to mark tasks as complete on a finished project, set `progress=1.0` only. **Do NOT change `stage_id`.** The task stays in its current stage (DD, Procurement, Mfg, On-site, etc.) — it is simply flagged 100% complete.
+
+Rationale: stage represents the work phase, not completion. A 100% task in DD stage is still a "DD task" for reporting. Moving it to Handover corrupts the stage distribution and breaks Kanban views.
+
+```python
+# CORRECT — mark complete in place
+models.execute_kw(db, uid, pw, 'project.task', 'write', [[task_id], {
+    'progress': 1.0
+}])
+
+# WRONG — do not change stage
+models.execute_kw(db, uid, pw, 'project.task', 'write', [[task_id], {
+    'progress': 1.0,
+    'stage_id': 479  # NEVER do this just to mark done
+}])
+```
+
+Exception: if the user explicitly says "move to Handover" or "move to stage X", then stage change is intentional.
+
 ## Restructuring Existing 3-Level to 2-Level
 
 When finding existing tasks with the old 3-level pattern (Package → Stage Package → Deliverable):

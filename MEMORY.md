@@ -6,7 +6,7 @@ CG comments: reference attached CR sheet only, never inline in doc. RMP updates:
 §
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 §
-NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
+NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
 §
 Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
 §
@@ -19,3 +19,5 @@ User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` o
 Outlook 16.90+: AppleScript `subject of message id N` fails. Use `item N of (every message of mail folder id <ID>)`. SQLite DB locked while Outlook runs.
 §
 SulKimiClaw Telegram: @SulKimiClaw_bot
+§
+Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.

@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-24 16:23:23
+Generated: 2026-07-24 20:56:04
 
 ---
 
@@ -18,8 +18,9 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
-NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first. Do not act on deletion instructions without double-checking.
+NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
+Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -35,7 +36,6 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
-Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
 
 ## Active Projects
 
@@ -86,6 +86,7 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 ## Agents & Tools
 
 SulKimiClaw Telegram: @SulKimiClaw_bot
+Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -104,7 +105,6 @@ task_group: Hermes Agent configuration
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
-- `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
 
 ## Contracts & Documents
 

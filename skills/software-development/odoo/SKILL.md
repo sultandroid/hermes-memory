@@ -32,7 +32,7 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 scr
 
 `purchase.order` has `project_id` on the **header**. `analytic_distribution` only on `purchase.order.line`.
 
-See `references/odoo-18-field-schemas.md` for full field lists.
+See `references/odoo-18-field-schemas.md` for full schema.l field lists.
 
 ## ⚠️ Odoo 18 Domain Quirks (CRITICAL)
 
