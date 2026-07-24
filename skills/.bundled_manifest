@@ -15,6 +15,7 @@ codex:a116c5f880869f663b2974c2c9a79dbd
 comfyui:c9ac1497c123c607f98a547f8cf54fc5
 computer-use:c40a491ce9f5035bb9cdfc141d5f473e
 design-md:b40264457352831ab1d06f3ec671b532
+docx:9ae20fcff7ff5df278423efaef875ce0
 dogfood:ae6e92c2cd27c3da8a0587f089d19fe3
 evaluating-llms-harness:ac24cf5202db5b024b3079023797a0f6
 excalidraw:149a572d2069ee3de2951352725a8b19
@@ -30,6 +31,7 @@ heartmula:96a5927a5f221065260ddb2e0f1d77ec
 hermes-agent:9bece7abffbad106f4772ef06aede930
 hermes-agent-skill-authoring:4fefd83beeea0a8a32f5ae006f10f00d
 hermes-desktop-plugins:a31f90cb1be30b2e08b838ce2dcf8195
+hermes-themes:0dbc92a3e823608e0f894725249a2e51
 himalaya:d215ffaa3c1aecbc68a326e45d6927c8
 huggingface-hub:da338c5152d72db030bb81d923d1c64d
 humanizer:6645b341862575f452e86139c5c71ce9
@@ -47,6 +49,7 @@ ocr-and-documents:af5fba9fa8ef003951ff5fe5a0a04adf
 opencode:d2a166c7f2c74f6e47d548ed1290c458
 openhue:ce1dd061d7f49d4752a4c0711ad2666c
 p5js:5f09fa1cb8494c93bc2f5bcbd34a2ead
+pdf:2fd0a06149ffda512f67eeb9d29082ec
 petdex:472d8fe96aa175cc1678d3f52dcdc624
 plan:96b15c8e9ad8ad4b278d833cf52f6e43
 polymarket:7644c886e028c229bc8c1f54114c3170
@@ -67,7 +70,9 @@ systematic-debugging:90bd57d854ed05d7c97f18b9a9901167
 teams-meeting-pipeline:88487d005d0c3b90a83bebcf6a52c583
 test-driven-development:a67bd4cb658ed7c123b7440376d9302c
 touchdesigner-mcp:0664ded9138795d5518def4d16037650
+tui-widgets:b447a68c6a14d80feb34e5439a69f8ef
 weights-and-biases:8f0e1ee92fdf7b42a1dad448176d7c64
+xlsx:fe96970de033cba436e316f96d9132bb
 xurl:51f80e85db29ab86b96f45f0940f884b
 youtube-content:5ff165441acd414c5e1937235bf6cafd
 yuanbao:7844c287c57b42dccf51127f15e0751b

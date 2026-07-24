@@ -22,6 +22,26 @@ User asks to:
 - Search for project-related emails
 - Extract attachments from Outlook
 
+### SQLite Lock Detection (MANDATORY before querying)
+
+Outlook holds the SQLite database open with a WAL journal. If queries time out, the DB is locked. **Do not retry more than once.** Fall back to AppleScript immediately.
+
+```bash
+# Check if Outlook holds the lock
+lsof ~/Library/Group\\ Containers/UBF8T346G9.Office/Outlook/Outlook\\ 15\\ Profiles/Main\\ Profile/Data/Outlook.sqlite 2>&1 | head -5
+
+# Check WAL file size (4MB+ = active writes, lock is persistent)
+ls -la ~/Library/Group\\ Containers/UBF8T346G9.Office/Outlook/Outlook\\ 15\\ Profiles/Main\\ Profile/Data/Outlook.sqlite-wal 2>&1
+```
+
+**Signals that SQLite is permanently locked (not transient):**
+- `lsof` shows Microsoft Outlook PID holding the file
+- WAL file is 2MB+ (active transaction log)
+- `PRAGMA wal_checkpoint(TRUNCATE)` also times out
+- `.backup` and `cp` both fail
+
+**When locked, skip SQLite entirely and use AppleScript for everything.** The AppleScript fallback is slower but always works. Do not waste tool calls retrying SQLite.
+
 ## Database Location
 
 **Note:** The user may be using OneDrive for Outlook storage. If the database is not found in the standard location, check:
@@ -31,6 +51,26 @@ User asks to:
 If the user has a custom Outlook profile path, the database may be stored elsewhere. **Always verify the correct profile path before querying.**
 
 Only one account (sultan@samayainvest.com) — no account filtering needed.
+
+### SQLite Lock Detection (MANDATORY before querying)
+
+Outlook holds the SQLite database open with a WAL journal. If queries time out, the DB is locked. **Do not retry more than once.** Fall back to AppleScript immediately.
+
+```bash
+# Check if Outlook holds the lock
+lsof ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile/Data/Outlook.sqlite 2>&1 | head -5
+
+# Check WAL file size (4MB+ = active writes, lock is persistent)
+ls -la ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile/Data/Outlook.sqlite-wal 2>&1
+```
+
+**Signals that SQLite is permanently locked (not transient):**
+- `lsof` shows Microsoft Outlook PID holding the file
+- WAL file is 2MB+ (active transaction log)
+- `PRAGMA wal_checkpoint(TRUNCATE)` also times out
+- `.backup` and `cp` both fail
+
+**When locked, skip SQLite entirely and use AppleScript for everything.** The AppleScript fallback is slower but always works. Do not waste tool calls retrying SQLite.
 
 ### Database Location Reference
 
@@ -229,7 +269,32 @@ See `references/sender-discovery-patterns.md` for the iterative workflow to find
 
 **Most reliable pattern: bash `for` loop with individual `osascript -e` one-liners per property.**
 
-**`has attachment` returns empty string via `osascript -e` one-liners.** Use a `.applescript` file for reliable attachment detection.
+**`has attachment` returns empty string via `osascript -e` one-liners.** Use a `.applescript` file for reliable attachment detection. Even in `.applescript` files, `has attachment of theMsg` can fail with `Expected end of line, etc. but found class name` (-2741) errors. **Reliable workaround:** use `count of (every attachment of theMsg)` instead — this always works and returns the integer count. Example:
+
+```applescript
+tell application "Microsoft Outlook"
+    set theMsg to message id 49039
+    set attCount to count of (every attachment of theMsg)
+    return attCount
+end tell
+```
+
+This is the most reliable pattern for attachment detection across both `.applescript` files and `osascript -e` one-liners.
+
+**`subject of m` / `time received of m` / `has attachment of m` fail with `Can't make |subject| of incoming message id X into type specifier` (-1700) on Outlook 16.90+.** This is a persistent AppleScript regression where direct property access on `message id N` objects fails. The error is NOT a syntax issue — the same syntax works on older Outlook versions. **Reliable workaround:** use `item N of (every message of mail folder id <FOLDER_ID>)` instead of `message id N`. This bypasses the broken property-access path:
+
+```applescript
+-- BROKEN (Outlook 16.90+):
+set m to message id 49107
+set msub to subject of m  -- ERROR: Can't make |subject| of incoming message id 49107 into type specifier
+
+-- WORKS:
+set msgs to (every message of mail folder id 114)
+set m to item 1 of msgs
+set msub to subject of m  -- OK
+```
+
+**Combined workaround for scanning recent inbox messages:** use `item N of (every message of mail folder id <ID>)` in a loop, or generate individual `.applescript` files via Python (one per message index, not per message id). The `item N` approach works reliably for all property reads (subject, time received, has attachment, sender).
 
 **`message/rfc822` attachments (forwarded .eml) cannot be saved via AppleScript.** When an email's attachment has content type `message/rfc822`, the `save att in saveFile` command fails with error -2700. The actual file is embedded inside the forwarded message. Workaround: open the email manually in Outlook and save the attachment from the forwarded message's own attachment list. If the forwarded message itself contains an Excel/PDF, you may need to extract the inner message's attachments separately.
 

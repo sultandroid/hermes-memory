@@ -69,9 +69,9 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 
 | Doc Code | Description | Destination |
 |----------|-------------|-------------|
-| ZD-0020 | Stakeholder Management Plan Rev.03 | `04_Docs/02_Plans_and_Procedures/02.19_Stakeholder_Management_Plan/01_Source_Files/` |
+| ZD-0020 | Stakeholder Management Plan Rev.03 | `04_Docs/02_Plans_and_Procedures/02.3_Stakeholder_Management_Plan/01_Source_Files/` |
 | ZD-0067 | Fire Alarm & Suppression | `03_Design_Files/Electrical/Fire_Alarm_Suppression/` |
-| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Resource_Management_Plan/01_Source_Files/` |
+| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
 | ZD-0082 | Sustainability Management Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | ZD-0085 | Graphics Specialist SOW | `24_Subcontractors/04_Graphics_Graphite/01_Scope_of_Work/` |
 | ZD-0086 | Project Execution Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
@@ -84,6 +84,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | ZD-0093 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
 | ZD-0094 | Subcontract Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Subcontract_Management_Plan/01_Source_Files/` |
 | ZD-0095 | QA/QC CV (Aftab Adeel) | `24_Subcontractors/09_General/01_Prequalification/` |
+| ZD-0096 | Architectural Title Block Template | `02_Submittals/01_DD_Gate/Architecture/` |
+| ZD-0098 | EMDP and SDP Assessment Report | `03_Design_Files/Electrical/EMDP_SDP_Assessment/` |
 
 ### Plans (PL-*)
 
@@ -91,8 +93,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 |----------|-------------|-------------|
 | PL-02.17 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
 | PL-0046 | HSE Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
-| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.18_Resource_Management_Plan/01_Source_Files/` |
-| ZD-0020 | Stakeholder Management Plan | `04_Docs/02_Plans_and_Procedures/02.19_Stakeholder_Management_Plan/01_Source_Files/` |
+| ZD-0081 | Resource Management Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
+| ZD-0020 | Stakeholder Management Plan | `04_Docs/02_Plans_and_Procedures/02.3_Stakeholder_Management_Plan/01_Source_Files/` |
 
 ### Other Document Types
 
@@ -110,6 +112,19 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *lookahead* | Lookahead | `00_Status/` |
 | *Prequalification_Submission_CG* | Prequal Submission | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
 | *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/02_Landscaping/01_Prequalification/` |
+| *SMP*CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *SOR-* or *HSE SOR* | Safety Observation Report | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *TU-261848* or *Chain block* or *Wire Rope* or *Bow Shackles* | Rigging Prequal (MITSUBISHI certs) | `24_Subcontractors/10_Rigging/01_Prequalification/` |
+| *Executive Level Minutes* or *Executive level minutes* | Meeting Minutes | `00_Status/Meeting_Minutes/` |
+| *PROJECT EXECUTION PLAN* (no doc code) | Project Execution Plan | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/01_Source_Files/` |
+| *TB for approval* | Title Block for Approval | `03_Design_Files/Architecture/` |
+| *Authorized Distributor Certificate* or *GS324P* or *MediaCast* or *gs724tpv2* | AV/IT Prequal (Netgear/MediaCast) | `24_Subcontractors/09_General/01_Prequalification/` |
+| *Molitor*scope* or *Molitor-2026* | Molitor Scope of Work | `24_Subcontractors/09_General/01_Prequalification/` |
+| *6930_Finishes_Schedule* or *A2742-1910C* | Baffle Ceiling RFQ Companion | `24_Subcontractors/09_General/08_RFP_and_Proposals/` |
+| *Submission Plan for Reports* | Submission Plan | `04_Docs/09_Registers/` |
+| *Design_Phase_Deliverables_Tracker* | Design Tracker | `04_Docs/09_Registers/` |
+| *CRS.xlsx* or *ZD-0086 CRS* | CRS Sheet | `04_Docs/09_Registers/` |
+| *Main_stakeholders* | Stakeholder List | `04_Docs/09_Registers/` |
 | *TOS-ASEER-TP* | TransOrient Acoustic Prequal | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
 | *AME Company Profile* | AME Company Profile | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
 | *Patinated Brass* or *GBH Letter* | Material Finish Testing | `03_Design_Files/FF&E_Material_Boards/` |
@@ -187,3 +202,6 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 - **CG Comments (NRS Comments_*.xlsx)** go to `02_Submittals/01_DD_Gate/Architecture/` — they are CG review feedback on the submission plan, not a separate document type.
 - **Prequalification_Submission_CG.docx** from Soliman Obiya (AME/Rawasin) goes to `AME_Acoustic/01_Prequalification/`, not the general prequal folder.
 - **Zamzam project files** (ZAM-NWC prefix) route to `/Volumes/MIcro/Work/Zamzam-Visitor-Center/`, not Aseer-Museum.
+- **Git rebase + post-commit hook conflict.** The repo's post-commit hook regenerates `06_Risk_System/webapp/src/index.html` after every commit. During `git pull --rebase`, each rebase step fires the hook, leaving a dirty index.html that blocks the next step. **Workaround:** `git checkout 06_Risk_System/webapp/src/index.html` before each `git rebase --continue`. If the rebase aborted, redo with `git checkout index.html && git pull --rebase origin main` and repeat the checkout before each continue.
+- **Files without doc codes in their names** (e.g. "PROJECT EXECUTION PLAN 01.docx", "TB for approval.pdf") need keyword-based routing rules, not doc-code regexes. Add a keyword pattern alongside the doc-code pattern for the same destination.
+- **TU- prefix files** (e.g. TU-26184801) are technical uploads from subcontractors — route to the relevant subcontractor's prequal folder, not a general location.

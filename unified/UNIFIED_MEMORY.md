@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-23 19:00:38
+Generated: 2026-07-24 07:14:10
 
 ---
 
@@ -87,6 +87,8 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 
 Odoo: company contacts need vat='TBC', quotes use sale.order. Ref: ~/.hermes/skills/.../odoo/references/.
 @SulKimiClaw_bot is the correct Telegram handle for the SulKimiClaw agent.
+Aconex email scan cron: last check was this run. Previous Aconex findings stored in memory entries with "Aconex" prefix.
+Aconex scan 2026-07-24: no prior Aconex findings in memory — this is the first scan run.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -103,15 +105,12 @@ task: inspect Hermes auth/config for Nous credential storage and prepare to add 
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
-- `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
-- The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 
 ## Contracts & Documents
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
 CG comment disposition: reference attached CR sheet only, never list full CG comments inline in the document. Remove 1.4 CG Comment Disposition Matrix section entirely.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-RMP scoring scales: user designed each register with a different scale (PRR 4x4, DDR 5-point, HSE 5x5, AV 4x4) per PMBOK Ch. 11.3. I validated this. When CG challenges it, defend the original design — don't flip to comply. User will correct me if I do.
 Strong preference for clear document boundaries: RMP (methodology plan) should NOT contain operational data (risk IDs, scores, P6 IDs, register snapshots). Those belong in live registers. Push back on CG comments that confuse plan content with register data.
 Strong preference: methodology plans (RMP, SMP, etc.) describe process, not operational data. CG comments asking for register-level data (risk scores, P6 IDs, risk entries) in the plan are push-back candidates. Plans = methodology, registers = live data. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category — use as justification.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -138,6 +137,7 @@ Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 0
 Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submittals (0A/3B/2C/1D/0U), SNA (2B/1U), RFI (4 open/20 closed), SI (~4 open), NCR (1C/4U), Outgoing (30 letters), Incoming (1 from CG). Status codes: A/B/C/D/E/F/U. Doc prefix: MOC-MUS-ASE-. Key open: NCR-001 (63d delay), SI-011/013/014/015, open RFIs: GN-007, GN-009, SIC-1A0-TQ-0020/0022. EOT Claim 01 Rev.00 (Apr 2026). Source: Aseer-Museum/Docs/09_Registers/Submittal_Tracker_IFC_Log/ (OneDrive .xlsb locked — save as .xlsx in Excel to read). NRS submittals: Submittal 11 (SC_01/SC_02 shop dwgs, May 25), Lighting/AV/M&E G11 & G13 (May 28), Invoice INV-4825 (May 28). Register 284 rows, updated May 25-28 2026.
 No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
+3. **Financial Manager** — BOQ, cost, commercial, claims, variations
 
 ## Locations
 

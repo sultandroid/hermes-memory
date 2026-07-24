@@ -1,7 +1,7 @@
 ---
 name: hermes-quality-assurance
 description: Use before delivering ANY Hermes labor output (HTML, code, analysis) — runs cross-labor audit, HTML validation, and file-contamination checks
-version: 1.5.1
+version: 1.6.0
 author: agent
 tags: [qa, quality-assurance, audit, html-validation, workflow]
 triggers:
@@ -732,6 +732,82 @@ When cleaning AI fingerprints from plan documents, target these specific pattern
 - When calculating earned value percentages, use **actual drawing/submittal counts from project registers** — not estimates or judgement calls.
 - Search for registers (XLSX logs, submittal trackers, drawing lists) and count actual items.
 - A bracket like "specialist review = 115K" without precise supporting data will be questioned. Back it with register-level evidence.
+
+## Cross-Source Status Verification (Plan/Submittal Status Reports)
+
+When building status reports, plan trackers, or any document that asserts submission/approval status of project plans or submittals:
+
+### The Problem: Stale Repo Metadata
+
+The repo's own markdown files (plan frontmatter, plan tracker, manager dashboards) can have **stale status labels**. A plan marked "draft" in the repo may have been submitted and approved months ago. The repo is not automatically updated when Aconex transmittals arrive.
+
+### Required Cross-Reference Sources (check ALL, not just one)
+
+| Source | What It Tells You | Reliability |
+|--------|-------------------|-------------|
+| Plan frontmatter (`approval_status:`) | What the repo author last knew | **Low** — often stale |
+| Plan tracker (`00_plan_tracker.md`) | Aggregated status | **Medium** — may be stale |
+| Approval log (`approval_log.md`) | CG response dates and codes | **Medium** — updated manually |
+| Submittal register (`submittal_register.md`) | Submission dates, CG response dates, codes | **Medium-High** — updated from email scans |
+| Email scans / Aconex notifications | Actual transmittal receipts | **High** — real-time evidence |
+| Other plan documents that reference this plan | Cross-references in Communication Plan, Nama scope docs, etc. | **High** — independent corroboration |
+| Manager dashboards (`10_Manager_Lanes/`) | Lane-specific status | **Low-Medium** — may be stale |
+
+### Verification Protocol
+
+For every plan whose status you assert in a report:
+
+1. **Search the repo** for the plan's document number across ALL files — not just the plan's own folder
+2. **Check the submittal register** — does it have an entry with a CG response date and code?
+3. **Check email scans** — was there an Aconex transmittal notification?
+4. **Check approval logs** — does the plan's own `approval_log.md` have a CG response recorded?
+5. **Check cross-references** — do other approved plans (Communication Plan, Nama scope) reference this plan with a status?
+6. **If sources disagree**, the most recent Aconex/email evidence wins. Flag the discrepancy and update the stale source.
+
+### Common Stale-Status Patterns Found in Practice
+
+| Repo Says | Actual Status | How to Detect |
+|-----------|---------------|---------------|
+| "Draft" | Code B approved | Check submittal register + email scans for Aconex transmittal |
+| "Not submitted" | Submitted and awaiting CG | Check email scans for submission notification |
+| "Under review" | Code B approved weeks ago | Check submittal register for CG response date |
+| "Draft — Conflicts Resolved" | Code B approved (older version) | Check Communication Plan cross-references for the plan's doc number |
+
+### Example: BEP Status Correction
+
+The BEP (`MOC-ASEER-SIC-1K0-PL-0015`) was marked "draft" in the repo's `bim_execution_plan.md` frontmatter and plan tracker. Cross-referencing revealed:
+- Communication Plan RevC02 listed it as **Code B** (independent corroboration)
+- Nama scope document referenced it as **Code B 17-Mar-2026** (second independent source)
+- The repo's own `bim_execution_plan.md` was a newer draft version, but the **approved version** was Rev 01 from March
+
+**Lesson:** A plan can have a newer draft in the repo AND an older approved version. The approved version's status is what matters for status reports. Check the document number — if the repo draft has a different doc number than the approved version, they are different documents.
+
+### Verification Checklist Before Delivering Any Status Report
+
+```python
+# For each plan in the report:
+# 1. Get the plan's document number from the tracker
+# 2. Search for that doc number across the entire repo
+# 3. Check submittal register for CG response
+# 4. Check email scans for Aconex transmittal
+# 5. Check approval_log.md for recorded status
+# 6. If any source shows a different status than the tracker, investigate
+```
+
+**HARD RULE:** Never assert a plan's status based on a single source. If the plan tracker says "Draft" but the submittal register has a CG response date, the register wins. If the register has no entry but an email scan shows an Aconex transmittal, the email wins. Always cite the most authoritative evidence.
+
+### Comprehensive Data Audit — Check ALL Data Points, Not Just the Ones the User Flagged
+
+When the user says "X and Y are wrong in the report", **do not stop at X and Y.** The user is telling you the report has data quality problems, not just two specific errors. Perform a full audit:
+
+1. **Identify every data point in the report** — every count, status label, date, name, and code
+2. **Trace each one to its source file** — plan tracker, submittal register, NCR register, RFI register, SI register, email scans
+3. **Verify each against the source** — if the source says 217 submittals, the report must say 217, not 216
+4. **Check for stale metadata** — a plan marked "draft" in one file may be "approved" in another. Cross-reference across ALL files
+5. **Fix the source files too** — if the report was wrong because the source file was stale, update the source file. Don't just fix the report
+6. **Propagate corrections** — a status change in one file (e.g. plan tracker) may need updates in: submittal register, approval logs, Odoo sync scripts, manager dashboards, and the plan's own frontmatter. Search for ALL files that reference the corrected data point
+
+**User correction signal:** "I mean you have to check all data" means you only checked the items they mentioned and missed other errors. The next time, audit every data point in the deliverable before presenting it.
 
 ## Data Integrity — Never Fabricate Source Data
 

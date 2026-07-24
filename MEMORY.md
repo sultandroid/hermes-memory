@@ -18,6 +18,10 @@ Risk register multi-source update: when changing risk metadata, update ALL of: r
 §
 User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
 §
-RMP scoring scales: user designed each register with a different scale (PRR 4x4, DDR 5-point, HSE 5x5, AV 4x4) per PMBOK Ch. 11.3. I validated this. When CG challenges it, defend the original design — don't flip to comply. User will correct me if I do.
+Outlook 16.90+ AppleScript regression: `subject of message id N` fails. Use `item N of (every message of mail folder id <ID>)` instead. SQLite DB locked while Outlook runs — skip to AppleScript immediately.
 §
 @SulKimiClaw_bot is the correct Telegram handle for the SulKimiClaw agent.
+§
+Aconex email scan cron: last check was this run. Previous Aconex findings stored in memory entries with "Aconex" prefix.
+§
+Aconex scan 2026-07-24: no prior Aconex findings in memory — this is the first scan run.

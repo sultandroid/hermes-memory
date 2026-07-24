@@ -20,6 +20,30 @@ CG comments come in two distinct types. **Never merge them into one response.**
 | **Submission Plan Comments** | CG review of submission plan/register (e.g. Mohammad Elbaz) | **CR Sheet** (Excel) - sent to CG for agreement | CG + internal |
 | **Detailed Technical Review** | CG review of technical deliverables (e.g. Abdrabo Shahin, Code C) | **Consultant Comment Register** (Excel) - internal tracking | Internal only until resubmission |
 
+## Core Principle 2: Plan vs Register Distinction
+
+When CG returns Code C on a **management plan** (RMP, SMP, DMP, HSE Plan, QMP), not all comments are valid. Some ask for operational data that belongs in live registers, not the plan itself. **Before complying, ask: "Is this methodology or data?"**
+
+| If CG asks for... | It belongs in... | Response |
+|---|---|---|
+| Risk scores, P6 Activity IDs, float values, specific risk entries | **Live register** (PRR, DDR, HSE, AV) | Push back — plan is methodology, register has the data |
+| Register snapshots, register structure, register counts | **Plan** (as reference only) | Comply — add note that registers are live documents, attach snapshot |
+| Methodology changes (scoring approach, identification techniques, review cadence) | **Plan** | Comply — this is what the plan is for |
+| Standardised scoring across all registers | **Neither** — per PMBOK Ch. 11.3, different risk types may use different scales | Push back — document per-register scales clearly, no rescoring needed |
+
+### Why 4 Registers for Aseer Museum
+
+| Register | Who Uses It | Why Separate |
+|----------|-------------|-------------|
+| **PRR** (Master) | PM + Commercial Manager | Project-level risks — schedule, cost, contracts, design, execution. The whole team sees it. |
+| **DDR** (Design) | Technical Office + Design Manager | Design-phase technical risks — 77 detailed items (clash, LOD, coordination). Putting them in PRR would make it 100+ and unmanageable weekly. |
+| **HSE Register** | HSE Manager | Safety risks — uses different scale (CxL 5x5) and is legally required to be standalone on site. |
+| **AV Register** | AV Lead | AV/Multimedia specialist risks — heat gain, content production, integration risks unrelated to other project risks. |
+
+**Why not fewer?** One register with 178 risks would be unreadable weekly. HSE must be standalone by regulation.
+
+**Why not more?** Procurement and Quality risks are currently under PRR categories (PRC, QLT). If they grow past 20+ each, they can be split. Current 4 registers = balance between detail (each team sees their own) and simplicity (not 10 registers nobody tracks).
+
 ## Mandatory: Run the 7 Lenses on Every CG Interaction
 
 This protocol integrates with the **CG Analysis & Lessons Learned System** (`cg-analysis-and-lessons` skill). Every CG response handler MUST run the 7 lenses:
@@ -530,6 +554,8 @@ The study PDF is extracted from Outlook via AppleScript. Team action templates (
 ## Pitfalls
 
 - **Plan vs Register distinction** — When CG returns Code C on a management plan (RMP, SMP, DMP, etc.), not all comments are valid. Some ask for operational data that belongs in live registers, not the plan itself. Before complying, ask: "Is this methodology or data?" If data (risk scores, P6 IDs, specific risk entries, register snapshots), push back — the plan is methodology, the register has the data. The user explicitly confirmed this position after initially agreeing to comply. See `references/rmp-cg-response-patterns.md` for the full worked example.
+- **Defend original design decisions** — When you validated the user's approach (e.g., different scoring scales per register is fine per PMBOK), and CG challenges it, defend the original design. Don't flip positions and immediately change the plan. The user will correct you. The correct response: acknowledge CG's preference, explain the PMBOK basis, offer to document more clearly (not change), no rescoring.
+- **No placeholders in formal submissions** — Never submit a plan with "To be recalculated", "To be confirmed", or any other placeholder text. CG will flag it as incomplete. Either include real data or remove the section entirely with a clear statement that it will be completed when inputs are available. The user explicitly corrected this: "ليه حطيتهم من الأول" — placeholders are worse than omitting the section.
 - **Never add unapproved names to documents.** If a person's name hasn't been formally approved by CG/MoC (via CV submission, KPR update, or formal appointment), list the role only with a note: "Per live KPR" or "TBC — appointment pending." Adding unapproved names creates liability — CG will hold Samaya to that person's qualifications even if they were never formally accepted. The user explicitly corrected: "dont add names are not approved."
 - **Never merge submission plan comments with detailed technical reviews** — they are two separate streams with different audiences and response formats.
 - **cat-row separators** must use `.cat-row td` class (dark background, white text), not blank rows. Blank rows break table continuity.
