@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-24 20:56:04
+Generated: 2026-07-25 07:00:37
 
 ---
 
@@ -17,9 +17,9 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
+Snapshot counter: use --bump flag to advance, never auto-increment. Content number must match filename. Short codes only (PRR/DDR/HSE) as counter keys, never human-readable names.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
-User HATES the `§` symbol (Unicode section sign). Never use it. Use `Section` or `Clause` instead. Also no AI symbols: `->`, `--` (em dash), `·` (middle dot), `•`, `✓`, `✗`. This is the #1 recurring error.
+OneDrive: write /tmp first then cp to path. Download files ONE BY ONE sequentially, never batch.
 Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
@@ -85,7 +85,6 @@ You are the **Commander**. Your job is to **lead, plan, delegate, review, and de
 
 ## Agents & Tools
 
-SulKimiClaw Telegram: @SulKimiClaw_bot
 Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -105,11 +104,11 @@ task_group: Hermes Agent configuration
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
+- `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
 
 ## Contracts & Documents
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-CG comments: reference attached CR sheet only, never inline in doc. RMP updates: new risk factors go as rows in T4 table, not standalone paragraphs. T18 values say 'Deferred until BOQ finalised'. Plan body states factual position — never cite 'Per CG comment on ZD-XXXX' in formal docs. Insert before next body heading (Heading style, not toc). Verify TOC clean after insertions.
 AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 Methodology plans (RMP, SMP) describe process, not operational data. CG comments asking for register-level data in the plan are push-back candidates. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -138,10 +137,11 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
 - RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
+- **Contract:** Ministry of Culture (MoC) × Samaya Investment. Effective Date 2025-12-01, Term 10 months → 2026-09-30.
 
 ## Locations
 
-OneDrive: write /tmp first then cp to path. Read files one by one to avoid sync corruption.
+OneDrive: write /tmp first then cp to path. Download files ONE BY ONE sequentially, never batch.
 Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.

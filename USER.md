@@ -7,3 +7,5 @@ Reports to PD (Eng. Muhammad Waris Sultan Khan) should be concise, factual, with
 Strong preference for clean folder structures. Method Statements are not plans — belong in operational docs. HSE plans are a distinct category. Notices duplication patterns quickly.
 §
 Methodology plans (RMP, SMP) describe process, not operational data. CG comments asking for register-level data in the plan are push-back candidates. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category.
+§
+Test URLs yourself before sending — every link must return HTTP 200 first. 'You test' means 'test it, don't ask me.' Also: judge whether extra scope is needed before adding it — 'If covered, no need to split' means don't create parallel pages unless there's a clear gap.

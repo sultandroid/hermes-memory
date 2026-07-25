@@ -1,22 +1,22 @@
-📋 *DAILY TODO — 2026-06-12*
-Total: *14 items*
+DAILY TODO - 2026-07-25
+Total: *12 items*
 
-🔴 *HIGH PRIORITY (5)*
-1. [Aseer] Abu Melha FACP Power Disconnection & Control Room Security Breach — qarar / Decision required | HSE | 2026-06-11
-2. [Aseer] LIFE SAFETY DRAWINGS — murajaa wa ietimad / Review & approve | HSE | 2026-06-11
-3. [Aseer] 35- العرض الفني والمالي - Structural Design Studies — qarar / Decision required | RFP | 2026-06-12
-4. [Aseer] MI-0001 - Project Mobilization Items (SharePoint Link) — murajaa wa ietimad / Review & approve | MOB | 2026-06-11
-5. [Zamzam] Quotation NO.3451 - SAMAYA INVEST (Zamzam Museum) — qarar / Decision required | RFP | 2026-06-08
+HIGH PRIORITY (5)
+1. [Aseer] SI-CG-ASEER-007 Rev.02 - review and respond | SI | 2026-07-19
+2. [Aseer] Site Security Mgmt Plan (PL-0040) - review and approve | HSE | 2026-07-19
+3. [Aseer] Lifting Operation Mgmt Plan (PL-0046) - review and approve | HSE | 2026-07-19
+4. [Aseer] Welfare Mgmt Plan (PL-0037) - review and approve | HSE | 2026-07-19
+5. [Zamzam] External Wall Cladding package (WF-103 a/b/c/d) - review submittal | SDR/MEP | 2026-07-20
 
-🟡 *MEDIUM PRIORITY (8)*
-6. [Aseer] Detailed Design Architecture Package (ZD-0061 + Drawing List ZD-0062) — murajaa wa ietimad / Review & approve | DOC | 2026-06-10
-7. [Aseer] Arch Visualization 3D Shots Package 01 (ZD-0060) — murajaa / Review | DOC | 2026-06-10
-8. [Aseer] TQ-0013 + TQ-0016 Rev.01 — rad / Respond | TQ | 2026-06-11
-9. [Aseer] RFI-010 + GBH Showcase RFIs (007-009) — rad / Respond | RFI | 2026-06-11
-10. [Aseer] NRS Information Release Schedule — murajaa wa ietimad / Review schedule | SCH | 2026-06-11
-11. [Aseer] A-02 AS BUILT King Khaled Road + A2742 Proposed Views — murajaa / Review | DOC | 2026-06-11
-12. [Aseer] Product Compliance Statement - Georg+Otto Friedrich GmbH — murajaa / Review | DOC | 2026-06-12
-13. [Zamzam] SDR-AR-033 Rev.00 — murajaa wa ietimad / Review & approve | SDR | 2026-06-09
+MEDIUM PRIORITY (5)
+6. [Aseer] Quotation NO.3451 (Samaya Invest, Zamzam scope) - decision | RFP | 2026-07-19
+7. [Aseer] Technical and Financial Proposal Rev.02 - review | RFP | 2026-07-19
+8. [Aseer] Aseer 2026 SCOPE of works (StudioZNA) - review | RFP | 2026-07-19
+9. [Aseer] Time Schedule Update (26-05-13) - review schedule | SCH | 2026-07-19
+10. [Aseer] Exterior CCTV Locations (ZD-0038) - review | DOC | 2026-07-19
 
-🟢 *LOW PRIORITY (1)*
-14. [Aseer] Infra Utilities Work spreadsheet — murajaa / Review | GEN | 2026-06-12
+LOW PRIORITY (2)
+11. [Aseer] Scanning equipment quotes (BLK360 G2, RTC360) - review | RFP | 2026-07-19
+12. [Aseer] AV Power requirements (Racks and per zone) - review | DOC | 2026-07-19
+
+NOTE: Both OneDrive register CSVs (Aseer + Zamzam) are currently locked by OneDrive sync (Resource deadlock avoided). This report is built from the local watchdog file-state covering the last 7 days. The Aseer Design Files/ folder shows a large drop of HSE submittals, scope/financial proposals, and the updated site instruction on 2026-07-19. The Zamzam Submittal's/Arch folder shows a full External Wall Cladding/Tiles package (sheets WF-103 through WF-103d, plus reference images and CAD.zip) uploaded on 2026-07-20. No new MEP clash files, IR inspection requests, or fire/emergency submittals in the window. Re-run after OneDrive unblocks to pull full register data.

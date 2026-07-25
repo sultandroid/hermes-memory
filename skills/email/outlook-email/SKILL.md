@@ -243,6 +243,8 @@ See `references/sender-discovery-patterns.md` for the iterative workflow to find
 
 ### Pitfalls
 
+**OneDrive .xlsx/.docx stub files** (recurring trap when reading Office files in OneDrive folders). Symptom: `cp file.xlsx /tmp/` succeeds, the destination file shows 15-100 KB on disk, but `unzip -l file.xlsx` fails with `End-of-central-directory signature not found`, and `openpyxl.load_workbook()` raises `BadZipFile: File is not a zip file`. Root cause: OneDrive files-on-demand cloud placeholder — the OS shows a non-zero stub but the real bytes never hydrated. Detection: file size looks plausible (10s-100s of KB) but the file fails any zip validity check. Fix: open the file in Finder, right-click → "Always keep on this device" to force the real bytes to download, then retry. Affects all zip-based Office formats (.xlsx, .docx, .pptx). Programmatic check: `python -c "import zipfile; zipfile.ZipFile(path).testzip()"` before parsing — if it raises `BadZipFile`, the file is a stub. Same trap appears for `.olk15Message` (Outlook internal format) and `.pdf` files; always test readability before assuming content. Recovery is per-file; no global "force download" command exists.
+
 **Cross-folder search for supplier replies.** Do NOT limit the search to the project's main folder. Supplier replies may be filed under a DIFFERENT project folder. Always use a cross-folder SQL query.
 
 **macOS TCC blocks SQLite access intermittently.** Always try SQLite first. If it fails, fall back to AppleScript.

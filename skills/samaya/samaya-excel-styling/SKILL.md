@@ -426,6 +426,144 @@ p = OxmlElement('w:p')
 body.insert(table_idx + 1, p)
 ```
 
+### Snapshot Excel Builder — Per-Register Snapshot Pipeline
+
+When building Samaya-styled **risk register Excel snapshots** for the Aseer Museum (PRR/DDR), follow this pattern. See the live example at `06_Risk_System/webapp/build_xlsx.py` and `06_Risk_System/webapp/build_snapshots.py`.
+
+### Pipeline (build_snapshots → build_risk/build_ddr → deploy.sh)
+
+1. **build_snapshots.py** generates the xlsx (one per register) via `build_xlsx.py:build()`
+2. **build_risk.py** / **build_ddr.py** discover the latest versioned xlsx and embed its name in the HTML's Excel button
+3. **deploy.sh** runs all three steps then rsyncs to Hostinger
+
+### Per-Register Separation — RMP-Compliant
+
+The RMP Section 9.1 defines four linked risk registers with **different scoring scales**. Never merge them into one view:
+
+| Register | Scale | Count |
+|----------|-------|-------|
+| PRR (Master) | P x S 1-4 | 52 |
+| DDR (Design) | P x I 1-5 | 79 |
+| HSE | C x L 1-5 | 41 |
+| AV | P x S 1-4 | ~30 |
+
+Each register gets its own Excel snapshot and its own webapp page. The webapp uses a shared `template.html`; DDR is at `/aseer/registers/Risk/DDR/` (uppercase to dodge Hostinger case-sensitivity cache).
+
+### Cover Block Layout (rows 1-9, every sheet)
+
+```
+Row 1: "ASEER REGIONAL MUSEUM — <Register Name>" (Calibri 18pt bold, Navy #1E293B)
+Row 2: "Doc No. <EXP-RISK-YYY-YYYY> · Contract: <...> · Rev <C11> · <ACTIVE>"
+Row 3: "Snapshot No. <NNN> · Date: <YYYY-MM-DD> · Time: <HH:MM (Asia/Riyadh)> · Source: <URL>"
+Row 4: (blank)
+Row 5: KPI numeric cards — B5=total, C5=Critical, D5=High, E5=Medium, F5=Low, G5=Open
+Row 6: KPI labels — B6=TOTAL, C6=CRITICAL, D6=HIGH, E6=MEDIUM, F6=LOW, G6=OPEN
+Row 7: (blank)
+Row 8: QR code (left, cell A8, 110px) + Samaya logo (right, cell G8, ~28px tall)
+Row 9: "Scan to open live register → <URL>" (italic 8pt gray)
+```
+
+- KPIs use 1-column-per-card (B..G), NOT merged cells (avoids MergedCell ValueError)
+- Logo: fetch from `_Style-Guides/logos archives/samaya-logo.png` (repo path)
+- QR: `segno.make(url, error="m")` saved to /tmp PNG, loaded as XLImage (fallback if segno absent)
+
+### Heatmap Risk Matrix (dashboard sheet, rows 11+)
+
+```
+Row 11: "RISK MATRIX" (merge B-J)
+Row 12: "P ↓ / S →" | "S1" | "S2" | "S3" | "S4"   (navy headers, white font on Navy bg)
+Row 13: "P4" | cell | cell | cell | cell            (P rows high-to-low: P4..P1)
+Row 14: "P3" | cell | cell | cell | cell
+Row 15: "P2" | cell | cell | cell | cell
+Row 16: "P1" | cell | cell | cell | cell
+```
+
+- Cells with risks get **band-colored fill** (RATING_FILL by P*S score, white bold font)
+- Empty cells: Light Gray (#F1F5F9) fill
+- Score-to-band: P*S≥12=Critical, ≥8=High, ≥4=Medium, <4=Low (PRR 4x4)
+- For DDR 5x5: P*I≥16=Critical, ≥10=High, ≥5=Medium, <5=Low
+
+### Charts (Dashboard sheet)
+
+Two openpyxl-native charts, no matplotlib:
+1. **Doughnut chart** for severity split (proportion, best practice). Data source: by-rating table counts.
+2. **Bar chart** for category exposure (comparison, best practice). Data source: category table. Sorted by count descending, with category labels.
+
+```python
+from openpyxl.chart import DoughnutChart, BarChart, Reference
+```
+
+### Page Header/Footer (all sheets)
+
+```python
+ws.oddHeader.left.text = "Samaya Investment · Technical Office"
+ws.oddHeader.center.text = f"Snapshot No. {snapshot_no}"
+ws.oddHeader.right.text = f"{doc_no} · Rev {revision} · {status} · {register} · {page_url}"
+ws.oddFooter.left.text = "RESTRICTED · Project use only"
+ws.oddFooter.center.text = f"Generated {datetime}"
+ws.oddFooter.right.text = "Page &P of &N"
+# All 8pt, gray (#64748B)
+```
+
+### Page Setup (A4 portrait per Samaya Style Guide §2.1)
+
+```python
+ws.page_setup.orientation = "portrait"
+ws.page_setup.paperSize = 9  # A4
+ws.page_setup.fitToWidth = 1
+ws.page_margins = PageMargins(left=1.5, right=1.5, top=2.0, bottom=2.0, header=0.8, footer=0.8)
+ws.print_options.horizontalCentered = True
+```
+
+### Snapshot Counter Management — CRITICAL (prevents drift bug)
+
+**The bug:** `build_xlsx.py` auto-incremented the counter every time called. The caller also managed it. This created two key families in `snapshot_counter.json` ("PRR" vs "Master Risk Register (PRR)") with different numbers. The xlsx content said "Snapshot No. 006" but the filename said "001".
+
+**How to avoid drift:**
+
+1. `build_xlsx.build()` accepts an explicit `snapshot_no` parameter. When provided (caller-managed), it uses that number without touching the counter. When None (legacy mode), it auto-increments.
+2. `build_snapshots.py` (the builder) manages the counter via `--bump` flag. Idempotent by default (no counter advance on repeated runs during testing). Only `--bump` advances the number.
+3. Snapshot number is resolved BEFORE the `build()` call — xlsx content number always matches the output filename.
+4. Only two register keys in `snapshot_counter.json`: "PRR" and "DDR". Never use the human-readable register name as a counter key.
+
+```python
+# Correct — caller manages counter, number known before build
+snapshot_no = cur + 1 if args.bump else cur if cur > 0 else 1
+bx.build(data, str(out_path), snapshot_no=snapshot_no, ...)
+
+# WRONG — build_xlsx.py should NOT auto-increment or bump inside build()
+build(data, out_path)  # no snapshot_no passed -> auto-increment (not recommended)
+```
+
+```json
+{"PRR": {"last_snapshot": 1, "last_date": "2026-07-24", "last_revision": "C11"},
+ "DDR": {"last_snapshot": 1, "last_date": "2026-07-24", "last_revision": "C11"}}
+```
+
+### File Naming Convention (per Engineering Chart Framework §1.4)
+
+`EXP-RISK-<REG>-YYYY-NNN_Rev<rev>_<STATUS>.xlsx`
+Example: `EXP-RISK-PRR-2026-001_RevC11_ACTIVE.xlsx`
+
+Old non-versioned names (`Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx`) are superseded. The versioned snapshot is the authoritative download.
+
+### Hostinger Deployment — Case-Sensitive Directory 404
+
+When creating a new subdirectory under `/aseer/registers/Risk/` on Hostinger LiteSpeed:
+
+- **Lowercase directories get stuck in a 404 cache** after first accidental access. The 404 page carries `last-modified: Tue, 22 Apr 2025` (Hostinger default) and persists even after the file is on disk with correct perms.
+- **Fix: use UPPERCASE for the first directory name** (e.g. `DDR/` not `ddr/`). The uppercase path bypasses the cache because no 404 was ever cached for that exact path string.
+- Add `.htaccess` with cache-disabling directives:
+  ```
+  <IfModule mod_headers.c>
+      Header set Cache-Control no-cache, no-store, must-revalidate
+  </IfModule>
+  <IfModule LiteSpeed>
+      CacheDisable public /
+  </IfModule>
+  ```
+- If the directory MUST be lowercase, create it as UPPERCASE first, wait for 200, then rename to lowercase. Or keep uppercase permanently.
+
 ## Sheet Title Constraints — Invalid Characters
 
 Excel sheet titles have strict character restrictions. The following characters are **invalid** in sheet names and will raise `ValueError` from openpyxl:
@@ -713,7 +851,49 @@ Every open risk needs:
 - **Linked Risks** — cross-reference to PRR IDs
 - **Evidence Source** — actual project documents, not generic references
 
-## Construction Stage Register — Separate Sheet, RMP-Compliant
+### Construction Stage Risk Audit — Generic vs Duplicate vs Promote
+
+When auditing a secondary risk register (e.g. Construction Stage C-001 to C-060) for potential promotion to the PRR master, classify each risk into one of three buckets:
+
+#### 1. Generic / No meaning for this project (reject)
+
+Risks that are generic construction-site items not specific to this museum fit-out project. Examples:
+- Concrete pump failure during casting (no mass concrete works)
+- Utility damage during excavation (minimal excavation)
+- Pandemic or infectious disease outbreak (post-COVID generic)
+- Heavy rain / extreme weather (not Aseer-specific)
+- Fuel shortage for equipment, theft/vandalism, poor housekeeping
+- Generic HSE items already in the HSE register (confined space, electrical shock, fall from height)
+- Vague/unmeasurable items ("failure to achieve planned productivity")
+
+#### 2. Already covered by existing PRR (duplicate — omit)
+
+Map to the existing PRR risk that covers the same territory. Overlap is checked per-risk, not per-category:
+- Schedule delays -> PRR-SCH-01
+- Subcontractor performance -> PRR-PRC-04, PRR-PRC-07
+- Interface conflicts -> PRR-CON-02
+- Non-conformance / quality -> PRR-QLT-01
+- Testing and commissioning -> PRR-TCH-01
+- Communication breakdown -> PRR-STK-01, PRR-STK-02
+- Inspection approval delays -> PRR-APP-02, PRR-APP-04
+- Design clarification delays -> PRR-DES-05
+
+#### 3. Meaningful and missing (promote to PRR)
+
+Risks that are project-specific, not covered by any existing PRR entry, and significant enough for executive attention. Add as new PRR-XXX-NN risks:
+- Material shortage at remote Aseer site -> PRR-CON-05 (High)
+- Site access restrictions at Abu Malha Heritage Palace -> PRR-LOG-02 (High)
+- Work permit delays for heritage building works -> PRR-APP-05 (High)
+
+#### Promoting a risk to the PRR
+
+When adding a promoted risk:
+1. Use the next available number in the category (e.g. PRR-CON-05 follows PRR-CON-04)
+2. Write the title in plain English, project-specific
+3. Set probability/severity based on the source register's P and S
+4. Link evidence back to the source register (e.g. "C11 Construction Stage Register C-002")
+5. Add a history entry documenting the promotion
+6. Update the JSON total count
 
 When the old consolidated register has a Construction Stage sheet with site-level operational risks (C-001 to C-040):
 
