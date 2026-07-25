@@ -600,6 +600,20 @@ ws["A1"].value = "02_Holy_Quran_Gift_Shop — Other / Logistics Cost Details"
 
 **Pitfall:** If you define the sheet title in a `build_*` function AND also pass the name to `wb.create_sheet()`, you must fix BOTH places. The `create_sheet()` call and the `ws.title = ...` assignment both validate the name. A search for `Other / Logistics` in the file will find the `create_sheet()` call but miss the `ws.title` line if it's inside the builder function — grep for both.
 
+## User-Provided Workbook Templates (Highest Priority)
+
+When the user supplies a manually formatted `.xlsx` and asks to use it as a template, treat that workbook as the visual and structural source of truth. First copy it into a stable project template path and inspect every sheet's row/column layout, merged ranges, charts, images, freeze panes, filters, and formulas. Preserve those conventions before changing values.
+
+For risk-register snapshots, the template must retain:
+- Dashboard layout, charts, Samaya logo, QR/live-register link placement
+- `Risk Register` Owner, Target, Response / Action, and Evidence columns
+- An `Action Plan` sheet populated from structured actions; when no structured action array exists, use the source `response_action` text as the action entry rather than showing an empty sheet
+- Existing manual formatting and column widths
+
+Never claim owners or target dates that are absent from the source data. Keep `—` or `TBC` and report the source-data gap explicitly.
+
+A reference template from the DDR correction session is stored as `templates/risk_snapshot_template.xlsx` in the project webapp when available. See `references/user-template-preservation.md` for the inspection and rebuild procedure.
+
 ## Modifying Existing Formatted Workbooks (Preserve-Format Pattern)
 
 When you need to update an existing formatted Excel file (CR Sheet, submittal form, template), **never rebuild from scratch or insert rows** — both destroy the original formatting, merged cells, column widths, and data validations.
@@ -962,9 +976,55 @@ result = terminal(f'pdftotext -layout "{sample_pdf}" - 2>/dev/null | head -20')
 # Now assess: does this add new information to the repo?
 ```
 
+## Multi-register dashboard layout and owner integrity
+
+When a user supplies a manually formatted PRR/DDR workbook, save it as the canonical template and regenerate PRR, DDR, HSE, and AVR from the same template. Do not revert to a generic builder for one register only.
+
+For dashboard tables:
+
+- Refresh both category names and codes from the current payload; never leave stale template labels beside current codes.
+- Clear stale category/status/owner rows before writing new rows.
+- Split long Exposure by Category tables into two side-by-side blocks with Category, Code, Count, and % of total columns. Wrap category names.
+- Position Top Owners after the taller category/status block. If the section exceeds the footer, move the footer down. Never rely on fixed row 37 or another fixed row.
+- Use formulas against the Risk Register sheet for category, rating, status, owner, percentage, and matrix counts. Keep probability/severity in hidden helper columns if the visible approved template lacks them.
+- Preserve the Owner, Target, Response / Action, and Action Plan fields in every register. If structured actions are absent, populate Action Plan from the source response/action text.
+- For DDR, assign owners only from documented discipline responsibility. Do not invent owner names; use role titles such as Planner, Design Manager, BIM Coordinator, MEP Lead, AV Lead, Conservation Consultant, Approvals Consultant, QA/QC Director, Commercial Manager, Procurement Lead, or Security Specialist. If the source is genuinely unassigned, retain `—` and report the gap.
+
+Verification must inspect formula strings with `data_only=False`, check for stale/blank category rows, assert Top Owners starts below the preceding tables, and verify the live XLSX download returns HTTP 200.
+
+## Multi-register dashboard layout and owner integrity
+
+When a user supplies a manually formatted PRR/DDR workbook, save it as the canonical template and regenerate PRR, DDR, HSE, and AVR from the same template. Do not revert to a generic builder for one register only.
+
+Dashboard rules:
+
+- Refresh both category names and codes from the current payload; never leave stale template labels beside current codes.
+- Clear stale category, status, and owner rows before writing new rows.
+- Split long Exposure by Category tables into two side-by-side blocks with Category, Code, Count, and % of total columns. Wrap category names.
+- Position Top Owners after the taller category/status block. If the section exceeds the footer, move the footer down. Never rely on fixed row 37 or another fixed row.
+- Use formulas against the Risk Register sheet for category, rating, status, owner, percentage, and matrix counts. Keep probability/severity in hidden helper columns if the visible approved template lacks them.
+- Preserve Owner, Target, Response / Action, and Action Plan fields in every register. If structured actions are absent, populate Action Plan from the source response/action text.
+- If formulas have no cached results, preserve the formulas and inject cached dashboard values into the worksheet XML so Excel Preview and other viewers display the dashboard immediately. Verify with both `data_only=False` and `data_only=True`.
+- Before inserting rows into a formatted template, unmerge body/footer ranges at or below the insertion point. Otherwise merged footer rows can swallow target or action-plan cells.
+- For DDR, assign owners only from documented discipline responsibility. Use role titles such as Planner, Design Manager, BIM Coordinator, MEP Lead, AV Lead, Conservation Consultant, Approvals Consultant, QA/QC Director, Commercial Manager, Procurement Lead, or Security Specialist. Do not invent personal names; retain `—` and report the gap where the source is genuinely unassigned.
+- Every DDR risk must have a target date in both Risk Register and Action Plan. Use current rating and remaining programme to set working-day milestones, avoiding Fridays.
+
+Verification must inspect formula strings with `data_only=False`, cached values with `data_only=True`, stale/blank category rows, Top Owners placement below preceding tables, Owner/Target fields in both sheets, and HTTP 200 for each live XLSX download.
+
 ## Reference
 
 See `references/risk-register-example.md` for the full script structure and sheet-by-sheet breakouts from the Aseer Museum risk register session.
 See `references/onedrive-folder-audit-workflow.md` for the systematic pattern to audit OneDrive project folders and decide what to add to the repo.
 See `references/risk-register-cleanup-patterns.md` for the full cleanup and formatting patterns from the C11 session.
+
+## Public Register Controls and Source Visibility
+
+- Never expose internal-only evidence in public HTML or XLSX. Before publishing, search generated HTML, JSON, workbook shared strings, and evidence/history fields for internal register names, private dashboards, repo paths, or documents not issued to CG. Replace only with approved CG-visible evidence or neutral wording such as `Project risk review` when the source cannot be cited publicly.
+- Use plain human engineering English. Remove AI fingerprints, decorative symbols, em dashes, bullets, arrows, checkmarks, and phrases such as `seamlessly`, `robust`, and `cutting-edge` from public outputs.
+- Treat a user-supplied manually formatted workbook as the common visual template for every register. Preserve owner, target, response/action, evidence, logo, QR, charts, and merged-cell layout. Clear old rows before repopulating.
+- Dashboard sections must be formula-driven and dynamic. Split long category tables into two blocks, wrap labels, and place Top Owners below the taller preceding block. Do not use fixed row 37. If inserting rows, unmerge body/footer ranges first.
+- The downloaded Risk Register must show Probability, Severity, Score, and Rating. Score must be a formula (`Probability * Severity`) and Rating must be a formula based on the register scoring bands. Preserve formulas and inject cached results where previewers otherwise show blanks.
+- Public web dashboards should make Risk Matrix, Exposure by Category, By Status, and Top Owners headings clickable links to one schedule anchor. Verify each page has one anchor and working smooth-scroll handlers.
+- Keep only `Download Snapshot` in the page controls when requested. Remove Print and CSV controls from both visible HTML and stale button markup.
+- Final verification: inspect public HTML for prohibited source names/symbols, inspect XLSX formulas with `data_only=False`, inspect cached values with `data_only=True`, confirm no stale rows or overlaps, and test every live download with HTTP 200.
 See `references/drr-risk-assessment-logic.md` for the DRR residual scoring and evidence population logic.

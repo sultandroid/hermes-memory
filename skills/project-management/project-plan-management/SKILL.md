@@ -1285,6 +1285,73 @@ for table in doc.tables:
             print(' | '.join(c.text.strip()[:40] for c in row.cells))
 ```
 
+### Pre-Flight: Verify Every Source Reference Before Writing
+
+**Never add a section reference to a plan summary or cross-reference document without first verifying the claim against the actual source document.** This is the #1 lesson from a CG audit failure on the Aseer Design & BIM Summary (PL-0017).
+
+#### The Failure Pattern
+
+1. You read a plan summary that says "gates are in PEP §18"
+2. You add a halftone annotation: "Ref: PL-0015 Rev 04 sec 18"
+3. Reader finds the actual PEP §18 is about Document Control, not gates
+4. Gates are actually in PEP §4.1 — your ref is wrong
+
+This happened systematically across 41 reference annotations in one session: wrong sections, wrong documents, claims that don't exist in the source at all.
+
+#### CRITICAL: Never Fabricate Source References
+
+**If you have not read the source document, do NOT cite it.** This is a hard rule, not a suggestion.
+
+A previous session fabricated an escalation protocol ("Day+1 PM sends reminder to CG, Day+3 PD escalates to CG Acting PM, Day+5 formal notice") and attributed it to "Contract 0010003521 Sec 4 escalation protocol." The text was an invention -- it does not exist anywhere in the contract. Contract §4 Art. 2(n) requires the Contractor to notify the Government Entity "in writing, as soon as it becomes aware" of matters affecting undertakings, but contains no Day+1/3/5 schedule, no PM/PD roles, and no Aconex filing requirement.
+
+**Rules:**
+1. If you haven't read the source, say "source not verified" -- never guess
+2. If the source doesn't contain what you're claiming, say so
+3. When quoting, copy verbatim -- do not paraphrase and present as a quote
+4. If you're unsure whether a clause exists, search the extracted text first
+5. CG comments or specialist suggestions are not contract obligations -- check the actual contract text
+
+#### Mandatory Pre-Flight Checklist
+
+Before adding ANY source reference to a document:
+
+- [ ] Read the actual source section — don't trust what the document's TOC or another plan says. Go read the content.
+- [ ] Verify the claim matches the source — exact data, not paraphrased or reorganised
+- [ ] If the claim doesn't exist in the source, say so in the annotation (e.g., "project-developed, not in BEP")
+- [ ] If the section number is wrong, correct it. PEP and BEP section numbering is often non-intuitive (e.g., gates in PEP §4.1 not §18, RFI in PEP §17.1 not §21).
+- [ ] If the source document doesn't mention a key platform (e.g., Aconex absent from BEP), note which source actually covers it.
+- [ ] Add the plan name alongside the code: `PL-0015 Rev 04 (PEP)` not just `PL-0015 Rev 04`
+
+#### Common Aseer Museum Source Reference Traps
+
+| Claim | Often Cited As | Actually In |
+|-------|---------------|-------------|
+| G0-G8 stage gates | PEP §18 | PEP §4.1 |
+| Document numbering | DMP §5 or PEP §20 | PEP §18.2 |
+| RFI workflow | PEP §21 | PEP §17.1 (native Aconex, no standalone workflow) |
+| Communication hierarchy C1-C5 | PEP §21 | Not in PEP at all; PEP uses Comms Cadence Ladder |
+| ICE coordination wheel | DMP §7 | Not in DMP; project-developed |
+| INT-01 to INT-M10 interfaces | DMP §7 | Not in DMP; project register |
+| BIM objectives | BEP §3 | BEP §2.1 |
+| Software platform | BEP §5 | BEP §4 (with 2026 versions, not 2025+) |
+| LOD matrix | BEP §7 | BEP §2.3 + §8.7 |
+| Clash detection | BEP §8 | BEP §7 |
+| CDE status codes | BEP §9 | BEP §6.3-6.4 |
+| Aconex as CDE | BEP §9 | Not in BEP (BEP uses Autodesk BIM 360). Aconex is from PEP §18.1. |
+| KPI targets K-1/K-5/K-7/K-8 | BEP §9 | Not in BEP (BEP Table 104 has different KPIs) |
+
+### DOCX Formatting Rules for Annotations
+
+When adding halftone (gray) reference annotations to a DOCX summary document:
+
+1. **Font**: 7.5pt, italic, RGB #999999 — clearly distinguishes from body text
+2. **Placement**: immediately after the section heading, before any body text
+3. **Show plan name**: `PL-0015 Rev 04 (PEP)` not just the code
+4. **No symbols**: never use §, ->, -- (em dash), ·, •, ✓, ✗. Use plain text: "sec" for section, "-" for dashes.
+5. **Be short**: 1-2 lines max. Engineer reading, not a consultant report.
+6. **Caveat when source differs**: if the Summary organises data differently from the source (e.g., 3-level clash severity vs source's 4-level), say so plainly.
+7. **Remarks/notes in the body** (e.g., "Note: G0-G1 pre-contract...") should also be in halftone with smaller font, not body text.
+
 ### Pitfalls
 
 - **`insert_paragraph_after()` does not exist** in python-docx. Use `insert_paragraph_before()` on the NEXT paragraph instead.
@@ -1294,6 +1361,8 @@ for table in doc.tables:
 - **Inserting before the next paragraph changes indices** — if you insert multiple items, do them in reverse order (last item first) so indices don't shift.
 - **Font size and color must be set on the run, not the paragraph** — `new_p.runs[0].font.size = Pt(10)`.
 - **OneDrive write pattern** — copy to /tmp first, modify, then copy back. Direct writes to OneDrive paths may be silently reverted.
+- **Don't trust the TOC or another document's cross-reference** — always read the actual section content in the source document. Section numbering in PEP/BEP/DMP is not always where you expect it.
+- **DMP content claims are often wrong** — The DMP Rev C03 does not contain ICE wheel, interface register, or turnaround times. Claims from other plans about DMP content must be verified directly.
 
 ## 7. Pitfalls
 

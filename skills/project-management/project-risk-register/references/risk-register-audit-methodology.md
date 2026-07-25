@@ -226,3 +226,14 @@ Deliver the audit as a structured report with these sections:
 - **Pattern:** RMP says 1-5 P×I scale, register uses 1-4 P×S. RMP references PRR-001, register uses PRR-COM-01. RMP says 29 risks, register has 33.
 - **Root cause:** RMP and register were created independently without cross-referencing
 - **Fix:** Update the RMP to define and endorse the register's methodology. The register is the working tool; the RMP should document it, not contradict it.
+
+### Promoting Risks from Research Docs to Live Register (AV-style)
+- **Pattern:** A research or deep-dive doc (e.g. `99_Archive/02_Scope_Management/AV_IT/AV_Deep_Research.md`) contains a section "New R-AV risk surfaces" with proposed R-AV-08..17, but the live register only has R-AV-01..02.
+- **Root cause:** The research doc was written, the register wasn't updated. The two have drifted.
+- **Audit signal:** `grep -c 'is_ddr\|is_hse\|is_av' webapp/av/src/index.html` shows 0 of those flags in the deployed page (no sub-register at all). Or the live register's `risks.json` has 2 rows but the research doc enumerates 12.
+- **Audit action — promote in 4 steps:**
+  1. **Re-read the source doc carefully** — each proposed risk has a cause, event, consequence, likelihood × impact, and a mitigation. Treat the source as the data.
+  2. **Build a full JSON for the new sub-register** with action plans (2-4 actions each), owners, and target close dates. Use real owner roles (AV Lead, MEP Lead, Procurement Lead, etc.) — not joint "Team" owners.
+  3. **Score honestly** — research docs often score risks as `M × H` (Medium likelihood × High impact), which lands at 8 = High. Don't inflate to Critical without evidence of active harm.
+  4. **Deploy as a new sub-register** (separate folder under the family), with its own xlsx snapshot using the new `EXP-RISK-{PLAN}-{YEAR}-{SEQ}` naming. The PRR's existing `R-AV-*` rows can be cross-referenced from the new sub-register's `evidence` field.
+- **Result on Aseer C11:** 12 AV risks (2 existing + 10 promoted from research), 5 High / 5 Medium / 2 Low, 0 Critical, every action has a real owner and a concrete due date in Aug-Sep 2026.

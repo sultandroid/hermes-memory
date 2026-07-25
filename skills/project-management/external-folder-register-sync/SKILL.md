@@ -31,7 +31,55 @@ The detection script (`check_adel_files.sh`) now includes a **7-day recency filt
 
 **Do NOT remove this filter.** Without it, a snapshot reset causes ALL files (including Feb–Apr 2026 historicals) to appear as "new" in the next cron run.
 
-### 3. Subfolder-to-Register Mapping
+### 2. Submittal Package Folder (02. DOC - Document Submittal/GN/)
+
+The `02. DOC - Document Submittal/` folder contains 98 numbered submittal packages (01-98), each in its own subfolder. These are NOT auto-scanned by the detection script. To process them:
+
+**Folder structure per package:**
+```
+NN- DOC-ID/
+  ├── DOC-ID.pdf          # Transmittal cover sheet
+  ├── DOC-ID.xlsx         # Submittal register
+  ├── Supporting docs     # PDFs, DOCXs (the actual submittal content)
+  ├── Approval/           # CG response (if reviewed)
+  ├── Rev.01/ Rev.02/     # Revisions
+  └── Done/               # Completion marker
+```
+
+**Mapping rule by doc type:**
+| Package Type | Doc ID Pattern | Repo Destination |
+|-------------|----------------|------------------|
+| Plans (PL) | `MOC-ASEER-SIC-*-PL-*` or `MOC-MUS-ASE-*-PL-*` | `03_Plans/` (match plan number) |
+| Shop Drawings (ZD) | `MOC-MUS-ASE-*-ZD-*` | `03_Submittals/03.7_Submittal_Packages/` |
+| BOQs (QT) | `MOC-ASEER-SIC-*-QT-*` | `03_Submittals/03.3_Material_Submittals/` or `04_Financial/` |
+| Test Procedures (TP) | `MOC-ASEER-SIC-*-TP-*` | `10_Test_and_Inspection/` |
+| Reports (RP) | `MOC-MUS-ASE-*-RP-*` | `07_Reports/` |
+| SC Requirements | `MOC-MUS-ASE-*-SC-*` | `03_Submittals/` |
+| General (GN) | `ARM-DS-GN-*` | Depends on content (see known mappings below) |
+
+**Known GN package mappings:**
+| # | Doc ID | Content | Repo Destination |
+|---|--------|---------|------------------|
+| 01 | ARM-DS-GN-0001 | Mobilization Phase Plan | `03_Plans/07_Mobilization/` |
+| 06 | ARM-DS-GN-0006 | Narrative Reports (Rev 02-05) | `00_Status/` or `07_Reports/` |
+| 13 | MOC-ASEER-SIC-1K0-PL-0013 | Submission Plan Meeting Minutes | `03_Plans/01_DMP/` |
+| 15 | MOC-ASEER-SIC-1K0-PL-0015 | BEP Comment Response | `02_CG_Responses/` |
+
+**When converting DOCX to MD for repo:**
+- Place the `.md` alongside the source `.docx` in the same folder
+- Use `python-docx` to walk paragraphs + tables (see `references/docx-to-md-conversion.md` for batch template)
+- Escape `|` in table cells (replace with `/`) or markdown tables break
+- For batch runs, write a standalone `.py` script, not inline Python (folder names with leading zeros cause `SyntaxError` in `-c` mode)
+- Skip TOC-style paragraphs (style name contains "TOC")
+
+**Git push after conversion:**
+- The PM repo is `sultandroid/aseer-museum-pm` (not the viz app `sultandroid/aseer-museum-viz`)
+- Clone to `/Volumes/MIcro/Temp/aseer-museum-pm` (user prefers Micro volume for git operations)
+- macOS `._` metadata files in pack index cause noisy but harmless errors — add `._*` to `.gitignore`
+- Commit in logical batches: contracts first, then plans, then letters/RFIs/method statements
+- User expects push after every batch — "did you add to repo?" means "did you push to GitHub"
+
+### 3. Subfolder-to-Register Mapping (Adel's main folders)
 
 | Adel Subfolder | Repo Register | Notes |
 |---------------|---------------|-------|

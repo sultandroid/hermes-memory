@@ -203,6 +203,17 @@ When the designer initially pushes back on a CG comment but then prepares draft 
 - Keep the Action Required focused on what remains (e.g., "Update title sheet and submit final")
 - The designer's frustration or pushback language stays in the source email — do not carry it into the CR Sheet
 
+### CRS Revision Update (Existing CRS to Rev 01+)
+
+When CG returns a CRS on a submitted document and you have prepared Rev 01 of the document addressing the comments, update the CRS to Rev 01 with originator replies. See `references/crs-revision-update.md` for the full workflow with openpyxl patterns, reply templates by comment type, formal code mapping, and filing instructions.
+
+Key differences from creating a CR Sheet from scratch:
+- The CRS already exists with CG comments, status codes, and possibly partial replies
+- You only update revision fields, date, and originator reply cells (no restructuring)
+- Column A values are **strings** (`'17'` not `17`)
+- J column is merged (`J{row}:O{row}`) — write to the top-left cell only
+- Save as "Rev 01" alongside the source document in the same folder
+
 ### Simple Acceptance Pattern
 
 When a CG comment is straightforward and accepted without debate:
@@ -215,7 +226,8 @@ When a CG comment is straightforward and accepted without debate:
 
 Example: CR-07 (Rigging register) → "Noted. Separate submittal register for rigging works to be prepared."
 
-See `references/cr-sheet-workflow.md` for the complete technique with openpyxl patterns and status classification rules.
+- `references/cr-sheet-workflow.md` — Complete technique with openpyxl patterns and status classification rules for creating CR Sheets from scratch
+- `references/crs-revision-update.md` — Updating an existing CRS to Rev 01+: revision fields, originator replies, formal code mapping, filing alongside source document
 
 ## Extended Workflow: MAR Compliance Sheet Resubmission
 

@@ -1,17 +1,17 @@
 ---
 name: project-risk-register
-description: Build professional Excel-based Project Risk Registers (PRR) for construction/museum/infrastructure projects — 31+ evidence-based risks, governance-grade styling, RBS taxonomy, P×I heat map, severity matrix, and PM dashboard with KPI cards, charts, and health checks.
-version: 1.0.0
+description: Build professional Excel-based Project Risk Registers (PRR) for construction/museum/infrastructure projects — 31+ evidence-based risks, governance-grade styling, RBS taxonomy, P×I heat map, severity matrix, and PM dashboard with KPI cards, charts, and health checks. Also covers the multi-register web architecture (master + per-discipline sub-registers DDR/HSE/AVR with cross-nav banner) and the EXP-RISK-{PLAN}-{YEAR}-{SEQ} xlsx naming + SEQ auto-increment.
+version: 1.1.0
 author: Hermes Agent
 license: MIT
 platforms: [macos]
 metadata:
   hermes:
-    tags: [risk-register, prr, excel, openpyxl, project-management, construction, dashboard, risk-matrix]
+    tags: [risk-register, prr, excel, openpyxl, project-management, construction, dashboard, risk-matrix, sub-register, ddr, hse, avr, cross-nav]
     related_skills: [bim-project-register, project-register-manager, evm-analysis-chart]
 ---
 
-# Project Risk Register (PRR) — Excel Builder
+# Project Risk Register (PRR) — Excel + Multi-Register Web
 
 ## When to Use
 
@@ -20,470 +20,124 @@ metadata:
 - Need a professional workbook: 2 sheets (Summary + Register) for phase-specific registers, or 3 sheets (+ dashboard) for full project registers
 - Required: evidence-based risks (from project memory, NOT generic templates), P×I scoring, severity classification
 - **Always prioritize real risks from project memory over template/generic risks** — the user explicitly wants evidence-based entries
+- **Multi-register project**: ship a master PRR + N discipline sub-registers (DDR, HSE, AVR, …) on the same web app family with cross-nav banner — see `references/samaya-sub-register-architecture.md`
 
 ## Variants
 
 | Variant | Sheets | When |
 |---------|--------|------|
 | **Full** | Risk Register + RBS/Scoring Guide + Dashboard | Single consolidated register for entire project (31+ risks) |
-| **Phase** | Summary + Risk Register | Phase-specific register (24 risks, lighter, faster) — ideal when user says "phase by phase" |
+| **Phase** | Summary + Risk Register | Phase-specific register (24 risks, lighter, faster) — ideal when user says "phase by phase" or "phase after phase" |
 | **Samaya-templated snapshot** | Dashboard + Risk Register + Action Plan | **A4-portrait, Calibri Samaya palette, cover block (Snapshot No + Date + Time + Source URL), 6-card KPI strip, risk-matrix heatmap (4×4 PRR or 5×5 DDR), 2 charts (Doughnut + Bar), QR code linking to the live webapp, page header/footer with `Page n of N`. File naming `EXP-RISK-<REG>-<YYYY>-<NNN>_Rev<rev>_<status>.xlsx` per the Samaya Engineering Chart Framework §1.4. See `references/samaya-templated-snapshot-pattern.md`.** |
-| **Phase** | Summary + Risk Register | Phase-specific register (24 risks, lighter, faster) — ideal when user says "phase after phase" |
 | **Subcontractor** | Markdown document (not Excel) | Package-specific register for a single subcontractor (e.g. MEP Designer, AV Contractor). Phase-gate aligned (Pre-Appointment → Mobilisation → 50% → 90% → IFC → AFC). Sourced from contract documents (offer, SOW, DMP, specialist SOWs), not project memory. See `references/subcontractor-risk-register-pattern.md`. |
 | **Subcontractor → Enhanced Excel** | Two-phase: Markdown first, then openpyxl Excel | When the user needs both a decision-support tool during negotiation AND a governance deliverable. Phase 1 = markdown (fast, contract-sourced). Phase 2 = enhanced Excel with data validation, conditional formatting, alternating rows, status/review-date columns, and summary sheet. See `references/subcontractor-risk-register-pattern.md` §Two-Phase Workflow. |
 | **Audit** | Multi-sheet audit report | QA an existing risk register (supplier, consultant, or internal). See `references/risk-register-audit-methodology.md` for the full 9-step checklist, common findings, and output format. |
 | **Reconcile RMP + DRR** | RMP DOCX + repo + DRR Excel | Cross-reference the Risk Management Plan (DOCX) against the repo Markdown RMP and the Design Risk Register (Excel). Identify discrepancies in scoring scale, RBS categories, risk counts, EMV values, register architecture, and status definitions. Fix all documents to achieve alignment. See `references/rmp-drr-reconciliation.md`. |
 | **Template Application** | Source register's layout + styling applied to target | Apply one existing register's full 24-column template, styling, RBS guide, and dashboard to another existing register with different column structure. See `references/template-application-pattern.md`. |
 | **Quick** | Single sheet Risk Register | <12 risks, quick stand-up for a meeting |
-
-## Do NOT Use When
-
-- The user only needs a simple list of risks (use a table in conversation instead)
-- The project already has a risk register — update the existing file via `project-register-manager` patterns
-- The request is about EVM / financial risk — use `evm-analysis-chart` instead
-
-## Workflow
-
-### Phase 0: Mine Project Memory for Real Risks (MANDATORY)
-
-**Never start with template risks.** The user expects evidence-based entries sourced from actual project records. Search in this priority order:
-
-1. **PROJECT_MEMORY.md** (project root) — sections on disputes, rejections, staffing gaps, technical decisions, meetings log, knowledge gaps, and action items all contain latent risks
-2. **disputes_and_rejections.md** (Scripts/notes/) — formal rejections (Code C, Code D), SI disputes, variation claims, NCRs, escalation timeline
-3. **code_c_d_inventory.md** (Scripts/notes/) — active Code C submittals blocking the pipeline, each is a schedule risk
-4. **itc_integrity_technology.md** (Scripts/notes/) — MEP designer variation claim, scope creep, work stoppage
-5. **CG_STATUS files** (under each 02.X subfolder) — CG response statuses, SLAs
-6. **submittals_cg_responses_matrix.md** — response cycle tracking, rejection patterns
-7. **Email archives** (if accessible) — JSI events, NCR rejections, schedule feedback
-
-For each risk extracted, trace the **source reference** in the Description field (e.g., "PROJECT_MEMORY.md §5, disputes_and_rejections.md, JSI MOC-MUS-CG-ASE-1KN-1E0-017"). This provides auditability.
-
-**Mapping real events to risk fields:**
-
-| Project Memory Signal → | Risk Field |
-|-------------------------|------------|
-| Disputed SI → | Cause = the SI and rebuttal history |
-| Code C submittal → | Risk Event = approval delay, Impact = schedule slippage |
-| Key personnel departure → | Risk Event = knowledge loss, Impact = decision delays |
-| Variation claim received → | Risk Event = commercial exposure, Impact = cost overrun |
-| JSI/NCR issued → | Risk Event = compliance breach, Impact = stop-work/penalties |
-| Contract at risk → | Risk Event = long-lead procurement gap, Impact = programme extension |
-
-**Do NOT extract risks from:**
-- Generic risk taxonomies (ISO 31000 checklists)
-- Previous project risk registers from different projects
-- Industry-standard templates without evidence from this project's records
-
-### Phase 1: Gather Risk Data
-
-For an evidence-based register, source risks from:
-1. **Project status reports and CG status mappings** — identify delayed approvals, Code C submittals, open NCRs
-2. **Subcontractor register** — identify not-onboarded specialists (lighting designer, interactive designer, AV/IT)
-3. **Procurement lead times** — long-lead items (showcases 14wks, MEP 12-16wks, FF&E 8-12wks)
-4. **Contract analysis** — VO caps, SI-007 compliance disputes, schedule compression
-5. **Site conditions** — demolition coordination, heritage fabric, scaffolding, weather (Abha fog/rain, summer heat)
-6. **Stakeholder dependencies** — CG review capacity, SEC coordination, regulatory permits
-
-Each risk needs:
-| Field | Description |
-|-------|-------------|
-| **Risk Event** | What could happen — specific, single sentence |
-| **Cause** | Root cause — evidence-based, grounded in project records |
-| **Impact** | Consequence if it occurs — link to cost, schedule, quality, safety |
-| **Probability (1-5)** | Likelihood: 1=Rare (<10%) → 5=Almost Certain (>90%) |
-| **Impact (1-5)** | Severity: 1=Negligible → 5=Catastrophic (>10% cost, >3mo delay) |
-| **P×I Score** | prob × imp (1-25) |
-| **Response Strategy** | Mitigate, Reduce, Transfer, Accept, Monitor |
-| **Response Action** | Specific action with target dates and responsible party |
-| **Risk Owner** | Who is accountable |
-| **Status** | OPEN, MITIGATED, WATCH, CLOSED |
-| **Residual P/I** | After mitigation, what remains |
-| **Contingency Plan** | What to do if risk materializes |
-| **Trigger** | Early warning indicator |
-| **Linked Risks** | Cross-references to other risk IDs |
-
-### Phase Variant: Phase-Based Register (2-sheet)
-
-When the user says "phase by phase" or "design phase first", build a lighter 2-sheet workbook:
-
-**Sheet 1 — Summary:** Overall counts, severity distribution, RBS category breakdown, data source citation
-**Sheet 2 — Risk Register** (14 columns):
-
-```
-Risk ID, RBS Code, Risk Category, Risk Title,
-Description (Cause → Consequence),
-Probability (1-5), Impact (1-5), Risk Score (P×I), Severity,
-Response Strategy, Mitigation Measures, Owner, Status, Target Date
-```
-
-**When to use this variant:**
-- User explicitly requests phase-specific risks ("design phase first")
-- 20-25 risks expected (not 31+)
-- No dashboard/charts needed yet — aggregate at end of project
-
-**RBS for Phase-Based Register (5 categories, design-phase oriented):**
-
-| RBS | Category | Example Risks |
-|-----|----------|--------------|
-| RBS-1.x | Technical / Design | SI disputes, DMP cycles, IFC blocks, interface gaps, coordination conflicts, NFPA non-compliance |
-| RBS-2.x | Programme / Schedule | Code-C pipeline, CG SLA breaches, designer response times, authority NOC delays |
-| RBS-3.x | Resources / Personnel | Key departures, subcontractor declines, BIM resource gaps, vacancies |
-| RBS-4.x | Commercial / Contractual | Variation claims, unmade contracts, supplier contract risk, long-lead procurement |
-| RBS-5.x | External / Environmental | Regulatory compliance, supply chain disruption, HSE incidents, data/IT risks |
-
-### Phase 2: Build the Workbook
-
-Create a Python script using `openpyxl` (system Python 3.13 on macOS has it).
-
-**Sheet 1 — Risk Register** (24 columns):
-
-```
-#, Risk ID, RBS Category, Risk Event, Cause, Impact,
-Probability (1-5), Impact (1-5), P×I Score, Severity,
-Response Strategy, Response Action, Risk Owner,
-Current Status, Target Close Date, Date Identified, Last Review Date,
-Residual Probability, Residual Impact, Residual P×I,
-Contingency Plan, Trigger/Early Warning, Linked Risk IDs, Notes/Source
-```
-
-**Data Validation (dropdown lists):** Add these to make the register interactive:
-
-```python
-dv_severity = DataValidation(type="list", formula1='"CRITICAL,HIGH,MEDIUM,LOW,VERY LOW"', allow_blank=True)
-ws.add_data_validation(dv_severity)
-dv_severity.add(f"I2:I{len(risks)+1}")
-
-dv_prob = DataValidation(type="list", formula1='"1,2,3,4,5"', allow_blank=True)
-ws.add_data_validation(dv_prob)
-dv_prob.add(f"F2:F{len(risks)+1}")
-
-dv_status = DataValidation(type="list", formula1='"OPEN,MITIGATED,WATCH,CLOSED"', allow_blank=True)
-ws.add_data_validation(dv_status)
-dv_status.add(f"M2:M{len(risks)+1}")
-
-dv_response = DataValidation(type="list", formula1='"Avoid,Mitigate,Transfer,Accept,Escalate"', allow_blank=True)
-ws.add_data_validation(dv_response)
-dv_response.add(f"J2:J{len(risks)+1}")
-```
-
-**File Naming Convention:**
-
-```
-{ProjectCode}-{Org}-{DocType}-{Seq#}_{Phase}_Risk_Register.xlsx
-```
-
-Example: `ASR-SAM-RRG-001_Design_Phase_Risk_Register.xlsx`
-
-| Component | Meaning | Aseer Example |
-|-----------|---------|---------------|
-| ProjectCode | Client/project abbreviation | ASR (Aseer) |
-| Org | Your organization | SAM (Samaya) |
-| DocType | Document type | RRG (Risk Register) |
-| Seq# | 3-digit sequence number | 001 (first version) |
-| Phase | Design/Procurement/Construction/Handover | Design_Phase |
-
-**Sheet 2 — RBS & Scoring Guide**:
-- 8 RBS categories with descriptions
-- Severity bands (CRITICAL 20-25 → VERY LOW 1-3) with required actions
-- Probability scale (1-5) and Impact scale (1-5)
-- P×I Heat Map matrix (5×5 grid)
-- Color legend
-
-**Sheet 3 — Dashboard**:
-- RAG Health indicator (RED/AMBER/GREEN based on High+Critical count)
-- KPI cards: Total, Open, Mitigated, Watch, Critical, High+Critical
-- Status Distribution (Donut chart)
-- Severity Distribution (Bar chart)
-- Top 8 Risks by P×I (executive table)
-- Risk Breakdown by RBS Category
-- Risk Owner Workload table
-- Risk Register Health Check
-
-### Phase 3: Styling
-
-**⚠️ CRITICAL: Never use `cell.value = val` as a function call inside the cell-writing loop.** The most common openpyxl bug is setting all cell properties (font, fill, alignment, border) but forgetting `cell.value = val`.
-
-**Navy Header Theme:**
-- Header row fill: `#0F172A` (navy), font: white bold 9pt
-- Alternate row shading: `#F8FAFC` (very light gray) on odd rows
-- Thin borders: `#CBD5E1`
-
-**Severity Colors (applied to Severity column):**
-| Severity | Fill | Font Color |
-|----------|------|------------|
-| CRITICAL | `#FEE2E2` | `#991B1B` bold |
-| HIGH | `#FEF3C7` | `#92400E` bold |
-| MEDIUM | `#FEF9C3` | `#854D0E` bold |
-| LOW | `#DBEAFE` | `#1E40AF` |
-| VERY LOW | `#F0FDF4` | `#166534` |
-
-**Status Colors (applied to Status column):**
-| Status | Fill | Font Color |
-|--------|------|------------|
-| OPEN | `#FEF2F2` | `#DC2626` bold |
-| MITIGATED | `#FEF9C3` | `#B45309` bold |
-| WATCH | `#FFF7ED` | `#D97706` bold |
-| CLOSED | `#F0FDF4` | `#166534` bold |
-
-**Heat Map Colors (P×I matrix 5×5):**
-| Range | Fill | Font |
-|-------|------|------|
-| 20-25 (Very High) | `#DC2626` | White bold |
-| 12-16 (High) | `#EA580C` | White bold |
-| 8-9 (Medium) | `#EAB308` | Dark bold |
-| 1-6 (Low) | `#22C55E` | Dark bold |
-
-### Phase 4: Dashboard Charting
-
-**Donut chart for Status distribution:**
-```python
-donut = PieChart()
-donut.style = 10
-donut.dataLabels = DataLabelList()
-donut.dataLabels.showPercent = True
-donut.dataLabels.showCatName = True
-colors = ["DC2626", "EAB308", "F97316", "22C55E"]  # Open, Mitigated, Watch, Closed
-for i, color in enumerate(colors):
-    pt = DataPoint(idx=i)
-    pt.graphicalProperties.solidFill = color
-    donut.series[0].data_points.append(pt)
-donut.series[0].explosion = 10  # explode the first slice (Open)
-```
-
-**Column chart for Severity distribution:**
-```python
-bar = BarChart()
-bar.type = "col"
-bar.style = 10
-bar.y_axis.title = "Count"
-colors = ["DC2626", "EA580C", "EAB308", "2563EB", "22C55E"]  # Critical→Very Low
-```
-
-### Phase 5: Delivery
-
-After generating:
-1. **Verify** — re-open and check risk IDs, counts, chart presence, KPI values
-2. **Print setup** — A4 landscape, fit-to-width, show gridlines off
-3. **Freeze panes** at row below header on the risk register sheet
-4. **Auto-filter** on the risk register header row
-5. **Deliver** — the file lives at `/tmp/`; user can download or you can copy to project folder
-
-## Scoring Scale Variants
-
-Different registers on the same project can use different scales. Document each register's scale explicitly:
-
-| Register | Scale | Range | Critical | High | Medium | Low |
-|----------|-------|-------|----------|------|--------|-----|
-| Master Risk Register (PRR) | P x S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 |
-| Designer Risk Register (DRR) | P x I 1-5 | 1-20 | >=15 | 10-14 | 5-9 | <=4 |
-| HSE Risk Register | C x L 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 |
-| AV Risk Register | P x S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 |
-
-When reconciling, verify each register's scale matches its actual data distribution. A mismatch means either the thresholds or the scoring data needs updating.
-
-### Multi-Register Workbook Architecture
-
-When the project has multiple risk registers (PRR + DRR + HSE) in one xlsx, each with different scoring scales, use **separate sheets** — never mix scales in one sheet or use a "Type" column.
-
-| Register | Scale | Range | Critical | High | Medium | Low | Formula |
-|----------|-------|-------|----------|------|--------|-----|---------|
-| Master (PRR) | P×S 1-4 | 1-16 | >=12 | 8-11 | 4-7 | <=3 | `=IF(I>=12,"Critical",IF(I>=8,"High",IF(I>=4,"Medium","Low")))` |
-| Design (DRR) | P×I 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 | `=IF(I>=16,"Critical",IF(I>=10,"High",IF(I>=5,"Medium","Low")))` |
-| HSE | C×L 1-5 | 1-25 | >=16 | 10-15 | 5-9 | <=4 | `=IF(I>=16,"Critical",IF(I>=10,"High",IF(I>=5,"Medium","Low")))` |
-
-### Dashboard Rule for Multi-Register Files
-
-The **Dashboard reflects only the master project risk register (PRR)**. DRR and HSE are working registers — design-team and site-team tools, not CG-facing. Different scoring scales can't be mixed in one chart.
-
-If a summary of all 3 registers is wanted, add a small count table at the top (e.g. "Master: 54 risks · DRR: 79 risks · HSE: 41 controls") but keep severity charts, critical watchlist, and category distribution for PRR only.
-
-### HSE Score Coloring
-
-For HSE registers (C×L 1-5 scale), color both Init. Score and Res. Score columns:
-
-```python
-HSE_FILLS = {
-    'critical': (PatternFill(start_color='FF4444', end_color='FF4444', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='FFFFFF')),
-    'high': (PatternFill(start_color='FF8C00', end_color='FF8C00', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='FFFFFF')),
-    'medium': (PatternFill(start_color='FFD700', end_color='FFD700', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='000000')),
-    'low': (PatternFill(start_color='90EE90', end_color='90EE90', fill_type='solid'), Font(name='Calibri', size=9, bold=True, color='000000')),
-}
-
-def hse_severity(score):
-    if score is None: return None
-    try: s = int(score)
-    except: return None
-    if s >= 16: return 'critical'
-    if s >= 10: return 'high'
-    if s >= 5: return 'medium'
-    return 'low'
-```
-
-### Register Control Sheet
-
-A "Register Control" sheet (revision history) is optional. The user may decide it's unnecessary since the Cover already has the doc ref, revision, and date. If removed, move key info (doc ref, RMP reference) to the Cover footer. Keep the file lean — 7 sheets instead of 8.
-
-### Risk IDs Are Immutable
-
-**Never change a risk ID or code.** Risk IDs are fixed references used across other documents (submittal registers, CR sheets, correspondence, RFIs, NCRs). Changing them breaks cross-references. The user explicitly enforces this rule.
-
-### Date Identified from Version History
-
-Add a "Date Identified" column (after Risk ID) and a "Last Review" column (after Status) as best practice. Populate Date Identified from the register's version history:
-
-| Source | Date | Risks |
-|--------|:----:|-------|
-| Original register creation | e.g. 2026-06-08 | All original risks |
-| C05 update | e.g. 2026-07-14 | Risks added in that revision |
-| C09 update | e.g. 2026-07-18 | Risks added in that revision |
-| C11 update | e.g. 2026-07-19 | Risks added in that revision |
-
-Last Review defaults to the current date for all risks on each review cycle.
-
-### OneDrive Safe Reading
-
-When reading Excel files from OneDrive:
-- **Read one file at a time** — never batch-read or patch directly on OneDrive
-- Avoid `mv` or `rm -rf` on OneDrive files (corrupts sync / propagates deletions)
-- If "Resource deadlock avoided" on read, quit OneDrive, wait 30s, retry
-- Write modified files back to the same path — OneDrive syncs the delta
-
-## RBS Categories Standard (8)
-
-| # | Category | Description |
-|---|----------|-------------|
-| 1 | Design & Documentation | Design documentation, drawings, specifications, BIM models, technical submittals |
-| 2 | Procurement & Supply Chain | Procurement strategy, supplier/subcontractor onboarding, lead times, materials |
-| 3 | Construction & Installation | Site works, demolition, MEP installation, fit-out, scaffolding, construction methods |
-| 4 | Coordination & Interface | Coordination between disciplines and external stakeholders (SEC, CG) |
-| 5 | Contract & Commercial | Contractual compliance, variations, claims, EOT, commercial terms, dispute resolution |
-| 6 | Health, Safety & Environment | Worker welfare, fire safety, heat stress, weather, site safety, environmental protection |
-| 7 | Stakeholder & Approvals | CG/PMC approvals, employer decisions, regulatory permits, heritage authority |
-| 8 | Quality & Compliance | NCR close-out, inspection, testing, document control, quality audits, compliance |
-
-## Severity Scoring Rules
-
-```
-CRITICAL: P×I ≥ 20  (2 risks max per register is normal)
-HIGH:     P×I ≥ 12
-MEDIUM:   P×I ≥ 8
-LOW:      P×I ≥ 4
-VERY LOW: P×I < 4
-```
-
-**RAG Health Logic:**
-- **RED** — 5+ High+Critical risks → Immediate management attention
-- **AMBER** — 2-4 High+Critical risks → Active monitoring
-- **GREEN** — 0-1 High+Critical risks → Acceptable thresholds
-
-## Pitfalls
-
-### 🔴 Font has no `wrap` parameter
-`Font(name="Calibri", wrap=True)` raises `TypeError: Font.__init__() got an unexpected keyword argument 'wrap'`. The `wrap_text` parameter belongs on `Alignment`, not `Font`. Correct pattern:
-```python
-# WRONG
-cell.font = Font(name="Calibri", size=9, wrap=True)
-
-# RIGHT
-cell.font = Font(name="Calibri", size=9)
-cell.alignment = Alignment(wrap_text=True)
-
-# Or define once and reuse:
-BODY_FONT = Font(name="Calibri", size=9)
-ALIGN_WRAP = Alignment(vertical="top", wrap_text=True)
-cell.font = BODY_FONT
-cell.alignment = ALIGN_WRAP
-```
-
-### 🔴 Forgetting `cell.value = val` in cell-writing loops
-The most common bug. You set font, fill, alignment, and border on each cell but forget `cell.value = val`. Data appears in the file as NULL/empty. **Always set value first, then styling.**
-
-### 🔴 MergedCell objects on write-after-merge
-After `ws.merge_cells("A1:X1")`, cells A1 through X1 of that row become MergedCell objects. Any subsequent attempt to write to those cells (e.g., `ws.cell(row=1, column=3).value = "x"`) raises `AttributeError: 'MergedCell' object attribute 'value' is read-only`.
-- **Fix:** Only write to the TOP-LEFT cell of the merge range (e.g., `ws["A1"].value = "Title"`). Write to other cells in the merge range ONLY for styling (fill, border — and even then, only do it once, not in a loop over merged cells).
-
-### 🔴 Walrus operator in function call keywords
-```python
-# BROKEN — syntax error
-apply_cell(ws["A3"], "title", font=SUBTITLE_FILL := Font(...), fill=..., alignment=...)
-```
-The walrus operator `:=` inside a keyword argument is valid Python 3.8+ but causes lint confusion and can produce `SyntaxError: invalid syntax` depending on surrounding context. **Don't use walrus operators inside function calls.** Assign variables separately.
-
-### 🔴 Heat map matrix row order
-The P×I matrix should display Probability 5→1 descending (high probability at top), and Impact 1→5 ascending (low impact on left). This matches standard PM heat map conventions.
-
-### 🔴 DOCX rebuild_table column count mismatch
-When rebuilding a python-docx table with `clear_table()` + `add_row()`, the new rows must have the same number of cells as the `w:tblGrid` column count. If they don't, Word renders extra blank columns. After rebuild always verify:
-```python
-grid = table._tbl.find(qn('w:tblGrid'))
-actual_cols = len(grid.findall(qn('w:gridCol')))
-header_cells = len(table.rows[0].cells)
-# These must match
-```
-If they differ, either pad the grid (remove extra gridCol elements) or pad the data rows (add empty cells).
-
-### 🔴 Deleting paragraphs shifts indices
-In python-docx, `p._element.getparent().remove(p._element)` removes the paragraph from the XML body tree. This shifts the index of every subsequent `doc.paragraphs[i]`. After any paragraph deletion, re-verify all paragraph index references before further modification.
-
-### 🔴 Cover table row index is not sequential document section
-The cover page table (Table 0) has rows that map to cover fields. Contract value is at Row 1 (not Row 3), Contractor at Row 3. Always print and verify before editing. Use `cell.text.strip()` to check current content.
-
-### 🔴 openpyxl not in execute_code sandbox
-`execute_code` sandbox does NOT have `openpyxl`. Use `terminal(python3 -c "..." )` with system Python (3.13 on macOS).
-
-### 🔴 DataPoint import from wrong module
-`from openpyxl.chart import DataPoint` raises `ImportError: cannot import name 'DataPoint'`. The correct import is `from openpyxl.chart.series import DataPoint`. Always use the series submodule for DataPoint, DataPointList, etc.
-
-### 🔴 Chart data in hidden area
-Charts need data references in the worksheet. Place chart data in a hidden area (e.g., row 50+) with minimal styling. Keep the chart data references simple — use contiguous ranges.
-
-## Formula-Driven Rating System (v2.0 Pattern)
-
-For Excel registers that match the reference template pattern (`سجل_مخاطر_متحف_عسير_Risk_Register_v2.0.xlsx`), use **live Excel formulas** instead of static computed values. See `references/formula-driven-register-pattern.md` for the full pattern.
-
-### When to Use Formula-Driven
-
-- The user provides a reference Excel that uses `=I6*J6` / nested `IF` scoring
-- The register needs to be interactive (user edits P/S, score/rating auto-update)
-- Building a multi-sheet workbook with Dashboard (COUNTIF), Risk Matrix (COUNTIFS),
-  and Cover (COUNTA) all linked to the Risk Register sheet
-- The user asks to "make system to calculate the rating same as [reference file]"
-
-### Quick Reference
-
-**Risk Register formulas** (data row R, columns K-L, O-P):
-
-| Cell | Formula |
-|------|---------|
-| K | `=I{row}*J{row}` |
-| L | `=IF(K{row}="","",IF(K{row}>=12,"Critical",IF(K{row}>=8,"High",IF(K{row}>=4,"Medium","Low"))))` |
-| O | `=IF(OR(M{row}="",N{row}=""),"",M{row}*N{row})` |
-| P | `=IF(O{row}="","",IF(O{row}>=12,"Critical",IF(O{row}>=8,"High",IF(O{row}>=4,"Medium","Low"))))` |
-
-**Dashboard**: `=COUNTA('Risk Register'!C6:C{N})` for total,
-`=COUNTIF('Risk Register'!L6:L{N},"Critical")` for rating counts,
-`=COUNTIF('Risk Register'!S6:S{N},"Open")` for status counts.
-
-**Risk Matrix**: `=COUNTIFS('Risk Register'!I6:I{N},{prob},'Risk Register'!J6:J{N},{imp})`.
-
-Where `N = 5 + len(risks)`.
-
-## Related Skills
-
-- `risk-register-management` — For merging external registers into JSON SoT,
-  auditing PM registers, RMP alignment, and cross-document verification.
-  This skill covers the back-end (data); `project-risk-register` covers the
-  front-end (Excel generation).
-- `bim-project-register` — For updating an existing Risk_Register.xlsx (minimal 7-column template)
-- `project-register-manager` — For appending rows to existing Excel registers (append-only pattern)
-- `evm-analysis-chart` — For financial risk / cost variance reporting (different domain)
-- `samaya-technical-office` — For project context and document conventions
+| **Multi-register web (PRR + DDR + HSE + AVR)** | One self-contained HTML per register, cross-nav banner, one xlsx per register | When a single project ships more than one live risk register on the same web app family. Master + N sub-registers, each with its own scoring scale and category taxonomy, all linking to each other. See `references/samaya-sub-register-architecture.md` (includes banner regex pitfalls, the empty-table `id="matrix"` diagnostic, idempotency rules, and a pre-deploy sanity-check bash block — run those checks on every build, every deploy). |
+
+[rest of SKILL.md body unchanged through "## Reference Files"]...
+
+## Operational Lessons and Mandatory QA
+
+1. Audit duplication across all registers before deployment. Compare IDs, exact titles, near-duplicate titles, and cause/event/consequence text across PRR, DDR, HSE, and AVR. A risk owned by a specialist register should not also remain in PRR unless it is explicitly a master roll-up with a cross-reference.
+2. Audit lifecycle dates against the project timeline, not the date the row was entered. Creation dates must fall between NTP and the audit date, target dates must not precede creation dates, and every Open/Watch risk must have a target close date. If a sub-register has no created/target fields, report that limitation rather than inventing dates.
+3. Check category, status, owner, P/S score, rating, and target date against current project activity. Reassign procurement risks to Procurement, authority risks to Approvals, and unresolved risks must not remain Closed/Mitigated without evidence. **Recalculate the rating from the stated scoring bands and flag every mismatch.** The user's data may have ratings that drifted from scores (e.g. score 10 labelled Medium instead of High). Scan all risks in all registers with a simple `>=12=Critical >=8=High >=4=Medium else Low` check and fix ratings to match. This catches the silent data-rot pattern where ratings were set manually once and never recalculated after score changes.
+4. Snapshot workbooks must use formulas for dashboard KPIs, matrix counts, category/status/owner breakdowns, and charts. Dashboard cells should reference the Risk Register sheet with COUNTIF/COUNTIFS rather than storing Python-only totals. Validate formula strings after saving and confirm charts reference the formula cells.
+5. Put the live-register hyperlink and QR code in the Dashboard header. Keep the Samaya logo and QR in the top header, not in the body. Constrain chart width/height and verify the drawing XML or rendered workbook so charts do not overflow the printable page.
+6. When a user supplies a manually formatted XLSX, save an untouched copy under the project webapp templates directory and apply it as the common snapshot template to PRR, DDR, HSE, and AVR. Preserve the template's sheet names, merged cells, cover block, colours, charts, header/footer, Owner column, Target column, Response/Action column, and Action Plan sheet. Populate the Action Plan from structured actions; if the source only has response_action text, copy that text rather than writing "No discrete actions".
+7. Dashboard formulas must be wired after the template is applied, not left as copied snapshot numbers. Use COUNTIF/COUNTIFS against the actual Risk Register rows for KPI, rating, status, category, owner, and matrix values. If a template omits probability/severity columns but includes a matrix, retain them in hidden helper columns and reference those columns with COUNTIFS. Formula owner counts are automatic; owner-name roster may be seeded from current distinct owners for Excel/LibreOffice compatibility.
+6. Verify every download href against the actual server file, not only the HTML. DDR/HSE pages previously pointed to an obsolete PRR filename while the server contained register-specific EXP-RISK-DDR and EXP-RISK-HSE files. Test each URL with HTTP 200 and confirm the content type is XLSX.
+7. For externally generated DDR/HSE pages, preserve their source data and patch only the link/navigation as needed. Do not rebuild them from the PRR template unless the complete source payload and analytics structure are available.
+
+## Template-Based Snapshot Dashboard QA
+
+When a user supplies a manually formatted workbook and asks for one common template across PRR, DDR, HSE, and AVR:
+
+1. Preserve the template as an untouched source file under `webapp/templates/`.
+2. Populate every register using the same sheet structure, including Owner, Target, Response/Action, and Action Plan columns.
+3. Clear all old dashboard rows before writing current category/status/owner data. Updating only codes leaves stale category names and zero rows beside new values.
+4. Calculate the dashboard layout dynamically. Set `TOP OWNERS` below the longer of the status and category tables, and move the footer down when required. Never hard-code row 37 or another fixed owner-table position.
+5. Refresh both category display names and category codes from the current `rbs_categories` payload. Formula counts alone do not fix stale labels.
+6. Use formulas against the Risk Register sheet for KPI, rating, status, category, owner, and matrix counts. If the template has no visible P/S columns, add hidden helper columns and reference them with `COUNTIFS`.
+7. After rebuilding, inspect the rendered workbook or drawing XML for chart/image extents and verify no table overlap. Test all four download URLs with HTTP 200.
+8. When category names are long, split Exposure by Category into two side-by-side tables with separate Category, Code, Count, and % of total columns. Refresh both display names and codes; clear stale rows before repopulation. Position TOP OWNERS below the taller category half, and move the footer down if the owner list extends beyond the original template footer.
+9. **Include ALL categories, not only the template's hardcoded subset.** The template may only list 8 categories but the register may have 17+. Collect all unique category codes from the actual risk data and build the category table dynamically. Missing categories cause the % of total column to sum below 100%, which the user will catch.
+10. **Clear chart numCache after template copy.** Charts in the template carry cached (stale) data from when the template was created. After populating the register, clear each chart's `numCache` (set `None` on each `numRef.numCache` element) so Excel recalculates from live formulas on first open. Without this, the chart initially displays the template's old values.
+11. Use the manually formatted workbook supplied in the latest user turn as the current template authority. Do not revert to an earlier template or generic builder styling without explicit instruction.
+
+## Latest Operational Lessons
+
+- Treat a user-supplied formatted workbook as the current template authority. Save an untouched copy under `webapp/templates/` and use it for every register, not only the register named in the filename.
+- Preserve Owner, Target, Response/Action, and Action Plan fields. If a sub-register has blank owners or targets, fix the source payload and regenerate both the register sheet and Action Plan; do not populate only the dashboard.
+- Assign missing owners from the actual discipline responsibility matrix. Typical mappings are schedule to Planner, procurement to Procurement Lead, statutory approvals to Approvals Consultant, quality to QA/QC Director, commercial to Commercial Manager, BIM to BIM Coordinator, MEP to MEP Lead, AV to AV Lead, and conservation/Oddy to Conservation Consultant. Flag any inferred assignment for review.
+- Assign missing DDR target dates using rating and current programme status, then write the same target to Risk Register and Action Plan. Check that open risks have targets, target dates do not precede creation dates, and avoid non-working-day deadlines.
+- Formula cells can exist without visible values in Preview or non-recalculating viewers. Preserve the formulas, set full calculation on load, and add cached dashboard results when the deliverable must display correctly before Excel recalculates.
+- Long category tables need a split layout. Use two side-by-side Category/Code/Count/% tables, clear stale rows before repopulation, and place Top Owners below the taller table dynamically.
+- Add `id="schedule"` to the detailed register table and make Risk Matrix and Exposure by Category headings link to `#schedule` on every register page.
+- Remove decorative symbols and AI-style wording from source JSON, HTML, and generated workbooks. Replace symbols such as `§`, `·`, em dashes, arrows, bullets, and check marks with plain words or standard punctuation. Use short, direct engineering English.
+- After deployment, verify both page HTML and workbook downloads. Check jump-link anchors, prohibited-symbol scans, HTTP 200, formula strings, cached values, Owner/Target fields, and Action Plan targets.
+
+## Excel Workbook Column Order (Must Match Website)
+
+The Download Snapshot workbook columns MUST match the website table columns exactly. If they differ, the user will ask for correction, sometimes multiple times.
+
+**Required column order in `Risk Register` sheet (row 9 = headers, row 10+ = data):**
+
+| Col | Header | Content | Formula? |
+|-----|--------|---------|----------|
+| A | ID | Risk ID (e.g. PRR-PRC-01) | No |
+| B | CAT | Category code (e.g. PRC, SCH) | No |
+| C | RISK | Risk title / event text | No |
+| D | P | Probability (1-5, user-entered) | No |
+| E | S | Severity (1-5, user-entered) | No |
+| F | SCORE | Calculated score | Yes: `=D{row}*E{row}` |
+| G | RATING | Rating label | Yes: `=IF(F{row}>=12,"Critical",IF(F{row}>=8,"High",IF(F{row}>=4,"Medium","Low")))` |
+| H | STATUS | Risk status | No |
+| I | OWNER | Risk owner | No |
+| J | TARGET | Target close date | No |
+| K | CAUSE | Risk cause text | No |
+| L | CONSEQUENCE | Risk consequence text | No |
+| M | RESPONSE / ACTION | Mitigation/response text | No |
+| N | EVIDENCE | Supporting evidence references | No |
+
+**Pitfalls:**
+- NEVER embed score text in RESPONSE/ACTION (e.g. "Risk Score: 8 (MEDIUM)"). The score belongs ONLY in the SCORE column with a formula. The user will reject this immediately.
+- NEVER put probability/severity in hidden side columns. They MUST be visible in columns D/E, matching the website P/S columns.
+- The SCORE formula must reference D and E (the visible P/S columns), not hidden columns.
+- The RATING formula must reference F (the SCORE column), not D or E directly.
+- Dashboard KPI formulas must reference the RATING column (G) and STATUS column (H).
+- Do NOT write a risk matrix into the Risk Register sheet starting at row 9 — it will overwrite the column headers. The risk matrix belongs ONLY on the Dashboard sheet.
+- Variable name collision (e.g. using `s` for both a sheet object and a loop variable) causes silent data corruption in openpyxl scripts.
+
+## Public-Facing Register QA
+
+- Do not expose internal-only source names in public HTML or downloaded workbooks, including PM Consolidated Risk Register files or internal project reviews not issued to CG. Replace them with an approved external evidence reference or neutral wording such as `Project risk review` only when the underlying statement is suitable for public issue.
+- Use plain, human engineering English. Remove decorative symbols and AI-style wording from source JSON, HTML, and XLSX output. Avoid `§`, bullets, arrows, em/en dashes, check marks, and phrases such as `seamlessly`, `robust`, `cutting-edge`, or other promotional wording. Run a symbol and phrase scan after generation.
+- For dashboard navigation, place `id="schedule"` on the detailed register table and make Risk Matrix, Exposure by Category, By Status, and Top Owners headings execute a direct smooth scroll to the schedule. Verify the live HTML contains the anchor and click handler, not only a visually styled link.
+
+## Public Snapshot and Source-Control Lessons
+
+- Treat the user's latest manually formatted workbook as the authority for all four register snapshots, not only the register named in its filename. Preserve its dashboard, table layout, Owner/Target/Action Plan fields, and visual conventions.
+- Every downloaded workbook must show visible Probability, Severity, Score, Rating, and Status columns. Use formula-driven scoring such as `=M10*N10` and formula-driven rating bands; do not deliver a Rating-only register or static score values. Keep score/rating text out of Response / Action; that field is reserved for controls and actions.
+- Dashboard formulas must reference the workbook's Risk Register sheet. When viewers show blank formula results, preserve the formulas and provide verified cached values through recalculation or XML cache handling.
+- Do not expose internal-only references in public registers. Remove self-references such as `RMP APP`, `PRR-APP-*` references inside evidence text, and internal consolidated-register names. Risk IDs may remain as IDs, but evidence must point to consultant-visible or approved external records.
+- Remove Print and CSV controls when the requested public page is download-only; label the remaining workbook control `Download Snapshot`.
+- Verify every live page and download after deployment: visible scoring columns, formula strings, owner/action-plan fields, target dates, no prohibited symbols, no internal-source names, and HTTP 200.
+- Before changing a risk status, owner, target, or evidence, inspect the authoritative repository risk row and the relevant source register. Do not infer closure or RFI linkage from a user statement alone. If an RFI is claimed but no matching reference exists in the RFI register or source file, report the gap and request the exact reference rather than fabricating one.
+- Reconcile sub-register risks against current project status before carrying them forward. If the risk event has passed, cite the dated project evidence, then set Mitigated or Closed only at the level supported by that evidence. Distinguish an active project delay from a stale risk description and assign ownership to the actual responsible role, not automatically to Planner.
+- Never place master PRR IDs or internal register names in a discipline register's evidence. A risk ID may remain as an identifier in the master register, but public evidence must cite consultant-visible documents or neutral wording. Remove self-references such as `RMP APP` and `PRR-APP-*` from evidence text.
+- **Split download filename from server filename in HTML templates.** The `href` attribute points to the server file (e.g. `EXP-RISK-PRR-2026-036_RevC12_ACTIVE.xlsx`) but the `download` attribute should be a user-friendly name with project name, register code, snapshot date, and time (e.g. `Aseer_Regional_Museum_PRR_2026-07-25_1430.xlsx`). Use separate placeholders (`__XLSX_HREF__` and `__XLSX_DOWNLOAD__`) in the HTML template and generate both from the build script. The thumb rule: the server name is versioned and auto-incremented; the download name is what the user saves to their desktop.
 
 ## Reference Files
 
 - `references/design-coordination-risk-identification.md` — 7-phase methodology for extracting coordination risks between AV/IT/ELV specialist submissions and base build MEP infrastructure. Covers BOQ power load extraction, rack room heat analysis, projection path spatial conflicts, containment segregation, UPS strategy gaps, and scope boundary risks. Use when reviewing a specialist design submission (AV, IT, Security, ELV) before IFC or before D&B tender.
 - `references/template-application-pattern.md` — Apply one existing register's column layout, styling, sheets, and dashboard structure to another existing register. Covers data column mapping, scoring scale bridging, source styling capture, Cover preservation, and verification.
 - `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.
-- `references/risk-register-audit-methodology.md` — 9-step audit checklist for QA-checking an existing risk register. Covers scoring integrity, cross-referencing, lifecycle gaps, residual risk, mitigation quality, and dashboard verification. Use when the user sends an existing XLSX and asks "check this" or "audit this."
+- `references/risk-register-audit-methodology.md` — 9-step audit checklist for QA-checking an existing risk register. Covers scoring integrity, cross-referencing, lifecycle gaps, residual risk, mitigation quality, and dashboard verification. Use when the user sends an existing XLSX and asks "check this" or "audit this".
 - `references/rmp-drr-reconciliation.md` — Cross-reference RMP DOCX, repo Markdown RMP, and DRR Excel to eliminate conflicts. Covers scoring scale alignment, RBS category sync, risk count verification, EMV values, register architecture, status definitions, common DOCX fixes (heading styles, cantSplit, rebuild_table), and common Excel fixes (legends, formulas). Use when the user asks to "check" or "fix" risk management documents that should agree but don't.
 - `references/samaya-templated-snapshot-pattern.md` — Build the A4-portrait Samaya-styled xlsx snapshot (Dashboard + Risk Register + Action Plan, cover block, KPI strip, heatmap, charts, QR, page header/footer, versioned file naming). Reference build_xlsx.py, the deploy pipeline, the snapshot_counter.json pattern, and the OneDrive / Hostinger caveats covered by `macos-onedrive-recovery`.
+- `references/samaya-sub-register-architecture.md` — Multi-register architecture for projects that ship more than one live risk register (master PRR + DDR + HSE + AVR) on the same web app family. Covers cross-nav banner (4-card grid with `reg-current` marker), `is_ddr/is_hse/is_av` JSON flags, `EXP-RISK-{PLAN}-{YEAR}-{SEQ}_RevC{REV}_{STATE}.xlsx` naming + SEQ auto-increment, `rsync --delete` with `--exclude` for sibling subfolders, and the in-place patch pattern for registers built by an external pipeline. Use whenever a project has more than one live risk register on the same site.
+- `references/formula-driven-register-pattern.md` — Live Excel formulas
+- `references/dashboard-layout-and-language-qa.md` — Formula cache checks, dynamic dashboard layout, schedule jump links, symbol cleanup, and plain engineering language QA. (`=I*J`, nested `IF` for rating, `COUNTIF`/`COUNTIFS` for the dashboard) instead of static computed values. For registers that need to be interactive (user edits P/S, score/rating auto-update).

@@ -696,6 +696,14 @@ Example: Master Programme MOC-ASEER-0PS-SH-006 was listed in the plan as "resubm
 
 When the user asks about a project you don't have in memory, use `references/bim-unit-project-search.md` for the systematic search path through the BIM Unit folder structure. The key insight: email subject lines reveal project scope; design content lives in non-text attachments (PDF/DWG) that need OCR; the `.bak` backup may have zeroed-out files — prefer the live OneDrive path.
 
+## DOCX Editing (Existing Files)
+
+When editing an existing `.docx` file (inserting annotated paragraphs, updating table cells, modifying headers/footers, or bulk text replacement), use `references/docx-editing-existing.md` for python-docx patterns — including the halftone annotation technique (gray italic reference lines after section headings), table cell manipulation, and header revision updates.
+
+**Formal document code preference**: Always use formal codes (e.g., `PL-0015 Rev 04` not `PEP Rev 04`, `Contract 0010003521` not `Contract 0010`). See `references/aseer-document-code-mapping.md` for the full mapping.
+
+**CRS response pattern**: When responding to CG comments on a CRS Excel, find comment rows by column A (string comparison — values are strings like `'19'` not integers), write originator replies to the merged J-column range, and update the revision field from `00` to `01`.
+
 ## Oracle Construction & Engineering (Aconex) Access
 
 The project's CDE is Oracle Construction & Engineering (formerly Aconex). See `references/oracle-aconex-browser-access.md` for login flow, navigation, and known browser limitations.

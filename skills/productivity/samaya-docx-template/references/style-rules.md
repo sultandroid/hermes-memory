@@ -2,6 +2,12 @@
 
 ## Prohibited symbols
 - **No `§`** — use "Section" (e.g. "DMP Section 3")
+- **No icons or emoji in any format** — DOCX, Excel CR sheets, HTML, or email. Forbidden: ✅ ❌ ⚠️ ➡️ → 🟢 🔴 🟡 🔵 📌. Use plain text: `[done]`, `[missing]`, `[caution]`, `to`, ` - `, `per`
+- **No arrows or typographic dashes** — em dash (—), en dash (–), right arrow (→), bullet (•). Write plain: "to", "-", "per"
+
+## Known pitfall — icons in CR sheets and registers
+
+The user WILL reject any file containing status icons (✅ ❌ 🟢 🔴 🟡). This includes Excel CR sheets, comment columns, review notes, and internal trackers — not just formal DOCX or HTML documents. Always use plain text `[done]`, `[in progress]`, `[missing]` instead. This is the #1 recurrent error across all deliverables.
 
 ## Prohibited AI fingerprints
 - **Clichés**: seamlessly, robust, cutting-edge, bespoke, leveraging, delve, navigate, holistic, streamline, game-changer, state-of-the-art, world-class, innovative, synergistic
@@ -11,7 +17,7 @@
 - **Active voice** — "Samaya will install..." not "Installation will be carried out by..."
 - **British English** — natural, direct, Level 6 (B2-C1) readability
 - **Samaya** (not "the Contractor") when referring to ourselves
-- **No emoji** in formal documents
+- **No icons, emoji, or status symbols in any deliverable** — DOCX, Excel CR sheets, registers, slides, or internal trackers. This includes ✅ ❌ ⚠️ ➡️ → 🔴 🟡 🟢. Use plain text: `[done]`, `[missing]`, `to`, ` - `, `per`. The user will reject any file with these symbols.
 - **Short sentences** (15-22 words), every sentence carries weight
 
 ## Visual rules

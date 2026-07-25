@@ -1,23 +1,11 @@
-Repo is source of truth for plan content. ER/SoW compliance only. Fida's SMP: fix only contradictions (waste 60%, Oddy 14-day), keep his language.
-§
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-§
-Snapshot counter: use --bump flag to advance, never auto-increment. Content number must match filename. Short codes only (PRR/DDR/HSE) as counter keys, never human-readable names.
-§
-AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
 §
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
 §
-Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
+User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
 §
-OneDrive: write /tmp first then cp to path. Download files ONE BY ONE sequentially, never batch.
+Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment/Aseer Museum. Prefers concise British English, plain active engineering language, no AI clichés or decorative symbols. Expects real source data, tested URLs, explicit completion, and manual workbook formatting preserved across PRR, DDR, HSE/HSR, and AVR with owner/action-plan fields, formula dashboards, and dynamic layouts.
 §
-Risk register multi-source update: update ALL of risks.json, dashboards/risks.json, risks.json.bak, index.html, treatment/<id>.md frontmatter, and Excel. Deploy + git commit.
+Public Aseer PRR/DDR/HSE/AVR: columns = ID, CAT, RISK, P, S, SCORE(PxS), RATING, STATUS, OWNER, TARGET, CAUSE, CONSEQUENCE, RESPONSE/ACTION, EVIDENCE. No score text in response. Dashboard only. Preserve template formatting (charts, images, merged cells, formulas). Update formula col refs for new layout. Include ALL categories dynamically. Fix relative formula refs after shifting sections. Clear chart numCache. Split href/download for friendly filenames. Validate ratings match score band (>=12=Critical,>=8=High,>=4=Medium) — drift when set manually and scores change.
 §
-User hates: §, ->, -- (em dash), ·, •, ✓, ✗ and AI cliches (seamlessly, robust, cutting-edge, etc.). This is the #1 recurring error.
-§
-Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
-§
-Hostinger LiteSpeed 404 cache is case-sensitive + persistent: lowercase new subdirs (e.g. `ddr/`) stay 404-cached even after file is on disk with correct perms. Use UPPERCASE (e.g. `DDR/`) for new subdirs to bypass. Symptom: HTTP 404 with `last-modified: Tue, 22 Apr 2025` (cached error page) on a file that exists.
-§
-Construction risk audit: classify as generic (reject like pandemic, concrete pump), duplicate of existing PRR (omit), or missing project-specific risk (promote to PRR with next available number).
+Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.

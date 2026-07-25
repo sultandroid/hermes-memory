@@ -1241,7 +1241,7 @@ See the reference file for complete code patterns including: table XML rebuild w
 ## Related reference files
 
 - `references/dc-submission-transmittal-pattern.md` — DC submission transmittal for submitting prequalification packages to CG via Aconex (cover document with attachments table)
-- `references/docx-audit-and-fix-workflow.md` — Systematic audit and structural fix for existing DOCX (heading styles, cantSplit, table rebuilding via XML, content correction). Use when user says "check this [plan docx]" on non-SamayaDoc documents.
+- `references/docx-split-run-replacement.md` — Fixing text split across multiple XML runs in existing DOCX (e.g., "R01" as runs ['R0','1']), plus full Samaya-branding workflow for editing existing DOCXs.
 - `references/docx-formatting-fixes.md` — DOCX formatting fixes: page breaks before sections, prevent table splitting, set proportional column widths, RevC03→Rev00 reset pattern
 - `references/docx-merged-cell-extraction.md` — Extract text from merged cells (gridSpan) and rebuild tables from scratch when column structure is broken. Use when an existing DOCX has merged cells that make column removal unreliable.
 - `references/docx-image-rendering-fix.md` — Fix for images disappearing after bulk DOCX edits: empty cNvPr name, missing noChangeAspect, AND RGBA->RGB conversion (Word on macOS does not render RGBA PNGs). Run after any page-break/table-width/symbol-cleanup pass.
@@ -1254,6 +1254,7 @@ See the reference file for complete code patterns including: table XML rebuild w
 - `references/batch-md-to-docx-conversion.md` — Converting multiple MD deliverables to Samaya-branded DOCX in one script pass
 - `references/microclimate-action-report-pattern.md` — Museum showcase microclimate control + T&H monitoring action reports. Connected vs individual showcase architecture, 7/8-section structure, cost presentation rules, SVG flowchart patterns for DOCX.
 - `references/docx-editing-techniques.md` — Editing existing DOCX files (remove table rows, update paragraphs, save as R01). Use terminal heredoc, not execute_code sandbox.
+- `references/docx-retrofit-samaya-branding.md` — Applying Samaya fonts, margins, navy table headers, text fixes (Contractor→Samaya, doc ref) to third-party/consultant DOCXs
 - `references/svg-chart-embedding.md` — SVG chart creation, cairosvg rendering, Mac cairo fix, dual HTML/DOCX gen pattern
 - `references/svg-embedding-docx-pattern.md` — SVG→PNG→DOCX embedding via cairosvg: working `add_svg_to_doc()` function, viewBox cropping rules, flowchart arrow routing, A4 sizing. Essential for any DOCX with embedded flowcharts.
 - `references/subcontractor-creation-workflow.md` — End-to-end workflow for setting up a new subcontractor folder with SOW, docx, SitRep, and reference files

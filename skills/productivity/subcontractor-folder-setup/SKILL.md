@@ -764,4 +764,39 @@ After the quotation gap analysis confirms which scope items belong to this sub v
 - `references/contract-drafting-pack.md` — Worked example: assembling the document pack for ZNA Studio contract drafting, including DMP sourcing from email, scope baseline rule, and who-owns-what cross-check
 - `references/acoustic-prequalification-pattern.md` — Acoustic specialist prequalification with SOW + RACI matrix (worked example from CG rejection fix)
 - `templates/gen_acoustic_prequal.py` — Reusable generation script for prequalification support documents with SOW, RACI, deliverables, and submission forms
+
 ---
+
+## Boundary: subcontractor folder vs project plans folder
+
+When a specialist consultant produces a **project plan** as their deliverable (e.g. Sustainability Management Plan, Risk Management Plan, Quality Plan), the same deliverable may end up in two places — the subcontractor's folder (for contract management) and the plans/procedures folder (as a technical deliverable). Keep both, but enforce a clear boundary.
+
+| | Subcontractor folder (`24_Subcontractors/NN_Name/`) | Plans folder (`04_Docs/02_Plans_and_Procedures/02.XX_Plan/`) |
+|---|---|---|
+| Role | Relationship management with the consultant/vendor | Technical deliverable archive + project reference library |
+| Contract/PO/invoices | `01_Contract/`, `02_Invoices/` | ❌ |
+| Correspondence with sub | `03_Correspondence/` | ❌ |
+| CR sheets to/from sub | `05_CR_Sheets/` | ❌ (copy to registers if needed) |
+| Delivered plan PDFs | `04_Deliverables/` (evidence of delivery) | `01_Plan_Strategy/RevXX/` (formal revision archive) |
+| Codes, standards, references | ❌ (link to plans folder) | `03_Codes_Standards/` |
+| CG responses on the plan | ❌ | `06_CG_Coordination/` or `02_CG_Responses/` |
+| Compliance audits | ❌ | `07_Compliance_Audit/` |
+| Consultant evaluations | Only the appointed one | `04_Consultants/` — all bidders evaluated |
+| INDEX / README | ❌ | `00_INDEX/` — must match actual folder state |
+
+### Decision rule
+
+- **Subcontractor folder** = what you need to manage the contract (who, what, when, how much)
+- **Plans folder** = what the project needs as a technical reference (the deliverable itself, the codes it follows, the CG feedback, the compliance checks)
+
+### Pitfall — duplicate drift
+
+Both folders may hold copies of the same PDF. That's acceptable — each serves a separate audit trail. But the plans folder must always have the **latest CG-submitted revision**. When the sub sends a new revision, copy it into both.
+
+### Pitfall — stale INDEX
+
+After adding new subfolders (CG_Coordination, Compliance_Audit, etc.), update `00_INDEX/README.md` immediately. A stale INDEX makes the folder look incomplete.
+
+### Pitfall — folder name mismatch
+
+If the folder is named `Sustainability_Strategy` but the actual deliverable is `Sustainability Management Plan (SMP)`, team members won't find files by browsing. Either rename the folder to match the deliverable name, or add a cross-reference in the INDEX.

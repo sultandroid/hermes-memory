@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-25 07:00:37
+Generated: 2026-07-26 00:51:24
 
 ---
 
@@ -17,10 +17,11 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-Snapshot counter: use --bump flag to advance, never auto-increment. Content number must match filename. Short codes only (PRR/DDR/HSE) as counter keys, never human-readable names.
 NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
-OneDrive: write /tmp first then cp to path. Download files ONE BY ONE sequentially, never batch.
-Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
+User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
+Public Aseer PRR/DDR/HSE/AVR: columns = ID, CAT, RISK, P, S, SCORE(PxS), RATING, STATUS, OWNER, TARGET, CAUSE, CONSEQUENCE, RESPONSE/ACTION, EVIDENCE. No score text in response. Dashboard only. Preserve template formatting (charts, images, merged cells, formulas). Update formula col refs for new layout. Include ALL categories dynamically. Fix relative formula refs after shifting sections. Clear chart numCache. Split href/download for friendly filenames. Validate ratings match score band (>=12=Critical,>=8=High,>=4=Medium) — drift when set manually and scores change.
+Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. Very detail-oriented about document accuracy. Expects references to be verified against actual source documents BEFORE citing, never assume. Keep responses short, direct, factual — no AI-sounding language, no symbols (§), no verbose explanations.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -35,13 +36,15 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 2. **NEVER use `rm -rf`** on any path — OneDrive propagates deletions immediately.
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
-7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
 
 ## Active Projects
 
-AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Logo docs: AGENTS.md + style guide + asset README. Public URLs on samaya-factory.com. Cross-check all files referencing the asset.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
+Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment/Aseer Museum. Prefers concise British English, plain active engineering language, no AI clichés or decorative symbols. Expects real source data, tested URLs, explicit completion, and manual workbook formatting preserved across PRR, DDR, HSE/HSR, and AVR with owner/action-plan fields, formula dashboards, and dynamic layouts.
+Public Aseer PRR/DDR/HSE/AVR: columns = ID, CAT, RISK, P, S, SCORE(PxS), RATING, STATUS, OWNER, TARGET, CAUSE, CONSEQUENCE, RESPONSE/ACTION, EVIDENCE. No score text in response. Dashboard only. Preserve template formatting (charts, images, merged cells, formulas). Update formula col refs for new layout. Include ALL categories dynamically. Fix relative formula refs after shifting sections. Clear chart numCache. Split href/download for friendly filenames. Validate ratings match score band (>=12=Critical,>=8=High,>=4=Medium) — drift when set manually and scores change.
+Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.
+Eng Mohamed Sultan — Technical Office Mgr, Samaya/Aseer. British English, active voice, plain engineering. Direct commands, 'next' to iterate. Detail-oriented: layout/formatting/formulas/charts/percentages. 'Fix' = working deliverables, not plans.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. Very detail-oriented about document accuracy. Expects references to be verified against actual source documents BEFORE citing, never assume. Keep responses short, direct, factual — no AI-sounding language, no symbols (§), no verbose explanations.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -56,14 +59,13 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
 - Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
 - Samaya profile audit, font-direction correction, and safe v4 rollback: v6, Tajawal, Amiri, use the font was in V4 in V6 not reverse, 0-byte placeholder
-  - desc: Use for `samaya-profile` visual fixes, asset swaps, typography parity between versions, and exact rollback work in this repo.
-rollout_summary_file: 2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md
-description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
 
 ## Key People
 
-AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
+Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment/Aseer Museum. Prefers concise British English, plain active engineering language, no AI clichés or decorative symbols. Expects real source data, tested URLs, explicit completion, and manual workbook formatting preserved across PRR, DDR, HSE/HSR, and AVR with owner/action-plan fields, formula dashboards, and dynamic layouts.
+Eng Mohamed Sultan — Technical Office Mgr, Samaya/Aseer. British English, active voice, plain engineering. Direct commands, 'next' to iterate. Detail-oriented: layout/formatting/formulas/charts/percentages. 'Fix' = working deliverables, not plans.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. Very detail-oriented about document accuracy. Expects references to be verified against actual source documents BEFORE citing, never assume. Keep responses short, direct, factual — no AI-sounding language, no symbols (§), no verbose explanations.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -80,12 +82,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
-- **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
-You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
 
 ## Agents & Tools
 
-Odoo mark-as-done: set progress=1.0 only, NEVER change stage_id. Stage = work phase, not completion. User correction 2026-07-24.
+Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -109,8 +109,9 @@ task_group: Hermes Agent configuration
 ## Contracts & Documents
 
 Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
-AD Engineering: Samaya does mechanical design, AD reviews/stamps. To CG, AD is full MEP designer. Liability follows AD stamp.
-Methodology plans (RMP, SMP) describe process, not operational data. CG comments asking for register-level data in the plan are push-back candidates. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category.
+User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
+Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.
+CG submittal readiness: clean folder structure, consistent naming, permissions checked, no MD files, CRS comments verified against register entries. User modifies Excel templates directly; expects those saved as new baseline ('save for future'). Spots discrepancies across ALL registers — single-register fixes must replicate to PRR/DDR/HSE/AVR. Tests URLs and verifies work (download, HTTP 200, file permissions).
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -137,12 +138,10 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
 - RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
-- **Contract:** Ministry of Culture (MoC) × Samaya Investment. Effective Date 2025-12-01, Term 10 months → 2026-09-30.
 
 ## Locations
 
-OneDrive: write /tmp first then cp to path. Download files ONE BY ONE sequentially, never batch.
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. Very detail-oriented about document accuracy. Expects references to be verified against actual source documents BEFORE citing, never assume. Keep responses short, direct, factual — no AI-sounding language, no symbols (§), no verbose explanations.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -156,3 +155,4 @@ He prefers execution plus verification over explanation-only help. For printable
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
 rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl
+task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Subcontractors/03_Graphics_Contractor

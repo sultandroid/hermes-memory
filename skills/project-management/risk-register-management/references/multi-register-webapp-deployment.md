@@ -32,19 +32,41 @@ Each register gets its own build script that reads its own JSON and outputs to i
 
 ```
 06_Risk_System/webapp/
-├── build_risk.py     # PRR — reads 06_Risk_System/risks.json         -> src/index.html
-├── build_ddr.py      # DDR — reads 06_Risk_System/generated/drr_risks.json -> src/DDR/index.html
-├── build_hse.py      # future
+├── build_risk.py     # PRR — reads 06_Risk_System/risks.json         -> src/index.html + src/EXP-RISK-PRR-*.xlsx
+├── build_ddr.py      # DDR — reads 06_Risk_System/generated/ddr_risks.json -> src/DDR/index.html + src/DDR/EXP-RISK-DDR-*.xlsx
+├── build_hse.py      # HSE — reads HSE JSON -> src/HSE/index.html + src/HSE/EXP-RISK-HSE-*.xlsx
 ├── build_av.py       # future
-├── deploy.sh         # runs all build_* then rsyncs src/ to hostinger
+├── deploy.sh         # rsyncs src/ to hostinger (per register, never cross)
 ├── template.html     # shared (slightly extended with "Viewing:" nav hook)
 ├── src/
 │   ├── index.html          (PRR)
 │   ├── .htaccess
-│   ├── Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx   (master download, same for all)
-│   └── DDR/
-│       └── index.html     (DDR)
+│   ├── EXP-RISK-PRR-2026-NNN_RevC{REV}_ACTIVE.xlsx   (PRR snapshot, generated)
+│   ├── DDR/
+│   │   ├── index.html     (DDR)
+│   │   └── EXP-RISK-DDR-2026-NNN_RevC{REV}_ACTIVE.xlsx
+│   └── HSE/
+│       ├── index.html     (HSE)
+│       └── EXP-RISK-HSE-2026-NNN_RevC{REV}_ACTIVE.xlsx
 ```
+
+### Excel snapshot generation is local, not OneDrive-served
+
+**As of 2026-07-25 the PRR xlsx is generated inside `build_risk.py` from `risks.json`** by calling `build_xlsx.build(data, xlsx_path, snapshot_date, revision, total)`. The xlsx is reproducible from the JSON and no longer depends on the OneDrive master workbook path. DDR and HSE follow the same pattern.
+
+**File naming convention** (live on hostinger since 2026-07-24):
+
+```
+EXP-RISK-{PLAN}-{YEAR}-{SEQ:03d}_RevC{REV}_ACTIVE.xlsx
+```
+
+Where `{PLAN}` is `PRR` | `DDR` | `HSE`, `{YEAR}` is the export year, `{SEQ}` is a 3-digit zero-padded export counter, `{REV}` is the master workbook revision (e.g. `C11`). Example: `EXP-RISK-PRR-2026-003_RevC11_ACTIVE.xlsx`.
+
+**SEQ is auto-incremented** by scanning `src/` for `EXP-RISK-{PLAN}-{YEAR}-(\d{3})_*.xlsx` and taking `max+1`. Never overwrite a prior export — the old file stays in `src/` for traceability and gets rsynced alongside the new one.
+
+**Old legacy filename** `Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx` is removed by the build script (`glob('Aseer_Museum_Risk_Register_*.xlsx').unlink()`). It was the source of a 404 on the live EXCEL button after OneDrive stopped serving it.
+
+**Build script must `chmod 0644` the generated xlsx** — OneDrive's macOS copies arrive as `0640`, and the LiteSpeed web server needs world-read.
 
 ## Schema normalisation (DDR → PRR template)
 
@@ -71,18 +93,34 @@ Bands (Critical/High/Medium/Low) are computed identically: `P × S >= 16 → Cri
 
 ## Live template hook (shared template.html)
 
-Add a "Viewing:" line under the title that switches based on `RISK.is_ddr`:
+Add a "Viewing:" line under the title that switches based on `RISK.is_ddr` / `RISK.is_hse`:
 
 ```javascript
 function renderFooter(){
   // ... existing brandSub + foot ...
-  const regName = RISK.is_ddr ? 'Design Discipline Register (DDR)' : 'Master Risk Register (PRR)';
-  const other = RISK.is_ddr ? {url: '../', label: 'Master Risk Register (PRR)'} : {url: 'DDR/', label: 'Design Discipline Register (DDR)'};
-  $('#registerNav').innerHTML = `Viewing: <b>${esc(regName)}</b> · <a href="${esc(other.url)}">→ ${esc(other.label)}</a>`;
+  const regName = RISK.is_ddr ? 'Design Discipline Register (DDR)'
+                 : RISK.is_hse ? 'HSE Risk Register (Fit-Out)'
+                 : 'Master Risk Register (PRR)';
+  const siblings = [];
+  if (!RISK.is_ddr) siblings.push({url: 'DDR/', label: 'Design (DDR)'});
+  if (!RISK.is_hse) siblings.push({url: 'HSE/', label: 'HSE'});
+  if (RISK.is_ddr || RISK.is_hse) siblings.push({url: '../', label: 'Master (PRR)'});
+  const links = siblings.map(s => `<a href="${esc(s.url)}">${esc(s.label)}</a>`).join(' · ');
+  $('#registerNav').innerHTML = `Viewing: <b>${esc(regName)}</b> · ${links}`;
 }
 ```
 
-The build script sets `"is_ddr": true` in the DDR's data payload, and the template reads `RISK.is_ddr` to pick the right name + link. Default false (PRR) when key absent.
+The build script sets `"is_ddr": true` and/or `"is_hse": true` in each register's data payload, and the template reads both flags to pick the right name + link set. Default false (PRR) when both keys absent.
+
+**Template must include the placeholder** in the header for the JS to fill:
+
+```html
+<h1>Aseer Regional Museum — Risk Register</h1>
+<div class="dcline" id="brandSub"></div>
+<div class="dcline"><span id="registerNav"></span></div>
+```
+
+Without the `registerNav` span the JS injects into nothing, and the cross-link nav never appears. Symptom: deployed page shows the title and brandSub but no "Viewing: …" line under them.
 
 ## Hostinger quirks specific to multi-register deployment
 
@@ -118,4 +156,7 @@ Expected: PRR = 52 unique IDs, DDR = 79 unique IDs (all matching DDR prefixes: P
 - **Don't try to fit DDR into the 4×4 P×S matrix**. The template's matrix is hard-coded P4..P1, S1..S4. Risks with P=5 or S=5 won't render in the matrix but will still appear in the table. Don't try to "fix" the matrix for the DDR page — accept that the matrix is incomplete for DDR and rely on the table + filters.
 - **DDR has no `status` field** in the source JSON. Defaulting to "Open" is the honest answer (DDR risks are by definition active work-in-progress items). Don't fabricate other statuses.
 - **DDR categories (TEC/SCH/EXT/PRO/QA/COM) overlap with PRR categories** (SCH/COM/etc.) but mean different things. The dropdown filter must show both sets separately, not deduplicate. Use the DDR's own RBS map in the build script.
-- **The DDR xlsx is the same as the PRR xlsx** (the C11 master workbook contains both sheets — "Risk Register" + "Designer Risk Register (DRR)"). Don't create a separate DDR xlsx; the deploy script copies the same file once.
+- **`rsync --delete` will wipe sibling sub-registers.** When deploying the master PRR via `rsync -avz --delete ./src/ server:.../Risk/`, the destination's `DDR/` and `HSE/` subfolders (deployed by their own pipelines) are NOT in the local `src/` and will be deleted. Always use `--exclude='DDR/' --exclude='HSE/'` on every master deploy. Same protection in reverse for the DDR/HSE deploys. Verify the exclusion before rsync: `rsync -avz --delete --dry-run --exclude='DDR/' --exclude='HSE/' ./src/ server:.../Risk/ | grep -E 'deleting|^\*deleting' | head` should show no `deleting DDR/` or `deleting HSE/` lines.
+- **Don't reuse the legacy `Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx` filename.** The build script now generates `EXP-RISK-PRR-{YEAR}-{SEQ:03d}_RevC{REV}_ACTIVE.xlsx` and drops the legacy file from `src/` to prevent the 404 the old name caused. If you see a deployed `Aseer_Museum_Risk_Register_*.xlsx`, it predates the fix and the EXCEL button on that page will 404.
+- **OneDrive is not authoritative for the served xlsx.** The `MASTER` path in the old `deploy.sh` (`OneDrive-SAMAYAINVESTMENT/.../23_Project_Risk_Register/...`) was unreliable (OneDrive "files on demand" returned 0 bytes when the client was in a bad state). The new pipeline regenerates the xlsx from `risks.json` inside `build_risk.py`. If you find the old `MASTER=` line still in `deploy.sh`, the script is stale — the OneDrive step is no longer needed.
+- **The PRR xlsx is no longer the same as the DDR xlsx.** The old reference used a single OneDrive master workbook that contained both PRR and DDR sheets. The new pipeline generates one xlsx per register from its own JSON, with that register's rows only. Don't expect to find a "Designer Risk Register (DRR)" sheet inside the PRR xlsx.

@@ -126,6 +126,117 @@ After generation, verify:
 - [ ] No Python generator script left behind in the repo
 - [ ] Git commit with descriptive message
 
+---
+
+## Plan Reference Files (`ref_*.md`)
+
+In addition to the 4-file template inside each plan subdirectory, maintain **reference sheets** in `04_Docs/02_Plans_and_Procedures/reference/` (or equivalent central reference directory). These are quick-lookup cards for each approved/submitted plan, storing document metadata, revision history, submittal status, and cross-references.
+
+### File Naming
+
+```
+ref_{PlanShortName}.md
+```
+
+Examples: `ref_Procurement_Plan.md`, `ref_PQP_Project_Quality_Plan.md`, `ref_HSE_Plan.md`.
+
+### YAML Frontmatter Fields
+
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: <agent-name>
+status: active | superseded
+source: <OneDrive or CDE path to the PDF>
+doc_code: <document-code>
+revision: '<NN>'
+date: 'YYYY-MM-DD'
+title: <plan-title>
+project: <project-name>
+contract: <contract-number>
+prepared_by: <person/role>
+approved_by: <person/role or organization>
+owner: <responsible person — plan owner>
+cg_status: Code <A/B/C/D> — <Status description>
+---
+```
+
+### Body Sections
+
+| Section | Purpose | Key Content |
+|---------|---------|-------------|
+| **Document Identification** | Metadata table | Doc Code, Rev, Date, Title, Project, Contract, Prepared/Approved By, Format |
+| **Document Location** | Source path | OneDrive directory path in code block |
+| **Revision History** | Change log | Rev table: Rev, Date, Description, Author |
+| **Submittal Status** | CG review status | Submittal Type, Date, CG Review Status, Next Action |
+| **Description** | Plan summary | 2-3 sentence overview of what the plan covers |
+| **Content Summary** | TOC outline | Bullet list of sections covered |
+| **Cross-References** | Linked plans | Table: Ref, Plan, Note — bidirectional links to other plans |
+
+### Guidelines
+
+- Keep frontmatter and body in sync (revision, date, CG status must match)
+- Update `last_updated` on every modification
+- Source path should point to the actual PDF in OneDrive/CDE, not a local copy
+- Cross-references should be bidirectional — if Plan A references Plan B, Plan B's ref file should also mention Plan A
+- When a plan moves from draft → submitted → approved, update the submittal status and next action accordingly
+
+---
+
+## Obligation Matrix
+
+An **obligation matrix** maps every project plan to its document code, plan owner, CG approval status, and next required action. It serves as a single-page accountability overview.
+
+### Location
+
+Place it in the document index directory (e.g., `08_Document_Index/obligation_matrix.md`).
+
+### YAML Frontmatter
+
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: <agent-name>
+status: active
+source: 08_Document_Index/00_plan_tracker.md, approved_plans.md, 03_Plans/*/plan_summary.md, AGENTS.md
+---
+```
+
+### Structure
+
+The matrix is organized by CG status category, each as a separate table section:
+
+1. **Colour Key** — CG code definitions (Code B = Approved, Code C = Revise & Resubmit, etc.)
+2. **Plans Submitted to CG — Approved (Code B)** — plans that have passed CG review
+3. **Plans with CG Comments (Code C/D)** — plans needing revision or resubmission
+4. **Draft / Submitted Plans (Awaiting CG Response)** — plans in progress
+5. **Missing Plans (Not Yet Created)** — plans required but not yet drafted
+6. **Quick Summary** — count per status category
+7. **Key Contacts** — role-to-person mapping for plan owners
+
+### Table Columns per Section
+
+**Submitted / Approved / Needs Revision tables:**
+
+| # | Plan | Doc Code | Rev | CG Status | Owner | Next Obligation |
+
+**Draft / Submitted (Awaiting) tables:** (same columns)
+
+**Missing Plans table:**
+
+| # | Missing Plan | Why Needed | Referenced In | Owner | Priority |
+
+### Guidelines
+
+- **Cover all plans.** Every plan in the project should appear in exactly one section — don't leave gaps.
+- **Keep statuses consistent** with the plan tracker (`00_plan_tracker.md`) and approved plans index (`approved_plans.md`).
+- **Update when any plan's CG status changes.** A plan moving from Draft → Submitted, or Code C → Code B, should be moved to the correct section.
+- **Include the Key Contacts table** at the bottom so the matrix doubles as an ownership directory.
+- **No emoji or symbols in formal versions** (follow Samaya style guide). In internal registers, status indicators like ✅ 🔴 🟡 🟢 are acceptable.
+- **Priority column** (for missing plans): 🟡 High / 🟢 Medium / 🔵 Low.
+
+---
+
 ## Source
 
-Worked example: Aseer Museum PM repo — 16 plan subdirectories, 64 files generated and committed in a single pass.
+Worked example: Aseer Museum PM repo — 16 plan subdirectories, 64 files generated and committed in a single pass. Reference files updated and obligation matrix created at `08_Document_Index/obligation_matrix.md` (32 plans tracked, 25 existing + 7 missing, 15 Code B approved).

@@ -18,6 +18,8 @@ Authoring and polishing formal technical documents for Samaya Investment — Tec
 - User is working on Aseer Museum or similar Samaya BIM project documentation
 - User asks "do we need charts/figures here?" for a management plan section — load then check `references/management-plan-chart-recommendations.md`
 - User asks about what charts go in Interface Management, Risk, Schedule, Comms, Quality, or Resource sections
+- User asks to add reference annotations, cross-references, or source citations to a document — load then follow §9 Source-Reference Verification
+- User says "audit this document against its sources" or "QC this against the PEP/DMP/BEP" — load then follow §9.5
 
 ## Core Principles
 
@@ -252,6 +254,78 @@ When designing representation tables for Section 3 (Tier 1 Management, Tier 2 Sp
 
 **Rationale:** Formal business documents (Resource Mgmt Plans, SMPs, BEPs) must look consistent and professional. Color overload (gradients, green/red badges, tinted rows, tier-colored headers) makes the document feel informal or dashboard-like rather than a CG-submission plan. The Samaya style guide uses navy/sky as the only accent colors — adding extra palettes per tier or per status breaks visual cohesion.
 
+## 9. Source-Reference Verification (Cross-Audit)
+
+When adding reference annotations or citations to a document that cite another source document (PEP, DMP, BEP, SoW, ER, Contract), you MUST verify each claim against the actual source document before committing it.
+
+### 9.1 The Rule
+
+**If you cite it, verify it.** A reference annotation is a promise that the source document supports the claim. Do not add a reference without reading the relevant section of the source document first.
+
+**Critical check — section-number validation:** Before adding any reference to a PEP, DMP, or BEP section, verify the actual section heading in the source document matches the claimed content. Common failure modes:
+- The source document was restructured between revisions (e.g. PEP Rev 01 → Rev 04 may have renumbered sections)
+- External reference labels (what the Task Info Box shows) may differ from the actual document section structure
+- A reference like "BEP §3" may actually point to §2.1, §3 (Roles), or somewhere else entirely — verify by reading the source heading, not by trusting the claimed number
+- A document title like "Section 5 — Software Platform" may exist in the Summary's outline but the actual BEP has the software table in "Section 4 — Standards & Procedures"
+
+### 9.2 Workflow
+
+1. **Identify** which source document section(s) are being cited (e.g., "PEP §19" for shop drawing turnaround)
+2. **Locate** the source file on OneDrive or in the repo
+3. **Read the relevant section** — extract the actual data (numbers, names, durations, codes, dates)
+4. **Compare** the claim in your document against the source data:
+   - **MATCH** → reference is valid
+   - **MISMATCH** → fix the claim to match the source (the source is authoritative, not your draft)
+   - **NOT_FOUND** → remove the reference or flag it as TBC
+5. **Commit** the verified claim and reference annotation
+
+### 9.3 What to Verify
+
+All factual claims that cite a source should be cross-checked:
+
+| Claim Type | Examples to Verify |
+|---|---|
+| Durations / timeframes | "14 WD turnaround", "48-hour SLA", "W32 gate" |
+| Names & titles | Role holders, reviewer names, authority basis |
+| Codes & statuses | Status code sets (A/B/C/D/E/F), document formats |
+| Sequence & order | Gate sequences, workflow steps, escalation paths |
+| KPIs & targets | Numerical targets (100%, <20, <4/quarter) |
+| LOD values | LOD 350/400/500 per discipline |
+| **Section numbers** | "BEP §3", "PEP §19" — verify the actual heading exists at that number |
+| **Software / platform names** | Version numbers (2026 vs 2025+), platform names (Aconex vs BIM 360) |
+| **Content existence** | ICE wheel, INT-XX interfaces — verify the source doc actually contains this content, not just that a section with that number exists |
+| Table data | Any number, percentage, or list in a table |
+| Cross-references | "Covered in PEP section X" — verify section X actually covers it |
+
+### 9.4 Pitfalls
+
+- **Source docs can be wrong too** — if the source contradicts the contract (ER/SoW/Main Contract), the contract wins. Flag the discrepancy but cite the contract, not the source plan.
+- **Different revisions disagree** — always check which revision of the source document you're reading. A Rev 04 may have different data than Rev 03. The Summary's halftone ref should specify the exact revision.
+- **Tables vs prose** — source documents may contradict themselves between a table and the surrounding text. When in doubt, the table (structured data) takes precedence over prose.
+- **PDF text extraction limits** — OneDrive PDFs may be 0-byte placeholders or corrupted. Use the repo MD copies or HTML versions as fallback. If the source is unreachable, note it and don't add the reference.
+- **Cross-referenced section may not exist** — the PEP section number cited in the Summary may have been renumbered in the latest revision. Always verify the section heading actually matches the claimed content.
+- **Source doc may not contain the claimed content at all** — the DMP may have no ICE wheel, the BEP may not mention Aconex, the PEP may have no C1–C5 hierarchy. Adding a reference to a section that exists but doesn't contain what you claim is worse than having no reference. Verify content existence, not just section number existence.
+- **Claimed data may differ from source data** — software versions: BEP says Revit 2026, not 2025+. Clash severity: BEP has 4 levels (Critical 24h / High 3WD / Medium 1WK / Low), not 3. KPI targets: K-1/K-5/K-7/K-8 may come from a KPI Dashboard, not the BEP. Extract actual numbers from the source and compare before citing.
+- **Halftone refs must caveat deviations** — if the Summary uses a simplified system (3-level clash severity) that differs from the source (4-level), the halftone ref should note the discrepancy, not silently claim the source supports it.
+
+### 9.5 When to Audit the Entire Document
+
+If asked to review or update a document comprehensively:
+1. Extract all source-referenced claims from the Summary — every mention of PEP, DMP, BEP, SoW, ER, Contract with section numbers
+2. Group by source document (PEP, DMP, BEP, Contract, etc.) — each group is one audit task
+3. Locate each source document file — search OneDrive folder tree, check for PDF/DOCX/HTML variants (PDF may be a submittal form, not the actual source plan; verify by opening and checking content)
+4. Dispatch parallel sub-agents (max 3 concurrent) to read each source document and verify its claims against the Summary. Each sub-agent needs:
+   - The exact file path to the source document
+   - The specific sections and claims to verify
+   - Clear instructions: report MATCH / MISMATCH (with actual numbers) / NOT_FOUND per claim
+5. Integrate findings into a consolidated discrepancy report with verdict matrix
+6. Fix ALL mismatches before delivering — incorrect section references, wrong data, unsourced claims
+7. Add caveats where the Summary deviates from the source (e.g., "BEP has 4-level severity; Summary uses 3-level variant")
+
+**Critical:** Sub-agents must be told which file to read. The first PDF found by filename may be a submittal cover form, not the actual plan document. For DMP Rev C03, check `02.1_DMP/` not `02.2_BEP_MIDP_TIDP/`. Verify by reading page 1 content before dispatching.
+
+This is the minimum bar for a professional document review. The user will catch any claim that doesn't trace back to an approved source.
+
 ## Verification Checklist
 
 After any page merge/split/remove:
@@ -271,18 +345,18 @@ After any page merge/split/remove:
 6. Reference citations are from contract docs (ER, SOW, DMP) only
 7. **No status suffixes on TBC entries** — grep for "TBC —" to catch any that slipped through. Named firms only get status notes.
 
-## 9. Plan Conversion Pipeline — PDF/Legacy → Structured Markdown
+## 10. Plan Conversion Pipeline — PDF/Legacy → Structured Markdown
 
 When the user asks to convert existing project plans (PDF, DOCX, legacy MD) into structured Markdown in the repo, follow this pipeline.
 
-### 9.1 Survey Phase
+### 10.1 Survey Phase
 
 1. **Map all source locations** — check both OneDrive (`04_Docs/02_Plans_and_Procedures/`) and the repo archive (`99_Archive/`) for each plan
 2. **Check approval status** — load `approved_plans.md` to know which plans are Code B (approved, do not modify content) vs Code C/D (unapproved, can fix conflicts)
 3. **Identify existing MD analysis files** — the repo may already have partial MD content (DMP chapters, HSE analysis, stakeholder guidelines) that can be copied directly
 4. **Check PDF viability** — OneDrive PDFs may be 0-byte placeholders or corrupted; use repo copies or PMBOK reference MDs as fallback
 
-### 9.2 Directory Structure
+### 10.2 Directory Structure
 
 Create `03_Plans/` with numbered subdirectories matching PMBOK knowledge areas:
 
@@ -303,13 +377,13 @@ Create `03_Plans/` with numbered subdirectories matching PMBOK knowledge areas:
   99_Consolidated/ — Cross-plan analysis + system architecture
 ```
 
-### 9.3 Parallel Delegation Pattern
+### 10.3 Parallel Delegation Pattern
 
 For large-scale conversion (5+ plans), use `delegate_task` to dispatch one subagent per plan:
 
 ```python
 # Survey first
-terminal("find ... -type f \( -name '*.pdf' -o -name '*.md' \)")
+terminal("find ... -type f \\( -name '*.pdf' -o -name '*.md' \\)")
 
 # Create structure
 terminal("mkdir -p 03_Plans/{01_DMP,...,99_Consolidated}")
@@ -331,7 +405,7 @@ delegate_task(goal="Create BEP Markdown", context="...")
 - YAML frontmatter requirements (last_updated, owner_agent, status, source, doc_ref)
 - The exact output path
 
-### 9.4 YAML Frontmatter Convention
+### 10.4 YAML Frontmatter Convention
 
 Every plan Markdown file must start with:
 
@@ -353,7 +427,7 @@ source: OneDrive path or document reference
 
 For unapproved plans that had conflicts fixed, add `conflict_resolution` in YAML and bump the revision.
 
-### 9.5 Consolidated Analysis
+### 10.5 Consolidated Analysis
 
 After all plans are converted, create two documents in `99_Consolidated/`:
 
@@ -371,7 +445,7 @@ After all plans are converted, create two documents in `99_Consolidated/`:
    - Dashboard: 4 views (Overview, Plan Detail, Timeline, Action Items)
    - Implementation roadmap (4 phases, ~16 weeks)
 
-### 9.6 Conflict Resolution Rules
+### 10.6 Conflict Resolution Rules
 
 | Rule | Action |
 |------|--------|
@@ -390,4 +464,5 @@ After all plans are converted, create two documents in `99_Consolidated/`:
 - `references/primavera-schedule-review.md` — End-to-end workflow for reviewing contractor Primavera P6 schedule submissions: extraction, WBS analysis, critical path, design phase deep-dive, materials cross-referencing, Excel extract, HTML report generation, and project folder conventions.
 - `references/multi-plan-specialist-sync.md` — Multi-document sync pattern: updating SMP, Resource Plan, and KPR consistently when specialist deployment data changes (triggered by CG clarification requests, status updates, or deployment reviews). Covers revision bumping, cross-sectional changes, web deploy, and email reply drafting.
 - `references/contract-clause-extraction.md` — How to extract verbatim contract/SoW clause text from OneDrive PDFs when the repo doesn't have the literal text. Covers source PDF locations, extraction commands, and pitfalls.
+- `references/source-verification-audit-example.md` — Full audit example from the Design Management & BIM Summary session: methodology, findings table, pitfalls for PEP/DMP/BEP cross-referencing.
 - `references/rfi-correspondence-review.md` — Pre-send review checklist for bilingual (AR/EN) RFIs, TQs, and formal correspondence to CG/PMC/MoC. Covers document reference validation, contract clause verification, signatory title checks, content completeness, language/tone, and DOCX editing with python-docx.

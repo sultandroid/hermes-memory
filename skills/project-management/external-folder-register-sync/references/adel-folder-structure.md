@@ -60,6 +60,54 @@ Each 1G-xxxx package follows this pattern:
         MOC-ASEER-SIC-{DISC}-TQ-{NNNN}.pdf    ← CG reply PDF
 ```
 
+## 02. DOC - Document Submittal/GN/ (98 Submittals)
+
+**Root:** `Adel  Darwish's files - 01- Execution Documents/02. DOC - Document Submittal/GN/`
+
+98 numbered submittal folders (01 through 98), each containing:
+- A transmittal PDF (cover sheet)
+- An XLSX register
+- Supporting documents (PDFs, DOCXs, BOQs)
+- Sometimes `Approval/` or `Done/` or `Rev.0x/` subfolders
+
+**Doc ID prefixes and types:**
+
+| Prefix | Type | Count |
+|--------|------|-------|
+| `ARM-DS-GN-xxxx` | General submittals (mobilization, narrative, etc.) | 9 |
+| `MOC-ASEER-SIC-1K0-PL-xxxx` | Plans (submission plan, HSE plan, etc.) | 8 |
+| `MOC-ASEER-SIC-1K0-ZD-xxxx` | Shop Drawings (structural/arch) | 3 |
+| `MOC-ASEER-SIC-1K0-QT-xxxx` | BOQ / Quantities | 2 |
+| `MOC-ASEER-SIC-1A0-TP-xxxx` | Test Procedures | 2 |
+| `MOC-ASEER-SIC-1A0-ZD-xxxx` | Shop Drawings (architectural) | 5 |
+| `MOC-MUS-ASE-1KH-PL-xxxx` | Plans (specialist/coordination) | 12 |
+| `MOC-MUS-ASE-1KH-ZD-xxxx` | Shop Drawings (specialist) | 6 |
+| `MOC-MUS-ASE-1KH-SC-xxxx` | SC Requirements | 1 |
+| `MOC-MUS-ASE-1E0-ZD-xxxx` | Shop Drawings (electrical/MEP) | 15 |
+| `MOC-MUS-ASE-1E0-RP-xxxx` | Reports (electrical) | 1 |
+| `MOC-MUS-ASE-1K0-PL-xxxx` | Plans (coordination) | 3 |
+| `MOC-MUS-ASE-1K0-ZD-xxxx` | Shop Drawings (coordination) | 8 |
+| `MOC-MUS-ASE-1M0-PL-xxxx` | Plans (mechanical) | 1 |
+| `MOC-MUS-ASE-1M0-ZD-xxxx` | Shop Drawings (mechanical) | 3 |
+| `MOC-MUS-ASE-1A0-ZD-xxxx` | Shop Drawings (architectural) | 6 |
+| `MOC-MUS-ASE-MEP-ZD-xxxx` | Shop Drawings (MEP combined) | 2 |
+| `MOC-MUS-ASE-1V0-ZD-xxxx` | Shop Drawings (AV/visual) | 1 |
+
+**Converted DOCX files (saved to repo):**
+
+| File | Source Folder | Content |
+|------|--------------|---------|
+| `001_Mobilization_Plan_Rev03.md` | `01- ARM-DS-GN-0001/` | Mobilization plan: risk matrix, schedule, noise/dust control |
+| `006_Narrative_Report_Rev05.md` | `06- ARM-DS-GN-0006/Rev.05/` | Final baseline narrative report |
+| `006_Comment_Response_Rev03.md` | `06- ARM-DS-GN-0006/Rev.03/` | Comment resolution sheet |
+| `013_Submission_Plan_Meeting_Minutes.md` | `13- MOC-ASEER-SIC-1K0-PL-0013/` | Meeting minutes for submission plan |
+| `015_BEP_Comment_Response.md` | `15- MOC-ASEER-SIC-1K0-PL-0015/Rev.01/` | BEP consultant comment response |
+| `Submittal_Index.md` | (index of all 98 folders) | Master index with file counts and status |
+
+**Output location:** `Aseer-Museum/04_Docs/08_Adels_Submittals/`
+
+**Status breakdown:** 82 Approved, 13 Done, 3 Submitted (as of 25-Jul-2026)
+
 ## Key Dates
 
 - Most Letters: Dec 2025–Mar 2026 (historical)

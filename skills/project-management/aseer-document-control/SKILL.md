@@ -11,7 +11,8 @@ Trigger: user sends a PDF file for the Aseer Museum project, asks to create a su
 
 | File | Covers |
 |------|--------|
-| `references/rfi-tq-drafting.md` | RFI/TQ format, correct reference codes, signatory (Waris Sultan), contract refs for content/MoC items, bilingual structure |
+| `references/rfi-tq-drafting.md` | RFI/TQ format, codes, signatory, contract refs, bilingual structure |
+| `references/deliverable-vs-subcontractor-folder-boundary.md` | Plans vs subcontractor folder boundary, standard 5-folder structure, CR sheet verification against DOCX |
 
 ## Repo Structure Rule — Live Docs vs Archive
 

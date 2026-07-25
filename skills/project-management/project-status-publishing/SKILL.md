@@ -1,7 +1,7 @@
 ---
 name: project-status-publishing
-description: Automate daily project status extraction from PROJECT_MEMORY.md and publish to a GitHub repo via cron. Covers Python extraction script, cron job setup, and OneDrive-safe file handling.
-version: 1.1.0
+description: Automate daily project status extraction from PROJECT_MEMORY.md and publish to a GitHub repo via cron. Covers Python extraction script, cron job setup, OneDrive-safe file handling, and interactive counter-code lookups (HSE-26, PRR-3, etc.).
+version: 1.2.0
 author: Hermes Agent
 license: MIT
 platforms: [macos]
@@ -19,6 +19,7 @@ metadata:
 - User says "read this repo and update daily"
 - User has a GitHub repo with a `00_Status/project_status.md` file that needs daily auto-updates
 - User wants a cron job that extracts project status from PROJECT_MEMORY.md and publishes it
+- User asks for the status of a counter code like `HSE-26` or `PRR-3` (see "Counter-Code Lookups" below)
 
 ## Core Pattern
 
@@ -27,6 +28,20 @@ PROJECT_MEMORY.md (OneDrive) → Python extraction script → 00_Status/project_
                                                                                                     ↑
                                                                                               cron job (daily)
 ```
+
+## Counter-Code Lookups (HSE-26, PRR-3, DDR-2, etc.)
+
+When the user asks for a short code like `HSE-26` or `PRR-3`, treat it as a **counter key + sequence number**, not a literal document ID. Counter keys are project-specific shorthand (HSE = HSE discipline/plan, PRR = project risk register entry, DDR = design deliverable review, etc.) and live in a specific register or plan tracker — they do not map directly to formal doc numbers (`PL-####`, `ZD-####`).
+
+Resolution workflow:
+1. Identify the key prefix (HSE / PRR / DDR / SC / MA / TQ / etc.) and the sequence (e.g. 26).
+2. Find the counter home for that key — see `references/counter-code-lookup.md` for the per-key table.
+3. Look up the Nth entry in that counter.
+4. If the sequence is out of range, return the full counter snapshot and flag the gap.
+5. **Never invent a doc number** to make the code "fit" (do not guess `PL-0026` or `ZD-0026`).
+6. If multiple keys match the prefix, return the full set and ask the user to disambiguate.
+
+Example: `HSE-26` against the Aseer Museum plan tracker (only 16 HSE plans exist) — the seq=26 doesn't resolve. Return the full HSE snapshot from the plan tracker and note the gap.
 
 ## Step 1: Clone the Repo
 
@@ -242,6 +257,7 @@ source: PROJECT_MEMORY.md (auto-extracted YYYY-MM-DD)
 
 ## Pitfalls
 
+- **Counter codes aren't doc IDs** — `HSE-26` is `key=counter, seq=N`, not a literal `PL-####` / `ZD-####`. See "Counter-Code Lookups" above and `references/counter-code-lookup.md` for the per-key counter homes.
 - **OneDrive sync blocks file reads** — Use a fallback path if the primary PROJECT_MEMORY.md is locked. The `_Project_Memory/` subfolder copy is often more accessible than the root copy.
 - **Section 0 table has no unique row pattern** — All rows start with `||`. When patching, include surrounding context. Better: regenerate the whole file from scratch each time.
 - **Pending items may be empty** — If Section 0 has no 🟡/🔴/📧/📋 items, provide a fallback message rather than an empty section.
@@ -257,3 +273,4 @@ source: PROJECT_MEMORY.md (auto-extracted YYYY-MM-DD)
 - **Manual one-shot discovery** — When the user asks "what's new" / "check the repo" / "what did you learn", use `references/manual-repo-discovery.md` for the structured git-log + file-reads workflow. Distinct from the automated cron-driven pattern — this is an interactive deep-dive.
 - **Odoo-to-repo comparison audit** — When the user asks to verify the repo status file against live Odoo data, use `references/odoo-repo-comparison.md` for the full workflow: query Odoo, compute metrics, check hash, find discrepancies. Covers deadline mismatches, stale source dates, modified tasks, and discipline progress computation.
 - **Existing sync script** — The `aseer-pm-status.py` script at `~/.hermes/scripts/aseer-pm-status.py` implements a bidirectional sync (PROJECT_MEMORY.md → Odoo + Odoo → repo). It uses timestamp-based direction detection, milestone text matching, and discipline progress computation. Reference it when the user asks to run the sync rather than build a new one.
+- **Counter-code disambiguation** — When a counter code resolves ambiguously (e.g. `HSE-26` could be an HSE plan, HSE risk, or HSE training entry), surface the full disambiguation set and ask the user which one — never pick the first match silently. See `references/counter-code-lookup.md`.

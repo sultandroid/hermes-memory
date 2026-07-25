@@ -177,6 +177,54 @@ for p in doc.paragraphs:
         print(f"CONCATENATION in paragraph: {p.text[:100]}")
 ```
 
+### Split-run text across multiple XML runs
+
+A related problem: sometimes the text you want to replace is split across runs at the XML level and `run.text` shows each fragment separately. This happens with:
+- Revision labels: "R01" stored as `['R0', '1']` in runs
+- Document refs: "AMA/SMP-01" stored as `['Doc Ref: AM', 'A', '/SMP-01 ']`
+
+Neither `para.text` replacement nor `run.text.replace()` works because no single run contains the full old string.
+
+**Fix — set first t element to corrected text, clear the rest:**
+
+```python
+from lxml import etree
+
+W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+
+def replace_text_across_runs(para, old_text, new_text):
+    """Replace old_text with new_text even when text is split across runs."""
+    full = para.text or ''
+    if old_text not in full:
+        return False
+    
+    t_elems = para._p.findall(f'.//{W}t')
+    if not t_elems:
+        return False
+    
+    # Set first t element to the full corrected text
+    t_elems[0].text = full.replace(old_text, new_text, 1)
+    
+    # Remove subsequent t elements
+    for t in t_elems[1:]:
+        parent = t.getparent()
+        if parent is not None:
+            parent.remove(t)
+    return True
+```
+
+Usage — loop all paragraphs and fix:
+```python
+for i, p in enumerate(doc.paragraphs):
+    t = p.text or ''
+    if 'R01' in t and 'Rev' not in t:
+        replace_text_across_runs(p, 'R01', 'Rev 01')
+    if 'AMA/SMP-01' in t:
+        replace_text_across_runs(p, 'AMA/SMP-01', 'MOC-MUS-ASE-1KH-PL-0055')
+```
+
+**Limitation:** This discards per-run formatting (bold, italic, font changes) in the affected paragraph. The entire text takes on the formatting of the first run. For paragraphs that are purely plain text (like cover page metadata), this is fine. For mixed-format paragraphs, use the `clear-all-runs-and-preserve-first-run` pattern instead.
+
 ### Apply same replacements to table cells
 
 Paragraphs inside tables are ALSO in `doc.paragraphs`, so the above loop catches them. For explicit table-cell replacement:
@@ -244,15 +292,141 @@ shutil.move(src_folder, dst_folder)
 
 Also update any `index.html` redirects or `latest` pointers within the HTML source.
 
-## Full edit workflow example
+## Full Samaya Branding on Existing DOCX
 
-1. Open doc, inspect tables + paragraphs to locate targets
-2. Build replacement dict for revision metadata (Rev ID, date, status)
-3. Apply replacements across paragraph runs (preserves formatting)
-4. Check each paragraph style — some footers/headers repeat per-section
-5. Modify tables (remove rows highest-index-first, add rows, update cells)
-6. Check for existing content before adding (guard clauses on table rows)
-7. Update cross-reference sections (companion docs, authority basis, sign-off table)
-8. Save as new rev in same folder
-9. Rename parent folder from RevC02 to RevC03
-10. Verify: re-open saved file, re-print key paragraphs and tables
+When applying Samaya style to a subcontractor's existing DOCX (not creating from scratch), apply these in order:
+
+### 1. Page Margins
+```python
+for section in doc.sections:
+    section.top_margin = Cm(2.5)
+    section.left_margin = Cm(2.5)
+    section.bottom_margin = Cm(2.0)
+    section.right_margin = Cm(2.0)
+    section.page_width = Cm(21.0)
+    section.page_height = Cm(29.7)
+```
+
+### 2. Font - Calibri Throughout
+Covers both paragraph runs AND table cell runs. For existing files, iterate ALL runs:
+```python
+for p in doc.paragraphs:
+    for run in p.runs:
+        run.font.name = 'Calibri'
+        rPr = run._r.find(qn('w:rPr'))
+        if rPr is None:
+            rPr = parse_xml(f'<w:rPr {nsdecls("w")}></w:rPr>')
+            run._r.insert(0, rPr)
+        rFonts = rPr.find(qn('w:rFonts'))
+        if rFonts is None:
+            rFonts = parse_xml(f'<w:rFonts {nsdecls("w")} w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>')
+            rPr.insert(0, rFonts)
+        else:
+            rFonts.set(qn('w:ascii'), 'Calibri')
+            rFonts.set(qn('w:hAnsi'), 'Calibri')
+            rFonts.set(qn('w:cs'), 'Calibri')
+# Repeat for table cells
+for table in doc.tables:
+    for row in table.rows:
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                for run in p.runs:
+                    run.font.name = 'Calibri'
+                    # Same rPr/rFonts manipulation as above
+```
+
+### 3. Table Headers - Navy with White Text
+Remove existing shading first, then apply:
+```python
+from docx.oxml import parse_xml
+W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+
+for table in doc.tables:
+    for ci, cell in enumerate(table.rows[0].cells):
+        tcPr = cell._tc.find(f'{W}tcPr')
+        if tcPr is None:
+            tcPr = parse_xml(f'<w:tcPr {nsdecls("w")}></w:tcPr>')
+            cell._tc.insert(0, tcPr)
+        # Remove existing shading
+        existing_shd = tcPr.find(f'{W}shd')
+        if existing_shd is not None:
+            tcPr.remove(existing_shd)
+        # Add navy
+        shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="1E293B" w:val="clear"/>')
+        tcPr.append(shd)
+        # White bold centered text
+        for p in cell.paragraphs:
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            for run in p.runs:
+                run.font.color.rgb = WHITE
+                run.font.bold = True
+                run.font.size = Pt(9.5)
+```
+
+### 4. Text Replacements Across Runs
+Existing DOCX files often split words across multiple XML runs (e.g. "R01" as `['R0', '1']`). Use direct XML manipulation:
+```python
+from lxml import etree
+W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+
+def replace_text_across_runs(para, old_text, new_text):
+    full = para.text or ''
+    if old_text not in full:
+        return False
+    t_elems = para._p.findall(f'.//{W}t')
+    if not t_elems:
+        return False
+    t_elems[0].text = full.replace(old_text, new_text, 1)
+    for t in t_elems[1:]:
+        parent = t.getparent()
+        if parent is not None:
+            parent.remove(t)
+    return True
+```
+
+### 5. Document History Table Cleanup
+Deduplicate rows by revision+date key, keeping the row with the most content:
+```python
+for ti, table in enumerate(doc.tables):
+    row0 = ' '.join([c.text.strip()[:20] for c in table.rows[0].cells]).lower()
+    if 'rev' in row0 and 'developed' in row0:
+        groups = {}
+        for ri in range(1, len(table.rows)):
+            cells = [c.text.strip() for c in table.rows[ri].cells]
+            rev = cells[0].split('\\n')[0].strip() if cells else ''
+            if rev not in groups:
+                groups[rev] = []
+            groups[rev].append(ri)
+        # Keep row with most content per revision
+        rows_to_remove = []
+        for rev, indices in groups.items():
+            if len(indices) > 1:
+                # Keep highest-content row
+                scored = [(ri, sum(len(c) for c in table.rows[ri].cells[2:])) for ri in indices]
+                scored.sort(key=lambda x: -x[1])
+                for ri, _ in scored[1:]:
+                    rows_to_remove.append(ri)
+        tbl = table._tbl
+        tr_elements = tbl.findall(f'{W}tr')
+        for ri in sorted(rows_to_remove, reverse=True):
+            tbl.remove(tr_elements[ri])
+```
+
+### 6. Run-Level Text Preserving Fix
+When replacing "the Contractor" with "Samaya" across 2000+ paragraphs, iterate runs (preserves bold/italic):
+```python
+for p in doc.paragraphs:
+    for run in p.runs:
+        if 'the Contractor' in run.text:
+            run.text = run.text.replace('the Contractor', 'Samaya')
+```
+
+For case-insensitive catch-all:
+```python
+import re
+def fix_contractor_text(text):
+    text = re.sub(r'(?i)\\bthe\\s+Contractor\\'s\\b', "Samaya's", text)
+    text = re.sub(r'(?i)\\bthe\\s+Contractor\\b(?!\\'s)', 'Samaya', text)
+    text = re.sub(r'(?i)\\bContractor\\b', 'Samaya', text)
+    return text
+```

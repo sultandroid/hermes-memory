@@ -1,6 +1,6 @@
 ---
 name: risk-register-management
-description: Maintain the project risk register (Excel + MD) and keep the Risk Management Plan (RMP) aligned. Covers risk data extraction from repo, Excel rebuild with openpyxl, MD patching, and cross-document verification.
+description: Maintain the risk register (Excel + MD) and keep the RMP aligned. Covers data extraction, Excel rebuild, snapshot build, submittal audit, CRS management, MD patching, and cross-document verification.
 version: 1.0.0
 author: Hermes Agent
 license: MIT
@@ -26,8 +26,8 @@ metadata:
 
 | Risk Type | Default Owner | Rationale |
 |-----------|---------------|----------|
-| Site-work risks (structural, site investigations, testing, installation) | **Construction Manager** | Site execution is CM's domain |
-| Design risks (DD packages, IFC, drawing approvals) | **Technical Office Manager** | Design coordination is Tech Office's domain |
+| Site-work risks (structural, site investigations, testing, installation) | **Construction Manager** | Site work is CM's domain |
+| Design risks (DD packages, IFC, drawing approvals) | **Technical Office Manager** | Design coordination is his domain |
 | Procurement risks (supplier, PQ, long-lead) | **Procurement Lead** | |
 | Commercial/contract risks | **Commercial Manager** | |
 | HSE risks | **HSE Manager** | |
@@ -1533,9 +1533,10 @@ For large design packages spanning many disciplines (e.g. full museum fit-out wi
 
 ### Reference Files
 
-- `references/design-risk-study-report-template.md` — Reusable Markdown template for discipline risk study reports with all sections pre-structured
-- `references/action-plan-audit-workflow.md` — Audit all risk action plans against RMP response time periods and project stage logic; common non-compliance patterns and fix workflow
-- `references/action-plan-compliance-audit.md` — Audit all risk action plans against RMP §8.2 response time standards and project stage reality (target close dates, stage-mismatched responses, vague actions for severity)
+- `references/design-risk-study-report-template.md` — Reusable MD template for risk study reports
+- `references/action-plan-audit-workflow.md` — Audit action plans against RMP response periods; non-compliance patterns and fix workflow
+- `references/action-plan-compliance-audit.md` — Audit plans against RMP §8.2: close dates, stage logic, vague actions
+- `references/excel-build-patterns.md` — Column layout, dashboard formulas, chart cache clearing, variable naming pitfalls during Excel rebuild
 - `references/consolidated-register-audit-workflow.md` — Audit old consolidated Excel registers against live register: find gaps, add missing master risks, copy DRR/HSE sheets as separate tabs with correct scoring scales
 - `references/risk-archetypes-cheat-sheet.md` — Quick reference table of common risk archetypes by discipline (lighting, AV, MEP, structural, showcases, graphics)
 - `references/register-merge-id-collisions.md` — ID collision patterns and resolutions from the C08→C09 merge, with field structure reference and param order pitfalls

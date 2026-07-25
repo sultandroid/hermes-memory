@@ -211,6 +211,7 @@ Next gate...
 
 ## Style Rules
 
+- **No AI fingerprints, status icons, or emoji in any cell** — never use ✅ ❌ ⚠️ ➡️ → 🟢 🔴 🟡. Use plain text: `[done]`, `[missing]`, `[caution]`, `to`, ` - `, `per`
 - Header: Navy `#1F3864`, white Calibri bold 10pt
 - Gate headers: Navy Calibri bold 11pt, blue fill `#D6E4F0`, merged full-width
 - Floor headers: Navy Calibri bold 10pt, grey fill `#E8E8E8`, merged full-width

@@ -1,7 +1,7 @@
 ---
 name: hermes-quality-assurance
 description: Use before delivering ANY Hermes labor output (HTML, code, analysis) — runs cross-labor audit, HTML validation, and file-contamination checks
-version: 1.6.0
+version: 1.8.0
 author: agent
 tags: [qa, quality-assurance, audit, html-validation, workflow]
 triggers:
@@ -584,7 +584,165 @@ When a humanization pass is requested, apply these specific changes:
 - **Paragraph length:** max 3-4 sentences
 - **Number presentation:** plain without dramatic lead-ins ("CV = -218K" not "a troubling variance of")
 
-### Engineer-Provided Compliance Forms — Fill Only, Don't Create
+### DOCX Source-Annotated Reference Workflow
+
+When adding inline source-reference annotations to a DOCX document (halftone/gray lines after each section heading showing which source document section supports the content):
+
+### Workflow
+
+1. **Identify all source documents claimed** — extract every `Ref: ...` statement you plan to add
+2. **Read the actual source sections** — open the source HTML/DOCX/PDF and find the specific section cited
+3. **Cross-verify each claim** — does the source actually contain what the document says? Check for:
+   - Numbers and durations (turnaround times, weeks, percentages)
+   - Names and roles (personnel, job titles)
+   - Codes and formats (document numbering, status codes, zone codes)
+   - Process steps (workflow order, step names)
+   - KPI targets and thresholds
+4. **Only cite what exists** — if the source doesn't contain the claimed data, either:
+   - Find the correct source
+   - Mark it as "project-developed" or "per [other source]"
+   - Omit the claim entirely
+5. **Quote the source text** — where possible, include the actual statement from the source in quotation marks rather than just a section number
+6. **Write naturally** — no symbols, no AI fingerprints
+
+### Halftone Annotation Technique (python-docx)
+
+```python
+from docx import Document
+from docx.shared import RGBColor, Pt
+
+HALFTONE = RGBColor(0x99, 0x99, 0x99)   # gray, not black
+SMALL = Pt(7.5)                          # smaller than body text
+
+for para in doc.paragraphs:
+    if para.text.strip() == "6.1  SECTION HEADING":
+        new_p = doc.add_paragraph()
+        run = new_p.add_run(ref_text)
+        run.font.size = SMALL
+        run.font.color.rgb = HALFTONE
+        run.font.italic = True
+        # Move right after the heading
+        heading_elem = para._element
+        new_elem = new_p._element
+        heading_elem.addnext(new_elem)
+```
+
+### Reference Writing Rules
+
+| Rule | Example |
+|------|---------|
+| No section symbol `§` | `sec 4.1` not `§4.1` |
+| No arrows `→` | `to` or ` - ` not `→` |
+| No middle dots `·` | ` - ` or remove |
+| No em dash `—` | ` - ` (space hyphen space) |
+| No emoji/icons | `OPEN` not `🟢` |
+| Quote source where possible | `PEP sec 19.1: "RFI / SI / NCR tracked natively in Aconex"` |
+| Plan name alongside code | `PL-0015 Rev 04 (PEP)` not just `PL-0015` |
+| Natural engineer language | short declarative, no hedging, no AI padding |
+
+### Source Verification Before Annotation — HARD RULE
+
+**Do NOT add a reference annotation until you have read the actual source section and confirmed the claim matches.** Stop assuming. If you haven't read it, you don't know it's there. The user explicitly corrected this: "please do not assume whene refrence."
+
+Mandatory workflow:
+1. Find the actual source document and open it
+2. Read the specific section cited — not the TOC, not the summary, the actual content
+3. Extract the exact text that supports (or contradicts) the claim
+4. Only then write the annotation
+5. If the claim doesn't exist in the source, either find the correct source or mark it honestly
+
+**Pitfall — Wrong section refs from version mismatch:** The document may cite source sections (e.g. BEP sec 3-9) that don't exist in the actual source document's numbering scheme. Always check the source's actual section numbering before annotating. A systematic +1/-1 offset error across multiple section refs suggests a mapping against a different version.
+
+**Pitfall — Claimed content doesn't exist in source:** Common patterns found in practice:
+- Aconex CDE cited as BEP content — BEP may use Autodesk BIM 360/Docs instead and never mention Aconex
+- Specific KPI targets (K-1, K-5, etc.) cited as BEP — may come from KPI Dashboard instead; BEP may have completely different metrics
+- C1-C5 escalation hierarchy cited as PEP — PEP may use Comms Cadence Ladder instead
+- D/E/F/U status codes cited as CG rule — CG may only define A/B/C
+- ICE wheel and interface register claimed as "project register, not from DMP" — when they are actually in PEP §21
+- Escalation Day+/Day+/Day+ protocol claimed "per Contract Sec 4" — when that section covers general obligations only
+
+**Pitfall — Status codes from CG rule are only A/B/C/D:** The CG Submission Rule document (MOC-MUS-ASE-1K0-ZD-0006) defines only 4 codes: A (Approved), B (Approved with comments), C (Revise and Resubmit), D (Rejected). Codes E, F, U are internal project codes. Never claim E/F/U as CG codes without checking the actual rule document.
+
+**Pitfall — Source document not found:** If you cannot locate the source document for a claimed reference, say so. Do not assume the content exists because the document number was cited. Write the ref as: "Source [doc code] not found — claim unverified."
+
+**Pitfall — Body text remarks left as normal text:** When you add a note, caveat, or remark about a reference (e.g. "these numbers are approximate per PEP"), convert the entire paragraph to halftone style (gray 7.5pt italic) so it's visually distinguished from main content. This includes the hard-gate note, the G0-G1 pre-contract note, and any other non-main-content paragraph.
+
+**Fix pattern when source doesn't match:**
+```
+Ref: [Actual Source] sec X (actual content per source; detail is project-developed, not in source)
+```
+
+**Fix pattern when source has different data:**
+```
+Ref: [Source] sec X has different data: [quote source]. Summary uses different [approach/format].
+```
+
+**Fix pattern when source not found or unverified:**
+```
+Ref: [doc code] — source document not available to verify
+```
+
+**Fix pattern when source has different data:**
+```
+Ref: [Source] sec X has different data: [quote source]. Summary uses [different approach].
+```
+
+### Cite Approved Documents Only
+
+When adding reference annotations, only cite approved documents (Code B or better from CG). Documents with status "For CG Approval" or "Issued for CG Resubmission" are not approved. If the content only exists in an unapproved document, state it as "per [doc code]" without status qualifiers — the user explicitly rejected parenthetical status like "PEP (submitted, under CG review)". Keep refs clean: just the code and name.
+
+Approved sources for Aseer Museum:
+- DMP Rev 02 (PL-0029) — Code B 19-May-2026
+- BEP Rev 01 (PL-0021) — Code B 17-Mar-2026
+- Contract 0010003521 — signed
+
+Unapproved (do not cite as authoritative):
+- PEP Rev 04 (PL-0015) — For CG Approval
+- DMP Rev C03 (PL-0013) — Issued for CG Resubmission
+
+For design management content, use the approved DMP rather than the unapproved PEP. The PEP may still be cited for content not in DMP or BEP (e.g. ICE wheel, INT interfaces) but without status qualifiers.
+
+**Correct source for Aconex CDE registers:** The Submission Plan, not PEP sec 18.1. The BEP specifies Autodesk BIM 360/Docs, not Aconex.
+
+**Correct source for drawing register stats:** Weekly submittal status reports (Aconex Master Log), not PEP.
+
+**Mock-up schedule** is forward-planning, not yet approved. Do not cite as an authoritative approved source.
+
+**Pitfall — Source not found leads to incorrect claims:** If you cannot locate the source document, do NOT guess at its content. Say so explicitly: "Source not found — claim unverified." The user will provide it if needed. This session produced multiple incorrect claims because I assumed content existed in sources I hadn't read (e.g. claiming Contract Sec 4 had an escalation protocol, claiming the ICE wheel was project-developed when it was in PEP §21). Each incorrect claim eroded trust. When in doubt, skip the attribution rather than fabricate one.
+
+**Pitfall — Systematic section offset between document and source:** The Summary's BEP section references (BEP §3→§9) were systematically offset from the actual BEP numbering (actual: §2.1→§6). If multiple section refs are wrong by the same ±N offset, the document may have been mapped against a different version. Check the source's TOC/heading structure directly rather than assuming the document's cited numbers are correct.
+
+**Verification checklist before writing ANY halftone ref:**
+- [ ] Found the source document (not just the reference code)
+- [ ] Read the specific section cited
+- [ ] Confirmed the claim exists in the source with matching data
+- [ ] If mismatch exists: corrected the ref to reflect what the source actually says
+- [ ] Source section numbers are correct (not offset from a different version)
+
+### Converting Body Text Remarks to Halftone
+
+When remarks, notes, or caveats are written as body text (black, normal size), convert them to halftone to distinguish from main content:
+
+```python
+for run in para.runs:
+    run.font.color.rgb = HALFTONE
+    run.font.size = SMALL
+    run.font.italic = True
+```
+
+### Halftone Annotations Are Not CG Compliance
+
+Adding a halftone annotation that acknowledges a CG comment (e.g. "CRS comment 21: requires verification") does NOT comply with the comment. The annotation only flags the issue. To comply, you must change the underlying document content — fix the numbers, add the cut-off date, correct the sequence, add missing packages. CG comments are addressed by content changes, not by annotations about the content.
+
+Each CG comment requires either:
+- A content fix (corrected numbers, reordered steps, added packages)
+- A halftone note explaining the status only if the content cant change yet
+
+Do not mark a comment as addressed until the actual table cell, paragraph text, or figure has been updated.
+
+
+
+## Engineer-Provided Compliance Forms — Fill Only, Don't Create
 
 When the Engineer provides their own Excel compliance sheet template (e.g. 064023 and 061000 forms with spec text pre-filled):
 
@@ -888,6 +1046,60 @@ When the user provides someone else's document (PDF, DOCX) and asks to "fix the 
 
 **Pitfall — python-docx misses table cell text:** For documents with many tables (Fida's SMP had 20+), `python-docx` may return 0 matches because text lives in runs inside table cells that the library doesn't traverse the same way. Use direct XML editing of `word/document.xml` inside the .docx zip instead.
 
+## Subcontractor Deliverable Review Protocol
+
+When a subcontractor/consultant delivers a revised document (e.g. SMP Rev01) that was supposed to address a CR sheet, do NOT stop at CR-item verification. The user explicitly corrected: *"you have to review not only from CR"* — always do a full independent technical review.
+
+### Step 1 — Verify CR Items Are Closed
+
+1. Extract the CR sheet that was sent to the subcontractor
+2. For each item, search the delivered document for evidence in both paragraph text and table cells (content often lives in tables)
+3. Note which items are closed and which need more work
+
+### Step 2 — Full Independent Technical Review
+
+Run ALL of these checks beyond the CR items:
+
+**Style & Language:**
+- "The Contractor" vs company name — should use "Samaya" not "the Contractor"
+- "as per" → "per"; AI clichés ("innovative", "world-class") → remove
+- "shall" count → should be 0, use "will" or active voice
+- Rating/certification language (points, Silver/Bronze) — if contract says code-compliance only, strip these
+
+**Document Structure:**
+- Duplicate sections at same level (e.g. 7.1 "Construction Phase" and 7.3 "Construction Phase")
+- Duplicate appendices (same title in two appendices)
+- Document history table — clean 1 row per revision?
+- Cover page: correct rev label ("Rev 01" not "R01"), correct company name, correct doc ref with project prefix
+
+**Cross-References to Other Plans:**
+A plan must reference other project plans by document code and section: DMP, BEP, PEP, HSE Plan, Procurement Plan, PQP, Communication Plan, Risk Management Plan. "Procurement" generically is not enough.
+
+**Missing Key Content Checklist:**
+- BIM LOD for sustainability audit (LOD 300/350/400)
+- Subcontractor obligations matrix
+- Non-deleterious certification workflow per ER 2.4D
+- Material compliance register
+- SBC edition stated (2018 vs 2024)
+- Commissioning agent (ITCA) per SBC 1001
+- Document code following project standard prefix
+
+**RACI / Responsibility Matrix:**
+Does it exist? Does it cover NRS, subconsultants, all relevant Samaya roles?
+
+### Step 3 — Document Feedback in the Same CR Sheet
+
+Do NOT write a separate review report. Add findings to the same CR sheet:
+1. Open the subcontractor's response CR sheet
+2. Add a new column "Additional Review Comments"
+3. Per item: state what's closed and what still needs fixing
+4. Add general notes at bottom for issues not tied to a specific CR item
+5. Save and sync to both OneDrive and Micro volume
+
+### Step 4 — Present to User
+
+Short table: lead with CR-item verdict, then list additional findings. The user already knows CR items were addressed — focus on what the CR missed.
+
 ## Repo-First Workflow for Project Documents
 
 **HARD RULE — Always check the repo before touching any project plan document.**
@@ -904,4 +1116,5 @@ When the user provides someone else's document (PDF, DOCX) and asks to "fix the 
 - `scripts/qa_check.py` — canonical HTML QA validator. Handles `.sheet`/`.page` layouts, accounts for cover sheets when counting footers, validates asset paths, detects `read_file()` line-number contamination, and accepts spaced CSS values such as `page-break-after: always`. Accepts one or more files; exit code 0 = all clean, 1 = issues found.
 - `references/html-sheet-audit-notes.md` — patterns for validating multi-sheet A4 HTML documents: sheet counting with modifier classes, CSS whitespace normalization, continuation-sheet footer checks, and project-fact/role audits.
 - `references/html-css-audit-checklist.md` — HTML/CSS quality audit checklist (tag balance, section drift, inline styles, print CSS, RTL edge cases). Merged from html-css-audit skill.
+- `references/aseer-doc-source-mapping-2026-07.md` — verified source mappings for PEP, BEP, and Contract sections used in the Aseer Museum Summary document
 - `references/cumulative-disposition-table.md` — pattern for tracking review comments across multiple CG submission rounds in project documents. Use when building or editing CG Comment Disposition tables (summary + detailed).

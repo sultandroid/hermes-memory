@@ -1,11 +1,5 @@
-Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. English only, British English, plain engineer language, active voice. No AI clichés. 'fix' = just do it. Real data from repo sources. OneDrive: write /tmp first then copy. CR sheets: user reviews before sending. Reports to PD (Waris Sultan) — concise, factual, evidence + recommended actions.
+Eng Mohamed Sultan — Technical Office Mgr, Samaya/Aseer. British English, active voice, plain engineering. Direct commands, 'next' to iterate. Detail-oriented: layout/formatting/formulas/charts/percentages. 'Fix' = working deliverables, not plans.
 §
-When text extraction fails on PDF comments, delegate to subagent with browser tools for visual analysis (screenshots, pixel analysis, OCR) before reporting limitation.
+CG submittal readiness: clean folder structure, consistent naming, permissions checked, no MD files, CRS comments verified against register entries. User modifies Excel templates directly; expects those saved as new baseline ('save for future'). Spots discrepancies across ALL registers — single-register fixes must replicate to PRR/DDR/HSE/AVR. Tests URLs and verifies work (download, HTTP 200, file permissions).
 §
-Reports to PD (Eng. Muhammad Waris Sultan Khan) should be concise, factual, with clear evidence and recommended actions.
-§
-Strong preference for clean folder structures. Method Statements are not plans — belong in operational docs. HSE plans are a distinct category. Notices duplication patterns quickly.
-§
-Methodology plans (RMP, SMP) describe process, not operational data. CG comments asking for register-level data in the plan are push-back candidates. PMBOK 6th Ed Ch. 11.3 supports different scales per risk category.
-§
-Test URLs yourself before sending — every link must return HTTP 200 first. 'You test' means 'test it, don't ask me.' Also: judge whether extra scope is needed before adding it — 'If covered, no need to split' means don't create parallel pages unless there's a clear gap.
+Eng. Mohamed Sultan — Technical Office Manager, Samaya Investment, Aseer Museum. Very detail-oriented about document accuracy. Expects references to be verified against actual source documents BEFORE citing, never assume. Keep responses short, direct, factual — no AI-sounding language, no symbols (§), no verbose explanations.

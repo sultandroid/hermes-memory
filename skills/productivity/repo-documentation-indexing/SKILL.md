@@ -19,6 +19,8 @@ Create comprehensive navigation, manifest, and cleanup-tracking files for any pr
 - User asks for a "quick links" or "quick reference" document
 - User asks for a "deprecation log", "cleanup tracking", or "files to remove" document
 - User asks to "audit the repo structure" or "document what's here"
+- User asks to "update plan reference files", "update ref_*.md", or "update Procurement/PQP reference"
+- User asks to "create an obligation matrix" or "map plans to owners/CG status"
 - Routine repo maintenance: keeping navigation docs in sync with actual files
 
 ## Workflow
@@ -246,4 +248,4 @@ git commit -m "ORDER N: Create Master File Manifest & Navigation — 4 index fil
 
 - `references/aseer-museum-pm-indexing-session.md` — Worked example: 476 files, 80+ directories, 33 deprecation items identified (3 duplicate folders, 4 empty stubs, 5 artifacts, 4 marker files, ~17 legacy items), 4 index files created and committed.
 - `references/governance-versioning-pattern.md` — CHANGELOG.md, VERSION.md, and CONSTITUTION amendment log patterns.
-- `references/plan-folder-template-pattern.md` — 4-file template pattern (README.md, plan_summary.md, checklist.md, approval_log.md) for populating project management plan subdirectories. Covers template structure, plan-specific data per folder, Python generation strategy with f-string pitfalls, and verification checklist.
+- `references/plan-folder-template-pattern.md` — 4-file template pattern (README.md, plan_summary.md, checklist.md, approval_log.md) for populating project management plan subdirectories. Also covers **plan reference files** (ref_*.md — quick-lookup cards with doc metadata, revision history, submittal status, and cross-references) and the **obligation matrix** (plan-to-owner/CG-status map with next actions and key contacts). Covers template structure, plan-specific data per folder, Python generation strategy with f-string pitfalls, and verification checklist.

@@ -23,9 +23,11 @@ Extract structured data from PDFs and Excel exports for BIM/museum project regis
 | Source | Tool | Notes |
 |--------|------|-------|
 | URL-accessible PDF | `web_extract(urls=[...])` | Handles PDF-to-markdown, zero local deps — try this FIRST for any URL |
+| **Large self-contained HTML plan document** | **`search_files` (regex) + `read_file` (offset/limit)** | **PEP, DMP, BEP as single-file HTML with inline CSS. Locate sections via `<!-- PAGE` comment markers + `<h2>` headings. Extract tables, dashboards, flow diagrams, and milestone tracks sector by sector. See `references/html-project-plan-audit.md`.** |
 | PDF with real tables | `pdfplumber` | `extract_tables()` + `extract_text()` |
 | Simple single-column PDF (quotes) | `pdftotext` (poppler) | beats pdfplumber on irregular layouts |
 | macOS text-based PDF (fastest) | `pdftotext -layout -enc UTF-8` | Available on macOS via poppler, handles bilingual AR/EN |
+| **Bilingual KSA government contract (AR/EN dual-column)** | **`pdftotext -layout` + Python Unicode split** | **Split each line at first Arabic Unicode char (\u0600-\u06FF) into separate EN and AR files. Always produce TWO files, never merged. See `references/aseer-main-contract-extraction.md` for worked example.** |
 | Image-based PDF (no text layer) | PyMuPDF (`fitz`) → render to PNG → `tesseract` OCR | common for Illustrator/InDesign exports, scanned drawings |
 | **Slide deck PDF (PowerPoint/Keynote export)** | PyMuPDF → PNG → tesseract OCR, **then supplement with web sources** | 39-page slide decks with decorative elements; OCR is incomplete — always find a companion text document (overview PDF, published article) as primary source |
 | Scanned PDF (lightweight OCR) | `pytesseract` + Pillow | ~200MB tesseract, no PyTorch needed |
@@ -1000,6 +1002,84 @@ Design PDFs exported from AutoCAD/Vectorworks by scenographers (BMA, Boris Micka
 
 See `references/bma-cad-pdf-extraction.md` for full fixture legend libraries and the 27-question RCRC worked example.
 
+## DOCX to Markdown Conversion (Complex Documents)
+
+For DOCX files with many tables (BEPs, PEPs, plans with 50+ tables), `pandoc -t markdown` mangles table structure. Use `python-docx` with body-element iteration to preserve table placement relative to text:
+
+```python
+from docx import Document
+from docx.oxml.ns import qn
+import re
+
+doc = Document('input.docx')
+
+def get_table_md(table):
+    rows = []
+    for row in table.rows:
+        cells = [cell.text.strip().replace('\n', ' ').replace('|', ' / ') for cell in row.cells]
+        rows.append(cells)
+    if not rows: return ''
+    max_cols = max(len(r) for r in rows)
+    for r in rows:
+        while len(r) < max_cols: r.append('')
+    lines = ['| ' + ' | '.join(rows[0]) + ' |']
+    lines.append('|' + '|'.join(['---'] * max_cols) + '|')
+    for row in rows[1:]:
+        lines.append('| ' + ' | '.join(row) + ' |')
+    return '\n'.join(lines)
+
+def para_to_md(para):
+    style = para.style.name
+    text = para.text.strip()
+    if not text: return ''
+    formatted = ''
+    for run in para.runs:
+        rt = run.text
+        if not rt: continue
+        if run.bold and run.italic: rt = f'***{rt}***'
+        elif run.bold: rt = f'**{rt}**'
+        elif run.italic: rt = f'*{rt}*'
+        formatted += rt
+    if not formatted: formatted = text
+    if 'Heading 1' in style: return f'\n## {formatted}\n'
+    elif 'Heading 2' in style: return f'\n### {formatted}\n'
+    elif 'Heading 3' in style: return f'\n#### {formatted}\n'
+    elif 'List Paragraph' in style:
+        pPr = para._element.find(qn('w:pPr'))
+        indent = 0
+        if pPr is not None:
+            ind = pPr.find(qn('w:ind'))
+            if ind is not None:
+                left = ind.get(qn('w:left'))
+                if left: indent = int(left) // 720
+        return '  ' * indent + '- ' + formatted
+    return formatted
+
+# Iterate body elements in document order (preserves table placement)
+body = doc.element.body
+md_parts = []
+for element in body:
+    if element.tag == qn('w:p'):
+        for p in doc.paragraphs:
+            if p._element is element:
+                md = para_to_md(p)
+                if md: md_parts.append(md)
+                break
+    elif element.tag == qn('w:tbl'):
+        for t in doc.tables:
+            if t._element is element:
+                table_md = get_table_md(t)
+                if table_md: md_parts.append('\n' + table_md + '\n')
+                break
+
+full_md = '\n'.join(md_parts)
+full_md = re.sub(r'\n{4,}', '\n\n\n', full_md).strip() + '\n'
+```
+
+**Key:** Iterate `doc.element.body` in document order, not `doc.paragraphs` + `doc.tables` separately — the latter loses relative positioning.
+
+**Pitfall:** `pandoc -t markdown` produces cleaner prose but mangles complex tables (merged cells, multi-row headers). For 50+ table documents, always use `python-docx`.
+
 ## Pitfalls
 
 1. **Double extension files**: PDFs exported from Excel often get `.pdf.pdf` extension. Handle gracefully.
@@ -1022,6 +1102,11 @@ See `references/bma-cad-pdf-extraction.md` for full fixture legend libraries and
 9. **No text layer detection is not an error**: PyMuPDF `page.get_text()` returning empty string is valid for image-based PDFs. Always check text length first before deciding the route.
 10. **Encrypted PDFs may decrypt with empty password**: Many national-adoption PDFs (SIST, DIN, BSI previews) use 128-bit RC4 encryption with no user password. Try `pypdf.PdfReader(path).decrypt('')` before giving up.
 11. **Incomplete PDFs (TOC says 42 pages, file has 15)**: National adoptions of European standards often only include the front matter and first few clauses. Always check: (a) page count vs TOC, (b) whether the last page ends mid-sentence or mid-clause. Supplement with web sources (ANSI previews, iTeh standards, academic reviews) for the missing sections.
+12. **stdout cap truncates large terminal output (~40KB).** When extracting full contracts or large PDFs, `terminal("cat file")` or piping through `terminal()` silently truncates. For files over ~1000 lines, use Python file I/O directly (`open()` in `execute_code`) instead of terminal piping. The `execute_code` tool is the correct approach for bulk extraction.
+
+13. **execute_code has a 50 tool call limit.** When doing batch operations (converting multiple DOCX files, scanning many folders for file counts), use a single `terminal()` shell script that loops internally rather than making one `terminal()` call per item. The 50-call limit is hit quickly with per-file operations — a 98-folder scan with 4 tool calls per folder exhausts the budget. Write the loop as a bash script, run it once, then parse the output.
+
+14. **Do not fabricate contract content.** If you have not read a specific article/clause, do not invent its content and cite it as a source. An AI agent previously fabricated "Day+1 PM sends reminder to CG, Day+3 PD escalates to CG Acting PM, Day+5 formal notice" and cited it as "Per Contract 0010003521 Sec 4 escalation protocol" — this text does not exist anywhere in the contract. The user caught it and flagged it as a serious error. Before citing any contract provision: (a) extract the actual text from the PDF, (b) quote it verbatim, (c) cite the exact article number. If the contract does not contain what the user is looking for, say so explicitly.
 
 ## Schedule Compression & Restructuring
 
@@ -1226,6 +1311,7 @@ PYEOF
 
 ## Reference files
 
+- `references/docx-claim-verification.md` — DOCX claim verification / QC audit workflow: verify factual claims about a document's content against the actual source; locate the correct file when the given path is wrong; search docx paragraphs + tables for naming patterns; build a structured discrepancy report with claim-vs-actual tables
 - `references/shop-drawing-extraction.md` — Shop drawing PDFs from PostScript/Acrobat Distiller: partial text layer extraction, title block fields, dimension data, materials specs, and common sheet patterns (worked example: Bohemian Collection furniture shop drawings, 32 pages)
 - `references/bma-cad-pdf-extraction.md` — BMA/Boris Micka CAD-generated interior design PDFs: drawing code system, MEP fixture legend libraries, critical disclaimer language, and RFI cross-reference worked example (RCRC Exhibition, 27 questions)
 - `references/aseer-file-location-patterns.md` — Aseer Museum project file structure, OneDrive stub detection, Excel comparison sheet extraction, Outlook DB cross-reference, and known vendor quotation locations
@@ -1237,3 +1323,5 @@ PYEOF
 - `references/standard-pdf-extraction-pattern.md` — Pattern for extracting from European/British standards (BS EN, EN, ISO): encrypted national adoptions, incomplete PDFs (TOC says 42 pages, file has 15), supplementing missing clauses from web sources. Worked example: BS EN 16893:2018 Conservation of Cultural Heritage.
 - `references/material-data-sheet-extraction.md` — Worked example: extracting tabular data from image-based material data sheets (SS 304 inspection cert + Verdo FR MDF test report) using TSV bounding-box reconstruction, zoomed crop OCR, and manual calculation of derived values
 - `references/riba-plan-of-work-2013-study.md` — RIBA Plan of Work 2013 comprehensive study: all 8 stages (0–7) with full task bar tables, 6 procurement options with museum-specific recommendations, 12 project strategies, contractor's PM perspective, 2007→2013 stage mapping, and information exchange deliverables. Extracted from a 39-page image-based slide deck PDF + UCL overview supplement.
+- `references/aseer-main-contract-extraction.md` — KSA MoC Contract 0010003521: file locations, 9-section structure, Section 4 article map (13 articles), extraction pattern for bilingual AR/EN government construction contracts via pdftotext -layout
+- `references/html-project-plan-audit.md` — Structured QC audit of large HTML project plan documents (PEP, DMP, BEP). Workflow for locating sections via `<!-- PAGE` comment markers, extracting data tables, management dashboards, flow diagrams, and building a structured finding report with gap analysis. Worked example: Aseer Museum PEP Rev 01 audit of 6 sections in a 17,795-line HTML document.
