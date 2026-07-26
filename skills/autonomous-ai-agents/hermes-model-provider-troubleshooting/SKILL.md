@@ -142,6 +142,11 @@ providers:
     - Common models: `kimi-k2.5`, `kimi-k2.5-preview`, `kimi-k2.5-32k`, `kimi-k2.5-128k`, `moonshot-v1-8k`, `moonshot-v1-32k`, `moonshot-v1-128k`
     - See `references/kimi-provider-setup.md` for details
 
+11. **OpenCode Go provider fix** — If provider `opencode-go` points to `https://ollama.com/v1` instead of OpenCode's actual endpoint, the API will 401. Correct base_url in `~/.hermes/config.yaml`:
+   - `base_url: 'https://opencode.ai/zen/go/v1'`
+   - Requires restart or `/reload` after change
+   - Verify with `hermes config check` — should show `OPENCODE_GO_API_KEY` as ✓
+
 See steps 7-9 above for the safe staging pattern (embedding .env editing and verification).
 
 ## Mixture of Agents (MoA) configuration
