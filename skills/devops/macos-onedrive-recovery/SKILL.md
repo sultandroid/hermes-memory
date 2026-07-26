@@ -1,22 +1,23 @@
 ---
 name: macos-onedrive-recovery
-description: "Recover from OneDrive files-on-demand failures on macOS — distinguish 'Resource deadlock' (transient EDEADLK, retry) from 'stale stub' (0-byte or non-zip files when sync is disabled); use the Micro volume as a working-copy fallback. Load when cp/openpyxl/textutil fails on OneDrive paths, or the user mentions Micro/USB/external volume."
+description: "Recover from OneDrive files-on-demand failures on macOS — distinguish 'Resource deadlock' (transient EDEADLK, retry) from 'stale stub' (0-byte or non-zip files when sync is disabled) and 'write-block' (File Provider TCC restricts ALL writes to non-Finder processes); use the Micro volume as a working-copy fallback, or stage organized files to /tmp/ for manual Finder drag. Load when cp/openpyxl/textutil fails on OneDrive paths, or the user mentions Micro/USB/external volume."
 version: 1.0.0
 created_by: agent
 ---
 
 # macOS OneDrive Recovery
 
-Use when working with files in `~/Library/CloudStorage/OneDrive-...` (or any OneDrive mount point) on macOS and reads/writes fail in confusing ways. Covers the two failure modes that look similar but have different fixes, and the fallback to a local working copy.
+Use when working with files in `~/Library/CloudStorage/OneDrive-...` (or any OneDrive mount point) on macOS and reads/writes fail in confusing ways. Covers the three failure modes that look similar but have different fixes, and the fallback to a local working copy.
 
-## The two failure modes
+## The three failure modes
 
 | Mode | File on disk | Behaviour | Recovery |
 |---|---|---|---|
 | **Transient EDEADLK** | Real bytes, just briefly locked | `cp` fails with `Resource deadlock avoided`, retries succeed within 15-60 s | `sleep 30; retry` |
 | **Stale stub** (Files-on-Demand not hydrated) | Real-looking size, fake content | `unzip -l` says "End-of-central-directory signature not found"; `openpyxl` raises `BadZipFile`; `textutil` errors; `cat` shows PDF binary header | Read from the working copy on the Micro volume (or the user's external backup drive), edit there, write back when OneDrive lock clears |
+| **Write-block** (File Provider TCC) | Fully local, readable | ALL write methods fail with `Operation not permitted`: `cp`, `mv`, `ditto`, `cat >`, `mkdir`, Python `open('wb')`, AppleScript Finder `duplicate`/`move`. Creating new files or dirs also blocked. | Stage files to non-OneDrive volume (MICro, /tmp/), open both Finder windows, tell user to drag manually. Only Finder and OneDrive app can write. |
 
-**Diagnose first.** A 0-byte file or a fresh EDEADLK is one thing. A file with a real-looking size (15 KB, 79 KB, 471 KB) that won't unzip is the stub. Don't waste 5+ tool calls retrying — check `brctl status` for `SYNC DISABLED (app not installed)`, then go straight to the working-copy path.
+**Diagnose first.** A 0-byte file or a fresh EDEADLK is one thing. A file with a real-looking size (15 KB, 79 KB, 471 KB) that won't unzip is the stub. Don't waste 5+ tool calls retrying — check `brctl status` for `SYNC DISABLED (app not installed)`, then go straight to the working-copy path. If `cp file /path/to/OneDrive/` fails with `Operation not permitted` but the source file is readable, this is the write-block — don't retry, use the Finder-drag workaround instead.
 
 ```bash
 # Quick diagnostic
@@ -24,7 +25,28 @@ lsof "$PATH" 2>&1 | head -3                # is a real app holding it?
 ls -la "$PATH"                              # real size or 0?
 unzip -l "$PATH" 2>&1 | head -3             # valid zip?
 brctl status 2>&1 | grep -i "sync disab"   # is the client broken?
+# Write-block diagnostic (try to write a test file)
+touch "$(dirname "$PATH")/.od_write_test" 2>&1
+# → "Operation not permitted" = write-block active
 ```
+
+### Special case: OneDrive-stored Python modules
+
+When a `.py` file on OneDrive is a stale stub (null bytes), **importing it as a Python module** fails with `SyntaxError: source code string cannot contain null bytes` or the file reads as all `\x00` bytes. This is the same stale-stub failure mode but manifests at import time rather than at read time.
+
+**Detection:**
+```bash
+# Quick check — does the file have real Python content?
+head -c 200 /path/to/onedrive/template.py | xxd | head -3
+# All 0000 0000 0000 0000 = stale stub
+```
+
+**If the template file is essential** (e.g., SamayaDoc class for branded DOCX generation):
+1. Force OneDrive to sync: `open` the folder in Finder and click the file
+2. If sync is permanently stuck or the file cannot be downloaded, **replicate the styling manually** in python-docx using known brand specs
+3. Document the fallback in a reference file so future sessions don't retry the same dead end
+
+**Example:** The SamayaDoc template (`samaya_doc_template.py`) at 19KB with all-null content is a stale stub. The fix is manual Samaya-style replication — documented in `bim-technical-documentation` skill's `references/samaya-docx-generation-tbd-fill.md`.
 
 ## Micro volume as working-copy fallback
 
@@ -42,6 +64,21 @@ The Micro path is **not** a stale cache. When the user says "the morning's file 
 
 **Decision rule for the Micro `Work/` tree:** if the file's mtime is **after** the corresponding OneDrive file's mtime, Micro is the live source. Read from Micro, edit on Micro, write back to OneDrive only after the lock clears.
 
+## Write-block workaround: staging to /tmp/ for Finder drag
+
+When the File Provider write-block is active and you need to deliver organized files into OneDrive:
+
+1. **Stage files in a structured directory** under `/tmp/<job>_filed/` or `/Volumes/MIcro/Temp/<job>/`, organized by destination folder (e.g., one sub-folder per PQ ref). Do not use OneDrive as the staging area — every write attempt will fail.
+2. **Include a FILE_MAPPING.csv** in the staging directory so the user can see which file goes where.
+3. **Open both locations in Finder**:
+   ```bash
+   open /tmp/<job>_filed/
+   open "/path/to/OneDrive/target/folder/"
+   ```
+4. **Tell the user to drag** each sub-folder from the source window into the corresponding OneDrive target folder. The user reports this works after confirming they know the destination.
+
+**Do NOT attempt to open the staged files directly in Finder as a copy mechanism** — the `open` command from terminal opens files in Preview, which does NOT bypass the write-block.
+
 ## Recovery procedure
 
 1. **Identify the failure mode** (see diagnostic above). 30 s wait is cheap; 5 retries are not.
@@ -54,15 +91,16 @@ The Micro path is **not** a stale cache. When the user says "the morning's file 
      `sultandroid/aseer-museum-pm`. The repo is a third-tier fallback when both
      OneDrive and Micro are unavailable or stale.
    - Ask the user. Don't guess. They may be editing on a remote desktop, on a different machine, or have a version you don't know about.
-3. **Read from the working copy.** Use tools appropriate to the file type:
+3. **If write-block:** stage organized files to `/tmp/<job>_filed/` with a mapping CSV, open both Finder windows, and tell the user to drag. Do not waste retries on cp/mv/ditto.
+4. **Read from the working copy.** Use tools appropriate to the file type:
    - DOCX → `python-docx` (`from docx import Document`)
    - PDF → `pdftotext -layout` (poppler, in `/opt/homebrew/bin/`)
    - XLSX → `openpyxl.load_workbook(read_only=True, data_only=True)`
    - HTML → `textutil -convert txt -stdout` or just `cat`
-4. **Edit on the working-copy path** (Micro, repo, or wherever the source is). Use `write_file`, `patch`, or a `python` script that opens the file in place.
-5. **Re-render derived artefacts** (PDF from DOCX via `pandoc`, etc.) to `/tmp/`, then `cp` to Micro or the repo.
-6. **Try to write back to OneDrive** — single attempt, with one retry after a 30 s wait. If the second attempt fails, leave the new file on the working-copy path and tell the user.
-7. **Log what happened** so the next session knows. Mention the OneDrive state in your final reply.
+5. **Edit on the working-copy path** (Micro, repo, or wherever the source is). Use `write_file`, `patch`, or a `python` script that opens the file in place.
+6. **Re-render derived artefacts** (PDF from DOCX via `pandoc`, etc.) to `/tmp/`, then `cp` to Micro or the repo.
+7. **Try to write back to OneDrive** — single attempt, with one retry after a 30 s wait. If the second attempt fails, leave the new file on the working-copy path and tell the user.
+8. **Log what happened** so the next session knows. Mention the OneDrive state in your final reply.
 
 ## What NOT to do
 
@@ -71,6 +109,8 @@ The Micro path is **not** a stale cache. When the user says "the morning's file 
 - Do not `rm` the OneDrive stub as "cleanup" — OneDrive will re-create it on the next sync.
 - Do not loop a 5-attempt retry on EDEADLK. One retry after 30 s is enough; if it still fails, switch paths.
 - Do not push to git from a Micro file without re-staging to the repo on the main volume first — git tracks inodes, not paths, and a move across volumes can surprise.
+- **Do not retry writes to OneDrive during write-block.** One attempt is diagnostic; a second after 30 s proves persistence. Every subsequent attempt wastes tool calls. The File Provider TCC restriction will not lift during a session — only Finder/manual drag works.
+- Do not attempt to script around the write-block with AppleScript Finder `duplicate` or `move` — these also fail with error -8004. The block is at the kernel extension level, not the application level.
 
 ## User-hint patterns
 
@@ -88,6 +128,7 @@ When you see such a hint, go straight to the Micro path. Don't re-probe OneDrive
 - `outlook-email` — references `references/onedrive-edeadlk.md` for the read-side EDEADLK. This skill covers the **stale stub** failure, which is different and not addressed there.
 - `email-pipeline-automation` — has a pitfall that says `/Volumes/MIcro/Work/Aseer-Museum/` is stale. That is true for the `04_Plans/` and `.pi-tmp/` subtrees, **wrong** for `04_Docs/`. Read this skill before believing the email-pipeline-automation pitfall about Micro.
 - `hermes-config-management` — `references/gateway-polling-conflict-recovery.md` covers a different OneDrive problem (the gateway service can't restart from inside the agent). Unrelated to file recovery, but same family of "stuck state" issues.
+- `document-analysis` — covers the **OneDrive-locked DOCX** fallback: when even `python-docx` fails with EDEADLK on a locked DOCX, Python's `zipfile.ZipFile` + regex tag-strip may bypass the lock. Also covers `com.apple.provenance` xattr detection for OneDrive placeholder `.md` files, and the `open` hydration workaround for DOCX (same pattern as PDFs).
 
 ## Reference files
 

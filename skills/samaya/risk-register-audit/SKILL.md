@@ -71,6 +71,53 @@ Adel Darwish's files - 01- Execution Documents/
 | Blank target_close on High/Critical risks | 9 instances | Add realistic target dates |
 | Target_close = today with Open status | 3 instances | Review for closure or extension |
 
+## Structural Completeness Check
+
+Beyond verifying claims, audit every risk for **required field presence** across all 5 registers.
+
+### Data Sources & Action Plan Fields
+
+| Register | Source File | Action Plan Field | # Risks |
+|----------|------------|-------------------|---------|
+| PRR | `06_Risk_System/risks.json` | `response_action` | ~109 |
+| DDR/DRR | `06_Risk_System/generated/drr_risks.json` | `response_action` | ~79 |
+| DDR (MD) | `01_Registers/design_discipline_risk_register.md` | `Immediate Control Action` (col 9) | ~122 |
+| HSE | `06_Risk_System/generated/hse_risks.json` | `controls` | ~41 |
+| AVR | `06_Risk_System/webapp/av/src/index.html` (embedded RISK JSON) | `response_action` | ~12 |
+| Construction (project-specific) | `01_Registers/construction_risk_register.md` | `Mitigation` column | 20 |
+| Construction (generic) | `01_Registers/construction_risk_register.md` | **NONE** — no action column | 40 |
+
+### Audit Script Pattern
+
+Use python3 to iterate risks and flag missing fields:
+
+```python
+import json
+with open('path/to/risks.json') as f:
+    data = json.load(f)
+risks = data.get('risks', [])
+missing = [r['id'] for r in risks
+           if not r.get('response_action') or r['response_action'].strip() in ('', '—', '-')]
+print(f'{len(risks)} risks, {len(missing)} missing')
+for rid in missing:
+    print(f'  {rid}')
+```
+
+For AVR (embedded in HTML), extract the RISK JSON:
+```python
+import re
+with open('webapp/av/src/index.html') as f:
+    content = f.read()
+m = re.search(r'const RISK = (\{.+?\});', content, re.DOTALL)
+if m:
+    avr = json.loads(m.group(1))
+```
+
+### Known Structural Gaps (as of Jul 2026)
+
+- **Construction C-001 to C-040**: 40 generic risks lack any action/mitigation column in the table format. If still active, add a Mitigation column.
+- **HSE**: Uses `controls` field as the action plan (not `response_action`) — the field mapping differs from PRR/DDR/AVR.
+
 ## Deploy After Fixes
 
 ```bash

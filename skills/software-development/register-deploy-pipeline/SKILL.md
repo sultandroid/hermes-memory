@@ -37,19 +37,33 @@ OneDrive sync is unreliable: the file can be 0 bytes, missing, or stale. When th
 **Fix:** generate the xlsx locally from the same JSON that drives the webapp. A `build_xlsx.py` module should expose:
 
 ```python
-def build(data: dict, out_path: Path, snapshot_date: str, revision: str, total: int):
+def build(data: dict, out_path: str, *,
+          page_url: str, register: str, doc_no: str, doc_ref: str,
+          revision: str, status: str, total: int,
+          scale: int = 4, snapshot_no: int = None) -> str:
     """Build a Samaya-templated multi-sheet workbook (Dashboard, Register, Action Plan)."""
 ```
 
-Wire it into `build_risk.py` (or whatever the build script is) right after the HTML write:
+Wire it into the build script right after the HTML write:
 
 ```python
 from build_xlsx import build as _build_xlsx
 xlsx_path = OUT_DIR / xlsx_name
 snapshot_date = str(data.get("last_updated", "") or "")
-_build_xlsx(data, xlsx_path, snapshot_date, rev, n)
+_build_xlsx(data, str(xlsx_path),
+            page_url=cfg["page_url"],
+            register=cfg["register"],
+            doc_no=cfg["doc_no"],
+            doc_ref=cfg["doc_ref"],
+            revision=rev,
+            status="ACTIVE",
+            total=n,
+            scale=cfg.get("scale", 4),
+            snapshot_no=xlsx_seq)
 os.chmod(xlsx_path, 0o644)  # web server needs world-read
 ```
+
+**CRITICAL: `build()` uses keyword-only arguments** (the `*` in the signature). Do NOT pass extra positional args — `_build_xlsx(data, xlsx_path, snapshot_date, rev, n)` fails with `TypeError: takes 2 positional arguments but 5 were given`.
 
 Now the xlsx is byte-for-byte reproducible from `risks.json`. No OneDrive in the loop. If a sub-register has a different shape (e.g. DDR uses different categories), give it its own `build_xlsx_ddr.py`.
 
@@ -386,12 +400,25 @@ After every build and deployment, extract the actual `.xlsx` href from each live
 
 Verify all four URLs return HTTP 200 with the OpenXML spreadsheet MIME type. Protect sibling subdirectories from master `rsync --delete`.
 
-## Deploy verification (always run these four checks)
+## Deploy verification (always run these five checks)
 
 ```bash
+# 0. Verify HTML file structure before deploying (prevents site-breaking uploads)
+head -c 20 "$LOCAL_FILE"  # must show: <!DOCTYPE html>
+tail -c 20 "$LOCAL_FILE"  # must show: </html>
+
+# 0a. Verify JSON modification did not strip HTML
+python3 -c "
+with open('$LOCAL_FILE') as f:
+    c = f.read()
+assert c.startswith('<!DOCTYPE html>'), 'Missing DOCTYPE — JSON replacement destroyed the HTML!'
+assert c.endswith('</html>'), 'Missing closing HTML — file was truncated!'
+print('File OK:', len(c), 'bytes')
+"
+
 # 1. Main page returns 200 and references the new xlsx
 curl -s https://samaya-factory.com/aseer/registers/Risk/ \
-  | grep -oE 'EXP-RISK-PRR-[0-9-]+_[A-Za-z0-9_]+\.xlsx' | head -1
+  | grep -oE 'EXP-RISK-PRR-[0-9-]+_[A-Za-z0-9_]+\\.xlsx' | head -1
 
 # 2. The new xlsx returns 200
 curl -sI "https://samaya-factory.com/aseer/registers/Risk/EXP-RISK-PRR-2026-004_RevC11_ACTIVE.xlsx" \
@@ -403,29 +430,88 @@ for sub in DDR HSE; do
 done
 
 # 4. The cross-nav line is present in the rendered page
-curl -s https://samaya-factory.com/aseer/registers/Risk/ | grep -c 'registerNav\|reg-card'
+curl -s https://samaya-factory.com/aseer/registers/Risk/ | grep -c 'registerNav\\|reg-card'
 ```
 
-A passing run prints the latest EXP-RISK filename, `200` for the xlsx, `200` for each sub-register, and a non-zero count for the nav markers. Anything else = a deploy broke the split; revert the rsync and re-run.
+A passing run prints the latest EXP-RISK filename, `200` for the xlsx, `200` for each sub-register, and a non-zero count for the nav markers.
+
+## Hostinger multi-path deploy verification (CRITICAL — do not skip)
+
+The `.htaccess` on Hostinger rewrites ALL requests to `/build/`:
+
+```
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^samaya-factory.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^://samaya-factory.com$ [NC]
+RewriteCond %{REQUEST_URI} !^/build/
+RewriteRule ^(.*)$ /build/$1 [L]
+```
+
+This means two server paths serve the risk register:
+- `/build/aseer/registers/Risk/index.html` (primary)
+- `/build/technical-office/aseer/registers/Risk/index.html` (mirror — updated by git post-commit hook)
+
+**After every deploy, verify MD5 across ALL paths.** The git hook may overwrite your SCP:
+
+```bash
+MD5_LOCAL=$(md5 -q "$LOCAL_FILE")
+for REMOTE_PATH in \
+  "/home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/Risk/index.html" \
+  "/home/u517606786/domains/samaya-factory.com/public_html/build/technical-office/aseer/registers/Risk/index.html"; do
+  MD5_REMOTE=$(ssh -p 65002 u517606786@samaya-factory.com "md5sum '$REMOTE_PATH'" 2>&1 | awk '{print $1}')
+  echo "$([ \"$MD5_LOCAL\" = \"$MD5_REMOTE\" ] && echo MATCH || echo MISMATCH): $REMOTE_PATH"
+done
+```
+
+**If mismatch persists:** the git post-commit hook is overwriting the file. Disable temporarily:
+```bash
+ssh -p 65002 u517606786@samaya-factory.com \
+  "chmod -x /home/u517606786/domains/samaya-factory.com/public_html/build/.git/hooks/post-commit 2>/dev/null"
+```
+Re-deploy, then re-enable after confirming stable.
+
+**LiteSpeed cache persists despite no-cache headers.** Even with `cache-control: no-cache, no-store, must-revalidate`, LiteSpeed may serve stale HTML. Force fresh serve:
+1. Add query param: `curl -s 'https://.../Risk/?v=$(date +%s)'`
+2. Purge: `rm -rf /tmp/lshttpd/* && /usr/local/lsws/bin/lshttpd -s restart`
+3. Verify content has your fix with unique param
+
+For the full toolbar standard (all four registers must match), see `references/toolbar-standardization.md`.
 
 ## Pitfalls
 
-- **OneDrive-stale xlsx → 404**: if `deploy.sh` does `cp "$ONE_DRIVE_PATH" src/` and OneDrive is sync-disabled, the xlsx will be 0 bytes or missing. Symptom: EXCEL button 404, page itself loads fine. Fix: generate the xlsx from JSON (lesson 1).
+- **Local file may be stale** — the HTML source at `~/aseer-museum-pm/06_Risk_System/webapp/src/` is NOT the authoritative data source. The server often has newer risks added or edited directly. Before editing the local copy, always compare risk counts. If the server has more risks, download from server first and edit that.
+- **Git restore overwrites server customizations** — the live server may have toolbar buttons, register nav links, CSS tweaks, or button handlers that the git repo doesn't have. These were added directly to the server file. Before restoring from git: download the server version, compare features, and re-add any missing customizations after restore. The safe JSON fix procedure: extract RISK JSON from server HTML, modify via json.loads/dumps, slice-replace only the JSON portion (using m.start(2)/m.end(2)), verify `<!DOCTYPE html>` + `</html>` still bookend the file.
+- **Sub-registers missing CSV/Print buttons** — older DDR/HSE/AVR pages built from an earlier template may lack `exportCSV()` function and `btnPrint` bindings. Fix: copy `exportCSV()` from PRR (register-agnostic, reads from RISK global), add `btnCsv.onclick = exportCSV; btnPrint.onclick = ()=>window.print();` to init(). After adding, verify all four toolbar buttons (Reset, Snapshot, CSV, Print) work on every register.
+- **Fixes must replicate to ALL sibling pages** — after fixing one register page (e.g. PRR), always check the other three (DDR, HSE, AVR) for the same issue. User catches discrepancies across registers. Common gaps: missing CSV/Print buttons, registerNav in wrong location (htitle vs hright), duplicate registerNav elements, missing register cards section.
+- **PRR risk ID convention** — PRR uses `PRR-{RBS_CATEGORY}-{NN}` with 2-digit sequential (01-99). Non-standard codes like `SMP` (not an RBS category) or 3-digit padding (`001`) must be renumbered. Check `rbs_categories` dict for valid codes. Action IDs inside risks should match the project-wide format (`A1`, `A2`) not risk-specific (`SMP-001-A1`).
+- **OneDrive-stale xlsx → 404**: if deploy.sh does `cp "$ONE_DRIVE_PATH" src/` and OneDrive is sync-disabled, the xlsx will be 0 bytes or missing. Symptom: EXCEL button 404, page itself loads fine. Fix: generate the xlsx from JSON (lesson 1).
 - **`rsync --delete` wipes siblings**: the most destructive silent failure. Symptom: sub-register pages start 404'ing right after a master deploy. Fix: `--exclude='DDR/' --exclude='HSE/'` (lesson 2).
-- **Hardcoded xlsx filename in template**: the template used to have `Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx` baked in. Any filename change requires a template rebuild. Always make the filename a build-time substitution (`__XLSX_HREF__` for the server filename, `__XLSX_DOWNLOAD__` for the browser save-as name) and compute it from a SEQ helper.
+- **Hardcoded xlsx filename in template**: the template used to have `Aseer_Museum_Risk_Register_C11_2026-07-19.xlsx` baked in. Any filename change requires a template rebuild. The current approach uses `__XLSX_FILE__` in the template (reused for both href and download), then overrides the `download` attribute with a regex post-processing step.
 
-  **Download filename split:** The `href` points to the server filename (`EXP-RISK-PRR-2026-040_RevC12_ACTIVE.xlsx`). The `download` attribute should be user-friendly: `Aseer_Regional_Museum_PRR_2026-07-25_1537.xlsx`. Use two placeholders in the HTML template:
-  ```html
-  <a href="__XLSX_HREF__" download="__XLSX_DOWNLOAD__">Download</a>
-  ```
-  Generate the download name from the project name, register code, snapshot date, and current time:
+  **Download filename split:** The `href` points to the server filename (`EXP-RISK-PRR-2026-040_RevC12_ACTIVE.xlsx`). The `download` attribute should be user-friendly: `Aseer_Regional_Museum_PRR_2026-07-26_1324.xlsx`.
+
+  **Standard naming convention (all 4 registers):**
+
+  | Register | Download name pattern | Example |
+  |----------|----------------------|---------|
+  | PRR | `Aseer_Regional_Museum_PRR_{date}_{time}.xlsx` | `Aseer_Regional_Museum_PRR_2026-07-26_1324.xlsx` |
+  | DDR | `Aseer_Regional_Museum_DDR_{date}_{time}.xlsx` | `Aseer_Regional_Museum_DDR_2026-07-24_1324.xlsx` |
+  | HSE | `Aseer_Regional_Museum_HSE_{date}_{time}.xlsx` | `Aseer_Regional_Museum_HSE_2026-07-19_1324.xlsx` |
+  | AVR | `Aseer_Regional_Museum_AVR_{date}_{time}.xlsx` | `Aseer_Regional_Museum_AVR_2026-07-25_1325.xlsx` |
+
+  **Implementation (add to each build script after the main template replacements):**
   ```python
   from datetime import datetime
-  now = datetime.now().strftime('%Y-%m-%d_%H%M')
-  proj = "Aseer_Regional_Museum"
-  download_name = f"{proj}_{reg_code}_{now}.xlsx"
+  snap_date = str(data.get("last_updated", "") or "")
+  snap_time = datetime.now().strftime("%H%M")
+  download_name = f"Aseer_Regional_Museum_{REG_CODE}_{snap_date}_{snap_time}.xlsx"
+  import re as _re
+  html = _re.sub(r'download="[^"]+\.xlsx"', f'download="{download_name}"', html)
   ```
-  For sub-registers that derive from the master page (like AVR from PRR), replace both `href` and `download` attributes using regex or string search on the already-built master HTML:
+
+  The date comes from `data["last_updated"]` (data currency date), not `datetime.now()`, because the register may have been last updated days ago. The time comes from `datetime.now()` (generation time). This gives `YYYY-MM-DD_HHMM` format.
+
+  For sub-registers that derive from the master page (like AVR from PRR), replace both `href` and `download` attributes using regex on the already-built master HTML:
   ```python
   # Find the existing href/download values from the master page
   m = re.search(r'href="([^"]*\.xlsx)"', html)
@@ -438,8 +524,9 @@ A passing run prints the latest EXP-RISK filename, `200` for the xlsx, `200` for
 - **Permissions 640/700 on web server → 404**: The server's web user must have world-read on Excel files. Two common causes: (1) OneDrive-copied files arrive with `0640` perms — LiteSpeed returns 403/404. (2) openpyxl `save()` on macOS creates files with `-rwx------` (700) — rsync `-az` preserves these. PRR/AV were always fine because deploy.sh's build scripts call `os.chmod(xlsx_path, 0o644)`. **Always** `os.chmod(path, 0o644)` after writing any xlsx, whether from the build script or after an `rsync` deploy on the server.
 - **LiteSpeed cache hides the fix**: see `register-webapp-template` section 8b for the standard `.htaccess` + meta-tag cache-busting. Always add `?v=$(date +%s)` to the URL you curl in the verification step.
 - **`rbs_categories` must be a dict, not a list**: `build_xlsx._dashboard()` expects `data["rbs_categories"]` to be a `{code: name}` dict (e.g. `{"AV": "AV & Multimedia", "HW": "Hardware & long-lead"}`). If you pass a list of `{code, name}` objects, the xlsx build crashes with `AttributeError: 'list' object has no attribute 'get'`. Always check the format in the master `risks.json` before writing a sub-register's JSON.
-- **NEVER regex-patch a deployed page to add/remove cards**: regex-based banner replacement (`<div class="registers" id="registers">.*?</div>\s*</div>`) is fragile — the `.*?` with multiple `</div>` closes can eat adjacent sections (analytics, matrix, toolbar). Always rebuild from the master template by swapping the JSON payload and the current-card marker, then upload the full file. See `references/sub-register-ui.md` for the rebuild pattern.
-- **Use string slicing, not regex, for banner replacement in build scripts**: when building a sub-register from the master template, find the banner start with `html.find('<div class="registers" id="registers">')` and the next section start with `html.find('<div class="analytics">', i)` (fallback to `html.find('<div class="toolbar">', i)`), then slice-replace: `html = html[:i] + new_banner + '\n\n  ' + html[j:]`. This is safe, predictable, and never eats adjacent sections. The `build_av.py` at `~/aseer-museum-pm/06_Risk_System/webapp/av/build_av.py` is the reference implementation.
+- NEVER regex-patch a deployed page to add/remove cards: regex-based banner replacement is fragile and can eat adjacent sections. Always rebuild from the master template.
+- **Regex-based JSON data replacement destroys the file**: A regex like `(const DATA = )({.*?})(;\s*$)` captures only up to `;` at end of line. On a minified single-line JSON (all register SPAs), writing back `prefix + new_json + suffix` **loses all HTML/CSS/JS** before and after that line — the page becomes bare JSON. Always use JSON-level manipulation: parse with `json.loads()`, modify the dict, re-stringify with `json.dumps(ensure_ascii=False, separators=(',',':'))`, then slice-replace ONLY the JSON portion in the original HTML string using `m.start(2)` / `m.end(2)` boundaries. Verify the result starts with `<!DOCTYPE html>` and ends with `</html>` before deploying.
+- Use string slicing, not regex, for banner replacement in build scripts
 
 ## Companion skills
 

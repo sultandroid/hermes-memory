@@ -330,9 +330,38 @@ Dashboard metrics must use COUNTIF/COUNTIFS referencing the PRR sheet, not hardc
 prr_sheet = "'Master Risk Register'"
 ws.cell(row=5, column=3).value = f'=COUNTIF({prr_sheet}!I2:I100,"Critical")'
 ws.cell(row=5, column=4).value = f'=COUNTIF({prr_sheet}!I2:I100,"High")'
-ws.cell(row=5, column=5).value = f'=COUNTIF({prr_sheet}!I2:I100,"Medium")'
-ws.cell(row=5, column=6).value = f'=COUNTIF({prr_sheet}!I2:I100,"Low")'
 ```
+
+### Risk Matrix — Use COUNTIFS Formulas (Not Hardcoded Counts)
+
+The risk matrix (P×S or C×L grid) must use COUNTIFS formulas referencing the Risk Register sheet. The Risk Register must have **separate P (Probability) and S (Severity) columns** for the formulas to reference.
+
+```python
+# CORRECT: COUNTIFS referencing P and S columns
+cell.value = f'=COUNTIFS(\'Risk Register\'!$C$12:$C${last_data_row},{p},\'Risk Register\'!$D$12:$D${last_data_row},{s})'
+# C = Probability, D = Severity
+```
+
+Add P and S to REG_COLS and the vals array:
+```python
+REG_COLS = [
+    ("ID", 12, "left"),
+    ("Cat", 8, "center"),
+    ("P", 5, "center"),
+    ("S", 5, "center"),
+    ("Rating", 10, "center"),
+    ...
+]
+vals = [
+    r.get("id", ""),
+    r.get("category", ""),
+    r.get("probability", ""),
+    r.get("severity", ""),
+    ...
+]
+```
+
+**CRITICAL:** Hardcoded Python counts (`n = ps.get((p, s), 0); cell.value = n if n else None`) get stale. Always use dynamic COUNTIFS formulas.
 
 Distribution by category uses COUNTIFS:
 ```python
@@ -451,16 +480,17 @@ Each register gets its own Excel snapshot and its own webapp page. The webapp us
 
 ### Cover Block Layout (rows 1-9, every sheet)
 
+**No merged cells.** The user explicitly rejects merged cells. Write section headers, title, doc info, meta, QR caption, and footer to single cells only (e.g. ws["A2"]) — never merge ranges.
+
 ```
-Row 1: "ASEER REGIONAL MUSEUM — <Register Name>" (Calibri 18pt bold, Navy #1E293B)
+Row 1: QR code (col A, 55px) + Title "ASEER REGIONAL MUSEUM — <Register>" (col C) + Samaya logo (col G)
 Row 2: "Doc No. <EXP-RISK-YYY-YYYY> · Contract: <...> · Rev <C11> · <ACTIVE>"
 Row 3: "Snapshot No. <NNN> · Date: <YYYY-MM-DD> · Time: <HH:MM (Asia/Riyadh)> · Source: <URL>"
 Row 4: (blank)
 Row 5: KPI numeric cards — B5=total, C5=Critical, D5=High, E5=Medium, F5=Low, G5=Open
 Row 6: KPI labels — B6=TOTAL, C6=CRITICAL, D6=HIGH, E6=MEDIUM, F6=LOW, G6=OPEN
-Row 7: (blank)
-Row 8: QR code (left, cell A8, 110px) + Samaya logo (right, cell G8, ~28px tall)
-Row 9: "Scan to open live register → <URL>" (italic 8pt gray)
+Row 8: (blank — QR and logo are in row 1)
+Row 9: "Scan to open live register → <URL>" (italic 8pt gray, single cell A9)
 ```
 
 - KPIs use 1-column-per-card (B..G), NOT merged cells (avoids MergedCell ValueError)

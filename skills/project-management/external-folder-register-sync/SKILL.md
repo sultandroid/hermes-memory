@@ -170,6 +170,57 @@ The cron job (`check_adel_files.sh`) is `no_agent: true` — it only compares fi
 
 The script outputs a list of new/changed files and a suggestion to run `hermes -z` for processing. Actual content analysis and register updates require a separate agent session.
 
+## Supplementary: Finding Project Data When OneDrive Files Are Locked
+
+OneDrive cloud-only files (0 blocks on disk) return "Resource deadlock avoided" on all read attempts. When this blocks an investigation, use the following cascade to find subcontractor/specialist data:
+
+### Cascade Order
+
+1. **Repo registers first** — always check these before OneDrive:
+   - `prequalification_register.md` — company names, PQ refs, scope descriptions, CG codes
+   - `submittal_register.md` — doc refs, submission dates, CG codes
+   - `specialist_register.md` — appointed specialists and status
+   - `risk_register.md` — cross-references to specialist risks
+
+2. **Outlook SQLite (email previews)** — when email .md files are deadlocked:
+   ```bash
+   DB="/Users/mohamedessa/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/Outlook.sqlite"
+   sqlite3 "$DB" -column "
+   SELECT datetime(m.Message_TimeReceived, 'unixepoch') as dt,
+          m.Message_NormalizedSubject as subject,
+          m.Message_SenderAddressList as sender,
+          substr(m.Message_Preview, 1, 250) as preview
+   FROM Mail m
+   WHERE m.Message_NormalizedSubject LIKE '%KEYWORD%'
+   ORDER BY m.Message_TimeReceived DESC
+   LIMIT 10;
+   "
+   ```
+   - `Message_Preview` contains the first ~250 chars of the email body — enough to see CG response codes ("B - Approved with Comments", "C - Revise and Resubmit")
+   - Filter for `@cg.com.sa` senders to see CG responses
+   - See `references/outlook-sqlite-data-discovery.md` for common query patterns
+
+3. **Adel snapshot file listings** — the `99_Archive/adel_snapshots/file_list.txt` contains a full crawl of Adel's OneDrive folder structure. Search for doc refs:
+   ```bash
+   grep "ZD-0088" /Volumes/MIcro/Temp/aseer-museum-pm/99_Archive/adel_snapshots/file_list.txt
+   ```
+   - Approval subfolder = CG responded
+   - Rev.01 subfolder = resubmitted after comments
+   - File dates show the timeline
+
+4. **Cross-reference** between all three sources to get the full picture:
+   - Email subject = document ref
+   - File listing shows approval folder exists
+   - Registers show the company name and PQ status
+
+### Example: Finding "who does the electrical assessment"
+```
+1. prequalification_register.md → PQ-0084 TABCOMM (testing & assessment)
+2. Outlook: MOC-MUS-ASE-1E0-ZD-0088 → CG Code B
+3. Adel snapshot: ZD-0088 in Approval/ subfolder → CG responded
+4. Conclusion: TABCOMM does electrical/mechanical assessment, 3 reports approved
+```
+
 ## Pitfalls
 
 - **First-run noise**: The script's first scan after a long gap flags ALL files as "new". Filter by modification date. Only items from the last 7 days are genuinely new.

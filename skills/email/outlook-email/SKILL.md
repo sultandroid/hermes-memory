@@ -304,6 +304,44 @@ set msub to subject of m  -- OK
 
 **Inbox message ordering is oldest-first (CRITICAL).** Message index 1 is the **newest** message. This applies to ALL folders.
 
+### Reading CG Response Codes from Preview Text (No Attachment Extraction)
+
+CG responses from Hossam Mabrouk follow a consistent pattern: `Message_Preview` starts with a classification line, then contains the CG code. You can read A/B/C/D codes **without extracting attachments** — saves ~30s per email.
+
+**Pattern in preview text:**
+```
+Classification-ASE-External-DS-ELC-0089
+...
+B - Approved with Comments       ← or "C - Revise and Resubmit"
+REF. MOC-MUS-ASE-1E0-ZD-0089
+```
+
+**Batch CG code checking query:**
+```sql
+SELECT m.Record_RecordID, m.Message_NormalizedSubject,
+  CASE
+    WHEN m.Message_Preview LIKE '%A - Approved%' THEN 'A'
+    WHEN m.Message_Preview LIKE '%B - Approved%' THEN 'B'
+    WHEN m.Message_Preview LIKE '%C - Revise%' THEN 'C'
+    WHEN m.Message_Preview LIKE '%D - Disapproved%' THEN 'D'
+    ELSE 'UNKNOWN'
+  END as cg_code
+FROM Mail m
+WHERE m.Record_RecordID IN (49279, 49271, 49259)
+  AND m.Message_SenderList = 'Hossam Mabrouk';
+```
+
+**Workflow:**
+1. Query recent emails from CG senders with doc refs
+2. Extract CG codes from preview using CASE pattern
+3. Code B → log approval, update registers, no attachment needed
+4. Code C → extract PDF to read specific reviewer comments (preview may truncate)
+5. Only extract for Code C or when preview ambiguous
+
+This avoids AppleScript for ~70% of CG responses (Code B approvals).
+
+**Pitfall:** `Message_Preview` truncated to ~500 chars. If long preamble before the code line, fall back to AppleScript `plain text content`.
+
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
 
 1. **Lead with the verdict.** First sentence: "POSSIBLE" or "NOT POSSIBLE — only X of Y items."
@@ -330,10 +368,7 @@ See `references/register-log-reconciliation.md` for the complete workflow.
 
 **Login:** Navigate to `https://constructionandengineering.oraclecloud.com/ui/v1/login`
 
-**OneDrive file management (macOS):**
-- `mv` (rename within same OneDrive directory) works — it's a metadata-only operation
-- Direct `cp`/write to OneDrive paths can cause EDEADLK
-- Stage large archives to /tmp first with `unzip`, then `mv` to OneDrive target
+**OneDrive file management (macOS):**\n- `mv` (rename within same OneDrive directory) works — it's a metadata-only operation\n- Direct `cp`/write to OneDrive paths can cause EDEADLK (read) or `Operation not permitted` (write from non-Finder processes)\n- The write restriction is a macOS File Provider TCC limitation: ALL write methods fail (`cp`, `mv`, `ditto`, `cat >`, Python `open()`, AppleScript Finder `duplicate`, `mkdir`). Does not depend on cloud-only state — even fully local files in CloudStorage are unwritable from terminal/Python.\n- Workaround: stage organized files to `/tmp/<job>_filed/` with correct folder structure + mapping CSV, `open` in Finder, tell user to drag into OneDrive manually.\n- Stage large archives to /tmp first with `unzip`, then `mv` to OneDrive target (though `mv` to CloudStorage destination also fails — use Finder or copy to a non-CloudStorage target).
 
 **WeTransfer / cloud-link attachments are NOT downloadable from this environment.** Flag to the user for manual download.
 
@@ -691,7 +726,23 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 - **Actions Required** section — numbered list of what the user needs to do next
 
 ### Phase 5 — Cross-reference & Update
+
 Update ALL relevant registers: Master Submittal Register, Plan Tracker, discipline-specific CG_STATUS.md, submission plans, Lessons Learned Register, Odoo tasks, Memory.
+
+**Cascade pattern (CG responses touch multiple files):**
+
+When CG responses arrive, one email scan usually updates:
+- `01_Registers/submittal_register.md` — CG code + date for each submittal
+- `01_Registers/prequalification_register.md` — for PQ responses: code, resubmission dates
+- `Technical_Office/Specialist_Management/prequalification_log.md` — specialist appointment lifecycle (especially for PQ responses)
+- `Technical_Office/Specialist_Management/specialist_register.md` — specialist status, candidate names, stage (especially acoustic, landscaping, lab specialists)
+- `01_Registers/subcontractor_package_register.md` — package-level status updates for acoustic, landscaping, setwork, lab packages
+- `01_Registers/arch_drawing_register.md` and/or `01_Registers/drawing_register.md` — status per drawing package
+- `00_Status/action_items.md` — new actions for Code C (revise) or Code B (proceed with hiring/next stage)
+- `03_Plans/02_Stakeholder/CG_STATUS.md` — if stakeholder-specific
+- `00_Command_Center/master_dashboard.md` — if key milestones change
+
+Apply updates in order: submittal register first (source of truth), then specialist/log registers (derived), then action items (new work generated). This prevents stale references.
 
 ### Phase 6 — Archive
 Log the batch to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML frontmatter (last_updated, owner_agent: Hermes, status: active, source). This log serves as the dedup reference for the next scan.
@@ -699,7 +750,72 @@ Log the batch to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML f
 ### Phase 7 — Build / Update Submission Register
 See `references/email-deliverables-to-submission-plan.md`.
 
-### Phase 8 — Git Commit & Push (REQUIRED for repo-based registers)
+### Phase 8.5 — Extract & Analyze Document Content (for PQ / specialist / vendor documents)
+
+After filing attachments to OneDrive and updating registers, the next step is extracting document intelligence — reading the actual content to understand each specialist's capabilities, CG comments, and clearance path.
+
+**Tools:** `pdftotext` (brew-installed poppler) for PDFs, `openpyxl` for XLSX, `zipfile` for ZIP contents.
+
+**Workflow:**
+1. Run a batch extraction script that walks the filed document tree and converts each PDF/XLSX/ZIP to text under a common `_Text_Extracts/` directory
+2. Some PDFs are image-based (scanned CE DoCs, authorization letters) — pdftotext returns empty; flag them as image-based
+3. Delegate document analysis to sub-agents in parallel (one per specialist group): each reads text extracts and produces structured MD knowledge
+
+### Phase 9 — Knowledge Document Generation (New)
+
+After register updates are committed, generate specialist knowledge MDs from the document extracts. This creates a searchable knowledge base that future sessions can reference instead of re-extracting attachments.
+
+**Sub-agent delegation pattern (parallel document analysis):**
+```
+Delegate parallel sub-agents, one per specialist group:
+  - Group A: Acoustic specialists (3-4 candidates)
+  - Group B: Landscaping + lab specialists
+  - Group C: AV vendors + materials
+```
+
+Each sub-agent receives:
+- Paths to text extracts in `_Text_Extracts/`
+- The `pq_knowledge/` output directory
+- The knowledge MD format specification
+
+**Standard knowledge MD format per specialist:**
+
+```markdown
+## PQ-012X [SPECIALIST NAME]
+**CG Code:** X (Code description) | **Submitted:** date | **Key Offering:** one-liner
+
+### Company Profile
+- Founded, HQ, leadership, team size, classification/certifications
+- Local content (Nitaqat, Saudization, Saudi HQ)
+
+### Scope Offered / Products
+- Specific products / services proposed for the project
+- Quantities, locations, BOQ references where available
+
+### Certifications / Docs on File
+| Certification | Standard | Expiry |
+|---|---|---|
+
+### CG Comments Summary
+> **Status:** Code X
+> **Reviewer:** Name
+> **Comments:** numbered list from CG response
+
+### Path to Clearance
+1. Action item 1
+2. Action item 2
+
+### Relevant Docs on File
+| File | Description |
+|---|---|
+```
+
+**Save location:** `Technical_Office/Specialist_Management/pq_knowledge/<specialist_group>.md`
+**Commit with registers** — knowledge files are part of the repo, updated alongside register changes.
+
+**Pitfall — CG codes may be blank on forms:** The CG code shown on the submitted PQ review sheet may not match the code delivered by email. The CG email from Hossam Mabrouk is authoritative. Cross-check: if the form says nothing but the email says `B - Approved` or `C - Revise`, trust the email. Annotate the knowledge MD with `— per CG email from <sender> (<date>)`.
+
+### Phase 10 — Git Commit & Push (REQUIRED for repo-based registers)
 
 After updating all registers in the git repo (`aseer-museum-pm`), the user expects a **git commit + push to GitHub**, not just OneDrive file saves.
 
@@ -714,9 +830,69 @@ git push origin main
 
 **Pitfall — "dd you deploy?" means git push:** When the user asks "did you deploy?" or "dd you deploy?" after register updates, they are asking whether the changes were committed and pushed to the GitHub repo, not whether OneDrive files were saved. Always include the git commit+push step in the workflow and report the commit hash.
 
+**Pitfall — "Final transmittal" ≠ Approved for PQs:** Aconex transmittal notes sometimes label a CG response as "Final transmittal" even when the CG code is C (Revise & Resubmit) or B (Approved w/ Comments). Never mark a PQ "Final" in the register based on transmittal subject line alone — always read the actual CG code from email preview or the attached response PDF. The code A/B/C/D in the CG email body governs, not the transmittal classification. Example from 2026-07-23: PQ-0126 PINE was labelled "Final transmittal" in Aconex but the CG response was Code C.
+
+**Pitfall — Git push conflicts with post-commit hooks:** The `aseer-museum-pm` repo has a post-commit hook that auto-regenerates `06_Risk_System/risks.json` after every commit. After `git commit`, `risks.json` has unstaged changes. When you then `git fetch && git rebase origin/main`, the dirty `risks.json` causes a merge conflict. Clean sequence:
+
+```bash
+git add <your register files>
+git commit -m "..."
+git stash                              # save the post-commit dirty state
+git fetch origin && git rebase origin/main
+git stash pop                          # may conflict in risks.json — accept theirs
+git checkout --theirs 06_Risk_System/risks.json  # if conflicted
+git add 06_Risk_System/risks.json
+git commit -m "merge: accept remote risks.json"
+git push origin main
+```
+
+This avoids force push in most cases.
+
+**Pitfall — PQ updates cascade to TWO registers, not one:** Unlike ZD or MS submissions which update a single submittal register row, a prequalification (PQ) email batch typically updates two repo files:
+1. `01_Registers/prequalification_register.md` — the full PQ list with refs, codes, dates
+2. `Technical_Office/Specialist_Management/prequalification_log.md` — a curated specialist tracking log with CG code → MoC approval state machine
+
+Always update both. The register is the full list; the log tracks the appointment lifecycle (OPEN → SUBMITTED → CG-CODE → MoC-APPROVED). Updates to the log must also update the roll-up section with new counts.
+
 ## Direct Attachment Extraction (fallback — AppleScript is preferred)
 
 See `references/olk15-attachment-parsing.md` for the file format specification.
+
+### Base64 PDF extraction from .olk15MsgAttachment (no AppleScript)
+
+When AppleScript fails or is unavailable, Outlook `.olk15MsgAttachment` files can contain MIME-encoded attachments with base64-encoded bodies. Works for `.pdf`, `.docx`, `.xlsx`.
+
+**Format:** The file is a binary wrapper with MIME headers (`Content-type`, `Content-disposition`, `Content-transfer-encoding: base64`) followed by the base64 body.
+
+**Extraction:**
+```bash
+cp "/path/to/XXX.olk15MsgAttachment" /tmp/extract.olk
+python3 -c "
+import base64
+with open('/tmp/extract.olk', 'rb') as f:
+    data = f.read()
+text = data.decode('latin-1')
+idx = text.find('base64')
+b64 = text[idx+7:].strip()
+with open('/tmp/extracted.pdf', 'wb') as out:
+    out.write(base64.b64decode(b64))
+"
+pdftotext /tmp/extracted.pdf -
+```
+
+**Finding the path — Mail_OwnedBlocks join to Blocks:**
+```sql
+SELECT mb.Record_RecordID, mb.BlockTag, b.PathToDataFile
+FROM Mail_OwnedBlocks mb
+JOIN Blocks b ON mb.BlockID = b.BlockID
+WHERE mb.Record_RecordID = <EMAIL_ID>;
+```
+Path is relative to `Data/` — construct full path:
+`~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/<PathToDataFile>`
+
+**Pitfall — multiple attachments per email:** Each attachment gets its own row in `Mail_OwnedBlocks` with a distinct `BlockID`. Check for multiple rows.
+
+**Pitfall — image-based PDFs:** CAD/stamped drawings return empty `pdftotext`. Use `sips -s format jpeg` + `tesseract` for OCR.
 
 ## Reference files
 
@@ -753,4 +929,4 @@ See `references/olk15-attachment-parsing.md` for the file format specification.
 - `references/cg-data-package-forwarding.md`
 - `references/aseer-email-processing-example.md`
 - `references/batch-applescript-per-email.md`
-- `references/ibrahim-shaaban-extraction-2026-06.md`
+- `references/pq-email-processing.md` — PQ-specific workflow: sender mapping, two-phase processing (draft vs formal), CG code extraction from preview, dual-register cascade, pitfalls (Final transmittal ≠ Approved)

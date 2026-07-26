@@ -38,6 +38,7 @@ Extract structured data from PDFs and Excel exports for BIM/museum project regis
 | `.xlsb` (OneDrive-locked) | Excel → Save As `.xlsx`, then `openpyxl` | only working path; xlsb is binary |
 | `.xlsx` | `openpyxl` (`read_only`, `data_only`) | |
 | DOCX | `python-docx` | Parses actual structure, far better than OCR |
+| **OneDrive-locked DOCX** | **`zipfile.ZipFile` + regex tag-strip** | **When `python-docx` fails with `Resource deadlock avoided` — zipfile's raw byte I/O may bypass the macOS OneDrive lock. Extract `word/document.xml`, strip XML tags with `re.sub(r'<[^>]+>', ' ', xml)`, squeeze whitespace. See [OneDrive-locked DOCX](#onedrive-locked-docx) below.** |
 | PPTX | See `powerpoint` skill | Uses `python-pptx` with full slide/notes |
 
 ### pymupdf (lightweight, instant)
@@ -599,6 +600,68 @@ The `open` command triggers macOS LaunchServices → Preview → OneDrive hydrat
 
 Do NOT use non-native apps (e.g. `open -a TextEdit file.pdf`) — they open blank for dataless files.
 
+## OneDrive-locked DOCX
+
+Same `Resource deadlock avoided` symptom as PDFs, with an extra twist: the `.md` companion files (created by DOCX-to-MD conversion tools) can have `com.apple.provenance` extended attributes making them appear as file-sized-but-empty stubs.
+
+**Detection — check xattr before assuming the file is empty:**
+
+```bash
+xattr -l /path/to/file.md
+# → com.apple.provenance (binary data) = OneDrive placeholder, not a real empty file
+```
+
+A `.md` file showing `file_size > 0` but `read_file` returning 0 lines is NOT necessarily empty — it may be a OneDrive placeholder that hasn't hydrated. The `com.apple.provenance` xattr is the signal.
+
+**Primary workaround — extract from the sibling DOCX via zipfile:**
+
+`python-docx` (which calls `open()` at the OS level) may also fail with `Resource deadlock avoided` on locked OneDrive paths. However, Python's `zipfile.ZipFile` stdlib module uses a lower-level I/O path that **sometimes bypasses the OneDrive lock** on macOS, allowing direct extraction of the DOCX internals.
+
+```python
+import zipfile, re
+
+path = '/path/to/locked.docx'
+with zipfile.ZipFile(path) as z:
+    # Verify the internal structure
+    for name in z.namelist():
+        if 'document' in name.lower():
+            print(f'{name}: {z.getinfo(name).file_size} bytes')
+
+    # Read the main document XML
+    xml_content = z.read('word/document.xml').decode('utf-8', errors='replace')
+
+    # Strip XML tags to extract text
+    text = re.sub(r'<[^>]+>', ' ', xml_content)
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    # Check for key content
+    if text:
+        print(f'Extracted {len(text)} characters')
+        # Use grep-like extraction for specific sections:
+        if 'TBD' in text:
+            for chunk in text.split('TBD'):
+                # Show context around each TBD
+                print(f'...TBD context: ...{chunk[-100:]}')
+```
+
+**Limitations:**
+- This bypass works for DOCX but may fail on other zip-based formats (`.pptx`, `.xlsx`) — the lock affects different file extensions differently
+- The extracted text has no table structure (XML tags are stripped uniformly) — for tables, use `python-docx` if the file IS readable, fall back to zipfile only when it isn't
+- Still subject to macOS sandboxing: `head`, `cat`, `file` all fail — only `zipfile.open()` via Python may work
+
+**Secondary workaround — hydrate via `open` then extract:**
+
+Same pattern as OneDrive-locked PDFs — trigger OneDrive to download the real file:
+
+```bash
+open "/path/to/locked.docx"    # Opens in Word/LibreOffice, triggers hydration
+sleep 15                       # Wait for download
+ls -laO "/path/to/locked.docx" # Verify dataless flag is gone
+# Then use python-docx normally
+```
+
+**If both fail — the .docx itself is a stale stub:** Check the `brctl status` diagnostic (see `macos-onedrive-recovery` skill) and fall back to working-copy paths on Micro volume or git repo.
+
 ## OneDrive Path-Too-Long Sync Error
 
 OneDrive on macOS has a ~260-character path limit (inherited from Windows NTFS). When a file or folder name is excessively long — common with Alibaba product page downloads, deeply nested folder structures, or auto-generated filenames — OneDrive shows the error:
@@ -1107,6 +1170,8 @@ full_md = re.sub(r'\n{4,}', '\n\n\n', full_md).strip() + '\n'
 13. **execute_code has a 50 tool call limit.** When doing batch operations (converting multiple DOCX files, scanning many folders for file counts), use a single `terminal()` shell script that loops internally rather than making one `terminal()` call per item. The 50-call limit is hit quickly with per-file operations — a 98-folder scan with 4 tool calls per folder exhausts the budget. Write the loop as a bash script, run it once, then parse the output.
 
 14. **Do not fabricate contract content.** If you have not read a specific article/clause, do not invent its content and cite it as a source. An AI agent previously fabricated "Day+1 PM sends reminder to CG, Day+3 PD escalates to CG Acting PM, Day+5 formal notice" and cited it as "Per Contract 0010003521 Sec 4 escalation protocol" — this text does not exist anywhere in the contract. The user caught it and flagged it as a serious error. Before citing any contract provision: (a) extract the actual text from the PDF, (b) quote it verbatim, (c) cite the exact article number. If the contract does not contain what the user is looking for, say so explicitly.
+
+15. **`com.apple.provenance` xattr means OneDrive placeholder.** A file with size >0 that returns 0 lines from `read_file` is not necessarily empty — check `xattr -l /path/to/file`. The `com.apple.provenance` extended attribute (binary data) indicates a OneDrive "files on demand" placeholder that hasn't hydrated locally. This affects `.md`, `.pdf`, `.docx`, and any other extension. Don't assume the file is actually empty or corrupted — it's just not yet downloaded. Try the `open` hydration workaround or zipfile bypass (see [OneDrive-locked DOCX](#onedrive-locked-docx)).
 
 ## Schedule Compression & Restructuring
 

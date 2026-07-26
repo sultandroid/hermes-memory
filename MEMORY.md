@@ -1,11 +1,21 @@
-Scope boundaries: always check BOTH SoW text AND specialist's own submittal register — SoW alone isn't enough. CG comments or specialist's deliverable schedule may extend scope (e.g. ZNA).
+Scope: check BOTH SoW text AND specialist's submittal register for deliverables. CG comments may extend scope (ZNA).
 §
-NEVER delete user files without explicit confirmation. User is very particular about this — even if user says 'remove', verify first.
-§
-User hates fabricated/unverified references cited as "per Contract" or "per DMP". Previous AI invented "Day+1/Day+3/Day+5 escalation protocol" and falsely attributed it to Contract 0010003521 Sec 4 — caught by user. Always read source before citing; if not found, say so. PM repo = `sultandroid/aseer-museum-pm` (NOT viz app). Clone to `/Volumes/MIcro/Temp/`. "did you add to repo?" = push to GitHub expected.
+NEVER delete user files without explicit confirmation — even if user says remove, verify first.
 §
 Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment/Aseer Museum. Prefers concise British English, plain active engineering language, no AI clichés or decorative symbols. Expects real source data, tested URLs, explicit completion, and manual workbook formatting preserved across PRR, DDR, HSE/HSR, and AVR with owner/action-plan fields, formula dashboards, and dynamic layouts.
 §
-Public Aseer PRR/DDR/HSE/AVR: columns = ID, CAT, RISK, P, S, SCORE(PxS), RATING, STATUS, OWNER, TARGET, CAUSE, CONSEQUENCE, RESPONSE/ACTION, EVIDENCE. No score text in response. Dashboard only. Preserve template formatting (charts, images, merged cells, formulas). Update formula col refs for new layout. Include ALL categories dynamically. Fix relative formula refs after shifting sections. Clear chart numCache. Split href/download for friendly filenames. Validate ratings match score band (>=12=Critical,>=8=High,>=4=Medium) — drift when set manually and scores change.
+Never cite unread sources. For OneDrive deadlock: check Outlook SQLite, ~/Library/Group Containers/.../Outlook/Files/ cache, ~/Documents/Asher_Regional_Museum_Document_Control/, or GitHub repo. .olk15MsgAttachment files have base64 attachment after 'base64' header.
 §
-Never cite unread sources. For Aseer Museum: only DMP Rev 02 (Code B) and BEP Rev 01 (Code B) are approved. PEP Rev 04 is unapproved. KPI targets K-1/K-3/K-5/K-7/K-8 are internal to Summary, not from any source. CG codes A/B/C/D only (standard submittal legend, not a rule doc). Drawing register stats from weekly reports. Aconex CDE from Submission Plan. Mock-up schedule is forward-planning. Use natural language, no symbols.
+User says No = go to primary data (Outlook SQLite, PM repo snapshots). Multi-agent repo: always git pull --no-rebase before push; expect merge conflicts in risk JSON/HTML files.
+§
+Excel snapshots: pre-calc values in Python, no formulas. Strategy col from [Strategy:X] prefix. P+S cols separate, no merged cells, no EVIDENCE col. Risk JSON split per register — PRR-only in risks.json.
+§
+Hostinger: ?cb=N bypasses stale LiteSpeed cache. SSH grep is authoritative, not curl to URL.
+§
+Ahmed Salah (Project Engineer) no longer with Aseer Museum project as of ~26-Jul-2026. Replace references in org charts with vacant/removed.
+§
+OneDrive File Provider: ALL programmatic writes blocked to CloudStorage (cp/mv/Python/Finder AppleScript). Workaround: copy to /Volumes/MIcro/ first, user drags from Finder to OneDrive.
+§
+PQ knowledge MDs pushed to repo at Technical_Office/Specialist_Management/pq_knowledge/ (acoustic, landscaping+labs, AV vendors). Created from PQ email attachment extraction + pdftotext analysis + parallel sub-agent summarization.
+§
+User is contract-aware: expects contract terms checked before scope recommendations. Lump-sum D&B — scope creep must be flagged to PD (Adel), not decided at Tech Office level. VO pathway Art. 14(5)(e) for Employer info errors.

@@ -18,7 +18,7 @@ metadata:
 - User asks to "update the risk register" or "update the RMP"
 - User asks to "align" or "synchronize" risk data across documents
 - Any task involving the project risk register (Excel or MD), the RMP markdown or DOCX, the DRR Excel, or their cross-document consistency
-- Adding, updating, or closing risks in the live register
+- Adding, updating, or closing risks in the live register — see `references/risk-id-conventions.md` for the PRR/DDR/HSE/AVR ID naming rules
 - Updating the RMP DOCX for formal CG submittal
 - User asks to "audit" or "verify" the risk register against real evidence — see `references/risk-register-audit-methodology.md`
 

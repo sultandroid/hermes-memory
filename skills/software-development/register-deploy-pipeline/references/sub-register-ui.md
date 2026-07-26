@@ -24,12 +24,23 @@ Add to the JSON data file at the top level:
 
 ## Layer 1 — Header line
 
-### HTML placeholder (add under `brandSub`)
+### HTML placeholder (in `hright`, between LIVE SNAPSHOT tag and logo)
 
 ```html
-<div class="dcline" id="brandSub"></div>
-<div class="dcline"><span id="registerNav"></span></div>
+<div class="hright">
+  <span class="tag"><span class="dot"></span> Live snapshot</span>
+  <div class="reg-nav" id="registerNav"></div>    ← NAV HERE
+  <img class="logo" src="..." alt="Samaya Investment">
+  <div class="top-actions">
+    <button class="btn" id="btnReset">...</button>
+    <a class="btn" id="btnSnapshot">DOWNLOAD SNAPSHOT</a>
+    <button class="btn" id="btnCsv">CSV</button>
+    <button class="btn" id="btnPrint">PRINT</button>
+  </div>
+</div>
 ```
+
+**Do NOT** place `#registerNav` inside `htitle` or in a separate `dcline`. Must be in `hright` between the LIVE SNAPSHOT tag and the logo for consistent placement across all four registers. See `references/toolbar-standardization.md` for the full header layout and CSS.
 
 ### JS (replaces the existing `renderFooter` brandSub line)
 
