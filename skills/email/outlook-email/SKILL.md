@@ -257,7 +257,7 @@ See `references/sender-discovery-patterns.md` for the iterative workflow to find
 
 **Multiple Inbox folders exist (one per account).** Use `get id of every mail folder whose name is "Inbox"` to discover all Inbox IDs.
 
-**`sender` returns a Mail Recipient record, not a string.** Always wrap in a try block with `as text` coercion.
+**`sender` returns a Mail Recipient record, not a string.** Always wrap in a try block with `name of sender` (NOT `(sender of m) as text`). **`as text` coercion on sender produces garbled Unicode/raw bytes** when Outlook returns a non-decomposable recipient object — the output looks like Chinese/box-drawing characters instead of the actual name. Use `name of sender` inside a `try`/`on error` block for reliable results.
 
 **`sender` returns blank via `osascript -e` one-liners.** Use a short `.applescript` file on disk for sender extraction.
 
@@ -266,6 +266,8 @@ See `references/sender-discovery-patterns.md` for the iterative workflow to find
 **`PathToDataFile` returns %20-encoded paths.** Use `$'...'` bash quoting or Python `urllib.parse.unquote`.
 
 **AppleScript `.applescript` files have a ~700-byte script body limit.** Keep scripts short. Break into multiple small files. Scripts exceeding this limit fail with misleading `Expected "," but found class name` (-2741) errors. **Workaround:** use per-index `osascript -e` one-liners for simple property reads (each is a separate process, no body limit). Reserve `.applescript` files for complex operations like attachment extraction.
+
+**However, a single `.applescript` file with a `repeat` loop under ~500 bytes DOES work reliably** for batch inbox reads (subject, time, attachment count, sender name). Verified working example loops through indexes 1-10 returning pipe-delimited output. The 700-byte limit is a *compiled* limit — loops with short bodies (no nested `tell` blocks, minimal string concatenation) compile compactly and pass. Use `name of sender` inside try/on-error for clean sender names.
 
 **`considering case` block causes syntax errors inside `tell application` blocks.** The `considering case` construct is not supported inside Outlook's AppleScript dictionary. Use uppercase-only string matching instead (e.g., `if subj contains "ASEER"`). If case-insensitive matching is needed, write a `toLower` handler outside the `tell` block.
 

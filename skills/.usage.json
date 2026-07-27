@@ -446,12 +446,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-07-26T04:18:16.696004+00:00",
+    "last_used_at": "2026-07-27T04:00:51.050880+00:00",
     "last_viewed_at": "2026-07-21T16:08:02.009294+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 33,
+    "use_count": 34,
     "view_count": 19
   },
   "computer-use": {
@@ -680,12 +680,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-07-26T13:03:05.443199+00:00",
+    "last_used_at": "2026-07-27T01:05:45.248786+00:00",
     "last_viewed_at": "2026-07-24T19:06:52.733936+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 129,
+    "use_count": 133,
     "view_count": 51
   },
   "entity-intake": {
@@ -823,12 +823,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-07-26T13:03:05.464642+00:00",
+    "last_used_at": "2026-07-27T01:05:45.271432+00:00",
     "last_viewed_at": "2026-07-26T07:55:40.515923+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 90,
+    "use_count": 94,
     "view_count": 12
   },
   "google-workspace": {
@@ -1602,14 +1602,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-26T14:08:21.536347+00:00",
-    "last_used_at": "2026-07-26T14:07:36.783666+00:00",
-    "last_viewed_at": "2026-07-26T14:07:36.781503+00:00",
-    "patch_count": 245,
+    "last_patched_at": "2026-07-27T02:52:00.062474+00:00",
+    "last_used_at": "2026-07-27T03:48:31.675156+00:00",
+    "last_viewed_at": "2026-07-27T02:51:29.423863+00:00",
+    "patch_count": 247,
     "pinned": false,
     "state": "active",
-    "use_count": 496,
-    "view_count": 388
+    "use_count": 503,
+    "view_count": 390
   },
   "p5js": {
     "archived_at": null,

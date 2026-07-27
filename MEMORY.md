@@ -16,6 +16,6 @@ Ahmed Salah (Project Engineer) no longer with Aseer Museum project as of ~26-Jul
 §
 OneDrive File Provider: ALL programmatic writes blocked to CloudStorage (cp/mv/Python/Finder AppleScript). Workaround: copy to /Volumes/MIcro/ first, user drags from Finder to OneDrive.
 §
-PQ knowledge MDs pushed to repo at Technical_Office/Specialist_Management/pq_knowledge/ (acoustic, landscaping+labs, AV vendors). Created from PQ email attachment extraction + pdftotext analysis + parallel sub-agent summarization.
-§
 User is contract-aware: expects contract terms checked before scope recommendations. Lump-sum D&B — scope creep must be flagged to PD (Adel), not decided at Tech Office level. VO pathway Art. 14(5)(e) for Employer info errors.
+§
+Aconex scan 27-Jul: PQ-0122 Rev.01 (Evergreen C→resubmit), PQ-0124 Rev.01 (AME acoustic), IR-0001 (CCTV) submitted via WTRAN-108/109/110. CG Abdrabo Shahin flagged protocol breach + requested coordination team sheet.
