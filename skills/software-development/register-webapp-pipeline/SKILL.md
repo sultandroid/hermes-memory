@@ -13,7 +13,7 @@ description: Manage the 4-register risk webapp system (PRR/DDR/HSE/AVR) — buil
 | PRR | `06_Risk_System/risks.json` | `webapp/build_risk.py` | `webapp/src/index.html` |
 | DDR | `06_Risk_System/ddr_risks.json` | `webapp/build_ddr.py` | `webapp/src/DDR/index.html` |
 | HSE | `06_Risk_System/hse_risks.json` | `webapp/build_hse.py` | `webapp/src/HSE/index.html` |
-| AVR | `06_Risk_System/av_risks.json` | `webapp/av/build_av.py` | `webapp/av/src/index.html` |
+| AVR | `webapp/av/risks_av.json` (source) ← also mirror in `06_Risk_System/av_risks.json` | `webapp/av/build_av.py` | `webapp/av/src/index.html` |
 
 All build scripts read from the `template.html` in `webapp/` and inject data via the `__RISK_DATA__` token.
 
@@ -60,6 +60,10 @@ Historical bug (fixed 2026-07-26): Both `_scope_hse()` in `build_snapshots.py` a
 - `hazards` → `cause`/`consequence` (should be pass-through)
 - `controls` → `response_action` (should be pass-through)
 - `score_init` → `score` (should be pass-through)
+
+### HSE Strategy Classification (RMP 8.1)
+
+Per RMP §8.1, **Mitigate** only when actions reduce probability (physical controls). Administrative/monitoring-only controls (RAMS, PTW, TBT, PPE) are **Accept (Active)**. See `references/hse-strategy-rmp81.md` for the full classification table, current assignments, and update workflow.
 
 **Current correct mapping:**
 ```python
@@ -162,6 +166,58 @@ HSE uses single category: HSE (Health, Safety & Environment).
 - Old high-numbered files take precedence in `sorted(...)[-1]`
 - AVR snapshot counter is independent (not in `snapshot_counter.json`)
 
+### Manual snapshot delivery to OneDrive — DELETE-FIRST workflow
+
+When the user asks to "download" or "get" the risk snapshot registers, they want the files **copied to the OneDrive target location**, not generated-and-left in the repo nor sent via chat.
+
+**Target path:**
+```
+~/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/.../05_Submittle/REV{NN}/
+  01_Master_Risk_Register/  → PRR
+  02_Design_Risk_Register/  → DDR
+  03_HSE_Risk_Register/     → HSE
+  04_AV_Risk_Register/      → AVR
+```
+
+Full base: `/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/04_Registers/05_Submittle`
+
+**After generating snapshots, copy them immediately:**
+```bash
+SRC="/Users/mohamedessa/aseer-museum-pm/06_Risk_System/webapp"
+DST=".../05_Submittle/REV{NN}"
+
+cp "$SRC/src/EXP-RISK-PRR-2026-{NNN}_RevC{rev}_ACTIVE.xlsx" \
+   "$DST/01_Master_Risk_Register/Aseer_Museum_PRR_Snapshot_$(date +%Y-%m-%d).xlsx"
+cp "$SRC/src/DDR/EXP-RISK-DDR-2026-{NNN}_RevC{rev}_ACTIVE.xlsx" \
+   "$DST/02_Design_Risk_Register/Aseer_Museum_DDR_Snapshot_$(date +%Y-%m-%d).xlsx"
+cp "$SRC/src/HSE/EXP-RISK-HSE-2026-{NNN}_RevC{rev}_ACTIVE.xlsx" \
+   "$DST/03_HSE_Risk_Register/Aseer_Museum_HSE_Snapshot_$(date +%Y-%m-%d).xlsx"
+cp "$SRC/av/src/EXP-RISK-AV-2026-{NNN}_RevC{rev}_ACTIVE.xlsx" \
+   "$DST/04_AV_Risk_Register/Aseer_Museum_AVR_Snapshot_$(date +%Y-%m-%d).xlsx"
+```
+
+Use today's date as the snapshot filename to replace the previous day's file. The dated filename avoids accumulation — older same-date files overwrite.
+
+**CRITICAL — Delete old files before copying:**
+OneDrive does NOT auto-replace files with different names. Old snapshots accumulate. Before copying new files, remove all `.xlsx` from each subfolder:
+```bash
+rm -f "$DST/01_Master_Risk_Register/"*.xlsx
+rm -f "$DST/02_Design_Risk_Register/"*.xlsx
+rm -f "$DST/03_HSE_Risk_Register/"*.xlsx
+rm -f "$DST/04_AV_Risk_Register/"*.xlsx
+```
+Then copy. Never copy first and delete after — the old files persist until explicitly removed.
+
+**Verify source data before generating:**
+After a `git pull`, verify the source JSON files actually contain the expected changes before generating snapshots. Pull commits may add fishbone diagrams, fix scores, or adjust dates — but they may NOT have changed the fields you expect (e.g. `response_action`/strategy). Check before building:
+```bash
+cd 06_Risk_System
+python3 -c "import json; d=json.load(open('hse_risks.json')); [print(r['id'], r.get('response_action','')[:60]) for r in d['risks']]"
+```
+
+**Verify after copy — spot-check the Excel:**
+After copying to OneDrive, open the Excel and confirm key risks have the right values (e.g. PRR-COM-08 title, HSE strategy column). If the user reports wrong data, check the source JSON first — if the JSON has old values, the Excel is correct by construction.
+
 ## Auto-Deploy Cron Behavior
 
 **Two** auto-deploy mechanisms:
@@ -174,11 +230,14 @@ HSE uses single category: HSE (Health, Safety & Environment).
 
 ## OneDrive Daily Snapshot Sync
 
-A cron job `Daily Risk Snapshot Sync` (daily at 9 AM) runs `sync_risk_snapshots.sh`:
+A cron job `Daily Risk Snapshot Sync` (job_id: `ef2495d20159`, daily at 9 AM) runs `sync_risk_snapshots.sh`:
 - Downloads latest snapshots from webapp to: `.../05_Submittle/REV{NN}/`
 - One file per register, replaces old on new download
 - Each subfolder: 01_Master_Risk_Register, 02_Design_Risk_Register, 03_HSE_Risk_Register, 04_AV_Risk_Register
 - Weekly (Sundays): the script detects current REV folder and increments (REV01 → REV02)
+- Never ran initially (last_run_at was null after creation) — trigger it manually after creation or after major data changes: `cronjob(action='run', job_id='ef2495d20159')`
+
+**CRITICAL — script has stale hardcoded URLs:** The script `sync_risk_snapshots.sh` downloads from hardcoded server URLs with old snapshot filenames (e.g. `EXP-RISK-PRR-2026-012_RevC11_ACTIVE.xlsx`). These filenames increment with each `--bump` build, so the hardcoded URLs go stale. The script will download a 404 or the wrong file if the server doesn't serve the exact old name. **Fix:** update the script to either (a) copy from local repo instead of downloading from server, or (b) discover the latest snapshot filename from the repo directory before downloading.
 
 ## LiteSpeed Cache Issues
 
@@ -195,10 +254,17 @@ The file on disk is always correct — what curl or the browser returns may be c
 
 - **SCP can silently fail** — verify with MD5 checksum after deploy
 - **risks.json contamination** — after every git pull/merge, verify it's PRR-only
-- **AVR build_av.py xlsx call** uses `out_path=str(xlsx_path)` keyword, not positional
+- **AVR has TWO JSON source files** — `build_av.py` reads from `webapp/av/risks_av.json`, NOT from `06_Risk_System/av_risks.json`. When updating AVR strategies, data, or revision, edit BOTH files. The repo-root file (`av_risks.json`) is the canonical source for the repo; the av-folder file (`risks_av.json`) is what the build script reads. Forget one and the Excel won't reflect the change.
 - **Register IDs must be unique** — verify no duplicates when renaming
 - **Git conflicts on risks.json** — remote frequently has different version; use `--ours` or force-push
 - **Old snapshot files take precedence** — clean old snapshots before rebuilding (sorted picks highest number)
 - **Auto-deploy reverts built files** — always commit `src/*/index.html` after rebuild
 - **HSE status = "Ongoing"** — not "Open". The KPI heading still says "OPEN" which can be confusing
 - **Template changes affect ALL registers** — always rebuild all 4 and verify each one
+- **Trigger the cron, don't manually copy** — the `Daily Risk Snapshot Sync` cron (job_id `ef2495d20159`) handles OneDrive delivery. Prefer `cronjob(action='run', job_id='ef2495d20159')` over manual `cp` to OneDrive. Only manually copy if the cron is failing and immediate delivery is needed — and always delete-old-first.
+- **Pull doesn't mean data changed** — a pull with 30 commits may add fishbone diagrams and fix scores, but NOT change `response_action`/strategy fields. Verify source JSON fields before generating snapshots; don't assume what the pull contained.
+- **OneDrive cp may write stub files** — CloudStorage File Provider can create stub files instead of real content. After copying to OneDrive, verify file size matches the source (within 5%). If stubbed (file exists but seems wrong), open in Excel directly to force hydration.
+- **User says 'wrong data' — check source first** — If user reports incorrect snapshot data, check the source JSON before the Excel. If the JSON has old values, the Excel is correct by construction and the fix is in the data layer, not the snapshot.
+- **User says 'recheck' — verify data content, not just commit log** — When the user says "recheck" after you've already checked, they want you to verify the actual data values (e.g. `response_action` field content, strategy classification), not just the commit history. A pull with 30 commits may add fishbone diagrams and fix scores but NOT change the field you're being asked about. Run a targeted data query on the source JSON, not `git log`.
+- **Pre-commit hook blocks 00_Contracts/ commits** — The repo's pre-commit hook rejects any commit that stages files under `00_Contracts/` (read-only per AGENTS.md). If untracked contract files exist, `git add -A` will stage them and the commit will fail. Use `git add <specific files>` or `git reset HEAD 00_Contracts/` before committing.
+- **Post-commit hook modifies risks.json** — After every commit, a post-commit hook regenerates `06_Risk_System/risks.json`. This creates unstaged changes. When pulling with rebase, stash these first or use `git stash && git pull --rebase && git stash pop`.

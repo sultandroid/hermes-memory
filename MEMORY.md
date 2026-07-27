@@ -2,7 +2,7 @@ Scope: check BOTH SoW text AND specialist's submittal register for deliverables.
 §
 NEVER delete user files without explicit confirmation — even if user says remove, verify first.
 §
-Eng. Mohamed Sultan, Technical Office Manager at Samaya Investment/Aseer Museum. Prefers concise British English, plain active engineering language, no AI clichés or decorative symbols. Expects real source data, tested URLs, explicit completion, and manual workbook formatting preserved across PRR, DDR, HSE/HSR, and AVR with owner/action-plan fields, formula dashboards, and dynamic layouts.
+Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
 §
 Never cite unread sources. For OneDrive deadlock: check Outlook SQLite, ~/Library/Group Containers/.../Outlook/Files/ cache, ~/Documents/Asher_Regional_Museum_Document_Control/, or GitHub repo. .olk15MsgAttachment files have base64 attachment after 'base64' header.
 §
@@ -14,8 +14,8 @@ Hostinger: ?cb=N bypasses stale LiteSpeed cache. SSH grep is authoritative, not 
 §
 Ahmed Salah (Project Engineer) no longer with Aseer Museum project as of ~26-Jul-2026. Replace references in org charts with vacant/removed.
 §
-OneDrive File Provider: ALL programmatic writes blocked to CloudStorage (cp/mv/Python/Finder AppleScript). Workaround: copy to /Volumes/MIcro/ first, user drags from Finder to OneDrive.
+OneDrive CloudStorage writes (cp) may work for small Office files but can be unreliable for cloud-only stubs. If cp fails with EDEADLK, stage to /Volumes/MIcro/ for user to drag via Finder.
 §
 User is contract-aware: expects contract terms checked before scope recommendations. Lump-sum D&B — scope creep must be flagged to PD (Adel), not decided at Tech Office level. VO pathway Art. 14(5)(e) for Employer info errors.
 §
-Aconex scan 27-Jul: PQ-0122 Rev.01 (Evergreen C→resubmit), PQ-0124 Rev.01 (AME acoustic), IR-0001 (CCTV) submitted via WTRAN-108/109/110. CG Abdrabo Shahin flagged protocol breach + requested coordination team sheet.
+OneDrive risk snapshots: delete old .xlsx from subfolders FIRST, then copy new. Use cron job `ef2495d20159` instead of manual cp.

@@ -5,3 +5,5 @@ When asked "who does X" on the project, do NOT guess from filenames. Cascade: re
 Excel snapshots: no merged cells anywhere (use individual cells). No EVIDENCE column in Risk Register sheet. QR (55px) + logo in row 1. Risk matrix uses COUNTIFS formulas referencing P/S columns in Risk Register sheet.
 §
 Org chart (corrected 26-Jul): Adel Darwish = Project Director. Ahmed Salah no longer with project. Mohamed Samir handles finishes/BOQ.
+§
+CG correspondence tactic: when you've sent a comprehensive reply and CG re-states their position without engaging with your points, do not reply again — let it sit. Ball is in their court. Only follow up if they escalate or a week passes without response.

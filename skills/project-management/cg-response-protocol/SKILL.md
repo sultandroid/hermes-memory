@@ -209,6 +209,7 @@ Copy both to the CG_Responses folder for reference.
 | Reviewer | Type | Strategy |
 |----------|------|----------|
 | **Mansour Alrezeni** | Code enforcer + bypasses Samaya | Submit only what spec says. Do not propose alternatives or splits — he will reject. Escalate structural decisions to Elbaz. **Known to email sub-consultants (NRS, ZNA) directly, bypassing Samaya's project management role. Flag any direct communication with specialists as a communication plan violation per PL-0018 Sec 12.6 S-1 (direct subcontractor-to-CG communication not permitted).** |
+| **Mansour Alrezeni — "Noise Only" Pattern** | Sends reminders that re-state his position without engaging with the contractor's counter-proposal | When Mansour sends a follow-up reminder that ignores your detailed response (Oddy timeline, two-track proposal, supplier evidence), **do not reply.** He is making noise — re-stating his position without addressing your points. The ball is in CG's court. Only reply if he raises a genuinely new request or escalates to Hossam/Elbaz. |
 | **CG (general)** | Conflates deliverables | When CG returns Code C with cross-discipline comments, check if comments are in-scope before accepting them all |
 | **CG (general)** | Unaware of NRS-MoC deliverables | Before responding to design-stage requests, verify if already delivered under original design contract |
 
@@ -288,9 +289,35 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 - "CG want: loading notation schedule, load combo names. Loading tables in BOD per SBC. Need to clarify and resubmit."
 - "CG want: audit report for previous design stage. Under preparation. Will include in next package."
 
-## Multi-Round Code C Pattern — Rev.01 Still C, All Comments Open
+### Multi-Round Code C Pattern — Rev.01 Still C, All Comments Open
 
 When a Rev.01 resubmission gets **Code C again** with all comments still marked Open by CG:
+
+**Worked example — PEP ZD-0086 (Jul 2026):**
+- Rev.00 submitted 16 Jul → Code C 22 Jul (15 comments, all Open)
+- Samir circulated CG comments 22 Jul, asked team to respond
+- Samir sent Rev.01 to Waris 25 Jul: *"Please Review and if it's Confirmed from your side, please let's Submit it"*
+- Rev.01 submitted 26 Jul → Code C again 27 Jul (same 15 comments, all still Open)
+- CG note: *"The CRS reply"* — meaning the CRS was not fully resolved
+- Root cause: 1-day internal review, no formal sign-off gate, responses were explanations not evidence
+- See `01_Registers/lessons_learned_register.md` LL-013 and `03_Plans/11_Quality/lessons_learned_register.md` LL-017
+
+#### Red Flag: PM Says "Please Review and Confirm"
+
+When the PM/Construction Manager sends an email saying *"Please Review and if it's Confirmed from your side, please let's Submit it"* — this is a **red flag** that the CRS was not fully resolved before resubmission. The "please review" language means the team hasn't confirmed all responses yet.
+
+| Signal | What It Means | Action |
+|--------|---------------|--------|
+| PM asks team to "review and confirm" before submission | CRS responses are not yet finalised internally | **Do not submit.** Hold until all CRS items are closed or explicitly deferred with a cover-note commitment. |
+| PM says "finalize it TODAY so we can resubmit by end of day" | Resubmission is being rushed to meet an internal deadline | Flag to the user: the resubmission is going out before the CRS is fully resolved. CG will return Code C again. |
+| Rev.01 submitted without all CRS items closed | CG returns Code C with all comments still Open | **Root cause confirmed.** The resubmission was premature. The team submitted explanations instead of physical evidence. |
+
+**Root cause of 2nd Code C:** The Rev.01 was submitted before the CRS was fully resolved. CG did not accept any of the contractor's responses because they were explanations, not physical evidence. Every comment that was Open in Rev.00 remained Open in Rev.01.
+
+**Prevention:** Before any resubmission, run a CRS closure check:
+1. Are all CG comments from the previous round addressed with a response?
+2. Are the responses **physical evidence** (test reports, approved drawings, completed studies) — not explanations or references to existing documents?
+3. If any item is still "under preparation" or "being arranged", defer it explicitly in a cover note — do not submit hoping CG will accept partial responses.
 
 ### Pattern Recognition
 
