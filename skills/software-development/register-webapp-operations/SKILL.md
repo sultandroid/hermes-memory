@@ -64,9 +64,25 @@ Runs after each build. Detects current register via RISK.is_ddr/is_hse/is_av fla
 
 ### Layer 2: Runtime JS fix (fixCards in template.html init)
 
-Auto-corrects card paths on every page load. Added inline in `init()` before other init code. Detects current register, converts `<a>`↔`<div>`, adds/removes `reg-current` class, and fixes hrefs to use `../` prefix.
+Auto-corrects card paths and marks the current register on every page load. Added inline in `init()` before other init code. Detects current register, adds/removes `reg-current` class, injects the `current` badge into the current register's `<a>` tag (does NOT replace it with a `<div>` — that would destroy the link), and fixes hrefs to use `../` prefix for sub-pages.
 
 **Do NOT remove fixCards from init().** If editing register card HTML, test all 4 pages and verify fixCards still works.
+
+**CRITICAL: fixCards must keep `<a>` tags, not swap them for `<div>`.** The original implementation replaced the current card's `<a>` with a `<div>` (`el.parentNode.replaceChild(d, el)`), making it impossible to click back to the current page. The fix is to keep the `<a>` tag and only add the badge:
+
+```javascript
+// CORRECT — keep the <a>, just add badge:
+if (isCur && el.tagName === 'A') {
+    var h = el.querySelector('.reg-head');
+    if (h && !el.querySelector('.reg-badge')) {
+        var b = document.createElement('span');
+        b.className = 'reg-badge'; b.textContent = 'current';
+        h.insertBefore(b, h.firstChild);
+    }
+}
+```
+
+Also ensure the CSS does not override the link cursor: remove `cursor: default` from `.reg-card.reg-current`.
 
 ### WARNING comments in build scripts
 
@@ -311,6 +327,31 @@ ssh server "grep -c 'btnXlsx' /path/to/index.html"
 ```
 
 **Cache busting:** Add `?cb=$(date +%s)` to URL when testing with curl.
+
+## Lessons Learned Webapp (LN)
+
+The Lessons Learned register has its own webapp at `https://samaya-factory.com/build/aseer/registers/LN/`.
+
+**Build pipeline:**
+```
+03_Plans/11_Quality/lessons_learned_register.md  →  update-all-registers.sh  →  /tmp/lessons-learned-app/index.html  →  SCP to server
+```
+
+The post-commit hook runs `update-all-registers.sh` which:
+1. Reads the markdown register, parses all `LL-` rows
+2. Injects them as a `const LESSONS = [...]` JSON array into the HTML template at `/tmp/lessons-learned-app/index.html`
+3. SCPs to `samaya-factory.com/build/aseer/registers/LN/index.html`
+
+**Template location:** `/tmp/lessons-learned-app/index.html` — this is a LOCAL file, NOT in the git repo. If it's deleted (e.g. `/tmp` cleanup), the post-commit hook fails with `FileNotFoundError: '/tmp/lessons-learned-app/index.html'`. Restore it from the server:
+
+```bash
+ssh -p 65002 u517606786@samaya-factory.com "cat /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/LN/index.html" > /tmp/lessons-learned-app/index.html
+mkdir -p /tmp/lessons-learned-app
+```
+
+**Verification:** After any commit, check the hook output for `Rebuilt LN: N lessons` and `LN: HTTP 200`.
+
+**Data source:** Only `03_Plans/11_Quality/lessons_learned_register.md` is parsed. The `01_Registers/lessons_learned_register.md` is NOT included in the webapp — it's a separate simplified register.
 
 ## Daily Snapshot Sync to OneDrive
 

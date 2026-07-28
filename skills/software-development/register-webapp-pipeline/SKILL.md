@@ -104,7 +104,7 @@ The template has 4 register cards (PRR/DDR/HSE/AVR). **The template hardcodes PR
 A post-processor `webapp/fix_cards_static.py` runs after each build, replacing register card HTML with correct paths and current-state. All 4 build scripts must call this.
 
 ### Layer 2: fixCards() in template.html (JS runtime)
-Embedded in `function init()` in `template.html`. On every page load:
+Embedded as an IIFE inside `function init()` in `template.html`. On every page load:
 1. Reads `RISK.is_ddr` / `is_hse` / `is_av` to determine current register
 2. Loops through `#registers .reg-card` elements
 3. Fixes href paths using map: `{PRR:'../', DDR:'../DDR/', HSE:'../HSE/', AVR:'../AV/'}`
@@ -239,6 +239,21 @@ A cron job `Daily Risk Snapshot Sync` (job_id: `ef2495d20159`, daily at 9 AM) ru
 
 **CRITICAL — script has stale hardcoded URLs:** The script `sync_risk_snapshots.sh` downloads from hardcoded server URLs with old snapshot filenames (e.g. `EXP-RISK-PRR-2026-012_RevC11_ACTIVE.xlsx`). These filenames increment with each `--bump` build, so the hardcoded URLs go stale. The script will download a 404 or the wrong file if the server doesn't serve the exact old name. **Fix:** update the script to either (a) copy from local repo instead of downloading from server, or (b) discover the latest snapshot filename from the repo directory before downloading.
 
+## GitHub Actions Auto-Deploy
+
+A workflow `.github/workflows/deploy-risk-webapp.yml` auto-deploys on every push to `main` that touches risk files:
+- Trigger paths: `06_Risk_System/*.json`, `webapp/**`, workflow file
+- Build steps: install deps → build all 4 registers → generate snapshots → SCP to Hostinger
+- **SSH key secret `HOSTINGER_SSH_KEY`** is now configured in GitHub repo secrets
+- Runs on `ubuntu-latest` with Python 3.12
+
+After every push, check the workflow status:
+```bash
+gh run list --repo sultandroid/aseer-museum-pm --limit 3
+```
+
+If the deploy fails, check: (1) SSH key is still valid on Hostinger, (2) `HOSTINGER_SSH_KEY` secret exists in GitHub, (3) workflow file is syntactically valid.
+
 ## LiteSpeed Cache Issues
 
 Hostinger's LiteSpeed cache **ignores `no-cache` headers**. Despite `Cache-Control: no-cache, no-store`, the cache can serve stale content for several minutes.
@@ -262,9 +277,10 @@ The file on disk is always correct — what curl or the browser returns may be c
 - **HSE status = "Ongoing"** — not "Open". The KPI heading still says "OPEN" which can be confusing
 - **Template changes affect ALL registers** — always rebuild all 4 and verify each one
 - **Trigger the cron, don't manually copy** — the `Daily Risk Snapshot Sync` cron (job_id `ef2495d20159`) handles OneDrive delivery. Prefer `cronjob(action='run', job_id='ef2495d20159')` over manual `cp` to OneDrive. Only manually copy if the cron is failing and immediate delivery is needed — and always delete-old-first.
+- **Pre-commit hook blocks 00_Contracts/ commits** — The repo's pre-commit hook rejects any commit that stages files under `00_Contracts/` (read-only per AGENTS.md). If untracked contract files exist, `git add -A` will stage them and the commit will fail. Use `git add <specific files>` or `git reset HEAD 00_Contracts/` before committing.
+- **Post-commit hook modifies risks.json** — After every commit, a post-commit hook regenerates `06_Risk_System/risks.json`. This creates unstaged changes. When pulling with rebase, stash these first or use `git stash && git pull --rebase && git stash pop`.
+- **OneDrive snapshots — stale hardcoded URLs** — The `sync_risk_snapshots.sh` script hardcodes snapshot filenames like `EXP-RISK-PRR-2026-012_RevC11_ACTIVE.xlsx`. These go stale when snapshot numbers increment with each `--bump`. Fix: update the script to copy from local repo instead of downloading from server, or discover the latest filename before downloading.
 - **Pull doesn't mean data changed** — a pull with 30 commits may add fishbone diagrams and fix scores, but NOT change `response_action`/strategy fields. Verify source JSON fields before generating snapshots; don't assume what the pull contained.
 - **OneDrive cp may write stub files** — CloudStorage File Provider can create stub files instead of real content. After copying to OneDrive, verify file size matches the source (within 5%). If stubbed (file exists but seems wrong), open in Excel directly to force hydration.
 - **User says 'wrong data' — check source first** — If user reports incorrect snapshot data, check the source JSON before the Excel. If the JSON has old values, the Excel is correct by construction and the fix is in the data layer, not the snapshot.
 - **User says 'recheck' — verify data content, not just commit log** — When the user says "recheck" after you've already checked, they want you to verify the actual data values (e.g. `response_action` field content, strategy classification), not just the commit history. A pull with 30 commits may add fishbone diagrams and fix scores but NOT change the field you're being asked about. Run a targeted data query on the source JSON, not `git log`.
-- **Pre-commit hook blocks 00_Contracts/ commits** — The repo's pre-commit hook rejects any commit that stages files under `00_Contracts/` (read-only per AGENTS.md). If untracked contract files exist, `git add -A` will stage them and the commit will fail. Use `git add <specific files>` or `git reset HEAD 00_Contracts/` before committing.
-- **Post-commit hook modifies risks.json** — After every commit, a post-commit hook regenerates `06_Risk_System/risks.json`. This creates unstaged changes. When pulling with rebase, stash these first or use `git stash && git pull --rebase && git stash pop`.

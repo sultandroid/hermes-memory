@@ -31,18 +31,20 @@ Each register has its own data source with potentially different field names. Th
 
 ### DDR
 - `ddr_risks.json` — uses standard field names
-- `_scope_ddr()` maps `impact → severity`, passes through `actions`
+- `_scope_ddr()` maps `severity` (NOT `impact`), passes through `actions`
 
 ### HSE — CRITICAL FIELD MAPPING
-- `hse_risks.json` — has DIFFERENT field names
-- `_scope_hse()` maps:
-  - `activity → title`
-  - `hazards → cause` (hazards ARE the cause)
-  - `controls → response_action` (controls are the response measures)
-  - `c_init → severity` (consequence initial rating = severity)
-  - `l_init → probability` (likelihood initial = probability)
-  - `response_action` → pass through (inject strategy prefix)
-- **Pitfall:** The HSE JSON also has `response_action` field which contains `[Strategy: X]` prefix. Always prefer `r.get("response_action", r.get("controls", ""))` to get the strategy-rich text.
+- `hse_risks.json` — can have DIFFERENT field names (old format) or standard names (new format)
+- `_scope_hse()` maps with fallback to old names:
+  - `title` (fallback `activity`) → title
+  - `cause` (fallback `hazards`) → cause
+  - `consequence` (fallback `controls`) → consequence
+  - `probability` (fallback `l_init`) → probability
+  - `severity` (fallback `c_init`) → severity
+  - `response_action` (fallback `controls`) → response_action
+  - `actions` → pass-through
+  - `target_close` → target_close (NOT hardcoded empty)
+- **Pitfall:** If the HSE data was restructured, `cause` and `consequence` may be empty. Restore from git history: `git show <commit>:06_Risk_System/generated/hse_risks.json` and merge `hazards`→`cause`, `controls`→`consequence`.
 
 ### AVR
 - `av_risks.json` — uses standard field names
@@ -84,9 +86,9 @@ Each register has its own data source with potentially different field names. Th
 
 ### Dashboard
 
-- Cover block: QR (A1), title (C1), logo (G1) — no merged cells
+- Cover block: QR (A1), title (C1), logo (G1) — **no merged cells**
 - KPI strip: B5:G6 (Total, Critical, High, Medium, Low, Open)
-- Risk matrix: COUNTIFS formulas referencing Risk Register P and S columns
+- Risk matrix: **pre-calculated values** (computed in Python, not COUNTIFS formulas)
 - By Rating table: counts per band
 - By Status table: counts per status
 - Exposure by Category: table + bar chart
@@ -117,23 +119,26 @@ if acts:
     clean_action = "\n".join(f"• {a.get('text','')}" for a in acts if a.get('text'))
 ```
 
-## Matrix COUNTIFS Formulas
+## Risk Matrix — Pre-Calculated Values (No Formulas)
 
-The risk matrix uses cross-sheet COUNTIFS formulas instead of hardcoded counts:
+**The matrix uses pre-calculated values computed in Python, NOT COUNTIFS formulas.** This was changed from formulas to avoid LibreOffice recalculation dependency.
 
-```excel
-=COUNTIFS('Risk Register'!$C$12:$C$82,4,'Risk Register'!$D$12:$D$82,1)
+```python
+ps_counts = defaultdict(int)
+for rsk in risks:
+    key = (rsk.get("probability"), rsk.get("severity"))
+    if key[0] and key[1]:
+        ps_counts[key] += 1
+# Then write directly as integers
+n = ps_counts.get((p, s), 0)
+cell = ws.cell(row=rr, column=2 + s, value=n if n > 0 else None)
 ```
 
-- `$C` = P (probability) column in Risk Register
-- `$D` = S (severity) column in Risk Register
-- Range starts at row 12 (after header) and ends with generous buffer
+**CRITICAL: `defaultdict` must be imported** (`from collections import defaultdict`). Matrix values are written as integers (n) or `None` (empty cells with gray fill). Cells with values get band-colored fill.
 
-### CRITICAL: Formula range must cover all data rows
+### CRITICAL: Formula range must cover all data rows (historical — only applies if switching back to formulas)
 
-The formula range is calculated as `11 + len(risks) + 10` (header row + risk count + 10 buffer rows). If the range is too short, COUNTIFS misses the last risks and the matrix shows wrong counts.
-
-**Always add 10+ buffer rows to the formula range.** The `last_data_row` calculation must be generous.
+The formula range was `11 + len(risks) + 10`. This is no longer relevant since we use pre-calculated values.
 
 ### HSE-specific: Axis labels change
 
@@ -152,41 +157,28 @@ s_label = "L" if data.get("is_hse") else "S"
 
 The HSE column headers and row labels both use these variables. Do NOT hardcode `"P"` or `"S"`.
 
-## Column Index Tracking
+## Column Index Tracking (Critical)
 
 After adding/removing columns in `REG_COLS`, update ALL of these references:
 
 1. **`REG_COLS` list** — the authoritative column layout
 2. **`vals` array** in loop — order must match `REG_COLS`
-3. **`bold=(i in (...))`** — which columns get bold font
-4. **`color=NAVY if i in (...)`** — which columns get navy color
-5. **`rcell = ws.cell(row=row, column=...)`** — rating fill on correct column
+3. **`bold=(i in (...))`** — which columns get bold font (currently `i in (1, 6)` = ID and Score)
+4. **`color=NAVY if i in (...)`** — which columns get navy color (currently `i in (1, 7, 8, 10, 11)`)
+5. **`rcell = ws.cell(row=row, column=...)`** — rating fill on correct column (currently column 5)
 6. **Auto-filter range** — must cover all columns
 7. **Action Plan `cols` list** — separate from REG_COLS
 
 ### Known mistakes from adding P and S columns
 
 When P and S were added (columns 3 and 4):
-- `rcell` was still pointing at column 3 (now P) instead of column 5 (now Rating) — caused rating fill to appear on P column
+- `rcell` was still pointing at column 3 (now P) instead of column 5 (now Rating) — caused **rating fill to appear on P column**
 - `bold=(i in (1, 4))` pointed to wrong columns — column 4 was Score but became S
 - `color=NAVY if i in (1, 4, 7, 8)` also wrong for the same reason
 
-## HSE-specific Scoring Labels
-
-HSE uses Consequence × Likelihood (C×L) scoring instead of Probability × Severity (P×S):
-
-| Register | Matrix scale | Risk Register columns | Dashboard header |
-|----------|-------------|----------------------|------------------|
-| PRR | P×S 1-4 | P=x, S=x | `P ↓ / S →` |
-| DDR | P×I 1-5 | P=x, S=x | `P ↓ / S →` |
-| HSE | C×L 1-5 | P=c_init, S=l_init | `C ↓ / L →` |
-| AVR | P×S 1-5 | P=x, S=x | `P ↓ / S →` |
-
-The HSE data stores consequence in `c_init` and likelihood in `l_init`. These are mapped to `probability` (l_init) and `severity` (c_init) in `_scope_hse()`. Despite the standard field names, the HSE matrix headers show "C" and "L".
-
 ## No Merged Cells Rule
 
-The user explicitly rejected merged cells. All cover block sections (title, meta, QR caption) use individual cells. Section headers write to a single cell without merge.
+The user explicitly rejected merged cells. All cover block sections (title, meta, QR caption) use individual cells. Section headers write to a single cell without merge. **Zero merged cells across all sheets.**
 
 ## OneDrive Daily Sync
 
@@ -238,6 +230,31 @@ DDR: 193 actions (from ddr_risks.json)
 HSE: 164 actions (from hse_risks.json)
 AVR: 26 actions (from av_risks.json)
 
+## Build Script Data File Paths
+
+The data files were moved from `generated/` subdirectory to root level:
+
+| Old path | New path | Used by |
+|----------|----------|---------|
+| `generated/drr_risks.json` | `ddr_risks.json` | `build_ddr.py`, `build_snapshots.py` |
+| `generated/hse_risks.json` | `hse_risks.json` | `build_hse.py`, `build_snapshots.py` |
+
+Path resolution from `webapp/`:
+```python
+# webapp/build_ddr.py
+DDR_JSON = HERE.parent / "ddr_risks.json"  # 06_Risk_System/ddr_risks.json
+```
+
+## GitHub Actions Auto-Deploy
+
+The workflow at `.github/workflows/deploy-risk-webapp.yml` auto-deploys on push to `main` that touches risk files. It requires the `HOSTINGER_SSH_KEY` secret:
+
+```bash
+gh secret set HOSTINGER_SSH_KEY --repo sultandroid/aseer-museum-pm < ~/.ssh/id_rsa
+```
+
+This secret is the SSH private key used to authenticate to the Hostinger server. Without it, every push fails at the SSH step.
+
 ## Verification Checklist
 
 ```python
@@ -249,26 +266,27 @@ for path in [PRR, DDR, HSE, AVR]:
     # 1. No merged cells
     assert len(list(wsd.merged_cells.ranges)) == 0
     
-    # 2. Matrix has COUNTIFS formulas
-    f = wsd.cell(13, 3).value
-    assert str(f).startswith('=COUNTIFS')
+    # 2. Matrix has pre-calculated values (integers, not formulas)
+    total = sum(wsd.cell(r,c).value or 0 for r in range(13,19) for c in range(3,9) 
+                 if isinstance(wsd.cell(r,c).value, (int,float)))
+    assert total == len([r for r in data['risks'] if r.get('probability') and r.get('severity')])
     
-    # 3. Formula range covers all data
-    last_risk = max(r for r in range(12, ws.max_row+1) if ws.cell(r,1).value)
-    formula_range = int(re.search(r'\$C\$12:\$C\$(\d+)', str(f)).group(1))
-    assert formula_range >= last_risk
-    
-    # 4. Strategy column present
+    # 3. Strategy column present
     headers = [ws.cell(11, c).value for c in range(1, ws.max_column+1)]
     assert 'STRATEGY' in [str(h).upper() for h in headers]
     
-    # 5. P and S values populated
+    # 4. P and S values populated
     for r in range(12, ws.max_row+1):
         if ws.cell(r,1).value and str(ws.cell(r,1).value)[:3] in prefixes:
             assert ws.cell(r,3).value is not None  # P
             assert ws.cell(r,4).value is not None  # S
     
-    # 6. Rating fill on correct column
+    # 5. Rating fill on correct column (5, not 3)
     rcell = ws.cell(12, 5)
     # rcell should have colored fill
+    
+    # 6. Action plan has Strategy column
+    ws2 = wb['Action Plan']
+    act_headers = [ws2.cell(11, c).value for c in range(1, ws2.max_column+1)]
+    assert 'STRATEGY' in [str(h).upper() for h in act_headers]
 ```

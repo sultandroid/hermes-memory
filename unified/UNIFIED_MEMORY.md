@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-27 19:07:05
+Generated: 2026-07-28 07:00:45
 
 ---
 
@@ -16,7 +16,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 ## Critical Rules
 
-NEVER delete user files without explicit confirmation — even if user says remove, verify first.
+NEVER delete user files without explicit confirmation. If user says remove, verify first.
 Never cite unread sources. For OneDrive deadlock: check Outlook SQLite, ~/Library/Group Containers/.../Outlook/Files/ cache, ~/Documents/Asher_Regional_Museum_Document_Control/, or GitHub repo. .olk15MsgAttachment files have base64 attachment after 'base64' header.
 User says No = go to primary data (Outlook SQLite, PM repo snapshots). Multi-agent repo: always git pull --no-rebase before push; expect merge conflicts in risk JSON/HTML files.
 Eng. Mohamed Sultan, Technical Office Manager, Samaya Investment/Aseer Museum. British English, active voice, plain engineering. No AI clichés/symbols. Detail-oriented, expects thorough QA/QC, permanent root-cause fixes not workarounds, verified data, explicit completion. Frustrated by recurring issues. Entity isolation: Samaya vs Moqtana/Tqanny never cross-reference.
@@ -40,7 +40,8 @@ Always NAME which labor does each task. Labors MUST cross-audit each other at Ph
 ## Active Projects
 
 Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
-Ahmed Salah (Project Engineer) no longer with Aseer Museum project as of ~26-Jul-2026. Replace references in org charts with vacant/removed.
+Ahmed Salah left Aseer Museum ~26-Jul. Remove from org charts.
+Aconex scan 2026-07-28: WTRAN-000117/118 (rigging PQs), WTRAN-000119 (fire alarm ZD-0067 R02), WTRAN-000120 (mech plan ZD-0100), TRANSMIT-000011 (backlog ZD-0067 R01), PQ-0131/0132, SI-021 closeout, Elbaz ZD-0064 delay complaint, Arch Viz submittals, Plumbing DD 1G-0002, Zamzam schedule resubmission + structural IRs/WIRs. No RCRC.
 Eng. Mohamed Sultan, Technical Office Manager, Samaya Investment/Aseer Museum. British English, active voice, plain engineering. No AI clichés/symbols. Detail-oriented, expects thorough QA/QC, permanent root-cause fixes not workarounds, verified data, explicit completion. Frustrated by recurring issues. Entity isolation: Samaya vs Moqtana/Tqanny never cross-reference.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
@@ -58,13 +59,11 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Samaya profile audit, font-direction correction, and safe v4 rollback: v6, Tajawal, Amiri, use the font was in V4 in V6 not reverse, 0-byte placeholder
   - desc: Use for `samaya-profile` visual fixes, asset swaps, typography parity between versions, and exact rollback work in this repo.
 rollout_summary_file: 2026-06-25T00-15-54-f0rJ-aseer_graphics_folder_audit_and_hermes_nous_key_setup.md
-description: Read-only audit of the Aseer graphics contractor folder plus an incomplete attempt to add a Nous API key to Hermes; strongest durable takeaway is the folder/path drift and the Hermes Nous auth model.
 
 ## Key People
 
 Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
 User says No = go to primary data (Outlook SQLite, PM repo snapshots). Multi-agent repo: always git pull --no-rebase before push; expect merge conflicts in risk JSON/HTML files.
-Ahmed Salah (Project Engineer) no longer with Aseer Museum project as of ~26-Jul-2026. Replace references in org charts with vacant/removed.
 Eng. Mohamed Sultan, Technical Office Manager, Samaya Investment/Aseer Museum. British English, active voice, plain engineering. No AI clichés/symbols. Detail-oriented, expects thorough QA/QC, permanent root-cause fixes not workarounds, verified data, explicit completion. Frustrated by recurring issues. Entity isolation: Samaya vs Moqtana/Tqanny never cross-reference.
 Org chart (corrected 26-Jul): Adel Darwish = Project Director. Ahmed Salah no longer with project. Mohamed Samir handles finishes/BOQ.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -82,9 +81,11 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Ali Abdelrahman** (BIM Lead)
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
+- **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
 
 ## Agents & Tools
 
+Aconex scan 2026-07-28: WTRAN-000117/118 (rigging PQs), WTRAN-000119 (fire alarm ZD-0067 R02), WTRAN-000120 (mech plan ZD-0100), TRANSMIT-000011 (backlog ZD-0067 R01), PQ-0131/0132, SI-021 closeout, Elbaz ZD-0064 delay complaint, Arch Viz submittals, Plumbing DD 1G-0002, Zamzam schedule resubmission + structural IRs/WIRs. No RCRC.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -104,12 +105,11 @@ task_group: Hermes Agent configuration
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 - `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
-- `hermes_cli/config.py`: `NOUS_BASE_URL` optional env metadata.
 
 ## Contracts & Documents
 
 Scope: check BOTH SoW text AND specialist's submittal register for deliverables. CG comments may extend scope (ZNA).
-User is contract-aware: expects contract terms checked before scope recommendations. Lump-sum D&B — scope creep must be flagged to PD (Adel), not decided at Tech Office level. VO pathway Art. 14(5)(e) for Employer info errors.
+User contract-aware: lump-sum D&B, scope creep flag to Adel, not decide. VO Art.14(5)(e).
 Org chart (corrected 26-Jul): Adel Darwish = Project Director. Ahmed Salah no longer with project. Mohamed Samir handles finishes/BOQ.
 CG correspondence tactic: when you've sent a comprehensive reply and CG re-states their position without engaging with your points, do not reply again — let it sit. Ball is in their court. Only follow up if they escalate or a week passes without response.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -142,8 +142,8 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 ## Locations
 
 Never cite unread sources. For OneDrive deadlock: check Outlook SQLite, ~/Library/Group Containers/.../Outlook/Files/ cache, ~/Documents/Asher_Regional_Museum_Document_Control/, or GitHub repo. .olk15MsgAttachment files have base64 attachment after 'base64' header.
-OneDrive CloudStorage writes (cp) may work for small Office files but can be unreliable for cloud-only stubs. If cp fails with EDEADLK, stage to /Volumes/MIcro/ for user to drag via Finder.
-OneDrive risk snapshots: delete old .xlsx from subfolders FIRST, then copy new. Use cron job `ef2495d20159` instead of manual cp.
+OneDrive CloudStorage writes may fail EDEADLK. Stage to /Volumes/MIcro/ for user to drag.
+OneDrive risk snapshots: del old .xlsx then copy new. Use cron ef2495d20159.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.

@@ -332,36 +332,39 @@ ws.cell(row=5, column=3).value = f'=COUNTIF({prr_sheet}!I2:I100,"Critical")'
 ws.cell(row=5, column=4).value = f'=COUNTIF({prr_sheet}!I2:I100,"High")'
 ```
 
-### Risk Matrix — Use COUNTIFS Formulas (Not Hardcoded Counts)
+### Risk Matrix — Pre-Calculate for Deployment (Avoid Formula Recalc Dependency)
 
-The risk matrix (P×S or C×L grid) must use COUNTIFS formulas referencing the Risk Register sheet. The Risk Register must have **separate P (Probability) and S (Severity) columns** for the formulas to reference.
+The risk matrix (P×S or C×L grid) should use COUNTIFS formulas during development, but **pre-calculate in Python** when the deployment target has no LibreOffice. Formulas written by openpyxl have no cached values — they render as `None` until recalculated. LibreOffice recalc on macOS is unreliable (timeouts, corrupted files).
+
+**Pattern for pre-calculated matrix (deployment):**
 
 ```python
-# CORRECT: COUNTIFS referencing P and S columns
-cell.value = f'=COUNTIFS(\'Risk Register\'!$C$12:$C${last_data_row},{p},\'Risk Register\'!$D$12:$D${last_data_row},{s})'
-# C = Probability, D = Severity
+ps_counts = defaultdict(int)
+for rsk in risks:
+    key = (rsk.get("probability"), rsk.get("severity"))
+    if key[0] and key[1]:
+        ps_counts[key] += 1
+for ridx, p in enumerate(range(scale, 0, -1)):
+    rr = matrix_row + 2 + ridx
+    for s in range(1, scale + 1):
+        n = ps_counts.get((p, s), 0)
+        cell = ws.cell(row=rr, column=2 + s, value=n if n > 0 else None)
+        cell.fill = PatternFill("solid", fgColor=RATING_FILL[band] if n > 0 else GRAY_ALT)
 ```
 
-Add P and S to REG_COLS and the vals array:
+Add P and S columns to REG_COLS and vals:
 ```python
 REG_COLS = [
-    ("ID", 12, "left"),
-    ("Cat", 8, "center"),
-    ("P", 5, "center"),
-    ("S", 5, "center"),
-    ("Rating", 10, "center"),
-    ...
-]
-vals = [
-    r.get("id", ""),
-    r.get("category", ""),
-    r.get("probability", ""),
-    r.get("severity", ""),
-    ...
+    ("ID", 12, "left"), ("Cat", 8, "center"),
+    ("P", 5, "center"), ("S", 5, "center"),
+    ("Rating", 10, "center"), ("Score", 7, "center"),
+    ("Status", 11, "center"), ("Strategy", 14, "left"),
+    ("Owner", 18, "left"), ("Target", 12, "center"),
+    ("Risk Event / Title", 36, "left"), ("Cause", 32, "left"),
+    ("Consequence", 32, "left"), ("Response / Action", 36, "left"),
 ]
 ```
-
-**CRITICAL:** Hardcoded Python counts (`n = ps.get((p, s), 0); cell.value = n if n else None`) get stale. Always use dynamic COUNTIFS formulas.
+When adding/removing columns: update vals array order, bold/navy column references, rcell rating fill column index, and Action Plan cols together.
 
 Distribution by category uses COUNTIFS:
 ```python
@@ -1046,6 +1049,7 @@ Verification must inspect formula strings with `data_only=False`, cached values 
 See `references/risk-register-example.md` for the full script structure and sheet-by-sheet breakouts from the Aseer Museum risk register session.
 See `references/onedrive-folder-audit-workflow.md` for the systematic pattern to audit OneDrive project folders and decide what to add to the repo.
 See `references/risk-register-cleanup-patterns.md` for the full cleanup and formatting patterns from the C11 session.
+See `references/field-mapping-pitfalls.md` for HSE/DDR field name mapping and response_action strategy extraction patterns.
 
 ## Public Register Controls and Source Visibility
 

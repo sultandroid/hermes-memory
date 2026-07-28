@@ -237,6 +237,24 @@ Hostinger uses LiteSpeed server which has its own cache layer. Even with `cache-
 - `../DDR/`, `../HSE/`, `../AV/` = sibling registers
 - Absolute links like `HSE/` (without `../`) from a sub-register path resolve to WRONG location
 
+### fixCards() JS: Root vs Sub-Page Path Logic (Critical)
+
+The `fixCards()` JS in `init()` sets correct hrefs on register cards. **From the PRR root page (`/Risk/`), hrefs must be `DDR/`, `HSE/`, `AV/`** (no `../` prefix). From sub-pages (`/Risk/DDR/`), hrefs must be `../`, `../DDR/`, `../HSE/`, `../AV/`.
+
+Without the `isRoot` check, ALL hrefs get `../` prefix, breaking navigation from the PRR page:
+
+```javascript
+var isRoot = reg === 'PRR';  // PRR is at /Risk/, sub-pages at /Risk/DDR/ etc.
+// On root: href = c+'/'  (e.g. "DDR/")
+// On sub-page: href = map[c]  (e.g. "../DDR/")
+```
+
+**Always verify links from ALL 4 pages after any template change:**
+- PRR: `DDR/`, `HSE/`, `AV/` (direct child paths)
+- DDR: `../`, `../HSE/`, `../AV/` (parent + sibling)
+- HSE: `../`, `../DDR/`, `../AV/`
+- AVR: `../`, `../DDR/`, `../HSE/`
+
 ### fix_cards_static.py — Post-Build Register Card Corrector
 
 To avoid the current-register card bug permanently, use a **post-build processor** instead of JS-based fixCards() (which caused JS parse errors):
@@ -414,6 +432,7 @@ If the HTML file is replaced with only the JSON:
 - fix_cards_static.py walkthrough: `skill_view(name='register-webapp-maintenance', file_path='references/fix-cards-static-pattern.md')`
 - Excel snapshot audit checklist: `skill_view(name='register-webapp-maintenance', file_path='references/snapshot-audit-checklist.md')`
 - Excel snapshot generation system (pipeline, columns, formulas, field mapping): `skill_view(name='register-webapp-maintenance', file_path='references/excel-snapshot-system.md')`
+- HSE data restoration from git history: `skill_view(name='register-webapp-maintenance', file_path='references/hse-data-restoration.md')`
 
 ## Auto-Deploy Cron Overwrites SCP (Every 15 Minutes)
 
