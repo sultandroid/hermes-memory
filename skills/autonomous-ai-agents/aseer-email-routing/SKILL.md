@@ -40,28 +40,40 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 
 | Doc Code | Destination |
 |----------|-------------|
-| 1A0-1G-0003 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0004 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0005 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0006 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0007 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0008 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0007 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1A0-1G-0008 | `02_Submittals/01_DD_Gate/Architecture/` |
-| 1C0-1G-0001 | `02_Submittals/01_DD_Gate/Civil/` |
-| 1M0-1G-0001 | `02_Submittals/01_DD_Gate/MEP/` |
+| 1A0-1G-0003 | Arch Material Board — Basement | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0004 | Arch Material Board — LGF | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0005 | Arch DD Drawings — Ground Floor | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0006 | Arch Material Board — GF | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0007 | — | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0008 | — | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0009 | Showcases DD 50% | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0010 | Arch Viz 3D Shots — First Floor | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0011 | Arch Viz 3D Shots — Ground Floor | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1C0-1G-0001 | Civil/Structural DD | `02_Submittals/01_DD_Gate/Civil/` |
+| 1E0-1G-0002 | AV DD Drawings 50% Part II | `02_Submittals/01_DD_Gate/AV/` |
+| 1M0-1G-0001 | MEP DD | `02_Submittals/01_DD_Gate/MEP/` |
+| 1M0-1G-0002 | Plumbing DD 50% | `02_Submittals/01_DD_Gate/MEP/` |
+| 1A0-1G-0010 | Arch Viz 3D Shots — First Floor | `02_Submittals/01_DD_Gate/Architecture/` |
+| 1A0-1G-0011 | Arch Viz 3D Shots — Ground Floor | `02_Submittals/01_DD_Gate/Architecture/` |
 
 ### Prequalifications (PQ-*)
 
 | Doc Code | Specialist | Destination |
 |----------|------------|-------------|
 | 1A0-PQ-0123 | ACOUSTIEG | `24_Subcontractors/11_Acoustic/01_Prequalification/` |
-| 1A0-PQ-0124 | AME | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
+| 1A0-PQ-0124 | AME | `24_Subcontractors/18_Acoustic_Specialist/01_Prequalification/` |
 | 1A0-PQ-0125 | JOCAVI | `24_Subcontractors/07_Acoustic/01_Prequalification/` |
 | 1A0-PQ-0128 | TransOrient Solutions | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
 | 1C0-PQ-0120 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
 | 1C0-PQ-0121 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
-| 1L0-PQ-0122 | Landscaping | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
+| 1C0-PQ-0131 | Rigging (ACT) | `24_Subcontractors/12_Structural_Contractor/01_Prequalification/` |
+| 1C0-PQ-0132 | Rigging (AL FARIS) | `24_Subcontractors/12_Structural_Contractor/01_Prequalification/` |
+| 1E0-PQ-0133 | ICT Security (SPS) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
+| 1E0-PQ-0134 | ICT Security (NETGEAR) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
+| 1E0-PQ-0135 | ICT Security (TBD) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
+| 1E0-PQ-0133 | Network Solutions (NETGEAR) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
+| 1E0-PQ-0134 | Audio Solutions (Molitor) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
+| 1L0-PQ-0122 | Landscaping (Evergreen) | `24_Subcontractors/21_Landscaping_Specialist/01_Prequalification/` |
 | 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
 | 1L0-PQ-0127 | Landscaping (TLC) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
 
@@ -87,6 +99,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | ZD-0096 | Architectural Title Block Template | `03_Design_Files/Architecture/Title_Block/` |
 | ZD-0097 | MCC Assessment Report | `03_Design_Files/Electrical/MCC_Assessment/` |
 | ZD-0098 | EMDP and SDP Assessment Report | `03_Design_Files/Electrical/` |
+| ZD-0099 | DP-AC1 & MDP-AC Assessment Report | `03_Design_Files/Electrical/DP-AC1_MDP-AC_Assessment/` |
+| ZD-0100 | Mechanical Submittal Plan | `04_Docs/02_Plans_and_Procedures/02.10_Subcontractor_Deliverables/01_Source_Files/` |
 
 ### General Documents (ZD-*) — continued
 
@@ -123,6 +137,10 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *Prequalification_Submission_CG* | Prequal Submission | `24_Subcontractors/03_Acoustic_AME/01_Prequalification/` |
 | *RE CG*IR-0001* | CG Response to Inspection Request | `04_Docs/10_Test_and_Inspection/10.2_Inspection_Requests/` |
 | *RE CG*ZD-0091* or *RE CG*ZD-0092* | CG Response to Electrical Assessment | `03_Design_Files/Electrical/` |
+| *CG Response*ZD-0084* or *CG Response*ZD-0086* | CG Response to PEP/Active Component | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/02_CG_Responses/` |
+| *CG Response*ZD-0093* or *CG Response*ZD-0094* | CG Response to RMP | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/02_CG_Responses/` |
+| *CG Response*ZD-0090* | CG Response to MDP Assessment | `03_Design_Files/Electrical/Current_Condition_MDP/` |
+| *CG Response*ZD-0099* | CG Response to DP-AC1 Assessment | `03_Design_Files/Electrical/DP-AC1_MDP-AC_Assessment/` |
 | *SMP_CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | *SOR-* or *HSE SOR* | Safety Observation Report | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
@@ -152,12 +170,27 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *NRS Comments* | CG Comments on Submission Plan | `02_Submittals/01_DD_Gate/` |
 | *RE CG*IR-0001* | CG Response to Inspection Request | `04_Docs/10_Test_and_Inspection/10.2_Inspection_Requests/` |
 | *RE CG*ZD-0091* or *RE CG*ZD-0092* | CG Response to Electrical Assessment | `03_Design_Files/Electrical/` |
+| *CG Response*ZD-0084* or *CG Response*ZD-0086* | CG Response to PEP/Active Component | `04_Docs/02_Plans_and_Procedures/02.2_Project_Execution_Plan/02_CG_Responses/` |
+| *CG Response*ZD-0093* or *CG Response*ZD-0094* | CG Response to RMP | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/02_CG_Responses/` |
+| *CG Response*ZD-0090* | CG Response to MDP Assessment | `03_Design_Files/Electrical/Current_Condition_MDP/` |
+| *CG Response*ZD-0099* | CG Response to DP-AC1 Assessment | `03_Design_Files/Electrical/DP-AC1_MDP-AC_Assessment/` |
 | *SMP_CR_Sheet* or *Review Statement*SMP* or *Appendix T*SMP* | SMP Companion Docs | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | *SOR-* or *HSE SOR* | Safety Observation Report | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
 | *Evergreen*Prequal* | Landscaping Prequal (Evergreen) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
 | *Daily_Report* or *Daily Report* | Daily Report | `00_Status/Daily_Reports/` |
 | *WEEKLY* | Weekly Report | `00_Status/` |
 | *.xer | Schedule | `02_Schedule/` |
+| *KPI_Dashboard* or *Material Tracker* | KPI / Material Tracker | `04_Docs/09_Registers/22_Procurement_Schedule/MEP_Materials/` |
+| *Molitor* | Molitor SOW | `24_Subcontractors/14_Molitor/01_Scope_of_Work/` |
+| *INV-* or *Invoice* | Invoice | `00_Contracts/Invoices/` |
+| *MVii* or *Scale Model* | Scale Models | `24_Subcontractors/12_Scale_Models/01_Prequalification/` |
+| *Baffle* or *Ceiling* | Ceiling RFQ | `04_Docs/09_Registers/22_Procurement_Schedule/` |
+| *3D*Scanner* or *Faro* | 3D Scanning | `24_Subcontractors/13_3D_Scanning/01_Prequalification/` |
+| *Door_BOQ* | Door BOQ | `03_Design_Files/Architecture/Door_Schedule/` |
+| *Compliance_Sheet* | Compliance Sheet | `04_Docs/09_Registers/22_Procurement_Schedule/` |
+| *LT-003* or *MOC-MUS-ASE-LT* | Letter / Warning | `04_Docs/09_Correspondence/` |
+| *SMP* or *Sustainability* | Sustainability Plan | `04_Docs/02_Plans_and_Procedures/02.5_HSE_Plan/01_Source_Files/` |
+| *KAF*MAT* or *Al Watania* | Material Submittal | `04_Docs/09_Registers/22_Procurement_Schedule/MEP_Materials/` |
 | *ZNA* or *عقد* | Contract | `00_Contracts/` |
 | *MATERIAL-BOARD* | Material Board | `03_Design_Files/FF&E_Material_Boards/` |
 
@@ -202,3 +235,6 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 - **Git rebase + post-commit hook conflict.** The repo's post-commit hook regenerates `06_Risk_System/webapp/src/index.html` after every commit. During `git pull --rebase`, each rebase step fires the hook, leaving a dirty index.html that blocks the next step. **Workaround:** `git checkout 06_Risk_System/webapp/src/index.html` before each `git rebase --continue`. If the rebase aborted, redo with `git checkout index.html && git pull --rebase origin main` and repeat the checkout before each continue.
 - **Files without doc codes in their names** (e.g. "PROJECT EXECUTION PLAN 01.docx", "TB for approval.pdf") need keyword-based routing rules, not doc-code regexes. Add a keyword pattern alongside the doc-code pattern for the same destination.
 - **TU- prefix files** (e.g. TU-26184801) are technical uploads from subcontractors — route to the relevant subcontractor's prequal folder, not a general location.
+- **Two-pass routing for large batches.** When extracting 20+ files, write a primary script for this session's files and a separate stranded-cleanup script for orphaned files from prior cycles. See `references/two-pass-routing.md`.
+- **`00_Contracts/` is git-hook protected.** The repo has a pre-commit hook that blocks any commit touching `00_Contracts/`. If `git add -A` picks up contract files (e.g. from a sibling agent's work), `git commit` fails with `BLOCKED: Commit modifies protected 00_Contracts/ files.` Fix: `git reset HEAD 00_Contracts/` before committing. The contract files remain on disk — they just aren't committed.
+- **`patch` with `replace_all=true` on table rows can duplicate.** When adding new rows to a markdown table register, the old_string may match both the original row AND the newly added rows (because `replace_all` replaces every occurrence). This creates duplicate rows. Fix: always use a unique old_string with enough surrounding context (previous row + next row) to match exactly once. Never use `replace_all=true` on table rows in registers.

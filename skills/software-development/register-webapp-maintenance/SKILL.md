@@ -133,13 +133,13 @@ Place between KPIs div and analytics div:
 
 ```html
 <div class="registers" id="registers">
-  <div class="reg-card reg-current">
+  <a class="reg-card reg-current" href=".">
     <div class="reg-head"><span class="reg-badge">current</span><span class="reg-code">PRR</span></div>
     <div class="reg-title">Master Risk Register</div>
     <div class="reg-sub">...doc info...</div>
     <div class="reg-stats" id="regStats"></div>
     <div class="reg-foot">61 risks - 18 categories - you are here</div>
-  </div>
+  </a>
   <a class="reg-card" href="DDR/">
     <div class="reg-head"><span class="reg-code">DDR</span></div>
     <div class="reg-title">Design Discipline Register</div>
@@ -163,7 +163,7 @@ Place between KPIs div and analytics div:
 ```css
 .registers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
 .reg-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; text-decoration: none; ... }
-.reg-card.reg-current { box-shadow: inset 0 0 0 1px var(--navy); cursor: default; }
+.reg-card.reg-current { box-shadow: inset 0 0 0 1px var(--navy); }
 .reg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .reg-badge { background: var(--navy); color: #fff; font-size: 9.5px; ... padding: 2px 7px; border-radius: 999px; }
 .reg-code { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 12px; ... }
@@ -201,12 +201,53 @@ The `deploy-registers-on-commit` cron (every 15 min) and `register-auto-update` 
 
 **Layer 2 (JS) must be a simple IIFE, not a named function.** Complex JS functions injected into `template.html` caused JS parse errors (RISK undefined, 0 KPIs, 0 table rows). Keep the fix minimal and directly in `init()`.
 
-**Layer 2 refix logic:**
-- If a card is the current register: remove `<a>` wrapper, add `reg-current` class and `current` badge
+**Layer 2 refix logic (UPDATED Jul 2026):**
+- If a card is the current register: keep the `<a>` wrapper, add `reg-current` class and `current` badge, set `href="."` for page reload
 - If a card is NOT the current register: if it was a `<div>`, wrap in `<a>` with correct relative href
 - Fix broken hrefs: if `href` starts with `DDR/`, `HSE/`, `AV/` (relative from wrong parent), replace with `../DDR/`, `../HSE/`, `../AV/`
 
+**CRITICAL — DO NOT replace `<a>` with `<div>` for the current card.** The old JS code did this (lines 946-956 in the original fixCards function). This broke the Master Risk Register card link on the PRR page. The correct JS keeps the `<a>` tag and only adds the badge:
+
+```javascript
+if (isCur && el.tagName === 'A') {
+  var h = el.querySelector('.reg-head');
+  if (h && !el.querySelector('.reg-badge')) {
+    var b = document.createElement('span');
+    b.className = 'reg-badge'; b.textContent = 'current';
+    h.insertBefore(b, h.firstChild);
+  }
+}
+```
+
 The runtime JS is a safety net. The build-time post-processor should be the primary fix.
+
+### CSS `cursor: default` — Second Trap (Equally Important)
+
+Even after the JS is fixed, the CSS rule `.reg-card.reg-current { cursor: default; }` overrides the natural pointer cursor of the `<a>` tag. The card works as a link (clicking navigates), but there is NO visual affordance — no hand cursor, no indication it is clickable. The user perceives it as "not active" or "dead."
+
+**Fix:** Remove `cursor: default` from the CSS rule in ALL 4 built HTML files, both templates (`template.html`, `av/template_av.html`), AND `fix_cards_static.py` (which generates the CSS).
+
+Without this CSS fix, users see a static-looking card even though the HTML has a proper `<a href=".">`. Always pair the JS fix with the CSS fix — they are two independent causes of the same symptom.
+
+### Debugging: curl Raw HTML vs Browser Accessibility Tree
+
+When the browser accessibility tree shows a card as "StaticText" but `curl` confirms `<a>` in the raw HTML, the JS is manipulating the DOM after page load. This is a reliable diagnostic pattern:
+
+```bash
+# Step 1 — Check raw HTML (what the server sent)
+curl -s URL | grep 'reg-card reg-current'
+# → <a class="reg-card reg-current" href=".">   (correct HTML on server)
+
+# Step 2 — Check browser DOM (what JS did after load)
+# Browser console:
+document.querySelector('.reg-card.reg-current').tagName
+# → "DIV"  (means JS replaced the <a> — fixCards() is the culprit)
+# → "A"    (means JS kept the link intact — check CSS cursor)
+```
+
+If `curl` shows `<a>` but the browser shows `DIV`, the `fixCards()` IIFE inside `init()` is swapping the tag. The destructive line is `el.parentNode.replaceChild(d, el)` — search for it and replace with the badge-only approach above.
+
+**Also:** The accessibility tree sometimes renders `<a>` wrappers around block content as "generic" containers even when the link works. Do not trust the browser snapshot alone — always verify with `curl` against raw HTML.
 
 ## LiteSpeed Cache Can Mask Deployments
 
@@ -266,7 +307,7 @@ To avoid the current-register card bug permanently, use a **post-build processor
 1. Parse the built HTML, extract `RISK` JSON to determine current register
 2. Find the registers div via nesting-aware parsing (counts `<div>` / `</div>` — NOT regex)
 3. Replace all 4 register cards with correct `reg-current` assignment and relative paths
-4. For each card: current = `<div class="reg-card reg-current">`, others = `<a class="reg-card" href="...">`
+4. For each card: current = `<a class="reg-card reg-current" href=".">`, others = `<a class="reg-card" href="...">`
 
 **Integration into build scripts:**
 ```python

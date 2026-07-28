@@ -96,6 +96,7 @@ Present these as a short bullet list. If nothing is urgent, say so.
 - **Distinguish "reference to X" from "X itself"** — when a risk register or action item says "NRS comments on 57 pre-contract drawings", the risk is a *reference* to the comments, not the comments themselves. The user wants the actual source document, not the risk description quoting it back at them. Find the source (email attachment, drawing PDF, remarks table) — don't echo the risk entry.
 - **OneDrive placeholders cannot be read** — files returning "Resource deadlock avoided" or null bytes have not synced locally. Do not brute-force read them. Instead find cached copies in Outlook attachments, Adel snapshots, or the repo.
 - **NRS comment PDFs are image-only** — NRS stamped/redlined drawing PDFs are scanned AutoCAD plots. pdftotext and OCR return empty output. Open in PDF viewer.
+- **Pipeline confirmed ≠ pipeline completed** — confirming a pipeline cron job ran successfully is not enough. You must read the extracted documents, understand their content, and take action (update registers, notify user of findings). Running the pipeline and reporting "ok" without reading the output will be corrected by the user. After extraction, always: read → understand → route → update → report with actual findings.
 
 ## OneDrive Placeholder Workaround
 
@@ -153,10 +154,15 @@ end tell
 
 Run sequentially: `osascript /tmp/extract_<id>.applescript`
 
-### Step 3: Read key documents
+### Step 3: Read key documents — extract CG comments and CRS data
+
+**Do not file by filename alone.** Read the document content first. The CG rejection reason, status code, and action items are in the document body, not the filename.
 
 - **DOCX agreements**: `textutil -convert txt -stdout <file>.docx`
-- **PDF SOWs**: `pdftotext <file>.pdf -`
+- **PDF submittals/DS forms**: `pdftotext <file>.pdf -` — extract the **CG Comments** field (near bottom, labelled "CG Comments:" or "ملاحظات المهندس المشرف"). This is the authoritative rejection reason — quote verbatim, never paraphrase.
+- **PDF CG response attachments**: Same method. The DS form's status code (A/B/C/D) and CG reviewer's signature block are at the bottom of page 1. Read them.
+- **Excel CRS files** (CG Comment Resolution Sheets): Use Python openpyxl with `data_only=True`. Count Open vs Closed comments per column. Extract each comment: section reference, CG requirement, status. The CRS is where CG documents exactly what must change — do not skip it.
+- **Image-based PDFs** (renders, scanned dwgs): `pdftotext` returns empty. Note as image-based and move on.
 - **XLSX plans**: Python openpyxl to read sheets
 
 ### Step 4: File to repo
@@ -300,6 +306,24 @@ When presenting findings, use a table format with:
 - Report-by-report status with doc refs and dates
 - Clear summary: what's done, what's pending, what needs resubmission
 - Distinguish "no CG response yet" from "no response found in this source"
+
+## Extended Workflow: NCR / Formal Letter Procedural Audit
+
+When CG issues an NCR or formal warning letter (LT), audit its procedural validity against the Communication Plan, DMP, and scope documents before responding. This determines whether to contest (procedural defects found) or comply (procedurally clean).
+
+### What to Check
+
+| Check | What to Verify | Document Reference |
+|-------|---------------|-------------------|
+| **Channel** | Was instruction sent via Aconex C1 or direct email C2? | Communication Plan §6.1 |
+| **Recipient** | Correct escalation tier (L1-L5)? | Communication Plan §7.1 |
+| **Scope** | Is the demanded action in scope / in DMP? | DMP, SOW, Risk Register |
+| **Timeline** | Is the deadline appropriate for the tier SLA? | Communication Plan §7.1 |
+| **NCR validity** | Proper escalation chain (SI → NCR → LT)? Proper use of NCR mechanism? | DMP §8.5, Communication Plan §8.5 |
+
+### Reference File
+
+See `references/ncr-procedural-audit.md` for the full 5-point audit checklist with clause references, verdict format, and worked examples (NC-1G0-0019 vs LT-003).
 
 ## Pitfall: OneDrive placeholders for submittal docs
 

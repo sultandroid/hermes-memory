@@ -31,7 +31,32 @@ When the user provides a PDF account statement (e.g. Saba Najd, Mada Aljezera) a
 - The PDF may have a second page with additional transactions — always check for page breaks
 - Date format in the PDF may be DD/MM/YYYY — convert to DD-MMM-YYYY for the report
 - The statement is for Samaya Holding (parent company), not Samaya Factory — but the balance is still tracked in the Factory cashout report as a credit supplier
+- **Statement total != Factory Odoo PO total.** Example (Jul 2026):
+  - صبا نجد statement: 158,574.27 SAR vs Factory Odoo POs: 30,200 SAR (4 POs) — statement covers all Samaya projects
+  - مدى الجزيرة statement: 35,564.38 SAR vs Factory Odoo POs: 63,187.85 SAR (18 POs) — reverse gap due to period misalignment
 - `ws.cell(row=N)` without column argument raises TypeError — always pass both row and column
 - Ibrahim Shaaban's "قائمة المهام تم" comments are task completion, not payment. Always check `payment_state` on the invoice.
 - Odoo `purchase.order` does NOT have a `payment_state` field — that is on `account.move` (the invoice). Query invoices via PO's `invoice_ids`.
 - When checking payment, query `account.move` with: `[[('id', 'in', inv_ids)]]` and read `payment_state` field.
+
+## Concrete Example: Jul 2026 Statement Update
+
+The user provided م صبا نجد and م مدى الجزيرة PDFs plus a هام file:
+
+| Supplier | Statement Source | Statement Balance | Factory Odoo POs Total |
+|---|---|---|---|
+| صبا نجد | PDF (pdftotext extractable) | 158,574.27 SAR | ~30,200 SAR (4 POs) |
+| مدى الجزيرة | PDF (CamScanner image — no text extraction) | 35,564.38 SAR | ~63,188 SAR (18 POs) |
+
+**هام file items tracked:**
+- 17 individual POs (mix of projects) + 2 credit supplier lines + 1 zero-item line
+- Non-Factory POs excluded: P01543 (Quran), P02069 (Jalal), P02070 (Jalal), P02096 (Ghamama), P02099 (Maalim), P02116 (mixed factory/labor), P02129 (Jalal), P02181 (Ghamama), P02185 (Maalim), P02191 (Jalal), PO2084 (unknown)
+- Factory POs included: P01970, P02092, P02139, P02226, P02227 (+ P01543 if it's Factory)
+- Credit supplier items 18-19 treated as statement lines, not individual POs
+- Item 20 (صبا نجد paints) = 0 SAR, stopped pending payment
+
+**Report update approach:**
+- Show statement balances in Credit Suppliers sheet as single lines
+- Add a "Statement Cross-Reference" section comparing statement balance vs Factory Odoo POs
+- Never add statement balances to the "Cashout Required" total
+- Include the Odoo cross-reference counts in the notes

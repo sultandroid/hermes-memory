@@ -86,6 +86,82 @@ cg_status: A | B | C | D | Submitted
 - **CG status** — include the approval status (Code A/B/C/D) and date.
 - **Cross-references** — link to other plans in the library (e.g., "see DMP §6 for BIM requirements").
 
+### 3.5 Immutable Archive Convention (00_Contracts/)
+
+Approved plans (Code A/B) that serve as contractual reference documents go into the **`00_Contracts/`** folder as immutable read-only archives. This is distinct from `03_Plans/` (working library) -- `00_Contracts/` is the **formal record** that agents MUST NOT modify without explicit user direction.
+
+#### Target Path Convention
+
+```
+00_Contracts/
++-- 01_DMP/                 # Design Management Plan
++-- 02_PEP/                 # Project Execution Plan (if approved)
++-- 03_Stakeholder_Plan/    # Stakeholder Management Plan
++-- 04_Communication/       # Communication Plan
+|   ...                     # One subdirectory per approved plan
+```
+
+Numbering mirrors the `03_Plans/` scheme but applies only to plans that have reached Code A/B approval.
+
+#### YAML Frontmatter
+
+```yaml
+---
+doc_ref: MOC-MUS-ASE-1K0-PL-0020
+revision: Rev.02
+title: Stakeholder Management Plan
+status: formal_read_only
+last_updated: 2026-06-16
+approved_date: 2026-06-22
+approved_by: CG (Consultant Group)
+approval_code: B (Approved with Comments)
+source_file: 04_Docs/02_Plans_and_Procedures/02.13_Stakeholder_Plan/01_Source_Files/02_PDFs/Aseer_Plan.pdf
+agent_edit: prohibited
+---
+```
+
+Key frontmatter fields specific to `00_Contracts/`:
+
+| Field | Purpose |
+|-------|---------|
+| `doc_ref` | Document code (e.g., MOC-MUS-ASE-1K0-PL-0020) |
+| `revision` | Revision number (e.g., Rev.02) |
+| `status` | Always `formal_read_only` |
+| `approved_date` | Date CG approved the plan |
+| `approved_by` | Approving authority (e.g., Consultant Group) |
+| `approval_code` | A = Approved, B = Approved with Comments |
+| `source_file` | Relative path to the original PDF |
+| `agent_edit` | Always `prohibited` |
+
+Do NOT include `owner_agent` -- these files are not owned by any agent.
+
+#### File Naming Convention
+
+Each plan folder contains one index file plus numbered part files:
+
+| File | Content |
+|------|---------|
+| `00_INDEX.md` | Cover page, metadata, revision history, TOC, plan snapshot |
+| `01_Part1_Title.md` | First logical group of sections |
+| `02_Part2_Title.md` | Next logical group |
+| `03_Part3_Title.md` | ... |
+| `04_Part4_Title.md` | ... |
+| `05_Part5_Title.md` | ... |
+
+Each part file carries extra frontmatter: `part:`, `sections:`, `original_pages:`.
+
+#### Conversion Rules
+
+1. **Read the `03_Plans/` version first** -- prefer existing Markdown over raw PDF.
+2. **Follow the established folder pattern** -- check `00_Contracts/01_DMP/` for conventions.
+3. **YAML frontmatter must include `agent_edit: prohibited` and `status: formal_read_only`**.
+4. **Note the AGENTS.md restriction** -- Rule 9 prohibits creating/editing files in `00_Contracts/` without explicit user direction. If the user directs you to create files there, proceed but do not assume blanket permission.
+5. **Preserve all tables exactly** -- every register entry, score, KPI, and interface row must be present.
+6. **No AI fingerprints** -- follow the same human-engineer tone rules as Section 6.3.
+7. **All values from the source must be preserved** -- including Power/Interest scores, escalation routes, engagement methods, frequencies.
+
+See `references/00-contracts-archive-pattern-smp.md` for the full worked example (SMP Rev.02, 15 sections, 23 pages, 56 roles).
+
 ### 3.4 Parallel Conversion (via delegate_task)
 
 For large plan sets (10+ plans), delegate conversion to parallel sub-agents:
@@ -763,6 +839,8 @@ When updating RMP per CG comments:
 ## Reference
 
 See `references/stakeholder-plan-post-approval-audit.md` for a worked example (Aseer Museum Stakeholder Plan ZD-0020 Rev.02, approved Jun 18-24, audited Jul 13 with 6 new stakeholders identified).
+
+See `references/00-contracts-archive-pattern-smp.md` for a worked example converting the approved Stakeholder Management Plan Rev.02 (Code B, 23 pages, 56 roles) into the `00_Contracts/` immutable archive with `agent_edit: prohibited` and `status: formal_read_only`.
 
 See `references/plan-audit-scmp-zd-0094.md` for a worked example (Subcontract Management Plan ZD-0094 Rev.00 — 12 issues found, verdict: NOT READY for submission).
 

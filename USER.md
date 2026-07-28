@@ -1,9 +1,11 @@
-Eng. Mohamed Sultan, Technical Office Manager, Samaya Investment/Aseer Museum. British English, active voice, plain engineering. No AI clichés/symbols. Detail-oriented, expects thorough QA/QC, permanent root-cause fixes not workarounds, verified data, explicit completion. Frustrated by recurring issues. Entity isolation: Samaya vs Moqtana/Tqanny never cross-reference.
+English only in all replies — never Arabic. Even when source data is Arabic, summarize in English. Concise, British English, active voice, no AI clichés.
 §
-When asked "who does X" on the project, do NOT guess from filenames. Cascade: repo registers → Outlook SQLite email previews → Adel snapshots. User rejects speculation — wants data-backed answers only.
+Investigation cascade: repo registers → Outlook SQLite → actual CG response attachments (PDF + CRS). Never speculate from filenames or rely on register summaries alone — read primary source documents. When asked "why was X rejected", extract and read the actual CG response documents.
 §
-Excel snapshots: no merged cells anywhere (use individual cells). No EVIDENCE column in Risk Register sheet. QR (55px) + logo in row 1. Risk matrix uses COUNTIFS formulas referencing P/S columns in Risk Register sheet.
+Collaborates via GitHub Discussions for project decisions — post plans there, not just chat. Wants systemic/general solutions not one-off fixes.
 §
-Org chart (corrected 26-Jul): Adel Darwish = Project Director. Ahmed Salah no longer with project. Mohamed Samir handles finishes/BOQ.
+Verify assumptions before recommending — check actual files/repo state first. Wants visual design diagrams for UI/UX plans, not text-only specs.
 §
-CG correspondence tactic: when you've sent a comprehensive reply and CG re-states their position without engaging with your points, do not reply again — let it sit. Ball is in their court. Only follow up if they escalate or a week passes without response.
+Technical Office Manager who is procedurally meticulous — understands contract priority, communication plan compliance, escalation tiers, and NCR validity. Trusts his judgment on scope vs pressure tactics. Does not engage on procedurally defective directives; escalates contractual/scope matters to PM/PD correctly. Expects audits to confirm his analysis, not second-guess it. Distinguishes genuine compliance issues from CG pressure tactics.
+§
+Strictly English-only in responses — never use Arabic in conversation or replies. Even when source data is in Arabic, summarize in English.

@@ -178,6 +178,7 @@ Technical_Office/CG_Analysis/
 ## Reference Files (in skill directory)
 
 - `references/cg-reviewer-behavior-patterns.md` — Condensed CG behavior patterns from 13 lessons learned. Quick reference for "what will CG reject/approve" and per-reviewer tendencies.
+- `references/cg-response-outlook-extraction.md` — Extract verbatim CG rejection comments from Outlook attachments (PDF + CRS Excel) instead of relying on register summaries.
 - `references/lesson-entry-template.md` — Template for appending new lessons to the register. Includes category options, status codes, and governing plan references.
 - `references/team-dynamics-analysis.md` — Structured framework for assessing project team attitude, morale, and interpersonal friction. Covers data sources (PROJECT_MEMORY, email scans, submittal registers), analytical dimensions (internal health, consultant relationship, subcontractor stability, external pressure), output format, and climate labels. Use when asked "how is the team doing" or "team attitude analysis".
 
@@ -221,6 +222,8 @@ Every lesson must pass ALL of these checks:
 
 ### Style rules for the register
 
+- **English only** in all lesson content — no Arabic. User corrected this explicitly.
+- **Newest-first sort** in webapp — lessons table must sort by date descending.
 - **No `§` symbol** — use "Section" (e.g. "Procurement Plan Section 6.1" not "Procurement Plan §6.1")
 - **No AI fingerprints** — plain engineer English, short sentences, active voice
 - **No emoji in print/export** — strip emoji from status labels when generating CSV or PDF
@@ -244,6 +247,66 @@ The lessons learned register is deployed as an interactive web app at `samaya-fa
 See `references/lessons-webapp-deployment.md` for the full build and deploy workflow.
 See `register-webapp-template` skill for the complete template, pitfalls, and auto-update setup.
 
+## Procedural NCR/LT Audit Against Approved Plans
+
+When the user says "audit this NCR" or "check if this letter is valid", run a **7-point procedural audit** against the approved Communication Plan (PL-0018/PL-0027), DMP (PL-0029), and scope documents.
+
+### The 7 Audits
+
+For every CG NCR or warning letter (LT), check:
+
+1. **Communication Channel** — Was the original instruction sent through C1 (Aconex) or C2 (Email)? Per Communication Plan section 6.1, formal directions go through C1. Email (C2) is for "clarification, coordination, scheduling" — no contractual standing for formal instruction.
+
+2. **Correct Recipient** — Was it sent to the right person per the Escalation Ladder (section 7.1)?
+   - L1 = Site/Technical issues -> Site Engineer
+   - L2 = Project Management -> Tech Office Manager
+   - L3 = Contractual/Commercial -> Project Director
+   - BOQ reconciliation, scope disputes, and contractual matters are L3, not L2.
+
+3. **Escalation Ladder Compliance** — Per section 7.4 Rule 1, no skipped tiers without documented justification. If CG bypassed L3 and went to L2, or skipped proper escalation entirely, the NCR is procedurally defective.
+
+4. **Scope Basis** — Is the demanded task actually in the contracted scope? Check:
+   - SOW Part 1-7 deliverables
+   - DMP section 3.4 (RIBA stage mapping) — BOQ is Stage 3, not Stage 4
+   - Risk register for pre-existing scope dispute risks (e.g. PRR-COM-09)
+   - If the task is not a contractual deliverable, the NCR is invalid.
+
+5. **Deadline Reasonableness** — Per section 7.1 SLA:
+   - L1 = 48h, L2 = 5 WD, L3 = 10 WD
+   - A 3-day deadline for a multi-week task is procedurally unenforceable.
+
+6. **Prior Formal Instruction** — Was there a formal SI (Site Instruction) or Aconex transmittal before the NCR? Or just email reminders? An NCR following email-only reminders (no SI) is procedurally weak.
+
+7. **NCR Subject Matter** — Is the subject appropriate for an NCR?
+   - NCR = non-conformance to approved documents/standards
+   - Scope disagreement = contractual dispute -> should go through VO/change mechanism
+   - Procedural violations = Communication Plan enforcement -> should go through escalation
+
+### Audit Report Format
+
+Present findings as a table:
+
+| Check | Finding | Verdict |
+|-------|---------|---------|
+| Communication Channel | Email not Aconex | No contractual standing |
+| Correct Recipient | Sent to Tech Office Mgr not PD | Wrong tier |
+| Escalation Ladder | Bypassed L3 | Violation |
+| Scope Basis | Not in scope (PRR-COM-09) | Scope creep |
+| Deadline Reasonable | 3 days for multi-week task | Unreasonable |
+| Prior Formal Instruction | Email only, no SI | Procedural gap |
+| NCR Subject Matter | Scope dispute as NCR | Wrong instrument |
+
+If 4+ checks fail -> recommend formal rebuttal through PM/PD at next CG coordination meeting. If fewer than 3 fail and procedure is clean -> acknowledge and comply with phased approach.
+
+### Evidence Sources
+
+- **Communication Plan:** `00_Contracts/02_Communication_Plan/` (approved PL-0027 Rev C02)
+- **DMP:** `00_Contracts/01_DMP/` (approved PL-0029 Rev.02/C04, section 8.2 material sequencing)
+- **Scope:** `03_Plans/01_DMP/04_Scope_of_Works_Summary.md`
+- **Risk Register:** `01_Registers/risk_register.md` (pre-existing scope dispute risks)
+- **SI Register:** `01_Registers/si_register.md` (formal instruction history)
+- **NCR Register:** `01_Registers/ncr_register.md` (NCR tracking)
+
 ## Pitfalls
 - **PDFs may not exist in correspondence folder** — check email attachments, Aconex, Adel Darwish's bank
 - **Some CG responses lack named reviewers** — mark as "CG (general)" and update when identified
@@ -264,3 +327,4 @@ See `register-webapp-template` skill for the complete template, pitfalls, and au
 - **CG PM change** — when PMC announces a new CG PM, update letters_register.md (add IN letter), responsibility_matrix.md (add personnel note), and lessons_learned_register.md (add LL). The old PM's email may still be active for monitoring — note this.
 - **AD Engineering disputes** — when AD rejects Samaya's amendments, the submittal register status should be "Disputed" not "Under Review" or "Flagged". Add a lesson (LL-016) about LOD boundary definition.
 - **Basement/LGF packages** — when Maged Zamzam flags URGENT that CG comments from 7-8 Jul haven't been addressed by 20 Jul, add a lesson (LL-015) about CG comment response tracking.
+- **Recurring pattern: Rev.01 submitted without closing CRS comments** — the PEP ZD-0086 case (Jul 2026) is the 3rd instance of this pattern (after Structural DD 1C0-1G-0001 and DMP). Root cause: CRS Originator Reply column left empty, no internal QA gate before resubmission. CG explicitly noted "The CRS reply is missing from SAMAYA side, the quality team shall review any submittal before formal submission." Prevention: run a CRS closure check before any resubmission — (1) verify every comment has a response, (2) verify responses are physical evidence not explanations, (3) defer unresolved items explicitly in a cover note.

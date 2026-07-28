@@ -123,12 +123,57 @@ img = Image.open('/tmp/letter.png')
 text = pytesseract.image_to_string(img, lang='eng')
 ```
 
+**Route C — pdftoppm (CLI, multi-page, portable):**
+
+For bulk batch conversion of scanned PDFs to page images, `pdftoppm` (from poppler) is the simplest CLI option — no Python needed:
+
+```bash
+# Convert all pages to JPEG at 200 DPI
+pdftoppm -jpeg -r 200 "document.pdf" page_prefix
+
+# Output: page_prefix-1.jpg, page_prefix-2.jpg, ...
+
+# Convert to PNG at 300 DPI
+pdftoppm -png -r 300 "document.pdf" page_prefix
+
+# Single page
+pdftoppm -jpeg -r 200 -f 1 -l 1 "document.pdf" page_prefix
+```
+
+**Key benefits over PyMuPDF:**
+- Pure CLI — works in a one-liner loop, no Python process overhead
+- Handles page ranges with `-f` / `-l` flags
+- Available from poppler (brew install poppler on macOS)
+- Faster for batch conversion of 10+ pages
+
+**Pre-processing with ImageMagick (faster OCR):**
+
+Large images (3000+ px wide at 200 DPI) slow tesseract significantly. Resize before OCR:
+
+```bash
+# Resize to 1200px wide, 75% quality JPEG
+magick large_page.jpg -resize 1200x -quality 75 small_page.jpg
+
+# Batch resize all page images
+mkdir -p small
+for f in page_prefix-*.jpg; do
+  magick "$f" -resize 1200x -quality 75 "small/$f"
+done
+```
+
+**When to resize:**
+- **200-300 DPI page renders** = 2500-4000px wide → resize to 1200px saves 60-70% size, minimal OCR quality loss
+- **Already-small images** (under 1000px) → skip resize
+- **Handwritten/faint text** → skip resize, keep maximum resolution
+- **Table-heavy documents** → resize gently (1600px) to preserve cell boundaries
+
 **When to use which route:**
 
 | Situation | Route |
 |-----------|-------|
 | Multi-page PDF, need page-by-page | A (PyMuPDF) |
 | Single-page scanned letter, macOS | B (sips) — fewer deps |
+| Bulk batch conversion (10+ pages) | C (pdftoppm) — pure CLI, fastest |
 | Tables / structured data | A (PyMuPDF) + TSV reconstruction |
 | tesseract CLI fails on /tmp | Use Python pytesseract or copy to CWD |
 
@@ -574,33 +619,274 @@ def classify_page(text):
     return "Unknown"
 ```
 
-## OneDrive-locked PDFs
+## Bulk Directory Processing
 
-BIM registers often live as `.xlsb` files or PDFs on OneDrive. They are **unreadable by any tool** from the terminal because the OneDrive sync engine holds a file lock.
+When a directory contains **mixed document types** (some text-based PDFs, some scanned images, some already images), process them all with a single script:
 
-**Symptom**: `Resource deadlock avoided` — every syscall (read, copy, stat) fails. Files show `compressed,dataless` flag in `ls -laO`.
+### Workflow
 
-**Workaround — hydrate via `open` then extract:**
+1. **Inventory** — list all files, classify by extension and content type
+2. **Test for text layer** — try `pdftotext` or `pymupdf` first; if empty, fall back to OCR
+3. **Convert scanned PDFs** to images via `pdftoppm`
+4. **Resize images** (optional, for speed) via `magick`
+5. **OCR** all images with tesseract
+6. **Compile** into structured summaries
 
-OneDrive PDFs can be hydrated (downloaded from cloud) by opening them in their native app (Preview for PDFs). Once hydrated, they become regular files readable by extraction tools.
+### Example: Process a directory with mixed file types
 
 ```bash
-# Step 1: Trigger hydration by opening in Preview
-open "/path/to/OneDrive-locked-file.pdf"
-# Step 2: Wait a few seconds for download
-sleep 8
-# Step 3: Verify dataless flag is gone
-ls -laO "/path/to/file.pdf"
-# → compressed,dataless should no longer appear
-# Step 4: Extract text with pdftotext (from poppler)
-pdftotext "/path/to/file.pdf" - 2>/dev/null
+# === STEP 1: Inventory ===
+DIR="/path/to/document/folder"
+mkdir -p output/text output/ocr output/summaries
+
+for f in "$DIR"/*.pdf; do
+  base=$(basename "$f" .pdf)
+  echo "=== Processing: $base ==="
+
+  # === STEP 2: Try text extraction first ===
+  text=$(pdftotext -layout "$f" - 2>/dev/null | head -c 500)
+  if [ -n "${text// }" ]; then
+    # Text-based PDF — extract full text
+    pdftotext -layout "$f" "output/text/${base}.txt"
+    echo "  ✓ Text-based PDF, extracted to output/text/"
+  else
+    # === STEP 3: Scanned PDF — convert to images ===
+    echo "  ⚠ Image-based PDF, converting to pages..."
+    pdftoppm -jpeg -r 200 "$f" "output/ocr/${base}_page"
+
+    # === STEP 4: Resize for faster OCR ===
+    mkdir -p "output/ocr/${base}_small"
+    for page in "output/ocr/${base}_page"*.jpg; do
+      p=$(basename "$page")
+      magick "$page" -resize 1200x -quality 75 "output/ocr/${base}_small/$p"
+    done
+
+    # === STEP 5: OCR each page ===
+    for page in "output/ocr/${base}_small/"*.jpg; do
+      pname=$(basename "$page" .jpg)
+      tesseract "$page" "output/ocr/${pname}" -l ara 2>/dev/null
+    done
+  fi
+done
+
+# === STEP 5b: OCR native images (JPG/JPEG/PNG) ===
+for img in "$DIR"/*.{jpg,jpeg,png,JPG,JPEG,PNG}; do
+  [ -f "$img" ] || continue
+  base=$(basename "$img")
+  magick "$img" -resize 1200x -quality 75 "output/ocr/${base}_small.jpg"
+  tesseract "output/ocr/${base}_small.jpg" "output/ocr/${base}" -l ara 2>/dev/null
+  echo "  ✓ OCR'd image: $base"
+done
 ```
 
-The `open` command triggers macOS LaunchServices → Preview → OneDrive hydrates the file. The dataless flag disappears and the file becomes a regular file.
+### Python version (more control)
 
-Do NOT use non-native apps (e.g. `open -a TextEdit file.pdf`) — they open blank for dataless files.
+```python
+import subprocess, os, glob
+from pathlib import Path
 
-## OneDrive-locked DOCX
+DIR = "/path/to/documents"
+out = Path("output")
+(out / "text").mkdir(parents=True, exist_ok=True)
+(out / "ocr").mkdir(parents=True, exist_ok=True)
+
+for pdf_path in glob.glob(f"{DIR}/*.pdf"):
+    base = Path(pdf_path).stem
+    print(f"=== {base} ===")
+
+    # Try text extraction first
+    result = subprocess.run(
+        ["pdftotext", "-layout", pdf_path, "-"],
+        capture_output=True, text=True, timeout=30
+    )
+    text = result.stdout.strip()
+
+    if len(text) > 100:  # has real text content
+        (out / "text" / f"{base}.txt").write_text(result.stdout)
+        print(f"  Text: {len(text)} chars")
+    else:
+        # Scanned — convert to images via pdftoppm
+        subprocess.run(
+            ["pdftoppm", "-jpeg", "-r", "200", pdf_path,
+             str(out / "ocr" / f"{base}_page")],
+            check=True, timeout=60
+        )
+        print("  Scanned PDF → images")
+
+        # Resize and OCR each page
+        for img in sorted(glob.glob(str(out / "ocr" / f"{base}_page*.jpg"))):
+            small = img.replace(".jpg", "_small.jpg")
+            subprocess.run(
+                ["magick", img, "-resize", "1200x", "-quality", "75", small],
+                check=True
+            )
+            txt_out = Path(img).with_suffix("")
+            subprocess.run(
+                ["tesseract", small, str(txt_out), "-l", "ara"],
+                check=True
+            )
+            print(f"  OCR'd: {Path(img).name}")
+```
+
+### Documentation of results
+
+After bulk processing, create a **document inventory table** showing what was processed:
+
+| File | Type | Method | Quality | Extracted Content |
+|------|------|--------|---------|-------------------|
+| contract.pdf | PDF (scanned) | pdftoppm → tesseract | Fair | Contract terms, parties, clauses |
+| statement.pdf | PDF (text) | pdftotext | Excellent | Full table data with amounts |
+| receipt.jpg | JPG | tesseract | Fair | Amount and date readable |
+
+Also create a **processing notes section** documenting:
+- Methods used per file type
+- Quality assessment per document
+- Known limitations (poor OCR areas, garbled numbers)
+- Any files that failed or had very poor extraction
+
+### Structured Summary Output
+
+After extracting content from all documents, organize the results into **categorized markdown files** rather than one monolithic output. This creates a browsable document library.
+
+#### Categorization pattern
+
+Group documents by functional type, not by file extension:
+
+| Category | Example Sources | Output File |
+|----------|----------------|-------------|
+| **Contracts** | Signed agreements, SOWs, MOUs | `contract_summary.md` |
+| **Financial/BOQ** | Estimates, quotations, budgets | `boq_estimate.md` |
+| **Statements** | Bank statements, account histories | `account_statements.md` |
+| **Receipts** | Payment proofs, transfer confirmations | `payment_receipts.md` |
+| **Contractor Quotes** | Subcontractor bids, material quotes | `contractor_quotations.md` |
+| **Correspondence** | Letters, emails, memos | `correspondence.md` |
+| **Technical** | Drawings, specs, method statements | `technical_docs.md` |
+
+#### Per-document structure
+
+Each document inside a summary file should have:
+
+```markdown
+## [Document Title]
+
+| Field | Details |
+|-------|---------|
+| **File** | filename.pdf |
+| **Size** | 147 KB |
+| **Pages** | 1 |
+| **Language** | Arabic |
+
+### Content Summary
+
+[Key extracted data in structured format — tables for tabular data,
+paragraphs for prose, bullet lists for itemized content]
+
+### Key Values (if financial)
+
+| Item | Amount (EGP) |
+|------|:-----------:|
+| Total | 366,894 |
+| Balance | -4,142 |
+
+### Notes
+- OCR quality assessment
+- Known limitations
+- Cross-references to related documents
+```
+
+#### Cross-document synthesis
+
+When financial documents interact (e.g., receipts + account statements), verify consistency:
+
+```markdown
+### Cross-Reference Check
+
+| Receipt | Amount | Statement Entry | Match? |
+|---------|:------:|:--------------:|:------:|
+| دفعة 2A + 2B | 100,000 | Cert 3005: 100,000 (10/04) | ✅ |
+| دفعة 3 | 50,000 | Cert 3022: 50,000 (21/05) | ✅ |
+```
+
+#### Document inventory master file
+
+Create a `document_inventory.md` that serves as the index, containing:
+- Table of all documents with file name, type, size, and category
+- Processing methods used per file
+- Quality assessment per file
+- Storage layout showing directory tree
+- Key findings summary (total amounts, date ranges, key parties)
+
+## OneDrive-locked PDFs
+
+BIM registers often live as `.xlsb` files or PDFs on OneDrive. They are **unreadable by any tool** from the terminal because the OneDrive sync engine holds a file lock. rather than one monolithic output. This creates a browsable document library.
+
+### Categorization pattern
+
+Group documents by functional type, not by file extension:
+
+| Category | Example Sources | Output File |
+|----------|----------------|-------------|
+| **Contracts** | Signed agreements, SOWs, MOUs | `contract_summary.md` |
+| **Financial/BOQ** | Estimates, quotations, budgets | `boq_estimate.md` |
+| **Statements** | Bank statements, account histories | `account_statements.md` |
+| **Receipts** | Payment proofs, transfer confirmations | `payment_receipts.md` |
+| **Contractor Quotes** | Subcontractor bids, material quotes | `contractor_quotations.md` |
+| **Correspondence** | Letters, emails, memos | `correspondence.md` |
+| **Technical** | Drawings, specs, method statements | `technical_docs.md` |
+
+### Per-document structure
+
+Each document inside a summary file should have:
+
+```markdown
+## [Document Title]
+
+| Field | Details |
+|-------|---------|
+| **File** | filename.pdf |
+| **Size** | 147 KB |
+| **Pages** | 1 |
+| **Language** | Arabic |
+
+### Content Summary
+
+[Key extracted data in structured format — tables for tabular data, 
+paragraphs for prose, bullet lists for itemized content]
+
+### Key Values (if financial)
+
+| Item | Amount (EGP) |
+|------|:-----------:|
+| Total | 366,894 |
+| Balance | -4,142 |
+
+### Notes
+- OCR quality assessment
+- Known limitations
+- Cross-references to related documents
+```
+
+### Cross-document synthesis
+
+When financial documents interact (e.g., receipts + account statements), verify consistency:
+
+```markdown
+### Cross-Reference Check
+
+| Receipt | Amount | Statement Entry | Match? |
+|---------|:------:|:--------------:|:------:|
+| دفعة 2A + 2B | 100,000 | Cert 3005: 100,000 (10/04) | ✅ |
+| دفعة 3 | 50,000 | Cert 3022: 50,000 (21/05) | ✅ |
+```
+
+### Document inventory master file
+
+Create a `document_inventory.md` that serves as the index, containing:
+- Table of all documents with file name, type, size, and category
+- Processing methods used per file
+- Quality assessment per file
+- Storage layout showing directory tree
+- Key findings summary (total amounts, date ranges, key parties)
 
 Same `Resource deadlock avoided` symptom as PDFs, with an extra twist: the `.md` companion files (created by DOCX-to-MD conversion tools) can have `com.apple.provenance` extended attributes making them appear as file-sized-but-empty stubs.
 
@@ -1167,11 +1453,17 @@ full_md = re.sub(r'\n{4,}', '\n\n\n', full_md).strip() + '\n'
 11. **Incomplete PDFs (TOC says 42 pages, file has 15)**: National adoptions of European standards often only include the front matter and first few clauses. Always check: (a) page count vs TOC, (b) whether the last page ends mid-sentence or mid-clause. Supplement with web sources (ANSI previews, iTeh standards, academic reviews) for the missing sections.
 12. **stdout cap truncates large terminal output (~40KB).** When extracting full contracts or large PDFs, `terminal("cat file")` or piping through `terminal()` silently truncates. For files over ~1000 lines, use Python file I/O directly (`open()` in `execute_code`) instead of terminal piping. The `execute_code` tool is the correct approach for bulk extraction.
 
-13. **execute_code has a 50 tool call limit.** When doing batch operations (converting multiple DOCX files, scanning many folders for file counts), use a single `terminal()` shell script that loops internally rather than making one `terminal()` call per item. The 50-call limit is hit quickly with per-file operations — a 98-folder scan with 4 tool calls per folder exhausts the budget. Write the loop as a bash script, run it once, then parse the output.
+16. **Arabic-Indic numerals (٠١٢٣٤٥٦٧٨٩) OCR is unreliable on scanned documents.** Tesseract routinely misreads Arabic-Indic digits, especially when handwritten or in low-quality scans. A 6x error occurred in one session (OCR reported internal plastering BOQ as ~52K EGP when the actual figure was 331K EGP). **Do not trust OCR-extracted financial figures from scanned Arabic documents.** Always:
+    - Get a clean digital copy (MD, XLSX, text-based PDF) as primary source
+    - Cross-reference OCR figures against expected totals (e.g., contract value vs sum of BOQ items)
+    - Flag any OCR-extracted number for human verification before using in reports
+    - If only scanned documents are available, note the uncertainty explicitly in all derived analysis
 
-14. **Do not fabricate contract content.** If you have not read a specific article/clause, do not invent its content and cite it as a source. An AI agent previously fabricated "Day+1 PM sends reminder to CG, Day+3 PD escalates to CG Acting PM, Day+5 formal notice" and cited it as "Per Contract 0010003521 Sec 4 escalation protocol" — this text does not exist anywhere in the contract. The user caught it and flagged it as a serious error. Before citing any contract provision: (a) extract the actual text from the PDF, (b) quote it verbatim, (c) cite the exact article number. If the contract does not contain what the user is looking for, say so explicitly.
+17. **execute_code has a 50 tool call limit.** When doing batch operations (converting multiple DOCX files, scanning many folders for file counts), use a single `terminal()` shell script that loops internally rather than making one `terminal()` call per item. The 50-call limit is hit quickly with per-file operations — a 98-folder scan with 4 tool calls per folder exhausts the budget. Write the loop as a bash script, run it once, then parse the output.
 
-15. **`com.apple.provenance` xattr means OneDrive placeholder.** A file with size >0 that returns 0 lines from `read_file` is not necessarily empty — check `xattr -l /path/to/file`. The `com.apple.provenance` extended attribute (binary data) indicates a OneDrive "files on demand" placeholder that hasn't hydrated locally. This affects `.md`, `.pdf`, `.docx`, and any other extension. Don't assume the file is actually empty or corrupted — it's just not yet downloaded. Try the `open` hydration workaround or zipfile bypass (see [OneDrive-locked DOCX](#onedrive-locked-docx)).
+18. **Do not fabricate contract content.** If you have not read a specific article/clause, do not invent its content and cite it as a source. An AI agent previously fabricated "Day+1 PM sends reminder to CG, Day+3 PD escalates to CG Acting PM, Day+5 formal notice" and cited it as "Per Contract 0010003521 Sec 4 escalation protocol" — this text does not exist anywhere in the contract. The user caught it and flagged it as a serious error. Before citing any contract provision: (a) extract the actual text from the PDF, (b) quote it verbatim, (c) cite the exact article number. If the contract does not contain what the user is looking for, say so explicitly.
+
+19. **`com.apple.provenance` xattr means OneDrive placeholder.** A file with size >0 that returns 0 lines from `read_file` is not necessarily empty — check `xattr -l /path/to/file`. The `com.apple.provenance` extended attribute (binary data) indicates a OneDrive "files on demand" placeholder that hasn't hydrated locally. This affects `.md`, `.pdf`, `.docx`, and any other extension. Don't assume the file is actually empty or corrupted — it's just not yet downloaded. Try the `open` hydration workaround or zipfile bypass (see [OneDrive-locked DOCX](#onedrive-locked-docx)).
 
 ## Schedule Compression & Restructuring
 
@@ -1374,9 +1666,13 @@ with pdfplumber.open("/tmp/test.pdf") as pdf:
 PYEOF
 ```
 
+## Construction Cost Analysis Pipeline
+
+For extracting project financial data from a web app + scanned documents and producing an estimate-vs-actual comparison report, see `references/construction-cost-analysis.md` for the full pipeline: Supabase bulk download, OCR workflow, cross-document reconciliation, categorized MD summaries, and Chart.js HTML report generation.
+
 ## Reference files
 
-- `references/docx-claim-verification.md` — DOCX claim verification / QC audit workflow: verify factual claims about a document's content against the actual source; locate the correct file when the given path is wrong; search docx paragraphs + tables for naming patterns; build a structured discrepancy report with claim-vs-actual tables
+- `references/construction-cost-analysis.md` — Worked example: building finishing project cost analysis from web app + Supabase documents: verify factual claims about a document's content against the actual source; locate the correct file when the given path is wrong; search docx paragraphs + tables for naming patterns; build a structured discrepancy report with claim-vs-actual tables
 - `references/shop-drawing-extraction.md` — Shop drawing PDFs from PostScript/Acrobat Distiller: partial text layer extraction, title block fields, dimension data, materials specs, and common sheet patterns (worked example: Bohemian Collection furniture shop drawings, 32 pages)
 - `references/bma-cad-pdf-extraction.md` — BMA/Boris Micka CAD-generated interior design PDFs: drawing code system, MEP fixture legend libraries, critical disclaimer language, and RFI cross-reference worked example (RCRC Exhibition, 27 questions)
 - `references/aseer-file-location-patterns.md` — Aseer Museum project file structure, OneDrive stub detection, Excel comparison sheet extraction, Outlook DB cross-reference, and known vendor quotation locations

@@ -306,7 +306,37 @@ Do not answer “gpt-5.5 is only 272K” without qualifying the provider. Say: �
 - “Same model slug, different backend/entitlement path.”
 - “If you need the full window, use a provider route that exposes it, not the Codex OAuth route.”
 
-## References
+## Provider-drift on cron jobs
+
+When a cron job fails at runtime with:
+
+```
+RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (provider 'X' -> 'Y'), and this job is unpinned.
+```
+
+This means the cron job was created when the global provider was X, but the user later changed to Y. Unpinned jobs get blocked to prevent unintended spend on the wrong provider.
+
+**Fix:** Re-pin the job to the desired provider:
+
+```bash
+cronjob action=update job_id=<JOB_ID> provider=<ORIGINAL_PROVIDER>
+```
+
+Or pin to the new current provider if the user wants it to follow the new default:
+
+```bash
+cronjob action=update job_id=<JOB_ID> provider=<CURRENT_PROVIDER>
+```
+
+**Prevention:** When creating cron jobs that use an LLM, always pin a provider explicitly to avoid future drift:
+
+```bash
+cronjob action=create schedule="..." prompt="..." provider=<PROVIDER> model=<MODEL>
+```
+
+If no provider is set at creation time, the then-current global provider is stored implicitly. Changing the global provider later breaks unpinned jobs silently.
+
+**Verification:** After updating, check the job's model/provider fields in `cronjob action=list` output to confirm they're set.
 
 - `references/codex-gpt55-context-cap.md` — session-derived detail on the Codex OAuth 272K cap vs 1.05M on other routes.
 - `references/kimi-provider-setup.md` — Kimi/Moonshot provider setup (models, endpoint, tips).

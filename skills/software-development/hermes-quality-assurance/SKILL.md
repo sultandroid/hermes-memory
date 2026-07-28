@@ -1111,6 +1111,61 @@ Short table: lead with CR-item verdict, then list additional findings. The user 
 
 **User correction signal:** If the user says "you didnt follow the SoW we already accepted on REPO, always make repo your single source of information", you skipped step 1. Stop, read the repo, and redo the work from there.
 
+## Pipeline Output — Read Before Reporting
+
+**HARD RULE — Do not report a pipeline/task as "completed" or "ok" until you have read the actual output.**
+
+This applies to: email pipeline scans, cron job results, build outputs, data extractions, and any automated process.
+
+### What the user expects
+When you say "pipeline ran successfully", they expect you to know what it found — not just that the exit code was 0. A cron job can exit 0 and find zero new items, which is a meaningful result that must be communicated.
+
+### Verification protocol
+1. Read the actual output (SQLite query results, extracted file listing, pipeline log)
+2. Confirm what was found/changed before stating any result
+3. Report specifics: "7 emails with attachments extracted, 0 routed (all already filed)"
+4. Never say "pipeline ran ok" without reading the output first
+
+### Why it matters
+The user corrected this explicitly: "Did you read all?" — meaning they noticed the report was delivered without evidence that the output was actually read. Each time you skip this step, you lose trust.
+
+## Lessons Learned — Craft General Entries, Not Incident Reports
+
+### The rule
+When writing a lessons learned entry, identify the **recurring pattern**, not a single incident. A lesson that says "PEP got Code C twice" only helps with the PEP. A lesson that says "Documents resubmitted without closing CRS comments" helps with every future submission.
+
+### How to write it
+```
+❌ Narrow:  "PEP (ZD-0086) got Code C twice — Rev.01 resubmitted without closing CRS comments"
+✅ General: "Recurring pattern: documents resubmitted to CG without responding to previous review comments"
+             then list: PEP (2x), Structural DD (2x), DMP, 3 Acoustic PQs, MA-0006/0007 as examples
+```
+
+### Structure
+- **Title**: the recurring pattern (not a document name)
+- **Body**: describe the systemic root cause
+- **Examples**: list specific incidents as evidence
+- **Action**: what must change to prevent recurrence
+
+## Webapp Source File Paths — Verify Before Editing
+
+**HARD RULE — Always check the actual build script to confirm which source file a webapp reads from.**
+
+### The trap
+The repo has multiple files with similar names in different locations. The LN (Lessons Learned) webapp:
+- Reads from: `03_Plans/11_Quality/lessons_learned_register.md`
+- Does NOT read from: `01_Registers/lessons_learned_register.md`
+- These are DIFFERENT files with different formats
+
+### Verification
+Before editing any data source for a webapp, check:
+1. The build script (`update-all-registers.sh` or the relevant `build_*.py`) — it always contains the input path
+2. The script also specifies the required ID format (e.g. `LL-` prefix for LN lessons)
+3. Different source files may have different column formats — don't assume they're identical
+
+### Why it matters
+Editing the wrong source file means the change never appears in the webapp. The user will see no update and ask why. Checking the build script first takes 30 seconds and prevents this.
+
 ## References
 
 - `scripts/qa_check.py` — canonical HTML QA validator. Handles `.sheet`/`.page` layouts, accounts for cover sheets when counting footers, validates asset paths, detects `read_file()` line-number contamination, and accepts spaced CSS values such as `page-break-after: always`. Accepts one or more files; exit code 0 = all clean, 1 = issues found.

@@ -353,6 +353,10 @@ mkdir -p /tmp/lessons-learned-app
 
 **Data source:** Only `03_Plans/11_Quality/lessons_learned_register.md` is parsed. The `01_Registers/lessons_learned_register.md` is NOT included in the webapp — it's a separate simplified register.
 
+**ID format requirement:** The parser (inline Python in `update-all-registers.sh`) scans for `LL-` in the ID cell. Rows with numeric-only IDs (e.g. `14 | ...`) are **silently skipped**. Always prefix lesson IDs with `LL-` (e.g. `LL-018`).
+
+**Reference:** `references/register-source-mapping.md` — full source file mapping across all registers.
+
 ## Daily Snapshot Sync to OneDrive
 
 A cron job syncs the latest risk register snapshots to OneDrive daily at 9 AM:

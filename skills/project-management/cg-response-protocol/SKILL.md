@@ -507,7 +507,24 @@ Keep the email thread showing:
 | C:Resubmit | CG returned with comments, blocked until resubmission | Yellow + "BLOCKED" prefix |
 | Deemed Approved | CG did not respond within review period | Green (same as Approved) |
 
-## CRS Triage — Filtering Comments Before Forwarding to Designer
+### CRS Triage — Filtering Comments Before Forwarding to Designer
+
+### Recurring Pattern: Resubmitting Without Closing CRS Comments
+
+This is a documented recurring issue on this project. Instances:
+- Structural DD (1C0-1G-0001) — Code C twice, 15 comments all Open both rounds
+- PEP (ZD-0086) — Code C twice, 26 comments all Open both rounds
+- DMP — Code D then C, comments partially addressed
+
+Root cause in every case: the CRS Originator Reply column was left empty or contained explanations instead of physical evidence. CG returned Rev.01 with all comments still Open. The CG's note "The CRS reply is missing from SAMAYA side" confirms the pattern.
+
+**Prevention — CRS closure check before any resubmission:**
+1. Every CG comment MUST have a response in the Originator Reply column
+2. Responses MUST be physical evidence (test reports, approved drawings, completed studies) — not explanations, references, or "under preparation"
+3. Any item still pending must be explicitly deferred in a cover note with a commitment date
+4. Internal QA review must be completed and signed off before submission
+
+**Red flag:** When the PM says "Please review and confirm" before submitting — it means CRS responses are not yet finalised. Hold submission until all items are confirmed.
 
 When you receive a CG CRS (Comments Resolution Sheet) for a submittal, **do not forward the raw CRS to the designer.** Filter comments by responsible party first.
 
@@ -1074,6 +1091,194 @@ Set up a daily cron job that checks Mansour's emails for direct contact with sub
 2. Non-Samaya senders emailing CG without Samaya in CC
 
 Schedule: daily at 9 AM via `cronjob action=create schedule="0 9 * * *" script=monitor_cg_comm_protocol.sh`.
+
+## Warning Letter (LT) Audit — Escalation Chain & Feasibility
+
+When CG issues a formal warning letter (LT-XXX), the audit methodology differs from NCR audit. Warning letters typically come after an SI NCR LT escalation chain and require feasibility assessment, not just procedural checks.
+
+### Trigger
+
+CG issues an LT (Warning Letter). Before responding: trace the full escalation chain, assess procedural validity of each prior step, evaluate feasibility of demands against design readiness, and distinguish procedurally-sound LTs from procedurally-defective ones.
+
+### The 5 LT Checks
+
+| # | Check | What to Look For | Source |
+|---|-------|-----------------|--------|
+| 1 | **Escalation Chain** | Trace: Was there an SI first? NCR? Letter? Proper C1 channel at each step? | SI register, NCR register, Comm Plan 6.1 |
+| 2 | **Procedural History** | Was each prior step (SI, NCR) procedurally sound? If the SI was defective, the whole chain is weak. | Comm Plan 7.1, 7.3 |
+| 3 | **DMP / Scope Support** | Does the approved DMP or SOW support CG's position? Some LTs cite legitimate requirements. | DMP (00_Contracts/01_DMP/), SOW |
+| 4 | **Design-Readiness Dependency** | Are the demanded actions blocked by design decisions not yet made? | DMP Part 3 (stage gates), submittal register |
+| 5 | **Feasibility** | Break down each demand - reasonable lead time? Within team capacity? Already in progress? | Action items, risk register, project status |
+
+### Check 1 - Escalation Chain
+
+Trace the full chain backwards. Example:
+```
+LT-003 (28-Jul)
+  +-- NC-1A0-008 (10-Jun) - failure to respond to SI-008
+       +-- SI-008 (09-May) - material approvals required
+```
+
+If the chain follows SI NCR LT through proper Aconex channels, the escalation is procedurally valid.
+
+### Check 3 - DMP / Scope Support
+
+Search the approved DMP for clauses that support or contradict CG's position. DMP 8.2 says "no material specified in IFC drawings without Code A approved sample" - this supports CG on material timing. DMP Part 3 stage gates show some materials can't be submitted pre-50% DD.
+
+### Check 4 - Design-Readiness Dependency
+
+Segregate materials into two categories:
+
+| Category | Can Submit Now? | Example |
+|----------|----------------|---------|
+| Design-ready (already specified) | Yes - no excuse for delay | Finishes from approved schedule |
+| Design-pending (awaiting DD decisions) | No - blocked by design gate | Bespoke setwork finishes |
+
+### Check 5 - Feasibility Breakdown
+
+| Demand | Feasibility | Evidence Required |
+|--------|-------------|-------------------|
+| Submit prequal documents | Depends on material selection | Submittal register |
+| Submit tech data sheets | Reasonable for selected materials | Procurement status |
+| Physical samples | Some await design decisions | Design stage status |
+| Delivery schedule update | Reasonable | Current schedule |
+| Recovery Plan | New demand - needs assessment | Programme status |
+
+### Response Strategy
+
+An LT needs a more nuanced response than an NCR:
+
+| Situation | Strategy |
+|-----------|----------|
+| SI properly issued, NCR valid, LT follows chain | Accept procedural validity, respond with substance (DMP sequencing, design blockers, feasibility) |
+| SI had procedural defects (email, wrong tier) | Flag chain weakness but don't rely on it alone - main defence is substance |
+| CG mixes legitimate requirements with scope creep | Accept valid items, push back on scope creep separately |
+
+See `references/warning-letter-audit-worked-example.md` for the full LT-003 worked example.
+
+---
+
+## NCR Validity Audit — 5 Checks Against Communication Plan
+
+When CG issues an NCR alleging non-performance, audit it against the Communication Plan (PL-0018) and project procedures before responding.
+
+### Trigger
+
+CG issues an NCR. Before responding: check the Communication Plan, check scope/SOW, check timeline, record the audit. If invalid, escalate — do NOT comply.
+
+### The 5 Checks
+
+| # | Check | What to Look For | Comm Plan Ref |
+|---|-------|-----------------|---------------|
+| 1 | **Channel** | Was the original instruction sent through Aconex (C1)? If only email (C2), it has no contractual standing | §6.1, §6.3 |
+| 2 | **Recipient / Tier** | Contractual matters go to L3 (Project Director), not L2 (Tech Office Manager) | §7.1 |
+| 3 | **Scope** | Is the action within contracted scope? Check ER/SoW and risk register for "not in scope" entries | ER/SoW |
+| 4 | **Timeline** | Is the deadline reasonable? Compare against §7.1 SLAs (L1=48h, L2=5WD, L3=10WD) | §7.1 |
+| 5 | **Response Path** | Did you escalate correctly? Forwarding contractual matters to PD is correct protocol | §7.3 |
+
+### Check 1 — Channel (§6.1, §6.3)
+
+C1 (Aconex) is the system-of-record for formal submittals/NCRs. C2 (Email) is for clarification only with no contractual standing. If the original instruction was direct email only (no Aconex transmittal number) — channel violation.
+
+### Check 2 — Recipient Tier (§7.1)
+
+| Tier | Level | Owner | Scope |
+|------|-------|-------|-------|
+| L2 | Project Management | Tech Office Mgr | Submittal delays, resource conflicts |
+| L3 | Contractual / Commercial | Project Director | VO scope, contractual interpretation |
+
+BOQ/drawing reconciliation is contractual → belongs at L3 (PD). Per §7.4 Rule 1: no skipped tiers.
+
+### Check 3 — Scope
+
+Search risk register: `grep -i "not in scope\|scope creep\|BOQ.*reconcil" 01_Registers/risk_register.md`
+
+Common scope-creep NCR patterns:
+- BOQ vs Drawings reconciliation (pre-contract QS exercise, not D&B Contractor deliverable)
+- Design production (belongs to design team, not contractor)
+- Employer document reconciliation
+
+Scope disputed → forward to PD/PM for CG discussion. Do NOT respond substantively.
+
+### Check 4 — Timeline
+
+Compare NCR deadline against SLA (L1=48h, L2=5WD, L3=10WD). A project-wide BOQ reconciliation in 3 days is unreasonable. Respond with counter-proposal.
+
+### Check 5 — Response Path
+
+Correct L2 response to contractual instruction: (1) do not comply substantively, (2) forward to L3 (PD/PM), (3) log in action items. This is correct escalation, not neglect.
+
+### Rebuttal Evidence Pack
+
+1. Communication Plan excerpts (§6.3, §7.1, §7.3)
+2. Risk register entry (e.g., PRR-COM-09 — flagged not in scope)
+3. Email audit trail (email-only, wrong recipient)
+4. Action items log (instruction logged + escalated)
+5. Counter-proposal timeline
+
+### Auditing the PD's NCR Response
+
+After the PD drafts a response, check if procedural violations (channel, recipient, tier, timeline) were included. The PD may choose a substance-only strategy (citing DMP sequencing, contract priority) without mentioning procedural defects. This is a valid strategic choice — substance arguments are harder for CG to rebut since they reference CG-approved documents. But the procedural violations should still be noted as supplementary ammunition.
+
+#### Substance vs Procedure Strategy
+
+| Approach | Best When | Risk |
+|----------|-----------|------|
+| Substance only | CG-approved document supports your position (DMP Code B, priority clause) | CG can argue facts, but against their own approval |
+| Procedure + substance | NCR has clear procedural defects (wrong channel, wrong tier, unreasonable timeline) | Can feel combative -- CG may get defensive |
+| Substance first, procedure in reserve | Best for escalation -- use procedure only if CG rejects the substance response | Keeps maximum flexibility for later rounds |
+
+#### Distinguishing Procedurally-Valid LTs from Defective NCRs
+
+When auditing a warning letter (LT) vs an NCR, the key difference is the escalation chain:
+
+| Feature | Procedurally-Valid LT | Defective NCR |
+|---------|----------------------|---------------|
+| Chain | SI (via Aconex C1) to NCR to LT | Direct email (no C1) to NCR |
+| Channel | Aconex at every step | Email only |
+| Recipient | Company-level or PD | Wrong tier (individual, L2) |
+| Timeline | Follows SLA ladder | Arbitrary deadline |
+| Scope basis | DMP/SOW supports requirement | Scope not in contract |
+
+Worked example - LT-003 vs NC-1G0-0019:
+- LT-003: SI-008 via Aconex, NC-1A0-008, LT-003 = procedurally valid chain (even if demands are tight)
+- NC-1G0-0019: Direct email (no SI), NCR with 3-day deadline = procedurally defective (channel, tier, timeline)
+
+Response strategy differs:
+- Valid chain respond with substance (DMP sequencing, design blockers, phased plan)
+- Defective chain escalate, contest validity first
+- Mixed respond with substance, note defects in reserve
+
+#### User Preference Flag Missing Procedural Violations
+
+When auditing the PD's response, always note which procedural violations (channel, tier, deadline) were not mentioned. The user expects these documented even if the PD chose not to include them. Offer as supplementary rebuttal points.
+
+#### DMP Clause Verification
+
+The approved DMP PDF should be converted to markdown and stored at `00_Contracts/01_DMP/` as a formal read-only reference (`agent_edit: prohibited`, `status: formal_read_only`). If already converted:
+
+1. Read the relevant section from the markdown files — the DMP is split into 5 part files with `00_INDEX.md` as the table of contents
+2. Cross-reference with RIBA checklists in the DMP folder — BOQ/cost planning is typically Stage 3, not Stage 4 (Technical Design)
+3. Check the SOW — Stage 4 gates (50% to 90% to 100%) are design deliverables, not cost exercises
+
+If not yet converted:
+
+1. Check `08_Document_Index/key_documents.md` for the OneDrive path to the actual PDF
+2. Extract text with `pdftotext`, split into section files by the document's actual structure
+3. Save under `00_Contracts/{NN}_{Plan_Name}/` with YAML frontmatter: `agent_edit: prohibited`, `status: formal_read_only`, `approval_code: B`
+4. The DMP (PL-0029) was converted in Jul 2026 — use `00_Contracts/01_DMP/` as a template for other approved plans
+
+For all plans: verify the PD's claims against the actual approved document. If the claim is consistent with the RIBA framework, SOW, and approved plan records, it is likely correct.
+
+#### User Preference — Flag Missing Procedural Violations
+
+When auditing the PD's response, always note which procedural violations were not mentioned. The user expects procedural defects (channel violation §6.1/§6.3, wrong tier §7.1, unreasonable timeline) to be documented even if the PD chose not to include them. Offer them as supplementary rebuttal points in a brief note.
+
+### Reference Files
+
+- Communication Plan: `03_Plans/03_Communication/communication_plan.md`
+- Risk register: `01_Registers/risk_register.md`
+- Action items: `00_Status/action_items.md`
 
 ## Project Repo Convention
 

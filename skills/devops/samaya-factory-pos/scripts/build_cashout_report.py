@@ -24,8 +24,19 @@ models = xmlrpc.client.ServerProxy(f'{env["ODOO_URL"]}/xmlrpc/2/object', context
 domain = [['state','in',['purchase','done']], ['date_order','>=','2026-01-01']]
 fields = ['name','partner_id','amount_total','date_order','state','receipt_status','invoice_status','project_id','invoice_ids']
 rows = models.execute_kw(env['ODOO_DB'], uid, env['ODOO_API_KEY'],
-    'purchase.order', 'search_read', [domain], {'fields': fields, 'limit': 200})
-print(f'Total POs: {len(rows)}', file=sys.stderr)
+    'purchase.order', 'search_read', [domain], {'fields': fields, 'limit': 2000})
+print(f'Total POs (purchase/done): {len(rows)}', file=sys.stderr)
+
+# Force-include specific draft POs from the هام (urgent) list that are Factory project 244
+HAM_DRAFT_INCLUDE = {'P02116', 'P02137', 'P02185', 'P02226', 'P02227'}
+# Fetch these specific POs by name (Odoo 'in' domain crashes, so fetch all draft + filter)
+draft_domain = [['state','in',['draft']], ['date_order','>=','2026-01-01']]
+draft_rows = models.execute_kw(env['ODOO_DB'], uid, env['ODOO_API_KEY'],
+    'purchase.order', 'search_read', [draft_domain], {'fields': fields, 'limit': 2000})
+for po in draft_rows:
+    if po.get('name') in HAM_DRAFT_INCLUDE:
+        rows.append(po)
+        print(f'  Force-included draft PO: {po["name"]} = {po["amount_total"]}', file=sys.stderr)
 
 factory_pos = [po for po in rows if po.get('project_id') and isinstance(po['project_id'], list) and len(po['project_id']) >= 1 and po['project_id'][0] == 244]
 print(f'Factory POs: {len(factory_pos)}', file=sys.stderr)
@@ -108,8 +119,30 @@ row = 8; sc(ws1, row, 1, 'Paid Outside Odoo (Ibrahim/عهده)', bfont, bf); sc(
 row = 9; sc(ws1, row, 1, 'Grand Total (All POs)', boldf, gold); sc(ws1, row, 2, len(regular_pos), boldf, gold, Alignment(horizontal='center')); sc(ws1, row, 3, round(grand_total,2), boldf, gold, Alignment(horizontal='right')); sc(ws1, row, 4, '', boldf, gold)
 row = 11; ws1.cell(row=row, column=1, value='CREDIT SUPPLIERS (Periodic Statements)').font = sf
 mada = [r for r in credit_pos if 'مدى الجزيرة' in r['vendor']]; saba = [r for r in credit_pos if 'صبا نجد' in r['vendor'] or 'Saba' in r['vendor']]
-row = 12; sc(ws1, row, 1, 'مؤسسة مدى الجزيرة للتجارة', boldf); sc(ws1, row, 2, f'{len(mada)} POs', bfont, align=Alignment(horizontal='center')); sc(ws1, row, 3, round(sum(r['amount'] for r in mada),2), boldf, align=Alignment(horizontal='right')); sc(ws1, row, 4, 'Balance per periodic statement', bfont)
-row = 13; sc(ws1, row, 1, 'صبا نجد- Saba Najad (1224)', boldf); sc(ws1, row, 2, f'{len(saba)} POs', bfont, align=Alignment(horizontal='center')); sc(ws1, row, 3, round(sum(r['amount'] for r in saba),2), boldf, align=Alignment(horizontal='right')); sc(ws1, row, 4, 'Balance per periodic statement', bfont)
+
+# Actual statement balances from supplier PDFs
+MADA_STATEMENT_BALANCE = 35564.38
+SABA_STATEMENT_BALANCE = 158574.27
+
+mada_odo_total = round(sum(r['amount'] for r in mada), 2)
+saba_odo_total = round(sum(r['amount'] for r in saba), 2)
+
+row = 12; sc(ws1, row, 1, 'مؤسسة مدى الجزيرة للتجارة', boldf)
+sc(ws1, row, 2, f'Statement: {MADA_STATEMENT_BALANCE:,.2f} SAR', bfont, align=Alignment(horizontal='center'))
+sc(ws1, row, 3, MADA_STATEMENT_BALANCE, boldf, align=Alignment(horizontal='right'))
+sc(ws1, row, 4, f'Odoo PO total: {mada_odo_total:,.2f} SAR ({len(mada)} POs)', bfont)
+
+row = 13; sc(ws1, row, 1, 'صبا نجد- Saba Najad (1224)', boldf)
+sc(ws1, row, 2, f'Statement: {SABA_STATEMENT_BALANCE:,.2f} SAR', bfont, align=Alignment(horizontal='center'))
+sc(ws1, row, 3, SABA_STATEMENT_BALANCE, boldf, align=Alignment(horizontal='right'))
+sc(ws1, row, 4, f'Odoo PO total: {saba_odo_total:,.2f} SAR ({len(saba)} POs)', bfont)
+
+# Grand total including statement balances
+grand_total_with_credit = grand_total + MADA_STATEMENT_BALANCE + SABA_STATEMENT_BALANCE
+row = 15; sc(ws1, row, 1, 'Grand Total (incl. Credit Suppliers)', totf, gold)
+sc(ws1, row, 2, '', totf, gold, Alignment(horizontal='center'))
+sc(ws1, row, 3, round(grand_total_with_credit, 2), totf, gold, Alignment(horizontal='right'))
+sc(ws1, row, 4, 'All POs + credit supplier statement balances', totf, gold)
 
 # Sheet 2: Cashout Required
 ws2 = wb.create_sheet('Cashout Required')
@@ -177,6 +210,18 @@ for idx, r in enumerate(credit_pos):
     sc(ws5, row, 1, r['po'], bfont, alt); sc(ws5, row, 2, r['vendor'], bfont, alt); sc(ws5, row, 3, round(r['amount'],2), bfont, alt, Alignment(horizontal='right'))
     sc(ws5, row, 4, r['date'], bfont, alt, Alignment(horizontal='center')); sc(ws5, row, 5, r['pay_state'], bfont, alt, Alignment(horizontal='center')); sc(ws5, row, 6, 'Credit supplier — balance per periodic statement', bfont, alt)
 
+# Cross-reference summary
+ref_row = 4 + len(credit_pos) + 2
+sc(ws5, ref_row, 1, 'STATEMENT CROSS-REFERENCE', boldf, navy)
+ws5.merge_cells(start_row=ref_row+1, start_column=1, end_row=ref_row+1, end_column=6)
+sc(ws5, ref_row+1, 1,
+    f'مدى الجزيرة: Statement balance = 35,564.38 SAR | Odoo Factory POs total = {mada_odo_total:,.2f} SAR ({len(mada)} POs)',
+    bfont, wf)
+ws5.merge_cells(start_row=ref_row+2, start_column=1, end_row=ref_row+2, end_column=6)
+sc(ws5, ref_row+2, 1,
+    f'صبا نجد: Statement balance = 158,574.27 SAR | Odoo Factory POs total = {saba_odo_total:,.2f} SAR ({len(saba)} POs)',
+    bfont, wf)
+
 out = '/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Orders/2026/0000 اداريات/00 تقارير الاعمال/Samaya_Factory_Cashout_Report_Updated.xlsx'
 wb.save(out)
 print(f'\nSaved: {out}', file=sys.stderr)
@@ -185,4 +230,18 @@ print(f'Cashout Required (unpaid): {len(unpaid)} POs = {total_unpaid:,.2f} SAR')
 print(f'Paid via Odoo Bills: {len(bill_paid)} POs = {total_bill_paid:,.2f} SAR')
 print(f'Paid Outside Odoo (Ibrahim): {len(chatter_paid)} POs = {total_chatter_paid:,.2f} SAR')
 print(f'Credit Suppliers: {len(credit_pos)} POs')
-print(f'Grand Total: {grand_total:,.2f} SAR')
+print(f'  مدى الجزيرة: Statement = 35,564.38 SAR (Odoo Factory = {mada_odo_total:,.2f})')
+print(f'  صبا نجد: Statement = 158,574.27 SAR (Odoo Factory = {saba_odo_total:,.2f})')
+print(f'Grand Total (excl credit): {grand_total:,.2f} SAR')
+print(f'Grand Total (incl credit): {grand_total_with_credit:,.2f} SAR')
+print(f'')
+print(f'--- هام PO Cross-check ---')
+# Find and report draft POs from the هام list that were force-included
+ham_draft_names = {'P02116', 'P02137', 'P02185', 'P02226', 'P02227'}
+ham_draft_included = [r for r in results if r['po'] in ham_draft_names and not r['paid']]
+if ham_draft_included:
+    print('New draft POs from هام list added to cashout:')
+    for r in ham_draft_included:
+        print(f'  {r["po"]}: {r["amount"]:,.2f} SAR — {r["vendor"]}')
+    print(f'  Total new: {sum(r["amount"] for r in ham_draft_included):,.2f} SAR')
+print('Non-Factory PO from هام list: P02069 = 862.50 SAR (Jalal & Jamal #166) - excluded')

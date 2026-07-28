@@ -23,7 +23,7 @@ models = xmlrpc.client.ServerProxy(f'{env["ODOO_URL"]}/xmlrpc/2/object', context
 domain = [['state','in',['purchase','done']], ['date_order','>=','2026-01-01']]
 fields = ['name','partner_id','amount_total','date_order','state','receipt_status','invoice_status','project_id','invoice_ids']
 rows = models.execute_kw(env['ODOO_DB'], uid, env['ODOO_API_KEY'],
-    'purchase.order', 'search_read', [domain], {'fields': fields, 'limit': 200})
+    'purchase.order', 'search_read', [domain], {'fields': fields, 'limit': 2000})
 
 po_lookup = {}
 for po in rows:

@@ -456,6 +456,109 @@ After all plans are converted, create two documents in `99_Consolidated/`:
 | Source of truth for LOD | ER §2.3.D — LOD 300 contractual minimum; BEP can require higher for specific stages |
 | Source of truth for approvals | Contract §4 Art. 13 — MoC approval required for sub-consultant appointments |
 
+### 10.7 Formal Contract Document Conversion — `00_Contracts/`
+
+When the user asks to convert a formal, approved contract document (DMP, BEP, PEP, PQP, HSE Plan, etc.) into structured Markdown in the repo's `00_Contracts/` directory, follow this pattern.
+
+**Critical context:** Per AGENTS.md Rule 9, `00_Contracts/` is normally READ-ONLY for agents — files there are immutable. The user's explicit instruction to write there overrides this; do not write to `00_Contracts/` unprompted.
+
+#### 10.7.1 Source Handling — pdftotext Output
+
+When the source is a pdftotext extraction (saved as `.txt`):
+
+1. **Size assessment first** — `wc -l /tmp/filename.txt` to know the line count before reading
+2. **Read in chunks** — use `read_file(path=..., offset=1, limit=200)` iterating in 200-line blocks (keep each chunk under ~40K chars). For files over 10K lines, budget 3-4 chunk reads to map structure, then targeted reads for remaining sections
+3. **Map document structure while reading** — note where page breaks (`\f`), section headings, table formats, and recurring data patterns occur
+4. **Identify split points** — natural boundaries: Part separators, major section changes, logical groupings (e.g., Part 1 = sections 1-4, Part 2 = section 5, etc.)
+5. **Understand before transcribing** — read all chunks first to form a mental document map, then write
+
+#### 10.7.2 Target Directory — Contract vs Plan
+
+| Document Type | Target |
+|---|---|
+| Signed / approved contract documents (DMP, BEP, PEP, PQP, SoW, ER, Contract) | `00_Contracts/` |
+| Active working plans, registers, and status files | `03_Plans/` |
+
+#### 10.7.3 Part-Split + Index Navigation
+
+Large contract documents (40-52 pages) must be split into logical files with a navigation index:
+
+| File | Content |
+|---|---|
+| `00_INDEX.md` | Cover page, full YAML metadata, revision history, related docs, TOC with file links and original page numbers |
+| `01_Part1_Title.md` | Sections covering Part 1 (typically 3-4 sections, 10-15 pages) |
+| `02_Part2_Title.md` | Next logical grouping |
+| `03_Part3_Title.md` | Continue through all parts |
+| ... | |
+
+Index file requirements: cover page reproduction, full frontmatter, revision history table, related docs table, complete linked TOC, read-only notice.
+
+#### 10.7.4 YAML Frontmatter — Contract Documents
+
+Every contract document file must start with this full metadata:
+
+```yaml
+---
+doc_ref: MOC-MUS-ASE-1K0-PL-0029
+revision: Rev.02/C04
+title: Design Management Plan — Part N: Description
+status: formal_read_only
+last_updated: YYYY-MM-DD
+approved_date: YYYY-MM-DD
+approved_by: CG (Consultant Group)
+approval_code: B (Approved with Comments)
+source_file: 04_Docs/02_Plans_and_Procedures/<path>/<filename>.pdf
+agent_edit: prohibited
+---
+```
+
+| Field | Purpose |
+|---|---|
+| `doc_ref` | The document control reference code |
+| `revision` | Full revision identifier (Rev.XX/CXX) |
+| `status` | Always `formal_read_only` for contract documents |
+| `approved_date` | CG/PMC approval date |
+| `approved_by` | Approving entity |
+| `approval_code` | Code A/B/C/D per disposition |
+| `source_file` | Traceable OneDrive path to the signed PDF |
+| `agent_edit` | Always `prohibited` for `00_Contracts/` files |
+
+#### 10.7.5 Table Conversion from PDF Text Extraction
+
+pdftotext output degrades tables into several formats. Map each to proper markdown:
+
+| Extracted Format | Markdown Equivalent |
+|---|---|
+| Vertical key:value pairs on alternating lines | Single-row pipe table with header |
+| Colon/tab-separated rows with ALL-CAPS headers | Standard pipe table |
+| Multi-column data with visual gaps | Dense pipe table with abbreviated headers |
+| Section-data split across page boundaries | Merge data from consecutive chunks into one table |
+| Form-like layout (FIELD \n VALUE \n FIELD2 \n VALUE2) | Two-column key-value table |
+
+Rules:
+- ALL CAPS lines in extracted text become markdown table headers
+- Each extracted block becomes one or more table rows
+- If columns have no consistent delimiter, rebuild from data semantics (e.g., Discipline, LOD RCVD, LOD REQD is always 3 columns)
+- For RACI matrices: stakeholders are columns, activities are rows
+- Break very wide tables (7+ columns) into two simpler tables or use header abbreviations
+
+#### 10.7.6 Content Fidelity Rules
+
+1. **Transcribe verbatim** — do not summarize, paraphrase, or interpret
+2. **Preserve all tables** — every original table must appear, even if degraded in extraction
+3. **Preserve page markers** — keep `DOC PAGE X OF Y` for PDF cross-reference
+4. **Preserve workflow diagrams** — render as ASCII/text flow charts with `|` → `↑` `↓` arrows
+5. **Preserve all numbered lists** — sequentially numbered
+6. **DO NOT add content** — no new analysis, commentary, or cross-references not in source
+
+#### 10.7.7 Workflow Reference
+
+See `references/contract-doc-to-markdown.md` for the complete process from the 2026-07-28 DMP Rev C04 conversion: chunk-reading strategy, split-point decisions, table reconstruction examples, frontmatter template, and verification checklist.
+
+See `references/hse-plan-batch-conversion.md` for batch conversion of pre-converted MD files with DS headers (12 HSE plans pattern).
+
+See also § "Handling Cover-Sheet-Only PDFs" in the same reference for the fallback pattern when the source PDF is a 1-page submittal transmittal covering sheet rather than the actual plan document — covers archive discovery, bilingual CG comment extraction from OLD_VARIANT PDFs, and documenting missing source content transparently.
+
 ## Reference Files
 
 - `references/management-plan-chart-recommendations.md` — What charts/figures are needed in each management plan section (Interface, Risk, Schedule, Comms, Quality), with priority tiers and rationale for museum/cultural projects. Use when the user asks "do we need charts here?" for a specific section.
@@ -466,4 +569,5 @@ After all plans are converted, create two documents in `99_Consolidated/`:
 - `references/contract-clause-extraction.md` — How to extract verbatim contract/SoW clause text from OneDrive PDFs when the repo doesn't have the literal text. Covers source PDF locations, extraction commands, and pitfalls.
 - `references/source-verification-audit-example.md` — Full audit example from the Design Management & BIM Summary session: methodology, findings table, pitfalls for PEP/DMP/BEP cross-referencing.
 - `references/rfi-correspondence-review.md` — Pre-send review checklist for bilingual (AR/EN) RFIs, TQs, and formal correspondence to CG/PMC/MoC. Covers document reference validation, contract clause verification, signatory title checks, content completeness, language/tone, and DOCX editing with python-docx.
+- `references/communication-plan-conversion.md` — Communication Plan PDF → structured markdown: 4-page landscape layout extraction, communication matrix reconstruction from pdftotext -layout, contact list tables, communication rules, and YAML frontmatter pattern for `00_Contracts/02_Communication_Plan/`.
 - `references/samaya-docx-generation-tbd-fill.md` — Samaya-branded DOCX generation: manual styling fallback when OneDrive template is inaccessible, TBD filling rules (user rejects bare TBDs), python-docx table/shading/header patterns, and heritage-logistics default values for pending survey data.
