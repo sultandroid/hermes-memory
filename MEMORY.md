@@ -26,6 +26,4 @@ Sultan House: no Samaya branding. Surge: sultan-house-report.surge.sh.
 §
 Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/AR documents.
 §
-Email scan 2026-07-29 03:40: 18 project-critical emails. ZD-0084 Rev.01 Code C (Active Component), LT-003 formal warning, PQ-0133/0134/0135 submitted (NETGEAR/Molitor/SPS), arch viz material boards, structural DD, lighting review. 27 files routed. Git dc86f1c.
-§
-Email scan reference: last Aconex/project scan covered emails up to ~2026-07-29 03:40. Next scan should look for items after that timestamp. CG codes: always trust CG email body over transmittal subject line. PQ updates cascade to TWO registers (prequalification_register.md AND prequalification_log.md).
+Last email scan 2026-07-29 10:03: 27 project emails, 95 attachments, 39 routed. PQ-0122/0124 Code B, ZD-0084 Code C, SE-021 closed, LT-003, rigging PQs, NETGEAR/Molitor prequal, DD gate submittals. Registers + GitHub pushed.

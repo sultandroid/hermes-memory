@@ -315,14 +315,14 @@
     "archived_at": null,
     "created_at": "2026-07-20T06:36:56.604926+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-28T15:49:12.336401+00:00",
-    "last_used_at": "2026-07-28T15:49:01.366600+00:00",
-    "last_viewed_at": "2026-07-28T15:49:01.364299+00:00",
-    "patch_count": 21,
+    "last_patched_at": "2026-07-29T05:35:54.634147+00:00",
+    "last_used_at": "2026-07-29T05:36:00.684941+00:00",
+    "last_viewed_at": "2026-07-29T05:36:00.682565+00:00",
+    "patch_count": 24,
     "pinned": false,
     "state": "active",
-    "use_count": 28,
-    "view_count": 28
+    "use_count": 30,
+    "view_count": 30
   },
   "cg-approval-packaging": {
     "archived_at": null,
@@ -446,12 +446,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-07-28T15:34:09.076078+00:00",
+    "last_used_at": "2026-07-29T04:00:35.173317+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 36,
+    "use_count": 37,
     "view_count": 20
   },
   "computer-use": {
@@ -654,13 +654,13 @@
     "created_at": "2026-07-24T03:18:33.953831+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-07-26T06:33:44.493644+00:00",
-    "last_viewed_at": "2026-07-26T06:33:44.491253+00:00",
+    "last_used_at": "2026-07-29T05:26:51.665007+00:00",
+    "last_viewed_at": "2026-07-29T05:26:51.662704+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 13,
-    "view_count": 13
+    "use_count": 14,
+    "view_count": 14
   },
   "dogfood": {
     "archived_at": null,
@@ -706,13 +706,13 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-07-29T03:57:18.074352+00:00",
-    "last_viewed_at": "2026-07-29T00:44:17.515274+00:00",
+    "last_used_at": "2026-07-29T14:21:21.017689+00:00",
+    "last_viewed_at": "2026-07-29T04:01:41.087421+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 168,
-    "view_count": 68
+    "use_count": 172,
+    "view_count": 69
   },
   "entity-intake": {
     "archived_at": null,
@@ -901,13 +901,13 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-07-29T03:57:18.095114+00:00",
-    "last_viewed_at": "2026-07-28T16:04:18.093407+00:00",
+    "last_used_at": "2026-07-29T14:21:21.041366+00:00",
+    "last_viewed_at": "2026-07-29T07:07:40.286239+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 115,
-    "view_count": 15
+    "use_count": 119,
+    "view_count": 16
   },
   "google-workspace": {
     "archived_at": null,
@@ -1642,12 +1642,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-07-28T13:00:45.445087+00:00",
+    "last_used_at": "2026-07-29T13:24:40.903930+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 326,
+    "use_count": 328,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1680,14 +1680,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-28T15:56:56.642357+00:00",
-    "last_used_at": "2026-07-29T03:57:18.053458+00:00",
-    "last_viewed_at": "2026-07-28T15:56:33.833576+00:00",
-    "patch_count": 248,
+    "last_patched_at": "2026-07-29T04:01:53.648585+00:00",
+    "last_used_at": "2026-07-29T14:21:20.993810+00:00",
+    "last_viewed_at": "2026-07-29T07:09:13.597176+00:00",
+    "patch_count": 249,
     "pinned": false,
     "state": "active",
-    "use_count": 527,
-    "view_count": 394
+    "use_count": 532,
+    "view_count": 396
   },
   "p5js": {
     "archived_at": null,
@@ -2162,13 +2162,13 @@
     "created_at": "2026-07-26T06:28:31.438809+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-28T10:02:13.664477+00:00",
-    "last_used_at": "2026-07-28T16:11:47.321908+00:00",
-    "last_viewed_at": "2026-07-28T16:11:47.317770+00:00",
+    "last_used_at": "2026-07-29T06:55:22.693236+00:00",
+    "last_viewed_at": "2026-07-29T06:55:22.691482+00:00",
     "patch_count": 34,
     "pinned": false,
     "state": "active",
-    "use_count": 30,
-    "view_count": 30
+    "use_count": 31,
+    "view_count": 31
   },
   "register-webapp-operations": {
     "archived_at": null,
@@ -2356,27 +2356,27 @@
     "archived_at": null,
     "created_at": "2026-07-26T06:38:34.904211+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-28T16:12:38.783438+00:00",
-    "last_used_at": "2026-07-28T16:12:09.920447+00:00",
-    "last_viewed_at": "2026-07-28T16:12:09.918209+00:00",
-    "patch_count": 10,
+    "last_patched_at": "2026-07-29T06:55:45.211876+00:00",
+    "last_used_at": "2026-07-29T06:55:16.259288+00:00",
+    "last_viewed_at": "2026-07-29T06:55:16.257002+00:00",
+    "patch_count": 11,
     "pinned": false,
     "state": "active",
-    "use_count": 10,
-    "view_count": 10
+    "use_count": 12,
+    "view_count": 12
   },
   "samaya-docx-template": {
     "archived_at": null,
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T07:35:54.056128+00:00",
-    "last_used_at": "2026-07-28T17:57:14.208316+00:00",
-    "last_viewed_at": "2026-07-28T17:57:14.203107+00:00",
+    "last_used_at": "2026-07-29T06:53:56.025457+00:00",
+    "last_viewed_at": "2026-07-29T06:53:56.023456+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 420,
-    "view_count": 420
+    "use_count": 421,
+    "view_count": 421
   },
   "samaya-excel-styling": {
     "archived_at": null,

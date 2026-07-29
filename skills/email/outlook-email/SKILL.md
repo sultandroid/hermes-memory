@@ -834,21 +834,28 @@ git push origin main
 
 **Pitfall — "Final transmittal" ≠ Approved for PQs:** Aconex transmittal notes sometimes label a CG response as "Final transmittal" even when the CG code is C (Revise & Resubmit) or B (Approved w/ Comments). Never mark a PQ "Final" in the register based on transmittal subject line alone — always read the actual CG code from email preview or the attached response PDF. The code A/B/C/D in the CG email body governs, not the transmittal classification. Example from 2026-07-23: PQ-0126 PINE was labelled "Final transmittal" in Aconex but the CG response was Code C.
 
-**Pitfall — Git push conflicts with post-commit hooks:** The `aseer-museum-pm` repo has a post-commit hook that auto-regenerates `06_Risk_System/risks.json` after every commit. After `git commit`, `risks.json` has unstaged changes. When you then `git fetch && git rebase origin/main`, the dirty `risks.json` causes a merge conflict. Clean sequence:
+**Pitfall — Git push conflicts with post-commit hooks:** The `aseer-museum-pm` repo has a post-commit hook that auto-regenerates `06_Risk_System/webapp/src/index.html` after every commit. After `git commit`, `index.html` has unstaged changes. Two approaches:
 
+**Simple approach (no remote divergence):** Discard the auto-generated copy and push:
+```bash
+git checkout -- 06_Risk_System/webapp/src/index.html
+git push origin main
+```
+
+**Stash approach (when remote has new commits):** The post-commit hook leaves `index.html` dirty. When you then `git fetch && git rebase origin/main`, the dirty file causes a merge conflict. Clean sequence:
 ```bash
 git add <your register files>
 git commit -m "..."
 git stash                              # save the post-commit dirty state
 git fetch origin && git rebase origin/main
-git stash pop                          # may conflict in risks.json — accept theirs
-git checkout --theirs 06_Risk_System/risks.json  # if conflicted
-git add 06_Risk_System/risks.json
-git commit -m "merge: accept remote risks.json"
+git stash pop                          # may conflict in index.html — accept theirs
+git checkout --theirs 06_Risk_System/webapp/src/index.html  # if conflicted
+git add 06_Risk_System/webapp/src/index.html
+git commit -m "merge: accept remote index.html"
 git push origin main
 ```
 
-This avoids force push in most cases.
+This avoids force push in most cases. The simple `git checkout --` approach works when you haven't fetched/rebased — the post-commit hook's auto-generated file is identical to what's on remote, so discarding it is safe.
 
 **Pitfall — PQ updates cascade to TWO registers, not one:** Unlike ZD or MS submissions which update a single submittal register row, a prequalification (PQ) email batch typically updates two repo files:
 1. `01_Registers/prequalification_register.md` — the full PQ list with refs, codes, dates
