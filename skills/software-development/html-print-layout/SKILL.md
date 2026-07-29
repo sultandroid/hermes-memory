@@ -16,6 +16,9 @@ triggers:
   - "cement board 12mm / material datasheet page"
   - "print PDF from React app / createPortal / print button in modal"
   - "A4 landscape with photos"
+  - "bilingual Chart.js dashboard / cost comparison report / estimate vs actual"
+  - "curved / rounded charts with Chart.js"
+  - "project cost dashboard with cumulative spend timeline"
   - "raw HTML fragment / bare <section> with no document structure"
   - "HTML snippet exported from another tool, needs wrapping as print document"
   - "restructure monolithic HTML into build pipeline / partials / manifest"
@@ -416,7 +419,9 @@ Only after this gate prints `ALL N SHEETS FIT A4` may you report the task comple
 | Pitfall | Consequence | Fix |
 |---|---|---|
 | **Raw HTML fragment — no document structure** | File is just a bare `<section class="page">` or `<div>` with inline styles — no `<html>`, `<head>`, `@page`, or print CSS. Browser shows one unbroken page. | Run Step 0 detection first. If it's a fragment, build full document from scratch with `<!DOCTYPE html>`, `@page A4 portrait`, `.sheet` wrappers, and page breaks. Do NOT try to patch CSS onto a file that has no structure. |
-| Hardcoding row height (e.g., 4mm) | Every sheet overflows | Measure actual rendered heights in browser |
+| **Samaya branding scope** | Navy/gold + "SAMAYA" footer applied to personal/non-Samaya project | Check: is this a Samaya corporate doc (Aseer Museum, Samaya Factory) or personal project? Personal = neutral styling, no Samaya references. |
+| **Hardcoding row height (e.g., 4mm)** | Every sheet overflows | Measure actual rendered heights in browser |
+| **Samaya branding scope** | Navy/gold + "SAMAYA CONFIDENTIAL" footer applied to a personal/non-Samaya project | Check project ownership first. Samaya corporate doc? Use Samaya styling. Personal project? Neutral styling — dark gray header, no Samaya footer, no "SAMAYA" references. |
 | Searching for `C{xx}</td>` without `<tr>` prefix | Parent row loses opening tag, whole sheet HTML breaks | Search for `<tr><td class="ref">C{xx}</td>` |
 | Re-wrapping content with existing wrapper | Double `<div class="sheet">`, broken layout | Strip old wrapper before re-adding |
 | Using specific `[style*="border:.4pt"]` selector | Doesn't match if inline style formatting differs | Use broad `[style*="border"]` with `!important` |
@@ -1453,6 +1458,7 @@ Add `a[href*=\"#\"], a[href*=\"javascript\"]::after { content:none !important; }
 ### Reference Files
 
 - `references/modal-print-pattern.md` — Pattern for printing individual records (lessons, risks, submittals) as A4 documents from a modal overlay in a single-file HTML app. Covers CSS `@media print` rules, `.print-mode` class toggling, and fixed confidentiality footers.
+- `references/bilingual-chartjs-dashboard.md` — Bilingual (EN/AR) construction cost dashboard with Chart.js: 8 chart types, curved/rounded styling, cumulative vs actual, Surge deploy.
 
 ## Related Skills
 

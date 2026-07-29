@@ -66,13 +66,11 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | 1A0-PQ-0128 | TransOrient Solutions | `24_Subcontractors/06_Acoustic/01_Prequalification/` |
 | 1C0-PQ-0120 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
 | 1C0-PQ-0121 | Civil/Structural | `24_Subcontractors/08_Civil_Structural/01_Prequalification/` |
-| 1C0-PQ-0131 | Rigging (ACT) | `24_Subcontractors/12_Structural_Contractor/01_Prequalification/` |
-| 1C0-PQ-0132 | Rigging (AL FARIS) | `24_Subcontractors/12_Structural_Contractor/01_Prequalification/` |
-| 1E0-PQ-0133 | ICT Security (SPS) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
-| 1E0-PQ-0134 | ICT Security (NETGEAR) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
-| 1E0-PQ-0135 | ICT Security (TBD) | `24_Subcontractors/11_ICT_Security/01_Prequalification/` |
-| 1E0-PQ-0133 | Network Solutions (NETGEAR) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
-| 1E0-PQ-0134 | Audio Solutions (Molitor) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
+| 1C0-PQ-0131 | Rigging (ACT) | `24_Subcontractors/10_Rigging/01_Prequalification/` |
+| 1C0-PQ-0132 | Rigging (AL FARIS) | `24_Subcontractors/10_Rigging/01_Prequalification/` |
+| 1E0-PQ-0133 | ICT Security / Network Solutions (NETGEAR) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
+| 1E0-PQ-0134 | ICT Security / Audio Solutions (Molitor) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
+| 1E0-PQ-0135 | ICT Security (SPS) | `24_Subcontractors/04_AV_IT_Contractor/01_Prequalification/` |
 | 1L0-PQ-0122 | Landscaping (Evergreen) | `24_Subcontractors/21_Landscaping_Specialist/01_Prequalification/` |
 | 1L0-PQ-0126 | Landscaping (PINE) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
 | 1L0-PQ-0127 | Landscaping (TLC) | `24_Subcontractors/03_Landscaping/01_Prequalification/` |
@@ -106,6 +104,8 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 
 | Doc Code | Description | Destination |
 |----------|-------------|-------------|
+| ZD-0084 | Active Component Assessment | `03_Design_Files/Electrical/Current_Condition_MDP/01_Source_Files/` |
+| ZD-0084 CG Response | CG response to Active Component Assessment (Code C) | `03_Design_Files/Electrical/Current_Condition_MDP/02_CG_Responses/` |
 | ZD-0088/89/90/91/92 | Electrical Assessment (ATS/Containment/MDP/Earthing/UPS) | `03_Design_Files/Electrical/{AssessmentName}/` |
 | ZD-0093 | Risk Management Plan | `04_Docs/02_Plans_and_Procedures/02.17_Risk_Management_Plan/01_Source_Files/` |
 | ZD-0095 | QA/QC CV | `24_Subcontractors/09_General/01_Prequalification/` |
@@ -232,7 +232,7 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 - **CG Comments (NRS Comments_*.xlsx)** go to `02_Submittals/01_DD_Gate/Architecture/` — they are CG review feedback on the submission plan, not a separate document type.
 - **Prequalification_Submission_CG.docx** from Soliman Obiya (AME/Rawasin) goes to `AME_Acoustic/01_Prequalification/`, not the general prequal folder.
 - **Zamzam project files** (ZAM-NWC prefix) route to `/Volumes/MIcro/Work/Zamzam-Visitor-Center/`, not Aseer-Museum.
-- **Git rebase + post-commit hook conflict.** The repo's post-commit hook regenerates `06_Risk_System/webapp/src/index.html` after every commit. During `git pull --rebase`, each rebase step fires the hook, leaving a dirty index.html that blocks the next step. **Workaround:** `git checkout 06_Risk_System/webapp/src/index.html` before each `git rebase --continue`. If the rebase aborted, redo with `git checkout index.html && git pull --rebase origin main` and repeat the checkout before each continue.
+- **Git rebase + post-commit hook conflict.** The repo's post-commit hook regenerates `06_Risk_System/webapp/src/index.html` after every commit. During `git pull --rebase`, each rebase step fires the hook, leaving a dirty index.html that blocks the next step. **Workaround:** `git checkout 06_Risk_System/webapp/src/index.html` before each `git rebase --continue`. If the rebase aborted, redo with `git checkout index.html && git pull --rebase origin main` and repeat the checkout before each continue. If `git rebase --continue` fails with "Terminal is dumb, but EDITOR unset", use `GIT_EDITOR=true git rebase --continue`.
 - **Files without doc codes in their names** (e.g. "PROJECT EXECUTION PLAN 01.docx", "TB for approval.pdf") need keyword-based routing rules, not doc-code regexes. Add a keyword pattern alongside the doc-code pattern for the same destination.
 - **TU- prefix files** (e.g. TU-26184801) are technical uploads from subcontractors — route to the relevant subcontractor's prequal folder, not a general location.
 - **Two-pass routing for large batches.** When extracting 20+ files, write a primary script for this session's files and a separate stranded-cleanup script for orphaned files from prior cycles. See `references/two-pass-routing.md`.

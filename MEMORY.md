@@ -1,25 +1,31 @@
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
 §
-Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
+Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 §
 Never cite unread sources. OneDrive EDEADLK = use Micro volume. .olk15Msg base64 after 'base64' header.
 §
 User says No = go to primary data not AI guess. Multi-agent repo: git pull --no-rebase before push.
 §
-User contract-aware: lump-sum D&B, scope creep flag to Adel, not decide. VO Art.14(5)(e).
+Contract: lump-sum D&B, scope creep flag to Adel. VO Art.14(5)(e).
 §
 Email pipeline: extract→read→update repo→report. Read output fully before reporting.
 §
-Uses GitHub Discussions (sultandroid/aseer-museum-pm) for multi-agent collaborative planning before implementation. Expects thorough review from all agents before action. Surge.sh apps are test/temp only — don't count or reference as production. Production = Hostinger (samaya-factory.com).
+GitHub Discussions for multi-agent planning. Surge.sh = test/temp only. Production = Hostinger (samaya-factory.com).
 §
-LN register: English-only, newest first, general patterns not incident-specific. Dashboard goal: merge Risk+LN+Reports into one bilingual EN/AR SPA at samaya-factory.com. /aseer/ viz app keeps its URL unchanged (team daily use).
+LN register: English-only, newest first. Dashboard goal: merge Risk+LN+Reports into bilingual SPA at samaya-factory.com. /aseer/ viz app URL unchanged.
 §
-Personal project 'Sultan House' (Building 210), Al-Firdous City — residential finishing tracked at land210.vercel.app. Eng office: Amjad Consultancy ACG. Separate from Samaya/Aseer.
+Sultan House (B210, Al-Firdous) — residential finishing at land210.vercel.app. Eng office: Amjad Consultancy ACG. NOT Samaya.
 §
-Delegate file reading/processing to sub-agent (labor). Don't do heavy data work inline.
+Code B plans: PDF→MD with YAML frontmatter (agent_edit:prohibited) → 00_Contracts/. Drafts stay in 03_Plans/. Strip DS header forms.
 §
-Contract conversion: PDF→markdown→00_Contracts/ with frontmatter (formal_read_only, agent_edit:prohibited). User reviews before commit.
+User likes curved/rounded chart styling (borderRadius, smooth line tension, doughnut border-radius). Prefers animated chart transitions.
 §
-Email scan 2026-07-28: 90 files routed. PQ-0124/0122 Code B (Acoustic/Landscaping). ZD-0084/0090/0086 Code C. SE-021 CLOSED. PQ-0131-0135 added. Commit 8d727d4.
+For documents to Egyptian consulting offices (Amjad etc.), use Arabic or bilingual AR/EN — not English-only.
 §
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
+Sultan House: no Samaya branding. Surge: sultan-house-report.surge.sh.
+§
+Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/AR documents.
+§
+Email scan 2026-07-29 03:40: 18 project-critical emails. ZD-0084 Rev.01 Code C (Active Component), LT-003 formal warning, PQ-0133/0134/0135 submitted (NETGEAR/Molitor/SPS), arch viz material boards, structural DD, lighting review. 27 files routed. Git dc86f1c.
+§
+Email scan reference: last Aconex/project scan covered emails up to ~2026-07-29 03:40. Next scan should look for items after that timestamp. CG codes: always trust CG email body over transmittal subject line. PQ updates cascade to TWO registers (prequalification_register.md AND prequalification_log.md).

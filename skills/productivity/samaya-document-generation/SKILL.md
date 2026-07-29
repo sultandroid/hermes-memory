@@ -104,3 +104,4 @@ SamayaColors reference:
 
 - `references/assessment-report-tracking.md` — How to find who does assessment work and track their report status across Outlook SQLite, Adel snapshots, and repo registers.
 - `references/nrs-comments-investigation.md` — How to find NRS (Nissen Richards Studio) review comments: search Outlook SQLite `Message_Preview` for email body text, check cached PDF attachments in `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Files/S0/*/Attachments/`, and fall back to OneDrive document control folders when image-based redlines can't be OCR'd.
+- `references/approved-plan-ingestion.md` — Pipeline for converting approved Code B plan PDFs/markdown to formal read-only docs in `00_Contracts/`: DS header stripping, frontmatter, repo filing, register updates, and common pitfalls.

@@ -124,8 +124,10 @@ Compare each BOQ line item category against actual spend:
 
 | Category | BOQ Est. | Actual | Variance |
 |----------|:--------:|:------:|:--------:|
-| Electrical | 67,429 | 131,980 | +96% |
-| Plastering | 52,264 | 171,525 | +228% |
+| Electrical | 109,739 | 131,980 | +20% |
+| Internal Plastering | 330,930 | 171,525 | -48% (only 4 of 6 zones done) |
+
+**Critical OCR verification lesson:** Always cross-reference OCR-extracted BOQ totals against the known contract value. In this session, OCR misread Arabic-Indic digits and reported internal plastering as ~52K EGP when the real figure was 331K EGP (6x error). The contract value (632K EGP) should approximately match the sum of all Phase 1 BOQ categories — if it doesn't, the OCR is wrong. Get a clean digital copy (MD, XLSX) as primary source whenever available.
 
 **Key insight:** The BOQ was marked as "minimum cost" — actuals will always exceed it. The value is in identifying **which categories** deviated most and **why** (materials vs labor).
 

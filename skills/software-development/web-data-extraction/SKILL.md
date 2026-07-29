@@ -148,7 +148,70 @@ Pattern for a multi-section SPA:
 
 The accessibility tree snapshot may show the same content after navigation because SPAs reuse the same DOM shell. **Trust `document.body.innerText` via console** — it captures what's actually rendered, even when the snapshot doesn't reflect the route change.
 
-### 5.5 Extract → Save → Delegate Pattern
+### 5.5 Form Filling with JS Fallback
+
+When a form has custom combobox/select elements, radio buttons, or other complex UI components that `browser_type` and `browser_click` cannot handle reliably:
+
+**Step 1 — Identify the DOM structure** via `browser_console`:
+
+```javascript
+// Check if it's a real <select> or a custom ARIA widget
+document.querySelector('select[name="GovernorateID"]') // real select
+document.querySelector('[role="combobox"]') // custom ARIA combobox
+```
+
+**Step 2a — For real `<select>` elements**, use `browser_console` to set the value:
+
+```javascript
+(function() {
+  const sel = document.getElementById('governorate');
+  sel.selectedIndex = 8; // or sel.value = '2';
+  sel.dispatchEvent(new Event('change', {bubbles: true}));
+  return sel.options[sel.selectedIndex].text;
+})()
+```
+
+**Step 2b — For radio buttons**, enumerate them and set by index:
+
+```javascript
+(function() {
+  const radios = document.querySelectorAll('input[type="radio"]');
+  // Log them first to find the right index
+  let r = '';
+  radios.forEach((rb, i) => r += i + ': name=' + rb.name + ' value=' + rb.value + ' checked=' + rb.checked + '\\n');
+  return r;
+})()
+```
+
+Then check the desired radio:
+
+```javascript
+(function() {
+  const radios = document.querySelectorAll('input[type="radio"]');
+  radios[1].checked = true; // set علمى رياضة
+  radios[1].dispatchEvent(new Event('change', {bubbles: true}));
+})()
+```
+
+**Step 2c — Verify all form values before submit:**
+
+```javascript
+(function() {
+  const g = document.getElementById('governorate');
+  const radios = document.querySelectorAll('input[type="radio"]');
+  return 'Gov: ' + g.options[g.selectedIndex].text + ' | Dept: ' + radios[0].checked + ',' + radios[1].checked + ',' + radios[2].checked;
+})()
+```
+
+**Pitfalls:**
+- Typing into a combobox may contaminate the NEXT text field on the page (keyboard events leak). Use JS to set values instead.
+- `browser_click` on a `<select>` option may fail with `CDP error (DOM.getBoxModel): Could not compute box model` — use JS `selectedIndex` instead.
+- The accessibility tree snapshot may not reflect JS-set values until the page is re-navigated. Verify with `browser_console` expressions instead.
+- Some form validation is client-side. After setting values via JS, also dispatch `change` events so the framework (Angular/React/Vue) picks up the changes.
+- **Click the submit button, don't call `form.submit()` from console.** The button triggers the JS validation/submission handler registered via `addEventListener('submit', ...)`. Calling `form.submit()` bypasses the handler and does a raw HTTP POST that the server may reject (HTTP 405). Always use `browser_click` on the submit button ref.
+- **No visible feedback after submission.** Some forms show a hidden success popup rather than navigating away. Check via `browser_console` for `data-show-success="true"` on the form element, or if a hidden popup gained the `is-open` class. The `browser_snapshot` may miss hidden elements.
+
+### 5.6 Extract → Save → Delegate Pattern
 
 Do NOT hold all extracted data in your context. Instead:
 
@@ -238,10 +301,13 @@ When given a URL, determine if the target is:
 - **Categories:** On JS-rendered portfolio pages, categories may not be extractable from HTML. The `/our-work/` listing page likely loads via AJAX. Skip if not available rather than fabricating.
 - **Session loss on re-navigate:** Navigating away from a logged-in SPA and back (`browser_navigate` to same URL) may reset the session. Stay on the page and use programmatic navigation via console instead.
 - **Alibaba / aggressive captcha sites:** Sites with Alibaba-style `punish-component` captcha block all tools (browser, curl, proxies). No URL-level bypass works — the captcha is IP-based and session-based. Known dead ends: Wayback Machine has no archive, Google Cache returns 404, Bing Cache has no entry, CORS proxies get blocked, Jina.ai returns 403. The only viable alternative is a **different URL path** (e.g., the Alibaba PLA ad URL which uses a different server-side rendering path). See `product-research` skill Phase 2B for the PLA URL construction technique.
+- **DNS not resolving — Azure Application Gateway:** Some hostnames have no public DNS record but ARE configured in the Azure Application Gateway, which accepts forced-resolution connections. Use `curl --resolve <host>:<port>:<ip>` to test. Try **both HTTP and HTTPS** — the wildcard TLS cert may cover the subdomain even when HTTP fails. If the gateway returns **404 on all paths**, the hostname is configured but no backend service is deployed. This is common for inactive/off-season portals (e.g., exam result portals). Diagnose in steps: (1) `nslookup <host>` for baseline, (2) `curl --resolve` to the gateway IP (both ports 80 and 443), (3) delegate to sub-agent for alternative network path if both fail. When a user provides a URL that doesn't resolve, **try harder before giving up** — user-provided URLs are authoritative and worth the extra diagnostic steps.
+- **User-provided URLs are authoritative:** When a user insists on a specific URL and keeps asking you to try it, trust their input. They likely know the correct URL from an external source (Ministry announcement, news article, SMS, etc.). Do not dismiss it after a few failed attempts — the URL may be correct but the service may not be deployed yet. Set up a recurring cron job to monitor the URL rather than concluding it's dead. The user's persistence is a signal that the URL is authoritative.
 
 ## References
 
 - `references/print-doc-page-extraction.md` — extracting specific pages from assembled print-HTML documents where page numbers are JS-generated (`data-page-current`). Use when the target is one assembled HTML with `<section class="page">` per page and no static page numbers.
 - `references/spa-session-extraction.md` — worked example: extracting all data from a password-protected React SPA (project management dashboard) by logging in, navigating sections via console JS clicks, extracting text, and delegating analysis to a sub-agent.
+- `references/egyptian-gov-portal-patterns.md` — accessing Egyptian Ministry of Education (EMIS) portals for Thanaweya Amma result checking. Covers DNS resolution, transliterated Arabic service names ("sanwaya amaa" = ثانوية عامة), form field patterns (seat number + national ID), and common pitfalls with Next.js subdomain routing.
 
 OG meta tags are the most reliable content source on WordPress sites using Betheme/Avada/Visual Composer themes. The meta tags are server-rendered while the body content is injected client-side.

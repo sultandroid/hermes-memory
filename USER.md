@@ -1,11 +1,15 @@
-English only in all replies — never Arabic. Even when source data is Arabic, summarize in English. Concise, British English, active voice, no AI clichés.
+British English only. Never Arabic in replies — summarize Arabic sources.
 §
-Investigation cascade: repo registers → Outlook SQLite → actual CG response attachments (PDF + CRS). Never speculate from filenames or rely on register summaries alone — read primary source documents. When asked "why was X rejected", extract and read the actual CG response documents.
+Personal projects (Sultan House/Building 210) are NOT Samaya — no Samaya branding/footer. Use 'CONFIDENTIAL'.
 §
-Collaborates via GitHub Discussions for project decisions — post plans there, not just chat. Wants systemic/general solutions not one-off fixes.
+GitHub Discussions for plans. Wants systemic solutions, verify-first, visual UI/UX plans.
 §
-Verify assumptions before recommending — check actual files/repo state first. Wants visual design diagrams for UI/UX plans, not text-only specs.
+Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries.
 §
-Technical Office Manager who is procedurally meticulous — understands contract priority, communication plan compliance, escalation tiers, and NCR validity. Trusts his judgment on scope vs pressure tactics. Does not engage on procedurally defective directives; escalates contractual/scope matters to PM/PD correctly. Expects audits to confirm his analysis, not second-guess it. Distinguishes genuine compliance issues from CG pressure tactics.
+Tech Office Mgr — contract-aware, escalation-tier disciplined. Expects audit confirmation not speculation. Distinguishes compliance from CG pressure tactics.
 §
-Strictly English-only in responses — never use Arabic in conversation or replies. Even when source data is in Arabic, summarize in English.
+Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
+§
+Communication: respond in English only. Do NOT use Arabic in responses even when the content/topic is Arabic. User corrected me on this. Also prefers concise, direct answers. Likes iterative design refinement (show, get feedback, adjust, repeat).
+§
+Egyptian background — checks Thanaweya Amma results through government portals (natega.youm7.com, emis.gov.eg). Has an Egyptian phone (011... format) and uses sultan@samayainvest.com for personal matters. Prefers English-only replies; short directive fragments; keeps asking until it works ("try now").

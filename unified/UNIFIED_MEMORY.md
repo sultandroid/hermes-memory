@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-28 19:00:52
+Generated: 2026-07-29 07:00:19
 
 ---
 
@@ -18,10 +18,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
 Never cite unread sources. OneDrive EDEADLK = use Micro volume. .olk15Msg base64 after 'base64' header.
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
-English only in all replies — never Arabic. Even when source data is Arabic, summarize in English. Concise, British English, active voice, no AI clichés.
-Investigation cascade: repo registers → Outlook SQLite → actual CG response attachments (PDF + CRS). Never speculate from filenames or rely on register summaries alone — read primary source documents. When asked "why was X rejected", extract and read the actual CG response documents.
-Strictly English-only in responses — never use Arabic in conversation or replies. Even when source data is in Arabic, summarize in English.
+Email scan 2026-07-29 03:40: 18 project-critical emails. ZD-0084 Rev.01 Code C (Active Component), LT-003 formal warning, PQ-0133/0134/0135 submitted (NETGEAR/Molitor/SPS), arch viz material boards, structural DD, lighting review. 27 files routed. Git dc86f1c.
+Email scan reference: last Aconex/project scan covered emails up to ~2026-07-29 03:40. Next scan should look for items after that timestamp. CG codes: always trust CG email body over transmittal subject line. PQ updates cascade to TWO registers (prequalification_register.md AND prequalification_log.md).
+British English only. Never Arabic in replies — summarize Arabic sources.
+Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -39,11 +39,13 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 
 ## Active Projects
 
-Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
-Uses GitHub Discussions (sultandroid/aseer-museum-pm) for multi-agent collaborative planning before implementation. Expects thorough review from all agents before action. Surge.sh apps are test/temp only — don't count or reference as production. Production = Hostinger (samaya-factory.com).
-LN register: English-only, newest first, general patterns not incident-specific. Dashboard goal: merge Risk+LN+Reports into one bilingual EN/AR SPA at samaya-factory.com. /aseer/ viz app keeps its URL unchanged (team daily use).
-Personal project 'Sultan House' (Building 210), Al-Firdous City — residential finishing tracked at land210.vercel.app. Eng office: Amjad Consultancy ACG. Separate from Samaya/Aseer.
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
+Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
+GitHub Discussions for multi-agent planning. Surge.sh = test/temp only. Production = Hostinger (samaya-factory.com).
+LN register: English-only, newest first. Dashboard goal: merge Risk+LN+Reports into bilingual SPA at samaya-factory.com. /aseer/ viz app URL unchanged.
+Sultan House (B210, Al-Firdous) — residential finishing at land210.vercel.app. Eng office: Amjad Consultancy ACG. NOT Samaya.
+Sultan House: no Samaya branding. Surge: sultan-house-report.surge.sh.
+Personal projects (Sultan House/Building 210) are NOT Samaya — no Samaya branding/footer. Use 'CONFIDENTIAL'.
+Egyptian background — checks Thanaweya Amma results through government portals (natega.youm7.com, emis.gov.eg). Has an Egyptian phone (011... format) and uses sultan@samayainvest.com for personal matters. Prefers English-only replies; short directive fragments; keeps asking until it works ("try now").
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -57,14 +59,10 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
 - Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
-- Samaya profile audit, font-direction correction, and safe v4 rollback: v6, Tajawal, Amiri, use the font was in V4 in V6 not reverse, 0-byte placeholder
-  - desc: Use for `samaya-profile` visual fixes, asset swaps, typography parity between versions, and exact rollback work in this repo.
 
 ## Key People
 
-Eng. Mohamed Sultan, Technical Office Manager at Samaya/Aseer. Prefers concise British English, plain engineering language. Expects verified data, explicit completion. When saying 'last commit' means their authored commits — check git log --author before assuming.
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
-Technical Office Manager who is procedurally meticulous — understands contract priority, communication plan compliance, escalation tiers, and NCR validity. Trusts his judgment on scope vs pressure tactics. Does not engage on procedurally defective directives; escalates contractual/scope matters to PM/PD correctly. Expects audits to confirm his analysis, not second-guess it. Distinguishes genuine compliance issues from CG pressure tactics.
+Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -82,9 +80,12 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Mohamed Samir** (Construction Manager)
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
 - **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
+You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
+1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 
 ## Agents & Tools
 
+Email scan reference: last Aconex/project scan covered emails up to ~2026-07-29 03:40. Next scan should look for items after that timestamp. CG codes: always trust CG email body over transmittal subject line. PQ updates cascade to TWO registers (prequalification_register.md AND prequalification_log.md).
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -104,16 +105,16 @@ task_group: Hermes Agent configuration
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 - `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
-- `hermes_cli/config.py`: `NOUS_BASE_URL` optional env metadata.
 
 ## Contracts & Documents
 
-User contract-aware: lump-sum D&B, scope creep flag to Adel, not decide. VO Art.14(5)(e).
-Personal project 'Sultan House' (Building 210), Al-Firdous City — residential finishing tracked at land210.vercel.app. Eng office: Amjad Consultancy ACG. Separate from Samaya/Aseer.
-Contract conversion: PDF→markdown→00_Contracts/ with frontmatter (formal_read_only, agent_edit:prohibited). User reviews before commit.
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
-Investigation cascade: repo registers → Outlook SQLite → actual CG response attachments (PDF + CRS). Never speculate from filenames or rely on register summaries alone — read primary source documents. When asked "why was X rejected", extract and read the actual CG response documents.
-Technical Office Manager who is procedurally meticulous — understands contract priority, communication plan compliance, escalation tiers, and NCR validity. Trusts his judgment on scope vs pressure tactics. Does not engage on procedurally defective directives; escalates contractual/scope matters to PM/PD correctly. Expects audits to confirm his analysis, not second-guess it. Distinguishes genuine compliance issues from CG pressure tactics.
+Contract: lump-sum D&B, scope creep flag to Adel. VO Art.14(5)(e).
+Sultan House (B210, Al-Firdous) — residential finishing at land210.vercel.app. Eng office: Amjad Consultancy ACG. NOT Samaya.
+Code B plans: PDF→MD with YAML frontmatter (agent_edit:prohibited) → 00_Contracts/. Drafts stay in 03_Plans/. Strip DS header forms.
+Email scan reference: last Aconex/project scan covered emails up to ~2026-07-29 03:40. Next scan should look for items after that timestamp. CG codes: always trust CG email body over transmittal subject line. PQ updates cascade to TWO registers (prequalification_register.md AND prequalification_log.md).
+Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries.
+Tech Office Mgr — contract-aware, escalation-tier disciplined. Expects audit confirmation not speculation. Distinguishes compliance from CG pressure tactics.
+Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -137,13 +138,12 @@ task_group: Aseer Museum / Samaya Technical Office / subcontractor audit
 Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 02 + CRP PL-0027 Rev C01. Employer: MoC. PMC: ACE Moharram-Bakhoum. CG: Eng. Mohammad Elbaz (Acting PM), Eng. Abdrabo Shahin (Sr Structure/Reviewer). Samaya: PD Eng. Adel Darwish (Acting), Tech Office Eng. Mohamed Sultan, BIM Eng. Waleed Salah, CRP author Eng. Mohamed Elshikh. Design Lead: NRS (AoR). 52-stakeholder register (T1 Ops 6 / T2 Specialists 20 / T3 Authorities 14 / Ext MoC 7 / Statutory 5). 7 lifecycle phases, 7 report series, 11 standing meetings. SLAs: Submittal 14d, RFI/TQ 7d, SI 10d. 5-tier escalation L1→L5 (max 27d); 8 auto-fire triggers. 6 Authorities: SCD/GDCD, SEC, MoMRAH, CITC/CST, MOI, Aseer Emirate. KPIs: CDE 100%, RFI ≤7d, satisfaction ≥4.0/5.0. NRS Joint-Authorship model. CG Submission Sequence Rule (27-Apr-26): submittals without approved materials/design/specialist refs → Code C. All 8 CG comments CLOSED on SMP Rev 02.
 Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submittals (0A/3B/2C/1D/0U), SNA (2B/1U), RFI (4 open/20 closed), SI (~4 open), NCR (1C/4U), Outgoing (30 letters), Incoming (1 from CG). Status codes: A/B/C/D/E/F/U. Doc prefix: MOC-MUS-ASE-. Key open: NCR-001 (63d delay), SI-011/013/014/015, open RFIs: GN-007, GN-009, SIC-1A0-TQ-0020/0022. EOT Claim 01 Rev.00 (Apr 2026). Source: Aseer-Museum/Docs/09_Registers/Submittal_Tracker_IFC_Log/ (OneDrive .xlsb locked — save as .xlsx in Excel to read). NRS submittals: Submittal 11 (SC_01/SC_02 shop dwgs, May 25), Lighting/AV/M&E G11 & G13 (May 28), Invoice INV-4825 (May 28). Register 284 rows, updated May 25-28 2026.
 No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
-1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 
 ## Locations
 
 Never cite unread sources. OneDrive EDEADLK = use Micro volume. .olk15Msg base64 after 'base64' header.
-Formal approved plans (Code B) from OneDrive Plans_MD directories should be converted to MD with YAML frontmatter (agent_edit: prohibited) and saved to 00_Contracts/XX_PlanName/ in the aseer-museum-pm repo. Draft/unapproved plans belong in 03_Plans/, not 00_Contracts/. Always strip DS (Document Submittal) header forms before saving.
-Investigation cascade: repo registers → Outlook SQLite → actual CG response attachments (PDF + CRS). Never speculate from filenames or rely on register summaries alone — read primary source documents. When asked "why was X rejected", extract and read the actual CG response documents.
+For documents to Egyptian consulting offices (Amjad etc.), use Arabic or bilingual AR/EN — not English-only.
+Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/AR documents.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
