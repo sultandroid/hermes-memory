@@ -27,3 +27,5 @@ Sultan House: no Samaya branding. Surge: sultan-house-report.surge.sh.
 Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/AR documents.
 §
 Last email scan 2026-07-29 10:03: 27 project emails, 95 attachments, 39 routed. PQ-0122/0124 Code B, ZD-0084 Code C, SE-021 closed, LT-003, rigging PQs, NETGEAR/Molitor prequal, DD gate submittals. Registers + GitHub pushed.
+§
+Last email scan 2026-07-30 (cron): [to be filled by current scan]
