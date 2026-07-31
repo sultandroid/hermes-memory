@@ -46,3 +46,6 @@ Tavily web search installed 2026-07-31. API key in ~/.hermes/profiles/digitalher
 
 §
 2026-07-31: contract-manager-lens + contract-manager-self-learning skills created at ~/.hermes/profiles/digitalhermes/skills/legal/. Trigger: user says "عدسة مدير العقود" or invokes for any contract/claim work. 7-lens framework (documentary / procedural / substantive / quantum / tactical / devil's advocate / procedural discipline). Cross-references all 10 training topics in the hub.
+
+§
+2026-07-31: contract-manager-lens updated to be project-agnostic + auto-routing. Lens now applies to ANY project (WORK: Aseer/Samaya/RCRC/Tqanny; CONSULTING: Amjad; PERSONAL: Sultan House). Project identification via (1) explicit doc reference, (2) doc code prefix, (3) party name lookup, (4) ask user. Also: lens auto-activates on document paste (not just trigger phrase). Still requires explicit invocation OR document paste — never auto on plain chat.
