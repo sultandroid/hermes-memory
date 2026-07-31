@@ -1,4 +1,30 @@
-# PROJECTS — Samaya BIM Unit
+# PROJECTS — Samaya BIM Unit + Consulting + Personal
+
+> **This file is the project INDEX (hub layer).** Each row points to the project repo where work actually lives. The agent reads this on wake, then `cd` into the project repo to do work.
+>
+> Project-type legend: **WORK** = Samaya / factory / tech office · **CONSULTING** = external advisory · **PERSONAL** = non-work
+
+---
+
+## Quick Index
+
+| # | Project | Type | Repo | Local path | Doc code | Status |
+|---|---------|------|------|------------|----------|--------|
+| 1 | Aseer Regional Museum (P219) | WORK | `sultandroid/aseer-museum-pm` | `~/projects/aseer-museum-pm` | MOC-MUS-ASE | Active |
+| 2 | Aseer Museum Viz | WORK | `sultandroid/aseer-museum-viz` | `~/projects/aseer-museum-viz` | — | Active |
+| 3 | Aseer Weekly Dashboard | WORK | `sultandroid/aseer-weekly-dashboard` | `~/projects/aseer-weekly-dashboard` | — | Active |
+| 4 | Zamzam Visitor Center | WORK | (tbd — see hub AGENTS.md §6 for scaffold) | `Bim Unit/Zamzam - Visitor Center/` | ZAM-NWC | Active |
+| 5 | Masjid Alnoor | WORK | (tbd) | `Bim Unit/Masjid Alnoor/` | — | Active |
+| 6 | Hera' Ghar | WORK | (tbd) | `Bim Unit/Hera' Ghar/` | — | Active |
+| 7 | El-Haramain Museum | WORK | (tbd) | — | MVii | Active |
+| 8 | Samaya Workspace | WORK | `sultandroid/samaya-workspace` | `~/projects/samaya-workspace` | — | Active |
+| 9 | RCRC Exhibition Proposal | CONSULTING | `sultandroid/RCRC-Exhibition-Proposal` | `~/projects/RCRC-Exhibition-Proposal` | — | Active |
+| 10 | Tqanny (8 sub-projects) | WORK | OneDrive-Personal — no GitHub | `OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/` | — | Various |
+| 11 | Sultan House (B210) | PERSONAL | (not yet — scaffold when work begins) | — | — | Active |
+
+For project status, key dates, deliverables — see each project repo's `PROJECTS.md`.
+
+---
 
 ## Aseer Regional Museum (Project 219)
 
@@ -38,20 +64,8 @@
 | Comm Plan | PL-0018 | `Correspondence/` |
 | Stakeholder Plan | PL-0020 | `Correspondence/` |
 
-### Folder Structure
-```
-Aseer-Museum/
-├── 01_Contracts_and_ER/
-├── 02_Submittals/
-├── 03_Design_Files/
-├── 09_Correspondence/
-├── 07_Reports/07.5_Audit_Report/
-├── 09_Registers/
-├── 10_Plans/
-├── Docs/02_Plans_and_Procedures/02.5_HSE_Plan/
-├── Subcontractors/NN_Discipline/_MANAGER_DASHBOARD/
-└── _Project_Memory/
-```
+### Folder Structure (project repo)
+See `aseer-museum-pm/AGENTS.md` §4 for the canonical structure used by all projects.
 
 ### Subcontractors (Appendix B)
 Exhibition Fit-Out · Model Maker · Lighting · Graphics · AV · Showcases · Rigging · FF&E · Interactives · MEP · FLS · Structural · HSE · IT/Data · Surveyor · Accessibility · Architect · Acoustic · Interior Design · Landscape
@@ -111,6 +125,16 @@ Path: `OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/`
 | 08 | 08_Tabuk_Castle | Tabuk Castle (قلعة تبوك) |
 
 All follow standard structure: 00_Admin · 01_CLIENT_INPUTS · 02_Submittals · 03_Design · 04_Drawings · 05_Specifications · 06_BIM · 07_Meetings · 08_Schedules · 09_Site · 10_Calculations · 11_Standards · 99_Templates
+
+---
+
+## Sultan House (B210, Al-Firdous)
+
+Residential finishing. Project code B210. Personal project — **no Samaya branding**, use 'CONFIDENTIAL' header per `USER.md`.
+
+- Dashboard: `land210.vercel.app`
+- Eng office: Amjad Consultancy ACG
+- Status: see `~/projects/sultan-house/PROJECTS.md` (scaffold from `templates/PROJECT_TEMPLATE/` when work starts)
 
 ---
 
