@@ -155,7 +155,15 @@ Manual trigger: `bash ~/hermes-memory/scripts/daily_sync.sh` (alias for the abov
 
 ---
 
-## 9. Quick Self-Test (run once on a new agent setup)
+## 9. Training & Learning Hub
+
+The repo has a top-level `training/` directory — **cross-project, cross-entity** (where legal). It is the user's personal learning library, populated by reading real cases (e.g. arbitration rulings, contract disputes) and extracting lessons.
+
+When the user says "study this case" or "extract the lessons" or "find similar cases online", route to `training/<topic>/cases/`. When the user asks a domain question (e.g. "how do I draft a variation order"), search `training/<topic>/lessons.md` first.
+
+10 topics currently scaffolded: claims-arbitration, contract-administration, construction-management, design-management, procurement, project-management, qs-cost-control, bim-coordination, codes-standards, negotiation-disputes. See `training/README.md` for the structure.
+
+## 10. Quick Self-Test (run once on a new agent setup)
 
 Before doing real work, run:
 
