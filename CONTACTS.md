@@ -49,3 +49,23 @@
 - **Document control / daily reports** → Hesham
 - **Coordination / mfg orders** → Ahmed Salah
 - **Schedule review** → Sultan + Mohamed Elshaikh
+
+## Added 2026-07-31 — SulKIMICLAW
+
+| Name | Role | Email | Notes |
+|------|------|-------|-------|
+| Dr. Waleed Salah | BIM Manager (Aseer) | — | NRS BIM lead, reports to Jim Richards |
+| Eng. Waris Sultan | Project Director (Exhibitions) | — | From 13-Jun-2026, exhibitions scope |
+| Dogan Kozan | Lighting Engineer / Lead | — | Spec: ZNA (signed), workshop presenter |
+| Sulaiman Obiya | Acoustic Consultant / Lead | — | Spec: TransOrient (Code B), workshop presenter |
+| Magdy Saleha | Graphics Designer / Lead | — | Spec: Graphite (Code B), workshop presenter |
+| Bashir Zain | Sub-contractor (Civil) | — | Guardrailing installation, 30-Jul-2026 |
+
+## Communication Channels
+
+| Channel | Identifier | Agent |
+|---------|-----------|-------|
+| Telegram (personal) | @mohSulabbas | SulKIMICLAW |
+| Telegram (bot) | @SulKimiClaw_bot | SulKIMICLAW |
+| Email (primary) | sultan@samayainvest.com | All |
+| Email (personal) | mohamedsultanabbas@gmail.com | All |
