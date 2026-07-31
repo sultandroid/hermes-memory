@@ -1,0 +1,40 @@
+{
+  "research_topic": "Quantity Surveying and Cost Control in Construction (Saudi/GCC focus)",
+  "collection_date": "2026-07-31",
+  "tool": "Tavily API (search; web_extract for full text)",
+  "queries": [
+    "final account dispute construction Saudi Arabia contractor employer FIDIC NEC",
+    "variation pricing dispute construction FIDIC valuation contractor Saudi GCC",
+    "interim valuation dispute construction Saudi FIDIC measured work contractor",
+    "interim payment certificate dispute construction UAE GCC contractor HKA Pinsent Masons",
+    "cost plus lump sum target cost contract construction comparison Saudi",
+    "daywork provisional sum dispute construction FIDIC contractor valuation",
+    "overhead recovery claim head office prolongation construction Saudi arbitration",
+    "preliminaries dispute construction claim prolongation site overheads",
+    "remeasurement contract NEC FIDIC bill of quantities Saudi construction",
+    "NEC3 NEC4 remeasurement cost control construction Saudi Arabia",
+    "cost report cost control during construction execution Saudi project HKA",
+    "Saudi Arabia VAT withholding tax construction services 2024",
+    "RICS cost report construction cost control quantity surveyor practice",
+    "Stonehaven cost consultant quantity surveying Saudi Arabia claim",
+    "Strata Global quantity surveying Saudi Arabia cost report dispute",
+    "Al Tamimi construction cost dispute Saudi quantity surveyor variation",
+    "HKA litigating construction disputes Saudi Arabia",
+    "FIDIC \"Clause 14.8\" delayed payment financing charges Saudi riba Sharia",
+    "\"Using FIDIC construction contracts in Saudi Arabia\" Pinsent Masons DAB 14.8 riba financing charges",
+    "\"Construction Sector VAT\" \"ZATCA\" Saudi reverse charge Saudi Arabia building"
+  ],
+  "priority_sources_targeted": [
+    "RICS",
+    "HKA",
+    "Pinsent Masons",
+    "Fenwick Elliott",
+    "Strata Risk Advisory",
+    "FIDIC (federation)",
+    "Al Tamimi (referenced via HKA)",
+    "Aceris Law",
+    "Lexis Middle East / LexisNexis",
+    "Construction Front / Construction Claims Class / i-law"
+  ],
+  "verification": "Every selected case (Cases 001-012) was verified against a Tavily search result or full-text extract. Direct quotes in the per-case .md files were cross-checked against the corresponding raw file in /raw/."
+}
