@@ -43,3 +43,6 @@ All ADRs committed to aseer-museum-pm/00_Decisions/.
 
 §
 Tavily web search installed 2026-07-31. API key in ~/.hermes/profiles/digitalhermes/.env. CLI: `tvly search "..."`. Plugin: web-tavily enabled. Free tier 1000/mo. Use for: Saudi arbitration case lookups, Tamimi articles, SCCA digests, SADR bulletins. Tavily bypasses JS walls and CAPTCHA that raw curl hits.
+
+§
+2026-07-31: contract-manager-lens + contract-manager-self-learning skills created at ~/.hermes/profiles/digitalhermes/skills/legal/. Trigger: user says "عدسة مدير العقود" or invokes for any contract/claim work. 7-lens framework (documentary / procedural / substantive / quantum / tactical / devil's advocate / procedural discipline). Cross-references all 10 training topics in the hub.
