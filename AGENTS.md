@@ -161,7 +161,7 @@ Manual trigger: `bash ~/hermes-memory/scripts/daily_sync.sh` (alias for the abov
 - ❌ **Don't write project-specific memory to the hub** — it pollutes cross-project knowledge.
 - ❌ **Don't `git push --force`** — the hub is multi-agent; you will clobber another agent's push.
 - ❌ **Don't run `rm -rf`** anywhere — OneDrive propagates immediately per `RULES.md`.
-- ❌ **Don't respond in Arabic** — user prefers English replies; summarize Arabic sources.
+- ❌ **Don't respond in Arabic in terminal sessions** — user prefers English replies in CLI/terminal; summarize Arabic sources. In Telegram and other IM channels, match the user's language (Arabic is fine).
 - ❌ **Don't cite unread sources** — `RULES.md` is explicit.
 - ❌ **Don't create new Excel files** — only append rows to existing registers.
 
