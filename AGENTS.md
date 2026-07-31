@@ -126,6 +126,19 @@ A matter becomes a project repo when **any 2 of these** are true:
 
 **Naming convention:** `<client-or-topic>-<short-name>` in kebab-case, e.g. `aseer-museum-pm`, `samaya-workspace`. Private work: prefix `personal-` is optional.
 
+### Worked Example: Sultan House (B210)
+
+**When it became a project repo candidate:**
+- Criterion 1 (3+ sessions): ✗ — started as ad-hoc chat discussions
+- Criterion 2 (own deliverables, scripts): ✓ — finishing specs, BOQ, contractor bids, payment schedules
+- Criterion 3 (external stakeholders): ✓ — Amjad Consultancy (design), contractor, suppliers
+- Criterion 4 (doc code prefix): ✗ — none assigned yet
+- Criterion 5 (user said "set this up"): ✓ — user explicitly requested
+
+**Result:** 2 criteria met (≥2) → project repo justified. Scaffolded as `sultandroid/sultan-house`, type = PERSONAL, branding = `CONFIDENTIAL` (no Samaya), dashboard = `land210.vercel.app`.
+
+**What went wrong before the scaffold:** ad-hoc discussions got lost, deliverables ended up scattered across Telegram, no `PROJECT_MEMORY.md` so the same context got re-explained 3+ times. The repo fixed all three.
+
 ---
 
 ## 7. Daily Sync Routine (the cron-driven path)
