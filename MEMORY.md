@@ -29,3 +29,14 @@ Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/A
 Last email scan 2026-07-29 10:03: 27 project emails, 95 attachments, 39 routed. PQ-0122/0124 Code B, ZD-0084 Code C, SE-021 closed, LT-003, rigging PQs, NETGEAR/Molitor prequal, DD gate submittals. Registers + GitHub pushed.
 §
 Last email scan 2026-07-30 (cron): [to be filled by current scan]
+§
+[2026-07-31 AGENT:SulKIMICLAW] 4 ADRs approved by Mohamed Essa for Aseer Museum systemic improvements:
+- ADR-0001: Stack + Order (D-modified sequence: Freeze → XRef → Stage Gate → KPIs/IFC Risks)
+- ADR-0002: Out-of-scope deferral (#3 Interface Register, #4 Submission Dependency, #5 Procurement↔IFC → next month)
+- ADR-0003: Design Freeze Register (dual authority: Samaya proposes → CG ratifies; 3 conditions; 3 tiers; IFC only)
+- ADR-0004: Cross-Reference Map (Hybrid JSON + auto-gen MD; 4 relationship types; bidirectional; semver; public/private split)
+All ADRs committed to aseer-museum-pm/00_Decisions/.
+§
+[2026-07-31 AGENT:SulKIMICLAW] End-User Workshop 3-Aug-2026: internal prep meeting 30-Jul 12:00 (Samaya only). 9 specialties present to MoC+CG+PMC. ~22 client decisions. Critical: Patinated Brass (MA-0007) — 3 options (A=approve now, B=powder-coat, C=delay 8-12 weeks). LT-003 deadline: 11-Aug-2026 (14 WD from 28-Jul).
+§
+[2026-07-31 AGENT:SulKIMICLAW] Hot Work Permit 30-Jul-2026: Guardrailing installation, Basement/GF/LGF. Sub-contractor Bashir Zain + Wahid. 2 HSE compliance notes: (1) Wahid training tick missing, (2) 3 precautions not taken (dampening, fire-resistant cover, line isolation).
