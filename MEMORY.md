@@ -40,3 +40,6 @@ All ADRs committed to aseer-museum-pm/00_Decisions/.
 [2026-07-31 AGENT:SulKIMICLAW] End-User Workshop 3-Aug-2026: internal prep meeting 30-Jul 12:00 (Samaya only). 9 specialties present to MoC+CG+PMC. ~22 client decisions. Critical: Patinated Brass (MA-0007) — 3 options (A=approve now, B=powder-coat, C=delay 8-12 weeks). LT-003 deadline: 11-Aug-2026 (14 WD from 28-Jul).
 §
 [2026-07-31 AGENT:SulKIMICLAW] Hot Work Permit 30-Jul-2026: Guardrailing installation, Basement/GF/LGF. Sub-contractor Bashir Zain + Wahid. 2 HSE compliance notes: (1) Wahid training tick missing, (2) 3 precautions not taken (dampening, fire-resistant cover, line isolation).
+
+§
+Tavily web search installed 2026-07-31. API key in ~/.hermes/profiles/digitalhermes/.env. CLI: `tvly search "..."`. Plugin: web-tavily enabled. Free tier 1000/mo. Use for: Saudi arbitration case lookups, Tamimi articles, SCCA digests, SADR bulletins. Tavily bypasses JS walls and CAPTCHA that raw curl hits.
