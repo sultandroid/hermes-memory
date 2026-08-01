@@ -49,3 +49,6 @@ Tavily web search installed 2026-07-31. API key in ~/.hermes/profiles/digitalher
 
 §
 2026-07-31: contract-manager-lens updated to be project-agnostic + auto-routing. Lens now applies to ANY project (WORK: Aseer/Samaya/RCRC/Tqanny; CONSULTING: Amjad; PERSONAL: Sultan House). Project identification via (1) explicit doc reference, (2) doc code prefix, (3) party name lookup, (4) ask user. Also: lens auto-activates on document paste (not just trigger phrase). Still requires explicit invocation OR document paste — never auto on plain chat.
+
+§
+2026-07-31: GitHub Discussion #42 opened in aseer-museum-pm repo: "AD Engineering MEP Sub-Contract — SOW Governance, Coordination Matrix, Schedule Cascade". Two comments posted (12 KB + 6 KB) proposing 4 problems, 7 decisions, RACI matrix, schedule cascade, authority submissions plan. URL: https://github.com/sultandroid/aseer-museum-pm/issues/42
