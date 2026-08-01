@@ -44,3 +44,12 @@ build/
 *.lock
 ~$*.xlsx
 ~$*.docx
+
+# Binary files — NEVER commit to hub (per RULES.md)
+*.docx
+*.doc
+*.xlsx
+*.pdf
+*.png
+*.jpg
+*.dwg
