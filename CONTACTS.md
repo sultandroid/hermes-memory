@@ -32,8 +32,12 @@
 
 | Name | Role | Email |
 |------|------|-------|
-| Hossam Mabrouk | CG Consultant (CG) | hmabrouk@cg.com.sa |
-| Mohammad Elbaz | CG Project Manager | melbaz@cg.com.sa |
+| Hossam Mabrouk | CG Consultant (ACE) | hmabrouk@cg.com.sa |
+| **Mansour Al-Mutairi** | **Acting CG Project Manager** (replaced Elbaz, Jul 2026) | **malrezeni@cg.com.sa** |
+| Mohamed Al-Baz | CG Project Director | melbaz@cg.com.sa |
+| Mohamed Elbaz | CG Senior Electrical Engineer (monitoring capacity only) | melbaz@cg.com.sa |
+| Ahmed Ghoneim | CG Lighting Consultant Specialist | aghoneim@cg.com.sa |
+| Maged Zamzam | CG | mzamzam@cg.com.sa |
 | Jim Richards | Director — Nissen Richards Studio | jim.r@nissenrichardsstudio.com |
 | NRS | Design Lead (A2742) | Nissen Richards Studio |
 
