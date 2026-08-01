@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-08-01T14:11:36.880131",
+  "mail": {
+    "unread_to": 0,
+    "unread_cc": 0,
+    "outstanding": 0,
+    "overdue": 0,
+    "awaiting_approval": 0
+  },
+  "documents": [],
+  "transmittals": [
+    {
+      "ref": "SIC.-TRANSMIT-000017",
+      "subject": "Weekly Progress Report 22",
+      "from": "Samaya Investment",
+      "date": "1/08/26"
+    },
+    {
+      "ref": "SIC.-TRANSMIT-000016",
+      "subject": "Daily Progress Report / 01 Aug\u00a02026",
+      "from": "Samaya Investment",
+      "date": "1/08/26"
+    },
+    {
+      "ref": "CGP-TRANSMIT-000009",
+      "subject": "MOC-MUS-CG-ASE-NC-1E0-0020- Failure to Cl...",
+      "from": "Consultancy Group",
+      "date": "30/07/26"
+    },
+    {
+      "ref": "SIC.-TRANSMIT-000015",
+      "subject": "HSE Weekly Reports - W29",
+      "from": "Samaya Investment",
+      "date": "30/07/26"
+    },
+    {
+      "ref": "SIC.-TRANSMIT-000014",
+      "subject": "Daily Progress Report / 30 July 2026",
+      "from": "Samaya Investment",
+      "date": "30/07/26"
+    },
+    {
+      "ref": "CGP-WTRAN-000206",
+      "subject": "Final (WF-000187) Network Solutions Suppli...",
+      "from": "Consultancy Group",
+      "date": "29/07/26"
+    },
+    {
+      "ref": "CGP-WTRAN-000205",
+      "subject": "Final (WF-000188) Audio Solutions Supplier...",
+      "from": "Consultancy Group",
+      "date": "29/07/26"
+    },
+    {
+      "ref": "CGP-WTRAN-000204",
+      "subject": "Final (WF-000185) Fire Alarm & Fire Suppre...",
+      "from": "Consultancy Group",
+      "date": "29/07/26"
+    },
+    {
+      "ref": "CGP-WTRAN-000203",
+      "subject": "Final (WF-000190) ICT Security System Inte...",
+      "from": "Consultancy Group",
+      "date": "29/07/26"
+    },
+    {
+      "ref": "CGP-WTRAN-000202",
+      "subject": "Final (WF-000181) Rigging works, Lifting S...",
+      "from": "Consultancy Group",
+      "date": "29/07/26"
+    }
+  ]
+}
