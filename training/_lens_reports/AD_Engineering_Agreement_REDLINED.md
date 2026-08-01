@@ -91,10 +91,6 @@ The duration shall exclude periods taken by the First Party, the reviewing entit
 
 The Second Party shall be entitled to a reasonable extension of time for any delay not attributable to it. Where such delay materially affects mobilization, staffing or sequencing, the Second Party shall also be entitled to reasonable additional costs upon written notification. No delay penalties or liquidated damages shall apply unless separately agreed in writing.
 
-> 🟡 **Article 4.X — Acceleration Bonus**
->
-> If the Second Party achieves the 100% Final IFC Package on or before 30 September 2026, the First Party shall pay an acceleration bonus of **SAR 40,000 (Forty Thousand Saudi Riyals)** in addition to the Final/IFC Stage payment under Article 6.
-
 ---
 
 ## Article Five — Submissions, Review and Acceptance
@@ -166,22 +162,6 @@ To the extent permitted by the laws of the Kingdom of Saudi Arabia, the total ag
 
 Where a loss is caused by several parties, the Second Party shall be responsible only for the proportion attributable to its own breach. The First Party shall promptly notify the Second Party of any alleged error and allow it a reasonable opportunity to investigate and correct the matter.
 
-> 🟡 **Article 9.X — Insurance**
->
-> X.1 The **First Party (Samaya)** shall procure and maintain Professional Indemnity (PI) Insurance covering the Second Party's Services under this Agreement, with minimum limits of SAR 5,000,000 per claim and SAR 10,000,000 in aggregate.
->
-> X.2 The Second Party (AD Engineering) shall be named as a **covered consultant** under the First Party's PI policy.
->
-> X.3 The Second Party is **not required** to maintain separate PI insurance for this Agreement.
->
-> X.4 The First Party shall deliver a Certificate of Insurance to the Second Party before the Notice to Proceed (NTP).
->
-> X.5 The Second Party shall maintain, at its own cost: (a) **Public Liability Insurance** with a limit of not less than SAR 1,000,000 per occurrence, covering bodily injury and property damage arising from site visits. The First Party shall be named as an additional insured under this policy. (b) **Workers' Compensation / Employer Liability Insurance** covering all personnel of the Second Party in compliance with Saudi Labor Law.
->
-> X.6 The Second Party shall provide evidence of renewal of the PL and WC policies not less than thirty (30) days before expiry.
->
-> X.7 Failure by the Second Party to maintain the required PL and WC insurances shall constitute a material breach of this Agreement, entitling the First Party to suspend Services and/or terminate under Article 10.
-
 ---
 
 ## Article Ten — Suspension, Termination and Force Majeure
@@ -230,9 +210,7 @@ During any dispute, the Parties shall continue performing their undisputed oblig
 >
 > **Level 3 — Samaya PMC (Adel Darwish):** Triggered if Level 2 disputed, or if the dispute has commercial or schedule impact. One (1) week to arbitrate. Decision is binding on commercial and schedule matters.
 >
-> **Level 4 — Consultant (CG):** Triggered if Level 3 disputed, or if the dispute affects design intent. Final, contractually binding decision on design intent matters.
->
-> **Level 5 — Project Director + Contract Manager (Sultan):** Triggered if Level 4 disputed, or if the dispute involves contractual interpretation. Final authority on contractual interpretation.
+> **Level 4 — Project Director + Contract Manager (Sultan):** Triggered if Level 3 disputed, or if the dispute involves contractual interpretation. Final authority on contractual interpretation.
 >
 > Design work continues in parallel with the escalation. No party may pause design work pending resolution of a coordination dispute unless explicitly agreed by both Parties in writing.
 
@@ -254,20 +232,20 @@ This Agreement is executed and written in English. It may be signed in counterpa
 >
 > **Tie-breaker authority:** Samaya PMC (Adel Darwish) has final arbitration authority for cross-discipline coordination disputes. BIM Manager chairs the weekly meeting.
 >
-> | # | Activity | Samaya (BIM Mgr) | AD Engineering | Studio ZNA | Rawasin (AV/IT) | NRS (Arch) | Glasbau Hahn | Nama (FLS) | Lumotion | Evergreen | CG (PMC) |
-> |---|---|---|---|---|---|---|---|---|---|---|---|
-> | 1 | Federated BIM model | R/A | C | C | C | C | C | C | C | C | I |
-> | 2 | Weekly BIM coordination meeting | R/A | R | R | R | R (invite) | I | I (invite) | I | I | I |
-> | 3 | Mech-Elec coordination | I | R/A | — | — | — | — | — | — | — | I |
-> | 4 | Lighting-Electrical coordination | I | R | A | — | — | — | — | — | — | I |
-> | 5 | AV-Electrical coordination | I | R | — | A | — | — | — | — | — | I |
-> | 6 | BMS-MEP coordination | I | R | — | — | — | — | — | — | — | I |
-> | 7 | Showcase-Electrical coordination | I | R | C | — | — | A | — | — | — | I |
-> | 8 | FLS design coordination | I | C | — | — | — | — | A | — | — | R (review) |
-> | 9 | Architectural-MEP interfaces | I | C | C | C | A | — | — | — | — | R (review) |
-> | 10 | Interactive applications coordination | I | C | — | C | — | — | — | A | — | I |
-> | 11 | Landscape coordination | I | — | — | — | — | — | — | — | A | I |
-> | 12 | Civil Defense submission (MEP) | C | R/A | C | — | — | — | C | — | — | R (approval) |
+> | # | Activity | Samaya (BIM Mgr) | AD Engineering | Studio ZNA | Rawasin (AV/IT) | NRS (Arch) | Glasbau Hahn | Nama (FLS) | Lumotion | Evergreen |
+> |---|---|---|---|---|---|---|---|---|---|---|
+> | 1 | Federated BIM model | R/A | C | C | C | C | C | C | C | C |
+> | 2 | Weekly BIM coordination meeting | R/A | R | R | R | R (invite) | I | I (invite) | I | I |
+> | 3 | Mech-Elec coordination | I | R/A | — | — | — | — | — | — | — |
+> | 4 | Lighting-Electrical coordination | I | R | A | — | — | — | — | — | — |
+> | 5 | AV-Electrical coordination | I | R | — | A | — | — | — | — | — |
+> | 6 | BMS-MEP coordination | I | R | — | — | — | — | — | — | — |
+> | 7 | Showcase-Electrical coordination | I | R | C | — | — | A | — | — | — |
+> | 8 | FLS design coordination | I | C | — | — | — | — | A | — | — |
+> | 9 | Architectural-MEP interfaces | I | C | C | C | A | — | — | — | — |
+> | 10 | Interactive applications coordination | I | C | — | C | — | — | — | A | — |
+> | 11 | Landscape coordination | I | — | — | — | — | — | — | — | A |
+> | 12 | Civil Defense submission (MEP) | C | R/A | C | — | — | — | C | — | — |
 >
 > **Attendance rules:** Weekly BIM meetings: Samaya BIM Manager + AD Engineering + Studio ZNA + Rawasin + NRS (by invitation) + Nama (by invitation). Bi-weekly: Lumotion + Evergreen (only if active in that phase). Monthly: All 11 specialists.
 >
