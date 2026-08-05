@@ -19,8 +19,9 @@
 | 7 | El-Haramain Museum | WORK | (tbd) | — | MVii | Active |
 | 8 | Samaya Workspace | WORK | `sultandroid/samaya-workspace` | `~/projects/samaya-workspace` | — | Active |
 | 9 | RCRC Exhibition Proposal | CONSULTING | `sultandroid/RCRC-Exhibition-Proposal` | `~/projects/RCRC-Exhibition-Proposal` | — | Active |
-| 10 | Tqanny (8 sub-projects) | WORK | OneDrive-Personal — no GitHub | `OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/` | — | Various |
-| 11 | Sultan House (B210) | PERSONAL | (not yet — scaffold when work begins) | — | — | Active |
+| 10 | Samaya Costing & Pricing | WORK | `sultandroid/samaya-costing-pricing` | `~/projects/samaya-costing-pricing` | — | Active |
+| 11 | Tqanny (8 sub-projects) | WORK | OneDrive-Personal — no GitHub | `OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/` | — | Various |
+| 12 | Sultan House (B210) | PERSONAL | (not yet — scaffold when work begins) | — | — | Active |
 
 For project status, key dates, deliverables — see each project repo's `PROJECTS.md`.
 
