@@ -67,6 +67,27 @@ Categories:
 4. Category codes are fixed — do not invent new RBS codes without updating the `rbs_categories` map.
 5. Risk ID is the primary key — used in deep-links and cross-refs from other registers.
 
+## Adding a new risk — FULL multi-file sync (SoT = `06_Risk_System/risks.json`)
+
+When adding a risk (e.g. derived from a plan obligation), edit `risks.json` then push through every derived file. The webapp dashboard reads `prr_risks.json`, NOT `risks.json`; the markdown register is auto-generated.
+
+| Step | Command / File | Purpose |
+|------|---------------|---------|
+| 1 | edit `06_Risk_System/risks.json` | **SoT** — add the risk object |
+| 2 | `python3 scripts/sync_pep_risks_prr.py` | copy PRR-* risks → `prr_risks.json` (dashboard reads this) |
+| 3 | `python3 06_Risk_System/risk_sync.py` | regenerate `01_Registers/risk_register.md` (do NOT hand-edit — overwritten) |
+| 4 | `python3 scripts/sync_pep_risks_dashboard.py` | copy only Critical/High → `dashboards/risks.json` |
+| 5 | `python3 06_Risk_System/webapp/build_risk.py` | rebuild `webapp/src/index.html` |
+| 6 | append to `titles_ar` in `risk_titles_ar.json` | Arabic title for bilingual webapp/snapshots |
+
+Then validate JSON on all four files, commit, `git pull --rebase && git push` (handle concurrent sub-agent commits per the SKILL.md conflict section — see `project-plan-management` §7 reference).
+
+**Risk object schema** (from `risks.json`): `id, category, title, cause, event, consequence, probability, severity, score, rating, status, owner, target_close, created, last_reviewed, treatment_file, evidence, response_action, actions[], history[], diagram.fishbone, action_due`.
+
+**Rating bands:** score = probability × severity; ≥12 Critical, ≥8 High, ≥4 Medium.
+
+**RBS category choice for obligation-derived risks:** T&C/methodology gap → `CON`; reporting/financial gap → `COM`; test-upload/QC gap → `QLT`; schedule/programme gap → `SCH`. Owner = the role accountable for the source obligation.
+
 ## Data integrity checks
 
 ### Zero-padding consistency

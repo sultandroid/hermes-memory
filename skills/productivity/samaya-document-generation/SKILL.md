@@ -155,6 +155,16 @@ When drafting an RFI or Technical Query about AV/media content:
 - Reference SOW Section 2.2 (AV software/media excluded from Contractor scope, supplied by others) and SOW p.17 (MoC-supplied items: images/film list, commissioned art pieces) as the contractual basis for the RFI.
 - Reference the DMP (PL-0029) design stage gates to explain why the information is needed now (before 90% gate / IFC).
 
+### RFI Refocusing — Coordination-and-Schedule Only (user steer, 2026-08)
+
+When the user asks to refocus a content/AV RFI, they want the scope argument stripped out entirely and the emphasis moved to **coordination with the production specialist + delivery dates**. Observed steering:
+
+- **Drop the "who supplies content" dispute.** Do NOT argue scope or ask MoC to confirm supply responsibility. State it plainly in the purpose and move on.
+- **Confirm the designated production COORDINATOR** (contact + role) and request a coordination meeting to fix the interface this stage — not "confirm the specialist exists."
+- **Anchor delivery dates to actual content types** already defined (e.g. film production lead times, tactile fabrication) mapped against the design gates (50%/90%/100% or IFC), not just generic gate numbers.
+- **Attach the worked content brief as an appendix.** If a gallery's visitor-experience content is already defined (e.g. the G12 Archaeology brief: 1 scene-setting film + 2 interactives — tactile replication + rubbing station), include it as Appendix A so the content specialist sees exactly what coordination is needed. The content brief IS the coordination anchor.
+- Keep the RFI addressed to MoC (via CG) as coordinator. Ask who to coordinate with and when content arrives.
+
 ## Multi-Turn Task Protocol
 
 When the user says "read all msg", "read the conversation", or similar, consolidate the full thread before acting. Do not jump to a conclusion from the last message alone. Re-read the conversation, identify the current state and pending deliverable, then confirm before producing output.

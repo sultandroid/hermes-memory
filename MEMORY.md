@@ -22,6 +22,6 @@ MoC object list (Jul 2026) = 295 physical artifacts, NOT AV content. Only 11 obj
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
-Factory warehouse monitor: classify by PO's project_id, not warehouse name. project_id=244 = Samaya Factory = correct. Chatter notes: plain text only, no icons/tags/markdown.
+Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
 §
-Chatter notes in Odoo: plain text only, no icons, no tags, no markdown. Short and direct like a human message.
+Memory GitHub push = Step 6 in memory_skills_exchange.sh (syncs MEMORY/USER/skills/scripts, commit+push). memory_github_sync.sh de-coupled (no longer re-runs exchange; only ODOO/PROJECTS_FULL). Only ONE script owns the push.
