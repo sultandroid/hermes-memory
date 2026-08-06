@@ -11,6 +11,99 @@ tags:
 
 # CG Response Protocol
 
+## CRS Creation Workflow (MANDATORY — Follow in Order)
+
+When the user says "create CRS" or "make a CRS sheet":
+
+1. **Fetch the blank template immediately** from `https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx` — do NOT ask which template, do NOT describe the format, do NOT ask for confirmation
+2. **Save as** `CRS_[DocRef]_Rev[XX].xlsx` in `02_CG_Responses/`
+3. **Fill header block** (rows 1-7): PROJECT NAME, CRS NUMBER, DOCUMENT No., DOCUMENT TITLE, DISCIPLINE, DATE, Rev
+4. **Fill data rows** (row 11+): No., Initial, Sheet/Ref, Code, Reviewer Comment, Originator Reply, Reply By, Status
+5. **Present to user for review** — do NOT send to CG or specialist without user approval
+6. **Do NOT get sidetracked** by other tasks (risk register updates, merge conflicts, template hosting) before completing the CRS — the CRS is the primary deliverable
+
+### CRS Template Location
+
+The approved blank CRS template and all other Samaya templates are at:
+
+> **https://samaya-factory.com/templates/**
+
+| Template | URL |
+|----------|-----|
+| CRS blank | `/templates/crs/CRS_TEMPLATE_BLANK.xlsx` |
+| DOCX (Samaya branded) | `/templates/docx/Samaya_Corporate_System_Template.docx` |
+| RFI/TQ letter | `/templates/rfi/RFI_TEMPLATE.html` |
+| A4 print layout | `/templates/html/_A4-print-template.html` |
+| Weekly progress report | `/templates/reports/_TEMPLATE_Weekly_Progress_Report.xlsx` |
+| QA/QC log | `/templates/reports/_TEMPLATE_QAQC_Log.xlsx` |
+| Clash report | `/templates/reports/_TEMPLATE_Clash_Report.xlsx` |
+| Structural penetration register | `/templates/registers/Structural_Penetration_Register_Template.xlsx` |
+
+OneDrive source of truth: `04_Docs/09_Registers/CRS_Templates/CRS_TEMPLATE_BLANK.xlsx`
+
+### Pitfall — Do Not Sidetrack
+
+When the user asks for a CRS, the CRS is the ONLY deliverable until it is done. Do NOT:
+- Update risk registers mid-CRS
+- Fix merge conflicts in unrelated files
+- Host templates on the server
+- Research CG comments from Outlook
+- Ask the user to paste comments you could find yourself
+
+Complete the CRS first, then ask "what next?".
+
+## Stage-Boundary Triage — Out-of-Stage CG Comments
+
+CG frequently comments on items that belong to a **different design stage** than the one submitted. This is a distinct pattern from scope creep (which is about wrong discipline) — stage-boundary comments are about wrong **timing**.
+
+### Detection
+
+| Signal | What It Means |
+|--------|---------------|
+| CG asks for 90% DD details during a 50% DD review | Stage-boundary comment — belongs to next gate |
+| CG asks for IFC-level coordination during DD | Stage-boundary comment — premature |
+| CG asks for shop drawings during design review | Stage-boundary comment — shop drawings follow design approval |
+| CG asks for material samples before design intent is frozen | Stage-boundary comment — samples follow design freeze |
+
+### CRS vs RFI Decision
+
+| Situation | Use | Why |
+|-----------|-----|-----|
+| CG comments on items clearly belonging to a later stage | **CRS** — state the boundary, defer | We control the position; no need to ask permission |
+| CG rejects our stage-boundary position and insists | **RFI** — formalise the dispute | Escalate only after CRS pushback fails |
+| CG mixes in-stage and out-of-stage comments in one review | **CRS** — triage each comment separately | Respond to in-stage, note-and-defer out-of-stage |
+
+### CRS Response Language for Stage-Boundary Comments
+
+```
+Noted. This item belongs to the [90% DD / IFC / Shop Drawing] stage
+and will be addressed in the relevant submission per the DMP stage-gate
+sequence. The current submission is [50% DD / Gate 1 DD] and covers
+[scope of current stage].
+```
+
+No argument, no justification — just state the boundary. CG can disagree, but the burden shifts to them to explain why a later-stage item belongs in the current review.
+
+### Triage Workflow
+
+1. **Read each CG comment** against the DMP stage-gate definition for the current submission
+2. **Classify**: In-stage (respond) vs Out-of-stage (note and defer)
+3. **For in-stage**: Draft technical response per Stream 2
+4. **For out-of-stage**: Use the CRS response language above — do not comply, do not argue
+5. **Log recurring pattern**: If the same CG reviewer repeatedly issues out-of-stage comments, add a risk entry (see PRR-COM-10 template below)
+
+### Risk Entry Template
+
+When CG stage misunderstanding is a recurring pattern, add to the risk register:
+
+| Field | Value |
+|-------|-------|
+| ID | PRR-COM-10 (or next available) |
+| Title | CG consistently issues out-of-stage comments on submittals |
+| Score | 3x3 = 9 (High) |
+| Mitigation | CRS stage-boundary responses; escalate pattern to PM for CG coordination meeting |
+| Actions | A1: Add stage-boundary column to CRS template; A2: Triage every CG response; A3: Raise at next CG coordination meeting |
+
 ## Core Principle: Two Separate Streams
 
 CG comments come in two distinct types. **Never merge them into one response.**
@@ -52,157 +145,28 @@ This protocol integrates with the **CG Analysis & Lessons Learned System** (`cg-
 
 | Lens | Check |
 |------|-------|
-| 🔴 Rejection | Has this submittal type been rejected before? Check `cg_rejection_patterns.md` |
-| 🟡 Condition | Are all previous Code B conditions closed? Check `cg_code_b_conditions.md` |
-| 📋 Checklist | Run the pre-submission checklist in `cg_forecast_engine.md` §3 |
-| 💡 Improvement | Is there a lesson from a similar past submittal? Check `lessons_learned_register.md` |
+| Rejection | Has this submittal type been rejected before? Check `cg_rejection_patterns.md` |
+| Condition | Are all previous Code B conditions closed? Check `cg_code_b_conditions.md` |
+| Checklist | Run the pre-submission checklist in `cg_forecast_engine.md` Sec 3 |
+| Improvement | Is there a lesson from a similar past submittal? Check `lessons_learned_register.md` |
 
-If any check fails → **do not submit**. Flag the blocker and resolve first.
+If any check fails -> **do not submit**. Flag the blocker and resolve first.
 
 ### Post-Response Capture (when CG replies)
 
 | Lens | Action |
 |------|--------|
-| 🔴 Rejection | Code C or D? → Capture CG comment verbatim → Log as lesson |
-| 🟡 Condition | Code B with conditions? → Add to `cg_code_b_conditions.md` |
-| ⏰ Delay | Response took >14 days? → Flag as DA risk in submittal register |
-| ⚠️ NCR | New NCR issued? → Root cause analysis → Log as lesson |
-| 🔄 Rework | Does the response require rework? → Capture the process gap |
-| 📋 Checklist | Did we miss a checklist item? → Update the checklist |
-| 💡 Improvement | Any positive finding? → Capture for future projects |
+| Rejection | Code C or D? -> Capture CG comment verbatim -> Log as lesson |
+| Condition | Code B with conditions? -> Add to `cg_code_b_conditions.md` |
+| Delay | Response took >14 days? -> Flag as DA risk in submittal register |
+| NCR | New NCR issued? -> Root cause analysis -> Log as lesson |
+| Rework | Does the response require rework? -> Capture the process gap |
+| Checklist | Did we miss a checklist item? -> Update the checklist |
+| Improvement | Any positive finding? -> Capture for future projects |
 
 ### Lessons Learned: Client-Sharable Only
 
 When logging a lesson from a CG interaction, remember the lessons learned register is a **formal project deliverable** shared with the client. Only capture project-relevant lessons — no internal process notes, tool quirks, or session-specific events. See `cg-analysis-and-lessons` skill for the full lessons learned workflow and what to exclude.
-
-### Blank CG Comments Field — Code C with No Written Comments
-
-CG sometimes returns Code C with the "CG Comments" field on the cover page **completely blank** — no handwritten notes, no typed comments, no markup annotations on the PDF itself. The only signal is the "C" status checkmark.
-
-#### Detection
-
-| Signal | What It Means |
-|--------|---------------|
-| Cover page shows "C" checked but "CG Comments" field is empty | Comments were communicated separately (email, review sheet, meeting) |
-| PDF has no native annotations AND no embedded image overlays | The PDF is the clean submitted document, not the CG-marked version |
-| Two PDFs exist (same ref, different sizes) | The larger one may be the CG-marked version with overlay images |
-| Both PDFs have blank CG Comments field | CG did not write comments on the PDF at all |
-
-#### Investigation Steps
-
-1. **Check both PDFs** — one may be the clean submitted document, the other the CG-marked version. Compare file sizes and embedded image counts.
-2. **Render pages at high resolution** and scan for yellow highlights, red/blue stamps, or any colored pixels that aren't part of the document template (see `image-analysis` skill §9 for the pixel-level detection workflow).
-3. **Check the email thread** — the CG reviewer may have sent comments in the email body, as a separate attachment (CRS Excel file), or in a meeting minutes document.
-4. **Check the Outlook SQLite database** for the full email body — the preview in the SQLite `Message_Preview` column is severely truncated (~258 bytes). Use AppleScript `plain text content` for the full body.
-5. **Check for a separate CRS (Comments Resolution Sheet)** — CG often sends comments as a separate Excel file rather than writing on the PDF.
-6. **If nothing found after all checks**, report: "CG returned Code C with no written comments on the PDF. Comments were likely communicated via [email / meeting / separate document — specify which if found]."
-
-#### Root Causes
-
-| Cause | How to Confirm | Action |
-|-------|---------------|--------|
-| Comments in email body | Check Outlook SQLite or AppleScript for full email text | Extract and log comments |
-| Comments in separate CRS | Search Outlook attachments for Excel files with matching submittal ref | Extract CRS and process per Stream 2 |
-| Comments in meeting minutes | Check recent meeting minutes for the submittal review | Cross-reference with meeting schedule |
-| CG did not provide comments (rare) | No comments found in any channel | Escalate to PM — request written comments from CG |
-| Yellow highlights ARE the comments | Pixel analysis shows yellow on reference lines that are document template elements | Verify by checking if highlighted text is standard template content vs. CG-specific marks |
-
-#### Pitfalls
-
-- **Do NOT claim you read CG comments** from a PDF with a blank CG Comments field. You cannot read what isn't there.
-- **Do NOT assume the yellow highlights are CG annotations** without verifying they're not document template elements. In the PEP case, all yellow highlights were standard "Reference:" callouts in the document template.
-- **Do NOT assume the larger PDF is the CG response** — both PDFs may be clean versions (one original, one revised). Check embedded image counts and modification dates.
-- **The CG Comments field may appear blank in text extraction but have handwritten content** — render the cover page at high resolution and scan for non-white, non-black pixels in the CG Comments area before concluding it's blank.
-
-### Markup-Only CG Responses (YELLOW Highlights, No Extractable Text)
-
-CG sometimes returns Code C with comments as **PDF markup annotations** (hand-drawn highlights, stamps, handwritten notes) that text extraction tools (pdfminer, pdftotext) cannot read. The email body says only "C - Revise and Resubmit" with no detail.
-
-### Detection
-
-| Signal | What It Means |
-|--------|---------------|
-| Email body says "C - Revise and Resubmit" with no comment text | Comments are in the attached PDF as markup |
-| pdfminer/pdftotext returns empty or only the submittal form text | Comments are handwritten/stamped, not typed |
-| PM forwards saying "comments highlighted in YELLOW" | Confirms markup-only response |
-| Two PDFs in Outlook attachments (same ZD ref, different sizes) | One is the submitted document, one is the CG-marked version |
-
-### Workflow
-
-1. **Extract both PDFs** from Outlook attachments — the CG response is usually the larger file (contains markup layers)
-2. **Save to `02_CG_Responses/`** with descriptive filename: `MOC-MUS-ASE-1K0-ZD-0086_CG_Response_CodeC_22Jul2026.pdf`
-3. **Read the email thread** to understand what the comments relate to — the PM's forwarding email often says "comments related to baseline and Design"
-4. **Attempt programmatic visual analysis first** (before asking the user to open the PDF):
-   - Use `delegate_task` to a subagent with browser tools
-   - The subagent navigates to the PDF via `file://` URL in the browser
-   - Renders all pages at high resolution (up to 300 DPI)
-   - Takes screenshots of each page
-   - Detects yellow highlight regions via pixel color analysis
-   - Detects red/blue stamp regions via pixel color analysis
-   - OCRs highlighted and stamped regions (English + Arabic)
-   - Compares both PDFs page-by-page to identify what changed
-5. **Interpret the results correctly** — this is the critical step. The PM's email is the authoritative source, not the subagent's pixel analysis:
-
-   | Subagent Finding | PM Said | Correct Conclusion |
-   |------------------|---------|-------------------|
-   | CG Comments field blank, yellow highlights found | "comments highlighted in YELLOW related to baseline and Design" | The yellow highlights ARE the comments. They mark the sections to fix. Report: "CG returned Code C. Comments are visual markup (yellow highlights) on the PDF pages, relating to [topic per PM]. Open the PDF to view the highlighted sections." |
-   | CG Comments field blank, yellow highlights are document template elements | "comments highlighted in YELLOW" | The PM's email overrides the subagent's analysis. The highlights mark sections to fix even if they look like template elements. Report as markup-only response. |
-   | CG Comments field blank, no yellow highlights | No mention of highlights | CG did not provide markup. Escalate to PM. |
-
-   **Key rule:** When the PM explicitly says "comments highlighted in YELLOW", the yellow highlights ARE the comments. Do NOT conclude "comments were communicated elsewhere" just because the subagent says the highlights look like template elements. The PM knows what they sent to CG and what came back.
-
-6. **Update CG_STATUS.md** with the Code C status and note: "CG returned Code C — comments are visual markup (yellow highlights) on the PDF pages. Highlights relate to [topic per PM email]."
-7. **Track the resubmission** — the PM's email asking for "comments response for each point highlighted in YELLOW" means the team is already working on responses
-
-### Programmatic Visual Analysis — Subagent Prompt Template
-
-When delegating to a subagent for visual PDF analysis:
-
-```
-Read the CG response PDF for the [DOCUMENT NAME] and extract all CG comments/annotations from it. The PDF has yellow highlights and handwritten/stamped annotations that text extraction cannot read — you need to view it visually.
-
-The PDF is at: [absolute path to PDF]
-
-This is a [N]-page PDF. The CG returned Code [C/D] on [date]. The comments are marked in YELLOW on the PDF pages and relate to "[topic]" per the email from [sender].
-
-Use the browser tool to navigate to the PDF (use a file:// URL), take screenshots of each page, and read the handwritten/stamped comments. Also check the second PDF at the v2 path for any additional markup.
-
-Report back ALL comments you find, exactly as written, with the page number and section of the document they relate to.
-```
-
-### Pitfalls — Visual Analysis
-
-- **Yellow highlights may be document template elements**, not CG annotations. In the PEP case, all yellow highlights were standard "Reference:" callouts in the document template. Verify by checking if highlighted text is standard template content vs. CG-specific marks.
-- **The "CG Comments" field may be completely blank** even on a Code C response. The only signal may be the "C" status checkmark. Do not claim you read CG comments from a blank field.
-- **Both PDFs may be clean versions** (one original, one revised) with no markup. Check embedded image counts and modification dates. The larger file is not always the CG-marked version.
-- **The email preview is severely truncated** — Outlook's `Message_Preview` column stores only ~258 bytes. The full email body with the comment table, section references, and detailed instructions is NOT accessible via the SQLite preview. Use AppleScript `plain text content` for the full body, or rely on the PM's forwarding email context clues.
-- **PM's "TODAY" deadline** — when the PM says "finalize it TODAY so we can resubmit by end of day", the resubmission is already in progress. Do not suggest a multi-day review cycle.
-- **Check which version was actually submitted** — the repo version (prepared by Technical Office) may differ from the submitted version (prepared by Construction Manager). Compare: prepared by, checked by, approved by, dates, BIM consultant, and revision number.
-- **CG reviewer may differ from the usual contact** — check the sender on every CG response. Don't assume the same person always reviews the same document type.
-
-### Finding the CG Response PDF in Outlook Attachments
-
-CG response PDFs are stored in Outlook's proprietary attachment store. Search by document code:
-
-```bash
-find "/Users/mohamedessa/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Files" -name "*ZD-0086*" 2>/dev/null
-```
-
-Two files typically exist:
-- Smaller file (2.3MB) — the clean submitted document
-- Larger file (6.1MB) — the CG-marked version with markup layers
-
-Copy both to the CG_Responses folder for reference.
-
-### Pitfalls
-
-- **Do NOT claim you read the CG comments** from a markup-only PDF. Text extraction tools cannot read handwritten/stamped annotations. Say "CG returned Code C — comments are markup annotations on the PDF, open to view."
-- **Do NOT assume the smaller PDF is the CG response.** The CG response is usually the larger file (contains the submitted document + markup layers). The smaller file may be the original submission without markup.
-- **Check both PDFs** — one may be the clean submitted document, the other the CG-marked version. Both have the same ZD ref but different file sizes.
-- **The email preview is severely truncated** — Outlook's `Message_Preview` column stores only ~258 bytes (not ~500 chars as commonly assumed). The full email body with the comment table, section references, and detailed instructions is NOT accessible via the SQLite preview. Use AppleScript `plain text content` for the full body, or rely on the PM's forwarding email context clues (e.g., "below table", "highlighted in YELLOW", "related to baseline and Design").
-- **PM's "TODAY" deadline** — when the PM says "finalize it TODAY so we can resubmit by end of day", the resubmission is already in progress. Do not suggest a multi-day review cycle.
-- **Check which version was actually submitted** — the repo version (prepared by Technical Office) may differ from the submitted version (prepared by Construction Manager). Compare: prepared by, checked by, approved by, dates, BIM consultant, and revision number. The submitted version may have regressed to Rev 00 while the repo was at P01.
-- **CG reviewer may differ from the usual contact** — PEP Code C came from Hossam Mabrouk (hmabrouk@cg.com.sa), not the usual primary reviewer Mohammad Elbaz. Check the sender on every CG response — don't assume the same person always reviews the same document type.
 
 ## CG Reviewer Behavior Patterns (Quick Reference)
 
@@ -210,6 +174,9 @@ Copy both to the CG_Responses folder for reference.
 |----------|------|----------|
 | **Mansour Alrezeni** | Code enforcer + bypasses Samaya | Submit only what spec says. Do not propose alternatives or splits — he will reject. Escalate structural decisions to Elbaz. **Known to email sub-consultants (NRS, ZNA) directly, bypassing Samaya's project management role. Flag any direct communication with specialists as a communication plan violation per PL-0018 Sec 12.6 S-1 (direct subcontractor-to-CG communication not permitted).** |
 | **Mansour Alrezeni — "Noise Only" Pattern** | Sends reminders that re-state his position without engaging with the contractor's counter-proposal | When Mansour sends a follow-up reminder that ignores your detailed response (Oddy timeline, two-track proposal, supplier evidence), **do not reply.** He is making noise — re-stating his position without addressing your points. The ball is in CG's court. Only reply if he raises a genuinely new request or escalates to Hossam/Elbaz. |
+| **Venugopal Poyakkara Veetil — AV Specialist** | Extremely detailed technical reviewer | Reviews AV/IT/ELV submittals. Rejects generic documents that don't demonstrate buildable solutions. Requires: project-specific control architecture with interface matrix, selected switch models with port counts/PoE budgets/fibre topology, exhibit-by-exhibit control with device lists and alarm matrices, supported UPS load calculations with rack-by-rack schedules. Will reject documents that are "operational concepts" rather than approved submissions. Requires signed/stamped documents from AV Specialist Contractor. |
+| **Eng. Gaby Khoury — Showcases** | Drawing completeness reviewer | Reviews showcase/architectural DD submittals. Requires: all details incorporated, mechanism illustrations with operation/access, access panel dimensions on plans+elevations, additional plan/section/detail drawings, electrical/AV outlet locations, interface details with adjacent finishes, structural design calculations. |
+| **Mohamed Magdy — Mechanical** | Code compliance + ergonomics | Reviews mechanical/plumbing submittals. Checks SBC code references for discrepancies, ergonomic standards (sink-to-wall distances), and completeness of assessment report comments. |
 | **CG (general)** | Conflates deliverables | When CG returns Code C with cross-discipline comments, check if comments are in-scope before accepting them all |
 | **CG (general)** | Unaware of NRS-MoC deliverables | Before responding to design-stage requests, verify if already delivered under original design contract |
 
@@ -237,15 +204,14 @@ See `cg-analysis-and-lessons` skill for full reviewer profiles, forecast engine,
 ## CR Sheet Response Framing
 
 - **Quotes must be verbatim** - when quoting CG comments, ER/SoW text, or contract clauses, copy the original text exactly as written. Do NOT paraphrase, rephrase, or "clean up" the quote. The user explicitly said: "when qoute write the orginal text as it dont rewrite."
-- **No `§` symbol** — never use `§`. Use `Sec` instead (e.g., `ER Sec 3.7.XIII` not `ER §3.7.XIII`). The user has repeatedly corrected this across multiple sessions.
-- **No AI symbols** — no arrows (`→`, `←`), bullets (`•`, `·`), em dashes (`—`), en dashes (`–`), middle dots (`·`), or any decorative Unicode symbols. Plain ASCII only.
-- **Plain engineer English ("hummadize")** — short, direct sentences. No fluff, no AI clichés, no "seamlessly", "robust", "holistic", "leverage", "streamline", "facilitate". Write like an engineer writing to another engineer.
+- **No `Sec` symbol** — never use `Sec`. Use `Sec` instead (e.g., `ER Sec 3.7.XIII` not `ER Sec 3.7.XIII`). The user has repeatedly corrected this across multiple sessions.
+- **No AI symbols** — no arrows (`->`, `<-`), bullets (`*`, `-`), em dashes (`--`), en dashes (`-`), middle dots (`-`), or any decorative Unicode symbols. Plain ASCII only.
+- **Plain engineer English ("hummadize")** — short, direct sentences. No fluff, no AI cliches, no "seamlessly", "robust", "holistic", "leverage", "streamline", "facilitate". Write like an engineer writing to another engineer.
 - **NRS is Samaya's sub-consultant** — never frame NRS as separate or independent. Samaya directs NRS. Say "We direct NRS to..." not "NRS will..." or "NRS is responsible for...". Samaya is the D&B contractor; NRS works under Samaya's umbrella.
 - "This was completed at Stage 3. NRS draft (XXXX) for reference. Included in submission plan and drawing register." - for items already done
 - "This will be in the Life Safety registers and submittals (Namaa), not in the current architectural package." - for scope handoffs
 - "Bespoke setwork furniture shown on GA with setwork codes. Remaining FF&E to be coordinated from 50% to 90% to IFC." - for phased items
 - User-verified FF&E response: "Noted. Will add to submission plan and drawing register. Already in GA drawings, will split into separate drawings." — Confirms: (1) setwork already shown, (2) FF&E is a separate phased track, (3) supplier appointment is the blocker, (4) actions = add to submission plan + drawing register + split GA drawings
-- FF&E scope clarification: "Bespoke setwork furniture is shown on the GA drawings with setwork codes. Remaining FF&E items will be coordinated and included in subsequent stages from 50% to 90% to IFC. FF&E supplier to be appointed." — CG comment. Response: "Noted. Will add to submission plan and drawing register. Already in GA drawings, will split into separate drawings."
 - "Noted." - for accepted process comments
 - "All applicable loads in BOD per SBC. Showcase weights from manufacturer. Artwork weights from curator." - for technical clarifications
 
@@ -259,11 +225,11 @@ When CG issues multiple rounds of comments on the same document (e.g., R1 9-Mar,
 | # | Round | CG Comment | Disposition | Ref | Status | Route/Scope |
 |---|---|---|---|---|---|---|
 | cat-row | Round 1 — CG comments (9-Mar-26) — closed in Rev 1/2 |
-| CG-01 | R1·9-Mar | [comment] | [response] | §X | CLOSED | SMP-scope |
+| CG-01 | R1.9-Mar | [comment] | [response] | Sec X | CLOSED | SMP-scope |
 | cat-row | Round 2 — CG CRS (2-Jun-26, Code C) — addressed in Rev 3 |
-| CRS-01 | R2·2-Jun | [comment] | [response] | T1-07 | CLOSED | SMP-scope |
+| CRS-01 | R2.2-Jun | [comment] | [response] | T1-07 | CLOSED | SMP-scope |
 | cat-row | Round 3 — CG CRS (18-Jun-26, Code C) — addressed in Rev 4 |
-| CRS-18 | R3·18-Jun | [comment] | [response] | CRS | CLOSED | Procedural |
+| CRS-18 | R3.18-Jun | [comment] | [response] | CRS | CLOSED | Procedural |
 ```
 
 ### Rules
@@ -277,9 +243,9 @@ When CG issues multiple rounds of comments on the same document (e.g., R1 9-Mar,
 
 ### Status Progression
 ```
-R1: CG-01 → CLOSED
-R2: CG-01 → CLOSED (carried forward), CRS-07 → RE-OPENED (CV not yet submitted)
-R3: CRS-18 → CLOSED (CRS completed, QA performed)
+R1: CG-01 -> CLOSED
+R2: CG-01 -> CLOSED (carried forward), CRS-07 -> RE-OPENED (CV not yet submitted)
+R3: CRS-18 -> CLOSED (CRS completed, QA performed)
 ```
 
 ### Caveman Style for C:Resubmit Reasons
@@ -294,10 +260,10 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 When a Rev.01 resubmission gets **Code C again** with all comments still marked Open by CG:
 
 **Worked example — PEP ZD-0086 (Jul 2026):**
-- Rev.00 submitted 16 Jul → Code C 22 Jul (15 comments, all Open)
+- Rev.00 submitted 16 Jul -> Code C 22 Jul (15 comments, all Open)
 - Samir circulated CG comments 22 Jul, asked team to respond
 - Samir sent Rev.01 to Waris 25 Jul: *"Please Review and if it's Confirmed from your side, please let's Submit it"*
-- Rev.01 submitted 26 Jul → Code C again 27 Jul (same 15 comments, all still Open)
+- Rev.01 submitted 26 Jul -> Code C again 27 Jul (same 15 comments, all still Open)
 - CG note: *"The CRS reply"* — meaning the CRS was not fully resolved
 - Root cause: 1-day internal review, no formal sign-off gate, responses were explanations not evidence
 - See `01_Registers/lessons_learned_register.md` LL-013 and `03_Plans/11_Quality/lessons_learned_register.md` LL-017
@@ -427,7 +393,7 @@ When the overall submittal status contradicts the per-item breakdown, send a sho
 - 121+ drawings not stamped (CG didn't review most of what they received)
 
 **Email structure (keep it short, 2 questions max):**
-1. State the numbers: "X drawings → B, Y drawings → C, Z drawings → not stamped"
+1. State the numbers: "X drawings -> B, Y drawings -> C, Z drawings -> not stamped"
 2. State the contradiction: "Overall C seems incorrect given X are B"
 3. Name specific drawings with contradictory stamps
 4. Ask 2 clear questions: (a) should overall be B? (b) confirm status for specific drawings
@@ -440,9 +406,9 @@ Dear Eng. [Name],
 
 We received the review for Submittal [NUMBER]. The overall status is C, but the breakdown shows:
 
-[X] drawings → B
-[Y] drawings → C
-[Z] drawings → not stamped
+[X] drawings -> B
+[Y] drawings -> C
+[Z] drawings -> not stamped
 
 With [X] drawings approved as noted and only [Y] marked C, the overall C seems incorrect. Also, [N] drawings ([NUMBERS]) have "Approved As Submitted" on them but received a C stamp with no comments — we cannot identify what needs revision.
 
@@ -463,7 +429,7 @@ When adding CG resubmit reasons to remarks, write short direct sentences:
 
 ## Deemed Approval — CG Silence = Approval
 
-When CG does **not respond** to a submittal within the contractual review period (typically 14–21 working days per DMP/SoW), the submittal is **deemed approved** per standard construction practice.
+When CG does **not respond** to a submittal within the contractual review period (typically 14-21 working days per DMP/SoW), the submittal is **deemed approved** per standard construction practice.
 
 ### When to Apply
 
@@ -488,7 +454,7 @@ Update the submittal register with:
 
 Keep the email thread showing:
 1. Date of submission (e.g., 21 May 2026)
-2. Date range with no CG response (e.g., 21 May → 20 Jul = 60 days)
+2. Date range with no CG response (e.g., 21 May -> 20 Jul = 60 days)
 3. Your declaration of deemed approval
 
 ### Risk
@@ -584,13 +550,13 @@ When NRS submits a design study in response to CG/Ministry requests, file it und
 
 ```
 Aseer-Museum/
-├── 12_Design_Studies/
-│   ├── 01_Object_List/          (object schedule files)
-│   ├── 02_New_Study/            (future studies)
-│   └── 03_Study_01/
-│       ├── MOC-ASE-AR-ARC-GEN-DDD-DS01-00_DRAFT.pdf   (NRS study PDF)
-│       ├── G12_Structural_Assessment_Template.docx     (team templates)
-│       └── G12_Logistics_Method_Statement_Template.docx
++-- 12_Design_Studies/
+|   +-- 01_Object_List/          (object schedule files)
+|   +-- 02_New_Study/            (future studies)
+|   +-- 03_Study_01/
+|       +-- MOC-ASE-AR-ARC-GEN-DDD-DS01-00_DRAFT.pdf   (NRS study PDF)
+|       +-- G12_Structural_Assessment_Template.docx     (team templates)
+|       +-- G12_Logistics_Method_Statement_Template.docx
 ```
 
 The study PDF is extracted from Outlook via AppleScript. Team action templates (structural assessment, logistics method statement) are generated as Samaya-branded DOCX and placed alongside the study.
@@ -604,7 +570,7 @@ The study PDF is extracted from Outlook via AppleScript. Team action templates (
 - **Never merge submission plan comments with detailed technical reviews** — they are two separate streams with different audiences and response formats.
 - **cat-row separators** must use `.cat-row td` class (dark background, white text), not blank rows. Blank rows break table continuity.
 - **Status badges** must be consistent: CLOSED (green), SUBMITTAL-PENDING (amber), IN-PROGRESS (blue), RE-OPENED (red). Don't invent new badge types mid-document.
-- **Round column** must include both date and round number (e.g., "R2 · 2-Jun") for traceability across revisions.
+- **Round column** must include both date and round number (e.g., "R2 . 2-Jun") for traceability across revisions.
 - **Verify which floor the CRS covers** — CG often reviews one floor at a time. Check drawing number prefixes (BF=Basement Floor, LG=Lower Ground, GF=Ground Floor) in the CRS drawing references. The document title may say "Basement Floor" only. Do not assume a CRS covers multiple floors unless explicitly stated. When forwarding to the designer, name the correct floor in the subject line.
 
 ### Supplier Technical Rebuttal — When CG Demands Alternatives
@@ -654,15 +620,15 @@ Build a structured folder at the subcontractor's submittal directory:
 
 ```
 MA-NNNN_Rev01_Support/
-├── 01_CG_Rejection_Code_C/
-├── 02_Supplier_Technical_Reply/
-├── 03_Manufacturer_Datasheet/
-├── 04_Supporting_Data_Sheets/     (flat — no subdirs)
-├── 05_PQ_Approval/
-├── 06_Sample_Board/
-├── 07_Related_Submittal_Support/
-├── 08_Email_Thread/               (outside support folder — for CG)
-└── 09_Resubmission_Checklist/     (outside support folder — for CG)
++-- 01_CG_Rejection_Code_C/
++-- 02_Supplier_Technical_Reply/
++-- 03_Manufacturer_Datasheet/
++-- 04_Supporting_Data_Sheets/     (flat — no subdirs)
++-- 05_PQ_Approval/
++-- 06_Sample_Board/
++-- 07_Related_Submittal_Support/
++-- 08_Email_Thread/               (outside support folder — for CG)
++-- 09_Resubmission_Checklist/     (outside support folder — for CG)
 ```
 
 ### CR Sheet structure for material resubmission
@@ -818,12 +784,12 @@ See `references/cg-rejection-patterns-and-reviewer-profiles.md` for the methodol
 
 | ER Section | Content | When to cite |
 |-----------|---------|-------------|
-| §2.4D | Sustainability & Environmental Performance | Material compliance, VOC, Oddy comments |
-| §2.7 | General Cleaning — sustainability requirements | Cleaning sustainability comments |
-| §3.7.VIII | Client sustainability initiative, energy efficiency | Client initiative, energy efficiency comments |
-| §3.7.XIII | Applicable Codes — Mostadam Manual (no cert level) | Mostadam-related comments |
-| SoW §1.5 | Oddy testing, British Museum certification | Oddy test comments |
-| SoW §2.1 | Exhibition design (RIBA Stage 4) and off-site fabrication | Exhibition sustainability comments |
+| Sec 2.4D | Sustainability & Environmental Performance | Material compliance, VOC, Oddy comments |
+| Sec 2.7 | General Cleaning — sustainability requirements | Cleaning sustainability comments |
+| Sec 3.7.VIII | Client sustainability initiative, energy efficiency | Client initiative, energy efficiency comments |
+| Sec 3.7.XIII | Applicable Codes — Mostadam Manual (no cert level) | Mostadam-related comments |
+| SoW Sec 1.5 | Oddy testing, British Museum certification | Oddy test comments |
+| SoW Sec 2.1 | Exhibition design (RIBA Stage 4) and off-site fabrication | Exhibition sustainability comments |
 
 ## Critical Finding Pattern: MOSTADAM Certification Level
 
@@ -840,18 +806,10 @@ If the SMP includes a Yes/No MOSTADAM credit selection table and CG asks for sel
 | Situation | Response |
 |-----------|----------|
 | SMP has a Yes/No credit selection table | **Remove the table entirely.** The table implies we are pursuing certification. Since no certification level is contractually required, there are no credits to select. The table invites exactly this question. |
-| CG asks for rationale per credit | **Push back.** "The MOSTADAM credit matrix is an informational reference showing the relationship between project scope and MOSTADAM D+C credits. Since no specific certification level is contractually required per ER §3.7.XIII, there are no credits to select or criteria to define. The table is provided for awareness only." |
-| CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER §3.7.XIII. No specific certification level is contractually required." |
+| CG asks for rationale per credit | **Push back.** "The MOSTADAM credit matrix is an informational reference showing the relationship between project scope and MOSTADAM D+C credits. Since no specific certification level is contractually required per ER Sec 3.7.XIII, there are no credits to select or criteria to define. The table is provided for awareness only." |
+| CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER Sec 3.7.XIII. No specific certification level is contractually required." |
 
 **Do NOT** add a rationale column or fill rows with justifications — that implies we are pursuing certification, which we are not. The best move is to remove the table so it stops inviting the question.
-
-| Situation | Response |
-|-----------|----------|
-| SMP has a Yes/No credit selection table | **Remove the table entirely.** The table implies we are pursuing certification. Since no certification level is contractually required, there are no credits to select. |
-| CG asks for rationale per credit | **Push back.** "The MOSTADAM credit matrix is an informational reference showing the relationship between project scope and MOSTADAM D+C credits. Since no specific certification level is contractually required per ER §3.7.XIII, there are no credits to select or criteria to define. The table is provided for awareness only." |
-| CG insists on keeping the table | Add a note: "Credit selection is based on project scope and applicable code requirements per ER §3.7.XIII. No specific certification level is contractually required." |
-
-**Do NOT** add a rationale column or fill rows with justifications — that implies we are pursuing certification, which we are not. The existing Yes/No table (if kept) is sufficient for awareness.
 
 ## CG Scope Creep — Three Patterns to Watch
 
@@ -924,9 +882,9 @@ When CG returns a plan with Code C, not all comments are equal. Some are valid c
 
 | Lane | Criteria | Action | Example |
 |------|----------|--------|---------|
-| **✅ Comply** | Contractual obligation, no cost/schedule impact | Add to plan, no pushback | MOSTADAM prerequisites table, cleaning sustainability |
-| **⚠️ Comply (limited)** | Contractual obligation but scope-limited — we define criteria, others implement | Add criteria to plan, state who implements | Sustainability SPECS (we define, NRS implements) |
-| **🔴 Push back** | Not a contractual obligation, or has cost/schedule impact | Do NOT include. Prepare separate proposal if CG insists | Exhibition sustainability strategy (not in ER/SoW as standalone deliverable) |
+| **Comply** | Contractual obligation, no cost/schedule impact | Add to plan, no pushback | MOSTADAM prerequisites table, cleaning sustainability |
+| **Comply (limited)** | Contractual obligation but scope-limited — we define criteria, others implement | Add criteria to plan, state who implements | Sustainability SPECS (we define, NRS implements) |
+| **Push back** | Not a contractual obligation, or has cost/schedule impact | Do NOT include. Prepare separate proposal if CG insists | Exhibition sustainability strategy (not in ER/SoW as standalone deliverable) |
 
 ### CR Sheet Structure for Fida
 
@@ -957,6 +915,7 @@ When sending instructions to the specialist, structure the CR sheet as:
 4. **Do NOT send the CR sheet to the specialist** without the user reviewing it first
 
 The user explicitly corrected: "I didnt send the CR sheet please open we have to work on it again to send to fida" - meaning the CR sheet is reviewed and potentially modified by the user before it goes out.
+
 ### Middle Ground: Offer a Subsection Instead of a Standalone Document
 
 When CG asks for a new standalone document, offer to add a brief subsection to the existing plan at no cost. This:
@@ -980,13 +939,13 @@ For each push-back item, add a risk to the project risk register:
 
 ```
 02_CG_Responses/
-  ├── Architecture/          # Arch-specific CG responses
-  ├── Structure/             # Structural CG responses (BOD, loading, etc.)
-  └── YYYY-MM-DD_Description/  # Dated response packages
-        ├── 01_CR_Sheet/
-        ├── 02_NRS_Draft_Drawings/   # If applicable
-        ├── 03_Registers/            # Updated submission plans
-        └── 04_Correspondence/       # CG emails
+  +-- Architecture/          # Arch-specific CG responses
+  +-- Structure/             # Structural CG responses (BOD, loading, etc.)
+  +-- YYYY-MM-DD_Description/  # Dated response packages
+        +-- 01_CR_Sheet/
+        +-- 02_NRS_Draft_Drawings/   # If applicable
+        +-- 03_Registers/            # Updated submission plans
+        +-- 04_Correspondence/       # CG emails
 ```
 
 ## CG Communication Plan Violation Detection
@@ -1086,11 +1045,13 @@ Regards,
 
 ### Monitoring setup
 
-Set up a daily cron job that checks Mansour's emails for direct contact with sub-consultants. The script at `~/.hermes/scripts/monitor_cg_comm_protocol.sh` runs two checks:
-1. Mansour's To field for specialist domains (NRS, ZNA, Rawasin, Glasbau, etc.)
+Set up a daily cron job that checks CG emails for direct contact with sub-consultants. The script at `scripts/monitor_cg_comm_protocol.sh` (in this skill's directory) runs two checks:
+1. CG To field for specialist domains (NRS, ZNA, Rawasin, Glasbau, AD Eng, etc.)
 2. Non-Samaya senders emailing CG without Samaya in CC
 
-Schedule: daily at 9 AM via `cronjob action=create schedule="0 9 * * *" script=monitor_cg_comm_protocol.sh`.
+Schedule: daily at 9 AM via `cronjob action=create schedule="0 9 * * *" script=~/.hermes/skills/project-management/cg-response-protocol/scripts/monitor_cg_comm_protocol.sh`.
+
+**Pre-run script integration:** When this cron fires, the monitor script output feeds into the agent as pre-run context. The agent then runs the SQLite queries independently to verify and produce the final report. If the monitor script returns an empty array `[]`, the agent reports "No violations detected."
 
 ## Warning Letter (LT) Audit — Escalation Chain & Feasibility
 
@@ -1170,35 +1131,35 @@ CG issues an NCR. Before responding: check the Communication Plan, check scope/S
 
 | # | Check | What to Look For | Comm Plan Ref |
 |---|-------|-----------------|---------------|
-| 1 | **Channel** | Was the original instruction sent through Aconex (C1)? If only email (C2), it has no contractual standing | §6.1, §6.3 |
-| 2 | **Recipient / Tier** | Contractual matters go to L3 (Project Director), not L2 (Tech Office Manager) | §7.1 |
+| 1 | **Channel** | Was the original instruction sent through Aconex (C1)? If only email (C2), it has no contractual standing | Sec 6.1, Sec 6.3 |
+| 2 | **Recipient / Tier** | Contractual matters go to L3 (Project Director), not L2 (Tech Office Manager) | Sec 7.1 |
 | 3 | **Scope** | Is the action within contracted scope? Check ER/SoW and risk register for "not in scope" entries | ER/SoW |
-| 4 | **Timeline** | Is the deadline reasonable? Compare against §7.1 SLAs (L1=48h, L2=5WD, L3=10WD) | §7.1 |
-| 5 | **Response Path** | Did you escalate correctly? Forwarding contractual matters to PD is correct protocol | §7.3 |
+| 4 | **Timeline** | Is the deadline reasonable? Compare against Sec 7.1 SLAs (L1=48h, L2=5WD, L3=10WD) | Sec 7.1 |
+| 5 | **Response Path** | Did you escalate correctly? Forwarding contractual matters to PD is correct protocol | Sec 7.3 |
 
-### Check 1 — Channel (§6.1, §6.3)
+### Check 1 — Channel (Sec 6.1, Sec 6.3)
 
 C1 (Aconex) is the system-of-record for formal submittals/NCRs. C2 (Email) is for clarification only with no contractual standing. If the original instruction was direct email only (no Aconex transmittal number) — channel violation.
 
-### Check 2 — Recipient Tier (§7.1)
+### Check 2 — Recipient Tier (Sec 7.1)
 
 | Tier | Level | Owner | Scope |
 |------|-------|-------|-------|
 | L2 | Project Management | Tech Office Mgr | Submittal delays, resource conflicts |
 | L3 | Contractual / Commercial | Project Director | VO scope, contractual interpretation |
 
-BOQ/drawing reconciliation is contractual → belongs at L3 (PD). Per §7.4 Rule 1: no skipped tiers.
+BOQ/drawing reconciliation is contractual -> belongs at L3 (PD). Per Sec 7.4 Rule 1: no skipped tiers.
 
 ### Check 3 — Scope
 
-Search risk register: `grep -i "not in scope\|scope creep\|BOQ.*reconcil" 01_Registers/risk_register.md`
+Search risk register: `grep -i "not in scope|scope creep|BOQ.*reconcil" 01_Registers/risk_register.md`
 
 Common scope-creep NCR patterns:
 - BOQ vs Drawings reconciliation (pre-contract QS exercise, not D&B Contractor deliverable)
 - Design production (belongs to design team, not contractor)
 - Employer document reconciliation
 
-Scope disputed → forward to PD/PM for CG discussion. Do NOT respond substantively.
+Scope disputed -> forward to PD/PM for CG discussion. Do NOT respond substantively.
 
 ### Check 4 — Timeline
 
@@ -1210,7 +1171,7 @@ Correct L2 response to contractual instruction: (1) do not comply substantively,
 
 ### Rebuttal Evidence Pack
 
-1. Communication Plan excerpts (§6.3, §7.1, §7.3)
+1. Communication Plan excerpts (Sec 6.3, Sec 7.1, Sec 7.3)
 2. Risk register entry (e.g., PRR-COM-09 — flagged not in scope)
 3. Email audit trail (email-only, wrong recipient)
 4. Action items log (instruction logged + escalated)
@@ -1272,7 +1233,7 @@ For all plans: verify the PD's claims against the actual approved document. If t
 
 #### User Preference — Flag Missing Procedural Violations
 
-When auditing the PD's response, always note which procedural violations were not mentioned. The user expects procedural defects (channel violation §6.1/§6.3, wrong tier §7.1, unreasonable timeline) to be documented even if the PD chose not to include them. Offer them as supplementary rebuttal points in a brief note.
+When auditing the PD's response, always note which procedural violations were not mentioned. The user expects procedural defects (channel violation Sec 6.1/Sec 6.3, wrong tier Sec 7.1, unreasonable timeline) to be documented even if the PD chose not to include them. Offer them as supplementary rebuttal points in a brief note.
 
 ### Reference Files
 

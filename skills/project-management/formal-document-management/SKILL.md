@@ -88,6 +88,23 @@ git stash pop
 git push origin main
 ```
 
+### 7. Multi-agent merge-conflict recovery (when rebase stalls mid-way)
+
+This repo is shared by multiple agents, each pushing "Daily email sync YYYY-MM-DD" commits. Expect frequent divergences and markdown merge conflicts (registers, specialist_register, compliance_matrix, .sync_state.json). The post-commit webapp-rebuild hook also does a slow `scp` deploy that can **time out the terminal during `git rebase --continue`** — the rebase actually completes but the command appears to hang.
+
+Recovery sequence:
+1. `git pull --rebase origin main` — it may abort with conflicts.
+2. `git diff --name-only --diff-filter=U` lists conflicted files. Resolve each:
+   - **Auto-generated files** (`.sync_state.json`, `06_Risk_System/webapp/src/index.html`, register webapps): `git checkout --theirs <file>` (keep the newer incoming copy) OR `git checkout --theirs` then re-add.
+   - **Agent-edited registers** (specialist_register, compliance_matrix): inspect `grep -n "<<<<<<<\|=======\|>>>>>>>"` and merge manually — usually keep the newer daily-sync side which has richer data, but re-read to avoid losing rows/table structure. Fix stray `||` table artifacts left by patch resolution.
+3. `git add <resolved files>`.
+4. `git rebase --continue` may hang on the post-commit scp hook. Run it with a long timeout and non-interactive editor:
+   `GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git rebase --continue`
+   If it still times out, re-run it — the hook timeout does not corrupt the rebase; it completes on the retry.
+5. `git push origin main`.
+
+Pitfall: patch tool resolution of merge conflicts can leave stray `||`/`|` artifacts in markdown tables (the leading-pipe style). Always re-read the resolved section and fix table integrity before `git add`.
+
 ## Pitfalls
 
 - **Binary files** — Do NOT commit PDFs per repo policy. Reference OneDrive path in `source_file:` in frontmatter.

@@ -21,26 +21,53 @@ User asks to:
 - Find emails from a specific sender or project
 - Search for project-related emails
 - Extract attachments from Outlook
+- "check mail" / "check mails" / "check emails"
+- "update repo" / "update registers" / "follow repo instructions"
+
+## Mandatory First Step: Check Repo Pipeline
+
+**When the user says "update repo" or "follow repo instructions", do NOT start with ad-hoc register edits.** The `aseer-museum-pm` repo has a document intake pipeline at `scripts/document_intake.py`. Run it first:
+
+```bash
+cd /Users/mohamedessa/aseer-museum-pm
+python3 scripts/document_intake.py --scan-dir 05_Comms
+python3 scripts/document_intake.py --scan-dir 01_Registers
+```
+
+The pipeline classifies documents, extracts key fields, and updates registers automatically. After it runs, check `git diff --stat` to see what changed, then commit the pipeline's output. Only do manual register edits for items the pipeline missed (e.g. new PQ codes from email previews, invoice entries, specialist register updates).
+
+**Exception:** The pipeline does NOT handle:
+- PQ code updates from email previews (CG codes in Message_Preview)
+- Invoice register entries (no invoice pipeline yet)
+- Specialist register updates (derived from PQ data)
+- Knowledge document generation (Phase 9)
+
+These still need manual register edits after the pipeline runs.
 
 ### SQLite Lock Detection (MANDATORY before querying)
 
-Outlook holds the SQLite database open with a WAL journal. If queries time out, the DB is locked. **Do not retry more than once.** Fall back to AppleScript immediately.
+Outlook holds the SQLite database open with a WAL journal. **WAL mode permits concurrent reads even when Outlook holds the file open.** A locked DB does NOT mean queries will fail — only writes (backup, checkpoint, PRAGMA write) are blocked.
 
 ```bash
 # Check if Outlook holds the lock
 lsof ~/Library/Group\\ Containers/UBF8T346G9.Office/Outlook/Outlook\\ 15\\ Profiles/Main\\ Profile/Data/Outlook.sqlite 2>&1 | head -5
 
-# Check WAL file size (4MB+ = active writes, lock is persistent)
+# Check WAL file size (2MB+ = active transaction log, but reads still work)
 ls -la ~/Library/Group\\ Containers/UBF8T346G9.Office/Outlook/Outlook\\ 15\\ Profiles/Main\\ Profile/Data/Outlook.sqlite-wal 2>&1
 ```
 
-**Signals that SQLite is permanently locked (not transient):**
-- `lsof` shows Microsoft Outlook PID holding the file
-- WAL file is 2MB+ (active transaction log)
-- `PRAGMA wal_checkpoint(TRUNCATE)` also times out
-- `.backup` and `cp` both fail
+**Decision tree:**
+1. **Try SQLite first** — even with Outlook PID holding the file and a 3MB+ WAL, `SELECT` queries usually succeed. WAL mode permits concurrent readers.
+2. **If query times out** (rare — only when Outlook is in the middle of a write transaction), retry once. If it times out again, fall back to AppleScript.
+3. **Do NOT retry more than once.** The AppleScript fallback is slower but always works.
 
-**When locked, skip SQLite entirely and use AppleScript for everything.** The AppleScript fallback is slower but always works. Do not waste tool calls retrying SQLite.
+**Signals that SQLite is genuinely blocked (not just locked):**
+- `lsof` shows Microsoft Outlook PID holding the file AND a `SELECT` query times out
+- WAL file is 2MB+ AND the query times out
+- `PRAGMA wal_checkpoint(TRUNCATE)` times out (this is a write — expected to fail when locked)
+- `.backup` and `cp` both fail (these are writes — expected to fail when locked)
+
+**Key insight:** A 3MB WAL + Outlook PID holding the file is the NORMAL state during business hours. Do NOT skip SQLite just because these conditions are true. Try the query first. Only fall back to AppleScript if the query actually times out.
 
 ## Database Location
 
@@ -51,26 +78,6 @@ ls -la ~/Library/Group\\ Containers/UBF8T346G9.Office/Outlook/Outlook\\ 15\\ Pro
 If the user has a custom Outlook profile path, the database may be stored elsewhere. **Always verify the correct profile path before querying.**
 
 Only one account (sultan@samayainvest.com) — no account filtering needed.
-
-### SQLite Lock Detection (MANDATORY before querying)
-
-Outlook holds the SQLite database open with a WAL journal. If queries time out, the DB is locked. **Do not retry more than once.** Fall back to AppleScript immediately.
-
-```bash
-# Check if Outlook holds the lock
-lsof ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile/Data/Outlook.sqlite 2>&1 | head -5
-
-# Check WAL file size (4MB+ = active writes, lock is persistent)
-ls -la ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile/Data/Outlook.sqlite-wal 2>&1
-```
-
-**Signals that SQLite is permanently locked (not transient):**
-- `lsof` shows Microsoft Outlook PID holding the file
-- WAL file is 2MB+ (active transaction log)
-- `PRAGMA wal_checkpoint(TRUNCATE)` also times out
-- `.backup` and `cp` both fail
-
-**When locked, skip SQLite entirely and use AppleScript for everything.** The AppleScript fallback is slower but always works. Do not waste tool calls retrying SQLite.
 
 ### Database Location Reference
 
@@ -245,6 +252,8 @@ See `references/sender-discovery-patterns.md` for the iterative workflow to find
 
 **OneDrive .xlsx/.docx stub files** (recurring trap when reading Office files in OneDrive folders). Symptom: `cp file.xlsx /tmp/` succeeds, the destination file shows 15-100 KB on disk, but `unzip -l file.xlsx` fails with `End-of-central-directory signature not found`, and `openpyxl.load_workbook()` raises `BadZipFile: File is not a zip file`. Root cause: OneDrive files-on-demand cloud placeholder — the OS shows a non-zero stub but the real bytes never hydrated. Detection: file size looks plausible (10s-100s of KB) but the file fails any zip validity check. Fix: open the file in Finder, right-click → "Always keep on this device" to force the real bytes to download, then retry. Affects all zip-based Office formats (.xlsx, .docx, .pptx). Programmatic check: `python -c "import zipfile; zipfile.ZipFile(path).testzip()"` before parsing — if it raises `BadZipFile`, the file is a stub. Same trap appears for `.olk15Message` (Outlook internal format) and `.pdf` files; always test readability before assuming content. Recovery is per-file; no global "force download" command exists.
 
+**CloudStorage EDEADLK (new OneDrive path, 2026+):** Files under `~/Library/CloudStorage/OneDrive-*/` use a different File Provider mechanism than the old `~/OneDrive/` path. Symptoms: `cp` fails with `fcopyfile failed: Resource deadlock avoided`, `ditto` fails, `openpyxl` raises `BadZipFile`, `textutil` says "couldn't be opened", `file` command says "cannot read (Resource deadlock avoided)", `brctl download` says "Path is outside of any CloudDocs app library", and even `open -a "Microsoft Excel"` followed by a 45s wait does NOT hydrate the file. The File Provider holds an exclusive lock that blocks ALL read access from terminal/Python/AppleScript. **No programmatic workaround exists** — the user must open the file manually in Finder, let OneDrive hydrate it (the file icon changes from cloud to checkmark), then retry. AppleScript via Excel also fails because Excel cannot open the stub either. Detection: `python3 -c "import zipfile; zipfile.ZipFile(path)"` raises `BadZipFile` AND `cp path /tmp/` fails with EDEADLK. This is distinct from the old OneDrive path where `cp` succeeded but the file was a stub.
+
 **Cross-folder search for supplier replies.** Do NOT limit the search to the project's main folder. Supplier replies may be filed under a DIFFERENT project folder. Always use a cross-folder SQL query.
 
 **macOS TCC blocks SQLite access intermittently.** Always try SQLite first. If it fails, fall back to AppleScript.
@@ -284,6 +293,8 @@ end tell
 ```
 
 This is the most reliable pattern for attachment detection across both `.applescript` files and `osascript -e` one-liners.
+
+**Body lists filenames but `Message_HasAttachment=0` → Aconex/SharePoint-uploaded, NOT extractable.** Some submittal emails (esp. from Hesham Abdelhameed, and all Aconex transmittal notifications) name the document files in the body ("MOC-MUS-ASE-1E0-ZD-0103 Rev.01.pdf") but carry NO actual inline attachment — `count of (every attachment of m)` returns 0 and the `Mail_OwnedBlocks`/`Blocks` join returns no rows. The file was uploaded to Aconex/CDE and the email is just a notification. **Do not burn AppleScript/base64 cycles retrying** — check `Message_HasAttachment` in the SQLite query FIRST and only attempt extraction when it's 1. Log these as `Submitted` using the Aconex ref from the subject (e.g. `SIC.-WTRAN-000148`) and route to the register without an attachment copy. Note: an email that shows 0 attachments but looks like a document submittal is almost always a CDE sync, not a genuine inline-attachment failure.
 
 **`subject of m` / `time received of m` / `has attachment of m` fail with `Can't make |subject| of incoming message id X into type specifier` (-1700) on Outlook 16.90+.** This is a persistent AppleScript regression where direct property access on `message id N` objects fails. The error is NOT a syntax issue — the same syntax works on older Outlook versions. **Reliable workaround:** use `item N of (every message of mail folder id <FOLDER_ID>)` instead of `message id N`. This bypasses the broken property-access path:
 
@@ -325,13 +336,16 @@ SELECT m.Record_RecordID, m.Message_NormalizedSubject,
     WHEN m.Message_Preview LIKE '%A - Approved%' THEN 'A'
     WHEN m.Message_Preview LIKE '%B - Approved%' THEN 'B'
     WHEN m.Message_Preview LIKE '%C - Revise%' THEN 'C'
-    WHEN m.Message_Preview LIKE '%D - Disapproved%' THEN 'D'
+    WHEN m.Message_Preview LIKE '%D - Rejected%' THEN 'D'
+    WHEN m.Message_Preview LIKE '%Approved with%' THEN 'B'
     ELSE 'UNKNOWN'
   END as cg_code
 FROM Mail m
 WHERE m.Record_RecordID IN (49279, 49271, 49259)
   AND m.Message_SenderList = 'Hossam Mabrouk';
 ```
+
+**Pitfall — CG code uses en-dash, not hyphen.** The preview text uses `D – Rejected` (en-dash, U+2013), not `D - Rejected`. The CASE pattern `LIKE '%D - Rejected%'` (hyphen) does NOT match `D – Rejected` (en-dash). Use `LIKE '%D%Rejected%'` or `LIKE '%D – Rejected%'` with the actual en-dash character. Similarly, `Approved with Comment - B` uses a hyphen, so `LIKE '%Approved with%'` catches it. Always test the actual preview text before hardcoding CASE patterns.
 
 **Workflow:**
 1. Query recent emails from CG senders with doc refs
@@ -444,6 +458,55 @@ When the user asks to "check all emails related to [vendor]" and then "read all 
 6. **Phase 6 — Update registers**: Update `specialist_register.md` with SOW/Plan column refs showing folder paths. Update `PROJECT_MEMORY.md` with file paths. Update `01_Registers/subcontractor_sow_raci_register.md` and `01_Registers/subcontractor_package_register.md` with repo file paths.
 
 7. **Phase 7 — Master tracker**: Create/update `Technical_Office/Submission_Tracker/README.md` showing all specialists' SOW/Plan/Tracker status with priority actions. This is the single source of truth for all 27+ specialist packages.
+
+## Factory Employee Violation Search (Outlook → VIOLATIONS System)
+
+When the user asks to find historical violations/penalties for factory employees:
+
+**Source:** Outlook SQLite (NOT Gmail IMAP). The user's Gmail is personal; work emails are in Outlook.
+
+**Arabic search keywords that work:**
+- `مخالفة` / `مخالفات` — violation(s)
+- `خصم` — deduction
+- `إنذار` — warning
+- `جزاء` / `جزاءات` — penalty/penalties
+- `تأديب` — disciplinary
+- `غرامة` — fine
+- `تأخير` — delay/lateness
+- `رفض` — refusal
+- `عقوبة` — punishment
+- `لفت نظر` — notice
+
+**Canonical query pattern:**
+```sql
+SELECT m.Record_RecordID, m.Message_NormalizedSubject,
+       substr(m.Message_Preview, 1, 1500) as preview,
+       m.Message_SenderList, m.Message_TimeReceived
+FROM Mail m
+WHERE (m.Message_Preview LIKE '%مخالفة%' OR m.Message_Preview LIKE '%خصم%'
+       OR m.Message_Preview LIKE '%إنذار%' OR m.Message_Preview LIKE '%جزاء%'
+       OR m.Message_Preview LIKE '%تأديب%' OR m.Message_Preview LIKE '%رفض%')
+  AND m.Message_SenderList LIKE '%raoof%'
+  AND m.Message_Hidden = 0
+ORDER BY m.Message_TimeReceived DESC;
+```
+
+**Cross-reference with Odoo:** After finding a violation email, look up the employee in Odoo by name to get their Odoo ID, biotime code, job title, and department. Use the session-based Odoo API (password auth, not API key — the key is expired).
+
+**Registration workflow:**
+1. Extract violation details from email preview (date, employee, type, reporter, action taken)
+2. Look up employee in Odoo for biotime code and Odoo ID
+3. Create violation memo in `VIOLATIONS/VIOL-YYYY-NNN-<short-desc>.md` following the existing memo format
+4. Update `VIOLATIONS/INDEX.md` with the new row
+5. Update the stats footer (total count, last updated)
+
+**Pitfall — email preview truncation:** `Message_Preview` is ~500 chars. For full body, use AppleScript `plain text content of msg`. If the preview contains enough info (date, employee name, violation type, action), skip AppleScript.
+
+**Pitfall — employees not in Odoo:** Some workers (e.g. هريدهاي, عبد المجاهد) may not have Odoo records or biotime codes. Note this in the memo and use available info.
+
+**Pitfall — attachment-only details:** Some violation emails reference an attached PDF/image for full details. These attachments cannot be extracted from the preview. Flag as "تفاصيل ناقصة" in the memo.
+
+See `references/factory-violation-search.md` for a complete worked example.
 
 ## Hard Rules (apply to every response)
 
@@ -584,6 +647,90 @@ osascript /tmp/ext_49034.applescript 2>&1
 
 **Why this is preferred over bash heredoc:** The Python generator avoids the `&` tool guard entirely (no `&` in the terminal command), handles sanitization cleanly, and each generated script stays under the 700-byte limit.
 
+### Fallback: inline `osascript -e` when `.applescript` file fails
+
+When the Python-generated `.applescript` file approach fails silently (no output, no files saved), try inline `osascript -e` with the same `message id N` syntax. This works for simple single-attachment extraction even when the file-based approach doesn't:
+
+```bash
+osascript -e '
+tell application "Microsoft Outlook"
+    set m to message id 49773
+    set atts to (every attachment of m)
+    set outFolder to "/tmp/email_attachments/"
+    repeat with a in atts
+        set attName to name of a
+        set savePath to outFolder & "49773_" & attName
+        do shell script "touch " & quoted form of savePath
+        save a in (POSIX file savePath as alias)
+    end repeat
+end tell
+' 2>&1
+```
+
+For batch extraction of multiple emails, use a bash `for` loop with inline `osascript -e`:
+
+```bash
+for id in 49810 49823 49824; do
+  osascript -e "
+tell application \"Microsoft Outlook\"
+    set m to message id $id
+    set atts to (every attachment of m)
+    set outFolder to \"/tmp/email_attachments/\"
+    repeat with a in atts
+        set attName to name of a
+        set savePath to outFolder & \"${id}_\" & attName
+        do shell script \"touch \" & quoted form of savePath
+        save a in (POSIX file savePath as alias)
+    end repeat
+end tell
+" 2>&1
+done
+```
+
+**Pitfall:** The inline approach may fail for emails with many attachments or special characters in filenames. The Python generator approach is preferred for reliability; use inline as a fallback when the generator produces no output.
+
+### Fallback: inline `osascript -e` when `.applescript` file fails
+
+When the Python-generated `.applescript` file approach fails silently (no output, no files saved), try inline `osascript -e` with the same `message id N` syntax. This works for simple single-attachment extraction even when the file-based approach doesn't:
+
+```bash
+osascript -e '
+tell application "Microsoft Outlook"
+    set m to message id 49773
+    set atts to (every attachment of m)
+    set outFolder to "/tmp/email_attachments/"
+    repeat with a in atts
+        set attName to name of a
+        set savePath to outFolder & "49773_" & attName
+        do shell script "touch " & quoted form of savePath
+        save a in (POSIX file savePath as alias)
+    end repeat
+end tell
+' 2>&1
+```
+
+For batch extraction of multiple emails, use a bash `for` loop with inline `osascript -e`:
+
+```bash
+for id in 49810 49823 49824; do
+  osascript -e "
+tell application \"Microsoft Outlook\"
+    set m to message id $id
+    set atts to (every attachment of m)
+    set outFolder to \"/tmp/email_attachments/\"
+    repeat with a in atts
+        set attName to name of a
+        set savePath to outFolder & \"${id}_\" & attName
+        do shell script \"touch \" & quoted form of savePath
+        save a in (POSIX file savePath as alias)
+    end repeat
+end tell
+" 2>&1
+done
+```
+
+**Pitfall:** The inline approach may fail for emails with many attachments or special characters in filenames. The Python generator approach is preferred for reliability; use inline as a fallback when the generator produces no output.
+
 ### Alternative: .sh generator script (cron-safe, no `&` in terminal command)
 
 Write a `.sh` script that uses `cat > file <<SCRIPTEND` to generate `.applescript` files. The `&` operators are inside the heredoc body, not in the terminal command itself.
@@ -704,6 +851,7 @@ Use filename-only matching. See `references/onedrive-edeadlk.md`.
 ### Full dedup + routing reference
 
 See `references/batch-email-routing.md`.
+See `references/multi-project-routing-script.py` — reusable Python router for multi-project scans (Aseer, Zamzam, Jabal Omar). Document-code-based patterns, OneDrive paths, dedup handling.
 
 ## Batch Email Pipeline (End-to-End Workflow)
 
@@ -728,6 +876,31 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 - **Actions Required** section — numbered list of what the user needs to do next
 
 ### Phase 5 — Cross-reference & Update
+
+**CRITICAL: The review log alone is NOT sufficient.** The user requires that every email scan updates the actual registers, not just writes `email_scan_*.md`. A cron run that only writes the review log is a failed run. For every CG code (A/B/C/D) extracted, update the relevant register files in `~/aseer-museum-pm/`:
+- `01_Registers/submittal_register.md` — status column per doc ref (ZD/1G/PQ) to the new CG code + date; append row if absent
+- `01_Registers/prequalification_register.md` — PQ codes
+- `01_Registers/assessment_evaluation_register.md` — electrical/mechanical assessment reports
+- `01_Registers/risk_register.md` + `06_Risk_System/risks.json` — new risks from Code D/C; update revision + total in BOTH (risks.json is SoT; recompute Summary counts from actual rows, don't hand-edit)
+- `00_Status/action_items.md` — action item per Code C/D with owner + due
+- `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` — review log (append-only)
+
+**Verify CG codes from the actual email, not the cron summary.** The cron's CG-code extraction can MISLABEL a document's title. Example (2026-08-06): the cron called ZD-0103 "Compliance & Understanding Report" but the actual email subject was "Earthing LPS Compliance Understanding Report" (Code D). Always re-query the email preview (`Message_Preview`) for the exact doc title and code before writing it to a register. The CG email from Hossam Mabrouk is authoritative — trust it over the cron's summary.
+
+**Pitfall — `patch` tool fails on duplicate register rows.** Some registers (e.g. `assessment_evaluation_register.md`) contain the SAME block of rows twice (a `||`-prefixed section and a `|||`-prefixed section with identical doc refs). `patch` with a non-unique anchor fails with "Found N matches" and loops. Do NOT keep retrying with slightly different context — switch to a Python script that inserts after the FIRST occurrence only:
+```python
+with open(path) as f: lines = f.readlines()
+if any("ZD-XXXX Rev.01" in l for l in lines):
+    print("already present")
+else:
+    for i, l in enumerate(lines):
+        if "ZD-XXXX | <exact anchor text>" in l:
+            lines.insert(i+1, new_row); break
+    with open(path, "w") as f: f.writelines(lines)
+```
+Also verify the exact anchor line with `repr(lines[idx])` first — trailing whitespace/pipe-count differences break exact-match anchors.
+
+**Rebuild risk webapp if risks.json changed:** `python3 webapp/build_risk.py` (→ src/index.html) then `python3 webapp/build_snapshots.py --bump` (→ new snapshot xlsx). Force-add the xlsx (`git add -f`) since `*.xlsx` is gitignored but the latest snapshot is force-tracked. Handle the post-commit hook that dirties `index.html`: `git checkout -- 06_Risk_System/webapp/src/index.html` before and after `git pull --rebase origin main`, then push.
 
 Update ALL relevant registers: Master Submittal Register, Plan Tracker, discipline-specific CG_STATUS.md, submission plans, Lessons Learned Register, Odoo tasks, Memory.
 
@@ -867,27 +1040,33 @@ Always update both. The register is the full list; the log tracks the appointmen
 
 See `references/olk15-attachment-parsing.md` for the file format specification.
 
+## Direct Body Extraction from .olk15Message (No AppleScript)
+
+When AppleScript `message id N` fails on Outlook 16.90+ (error -1700) or is unavailable, the full email body can be extracted directly from the `.olk15Message` file on disk. The file has a 20-byte binary header followed by raw MIME content including HTML body.
+
+**Works for:** Standard MIME emails with HTML content.
+**Does NOT work for:** TNEF-encoded emails (`Content-Type: application/ms-tnef`) — the body is encoded inside the TNEF stream and requires a TNEF decoder.
+
+See `references/olk15message-body-extraction.md` for the complete extraction pattern with Python code.
+
+## TNEF (winmail.dat) Decoding
+
+Some Outlook emails (especially from Exchange/Outlook senders) use Microsoft TNEF format (`Content-Type: application/ms-tnef; name="winmail.dat"`). The body is NOT directly extractable from the `.olk15Message` file.
+
+**Tool available:** `tnef` (installed via `brew install tnef`). Usage:
+```bash
+tnef /tmp/email_winmail.dat -C /tmp/tnef_output/
+```
+
+**Limitation:** The TNEF data is stored inside the `.olk15Message` file in a proprietary binary structure, not as a separate MIME part. Extracting the raw TNEF stream from the binary requires finding the TNEF magic bytes (`0x78 0x9f 0x3e 0x22`) within the file, which may not be present in all cases. When the TNEF data is embedded in the binary header area (before the MIME headers), it cannot be extracted by simple byte search.
+
+**Workaround:** For TNEF emails, the `Message_Preview` column in SQLite provides the first ~500 chars. For full body, AppleScript is the only reliable method.
+
 ### Base64 PDF extraction from .olk15MsgAttachment (no AppleScript)
 
 When AppleScript fails or is unavailable, Outlook `.olk15MsgAttachment` files can contain MIME-encoded attachments with base64-encoded bodies. Works for `.pdf`, `.docx`, `.xlsx`.
 
-**Format:** The file is a binary wrapper with MIME headers (`Content-type`, `Content-disposition`, `Content-transfer-encoding: base64`) followed by the base64 body.
-
-**Extraction:**
-```bash
-cp "/path/to/XXX.olk15MsgAttachment" /tmp/extract.olk
-python3 -c "
-import base64
-with open('/tmp/extract.olk', 'rb') as f:
-    data = f.read()
-text = data.decode('latin-1')
-idx = text.find('base64')
-b64 = text[idx+7:].strip()
-with open('/tmp/extracted.pdf', 'wb') as out:
-    out.write(base64.b64decode(b64))
-"
-pdftotext /tmp/extracted.pdf -
-```
+**⚠️ CRITICAL: The marker format is `Content-transfer-encoding: base64\r\r` (two CRs, not \r\n).** The base64 data starts at offset +35 from the marker. Searching for `base64` alone or using `idx+7` will produce corrupted output. See `references/olk15-base64-extraction-corrected.md` for the corrected extraction pattern.
 
 **Finding the path — Mail_OwnedBlocks join to Blocks:**
 ```sql
@@ -939,3 +1118,4 @@ Path is relative to `Data/` — construct full path:
 - `references/aseer-email-processing-example.md`
 - `references/batch-applescript-per-email.md`
 - `references/pq-email-processing.md` — PQ-specific workflow: sender mapping, two-phase processing (draft vs formal), CG code extraction from preview, dual-register cascade, pitfalls (Final transmittal ≠ Approved)
+- `references/multi-project-routing-script.py` — Reusable Python router for multi-project email attachment routing (Aseer, Zamzam, Jabal Omar). Document-code-based patterns, OneDrive paths, dedup handling.\n- `references/electrical-compliance-report-cascade.md` — Electrical Compliance & Understanding Report → assessment + risk register cascade (missing-reports & Code-C systems risk, Aconex attachment=0 handling)

@@ -14,7 +14,18 @@ triggers:
 # Samaya Factory — PO Reports & Cashout
 
 ## Data Source
-Odoo 18 at `samayainv.odoo.com`, project **244 = Samaya Factory**.
+Odoo 18 at `samayainv.odoo.com`.
+
+### Factory Project IDs (5 projects)
+| ID | Name | Notes |
+|----|------|-------|
+| 244 | Samaya Factory | Main factory project |
+| 161 | مصنع سمايا - المدينة المنورة | Madinah factory |
+| 302 | Odoo Factory Requests | Internal factory requests |
+| 307 | نقل المصنع في أودوو | Factory migration project |
+| 315 | Factory — Standard Template | Template project |
+
+**Always check ALL 5 project IDs** when querying factory POs. The skill previously only tracked #244, missing ~35 POs from the other 4 projects.
 
 ## SSL Fix (macOS Python 3.13+)
 ```bash
@@ -25,11 +36,25 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 scr
 **Must fetch ALL and filter in Python** — Odoo 18 crashes on `project_id` in `search_read` domains.
 
 ```python
+FACTORY_PROJECT_IDS = {161, 244, 302, 307, 315}
+
 all_pos = call('purchase.order', 'search_read', [[]],
-    {'fields': fields, 'limit': 2000})  # 1895 total as of Jul 2026
+    {'fields': fields, 'limit': 5000, 'order': 'date_order desc'})  # ~2045 total as of Aug 2026
 factory_pos = [p for p in all_pos
-    if p.get('project_id') and p['project_id'][0] == 244]
+    if p.get('project_id') and p['project_id'][0] in FACTORY_PROJECT_IDS]
 ```
+
+### Factory Supplier POs (non-factory projects)
+Factory suppliers (صبا نجد, مدى الجزيرة, العمالة الخارجية, etc.) also serve other Samaya projects. When the user asks for "all factory POs", include these too — they represent factory vendor activity across the company.
+
+```python
+FACTORY_SUPPLIER_IDS = {2427, 5603, 5606, 5608, 5677, 5744, 5749, 5750, ...}
+supplier_pos = [p for p in all_pos
+    if p.get('project_id') and p['project_id'][0] not in FACTORY_PROJECT_IDS
+    and p.get('partner_id') and p['partner_id'][0] in FACTORY_SUPPLIER_IDS]
+```
+
+As of Aug 2026: **321 factory project POs** (2,039,919.79 SAR) + **125 factory supplier POs** (469,461.32 SAR) = **446 total** (2,509,381.11 SAR).
 
 ## Filter Rules (confirmed with user)
 - **Include:** All Factory POs from the هام file (or all unpaid Factory POs)
@@ -206,12 +231,15 @@ Filter for Factory (project 244) or workshop vendors using the workshop vendor l
 ## Linked Files
 - `references/odoo-18-domain-quirks.md` — Odoo 18 XML-RPC workarounds
 - `references/credit-supplier-statement-update.md` — workflow for supplier statement PDF cross-referencing
+- `references/factory-suppliers.md` — comprehensive factory supplier list with Odoo IDs, names, and top-10 by volume
 - `references/workshop-vendors.md` — comprehensive workshop vendor name list
 - `references/project-classification-patterns.md` — regex patterns to extract project group from vendor reference
+- `references/inventory-system.md` — inventory tracking system design (raw materials + consumables distribution)
 - `scripts/build_cashout_report.py` — reusable report builder (Factory cashout by payment status)
 - `scripts/build_factory_by_project.py` — report builder grouped by project (from vendor reference), with credit supplier rows per project
 - `scripts/update_workshop_tracker.py` — updates workshop purchasing tracker with Odoo payment data
 - `scripts/new_pos_last_3_days.py` — detects new POs created recently
+- `scripts/inventory_system.py` — inventory tracking: raw materials stock + MO consumption + consumables monthly distribution
 
 ## Pitfalls
 - Odoo 18 `search_read` with `project_id` in domain crashes — always fetch all + Python filter
@@ -229,7 +257,9 @@ Filter for Factory (project 244) or workshop vendors using the workshop vendor l
 - **هام item without PO:** When a هام item has no matching PO in Odoo (e.g. item 22: قشرة سنديان, ~9,000 SAR estimate), note it as an estimate that needs a PO created. Related POs may exist for different amounts
 - **XLSX cached reads:** `read_file` on a regenerated xlsx may show stale data. Verify with openpyxl `load_workbook`, or just open the file
 - OneDrive path has Arabic characters — use exact path from `read_file` output
-- `search_read` limit defaults to 500 — set to 2000 to catch old POs
+- `search_read` limit defaults to 500 — set to 2000 to catch old POs. As of Aug 2026 there are ~2045 total POs, so use `limit=5000` to be safe.
+- **`project_id` in search_read results** is a list `[id, name]` — always access via `po['project_id'][0]` for the ID. The `id` is at index 0, `name` at index 1. Never assume it's a plain int.
+- **5 factory projects, not 1** — always check all 5 IDs: {161, 244, 302, 307, 315}. Using only #244 misses ~35 POs.
 - **Workshop vendor list** — when filtering workshop POs by vendor name, use the comprehensive list in `references/workshop-vendors.md`
 - **Script limit mismatch:** `build_cashout_report.py` hard-codes `limit=200` but needs `limit=2000`. ~268 Factory POs as of Jul 2026
 - **Co-located files:** The output directory also contains `Factory-Tasks-Tracker-YYYY-MM.html` (separate system). Don't overwrite

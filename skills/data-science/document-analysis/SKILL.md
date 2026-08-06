@@ -818,7 +818,37 @@ Create a `document_inventory.md` that serves as the index, containing:
 
 ## OneDrive-locked PDFs
 
-BIM registers often live as `.xlsb` files or PDFs on OneDrive. They are **unreadable by any tool** from the terminal because the OneDrive sync engine holds a file lock. rather than one monolithic output. This creates a browsable document library.
+BIM registers often live as `.xlsb` files or PDFs on OneDrive. They are **unreadable by any tool** from the terminal because the OneDrive sync engine holds a file lock.
+
+**Tools that ALL fail with `Resource deadlock avoided` on locked OneDrive files:**
+- `pdftotext` (poppler) — returns 0 bytes, stderr: `Couldn't find trailer dictionary`
+- `pdfminer.high_level.extract_text` — raises `OSError: [Errno 11] Resource deadlock avoided`
+- `pdfplumber` — raises `[Errno 11] Resource deadlock avoided`
+- `PyMuPDF (fitz)` — raises `Failed to open file`
+- `python-docx` — raises `OSError: [Errno 11] Resource deadlock avoided`
+- `textutil` (macOS) — returns `The file couldn't be opened`
+- `shutil.copy2`, `cp`, `cat`, `head`, `file` — all fail with `Resource deadlock avoided`
+- `zipfile.ZipFile` (Python stdlib) — may bypass the lock for DOCX files (lower-level I/O path), but still fails for PDFs
+
+**There is no partial-read workaround for dataless OneDrive placeholders.** The lock is at the macOS VFS layer, not at the application level.
+
+### Fallback: find alternative copies outside OneDrive
+
+When OneDrive files are locked, search for alternative copies in git repos, desktop folders, and email attachment caches:
+
+```bash
+# Search for alternative copies outside OneDrive
+find /Users/mohamedessa -maxdepth 5 -name "*keyword*" 2>/dev/null | grep -v "CloudStorage" | grep -v "Library"
+
+# Common fallback locations for Aseer Museum project:
+# - /Users/mohamedessa/aseer-museum-pm/03_Scope/   (scope documents)
+# - /Users/mohamedessa/aseer-museum-pm/00_Contracts/ (contract indices)
+# - /Users/mohamedessa/Desktop/Work_Projects/Asher_Regional_Museum_Emails/Attachments/ (email attachments)
+```
+
+**Pattern:** The `aseer-museum-pm` git repo often has README.md files, analysis reports, and extracted PDFs that serve as fallback sources when OneDrive originals are locked. Check `03_Scope/<Vendor>/` and `99_Archive/09_Procurement_Management/Contracts/` for alternative copies.
+
+rather than one monolithic output. This creates a browsable document library.
 
 ### Categorization pattern
 
@@ -1672,6 +1702,7 @@ For extracting project financial data from a web app + scanned documents and pro
 
 ## Reference files
 
+- `references/contract-key-terms-extraction.md` — Worked example: extracting key terms from 5 Aseer Museum contracts when OneDrive originals are locked. 6-step extraction workflow, 15-field template, cross-reference patterns, OneDrive lock diagnostic, and tool failure table.
 - `references/construction-cost-analysis.md` — Worked example: building finishing project cost analysis from web app + Supabase documents: verify factual claims about a document's content against the actual source; locate the correct file when the given path is wrong; search docx paragraphs + tables for naming patterns; build a structured discrepancy report with claim-vs-actual tables
 - `references/shop-drawing-extraction.md` — Shop drawing PDFs from PostScript/Acrobat Distiller: partial text layer extraction, title block fields, dimension data, materials specs, and common sheet patterns (worked example: Bohemian Collection furniture shop drawings, 32 pages)
 - `references/bma-cad-pdf-extraction.md` — BMA/Boris Micka CAD-generated interior design PDFs: drawing code system, MEP fixture legend libraries, critical disclaimer language, and RFI cross-reference worked example (RCRC Exhibition, 27 questions)

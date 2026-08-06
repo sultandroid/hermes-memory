@@ -18,11 +18,15 @@ Before doing anything with a Samaya document draft:
 
 ```python
 import sys
-sys.path.insert(0, '/Volumes/MIcro/Temp/aseer-museum-pm/_Style-Guides/Doc Style Guide')
+sys.path.insert(0, '/Users/mohamedessa/aseer-museum-pm/_Style-Guides/Doc Style Guide')
 from samaya_doc_template import SamayaDoc, SamayaColors
 ```
 
-The repo clone (`/Volumes/MIcro/Temp/aseer-museum-pm/`) is the **only reliable source** for SamayaDoc. OneDrive paths often return null bytes / "Resource deadlock avoided".
+The repo clone at `~/aseer-museum-pm/` is the reliable source for SamayaDoc. OneDrive paths often return EDEADLK.
+
+## Multi-Turn Task Protocol
+
+When the user says "read all msg", "read the conversation", or similar, consolidate the full thread before acting. Do not jump to a conclusion from the last message alone. Re-read the conversation, identify the current state and pending deliverable, then confirm before producing output.
 
 ## Pipeline
 
@@ -30,7 +34,7 @@ The repo clone (`/Volumes/MIcro/Temp/aseer-museum-pm/`) is the **only reliable s
 
 Extract the full text. Identify:
 - Document structure (sections, tables, appendices)
-- All **TBD / TBC / "To be confirmed"** placeholders
+- All TBD / TBC / "To be confirmed" placeholders
 - References to other project documents, surveys, or external data sources
 
 ### Step 2: Search Project Data to Fill TBDs
@@ -39,14 +43,13 @@ Before generating the DOCX, search these sources in order:
 
 | Source | What to look for | How to search |
 |--------|-----------------|---------------|
-| **Repo** (`/Volumes/MIcro/Temp/aseer-museum-pm/`) | Registers, SOWs, prequal lists, org chart, delivery plans | `search_files`, `grep` for keywords |
-| **Outlook SQLite** | Email previews about relevant assessments, companies, contacts | `sqlite3` query on `~/Library/Group Containers/UBF8T346G9.Office/.../Outlook.sqlite` |
-| **Prequalification Register** (`01_Registers/prequalification_register.md`) | Which company does each scope | Search for assessment/survey companies |
-| **Deliverables Master List** (`01_Registers/deliverables_master_list.md`) | Contractual deliverables per phase | Search for S-P-* (site assessment) codes |
-| **Project org chart** (`00_Project_Charter/org_chart.md`) | Who is who, which company is appointed | Direct read |
-| **Scope of Work** (`00_Project_Charter/scope_of_work.md`) | Contractual responsibilities for surveys and assessments | Search for Part 2, Site Assessment, Surveying |
+| Repo (`~/aseer-museum-pm/`) | Registers, SOWs, prequal lists, org chart, delivery plans | `search_files`, `grep` for keywords |
+| Outlook SQLite | Email previews about relevant assessments, companies, contacts | `sqlite3` query on `~/Library/Group Containers/UBF8T346G9.Office/.../Outlook.sqlite` |
+| Prequalification Register | Which company does each scope | Search for assessment/survey companies |
+| Project org chart | Who is who, which company is appointed | Direct read |
+| Scope of Work | Contractual responsibilities for surveys and assessments | Search for Part 2, Site Assessment, Surveying |
 
-**Fill what you can find.** For values genuinely unavailable, note the source that will provide them (e.g. "To be confirmed by site survey REF-GWY-01") rather than leaving bare "TBD".
+**Fill what you can find.** For values genuinely unavailable, note the source that will provide them rather than leaving bare "TBD".
 
 ### Step 3: Generate with SamayaDoc
 
@@ -79,18 +82,90 @@ SamayaColors reference:
 
 | Document Type | Subfolder |
 |---------------|-----------|
-| Mobilization supplement / logistics plan | `MOBILIZATION/` |
-| Authority submissions / permits | `Docs/06_Authority_Submissions/` |
-| CG correspondence | `Docs/11_Correspondence/` |
+| CG correspondence / RFI / TQ | `05_Comms/drafts/` |
 | Plans and procedures | `Docs/02_Plans_and_Procedures/` |
 | Contracts / SOW | `Contracts/` or `Docs/02_Plans_and_Procedures/` |
 
+## Style Rules (MANDATORY — user will reject violations)
+
+These rules apply to ALL Samaya DOCX documents. They are non-negotiable.
+
+### No special characters or AI symbols
+- Never use: `§`, `→`, `◆`, `📌`, `✅`, `❌`, `⚠️`, `🟢`, `🔴`, `🟡`, `—` (em dash), `•` (bullet), `&mdash;`, `&rarr;`, or any Unicode symbol in body text.
+- Use plain text alternatives: "Section 8.2" not "§8.2", "to" not "→", "Approved" not "✅".
+- This applies to ALL formal documents — SOWs, reports, registers, letters, transmittals.
+
+### No AI fingerprint
+- No AI clichés: seamlessly, cutting-edge, robust, innovative, bespoke, leveraging, delve, navigate, holistic, dynamic, streamline, game-changer, state-of-the-art, world-class.
+- No AI phrasing: "It is worth noting that", "It is important to mention", "Please be advised", "In the realm of", "When it comes to".
+- No AI symbols: no `§`, `→`, `◆`, emoji status indicators.
+
+### Write like a human engineer
+- Short sentences. Active voice. Plain words.
+- If a 14-year-old can't understand it, rewrite it.
+- British English spelling: colour, programme, centre, metre, organise, licence (noun) / license (verb).
+- Do not talk too much. One paragraph per idea. No padding.
+
+### Reference
+The full Samaya Style Guide is in `AGENTS.md` under "Samaya Style Guide — Mandatory Reference" and `_Style-Guides/`. Load it before generating any client-facing document.
+
+## Document Numbering — Verify Serial from Aconex
+
+Before assigning any document reference number (TQ, RFI, ZD, PL, etc.), check the last used serial from Aconex via Outlook SQLite:
+
+```sql
+SELECT DISTINCT substr(m.Message_NormalizedSubject, 
+  instr(m.Message_NormalizedSubject, 'TQ-'), 8) as tq_ref
+FROM Mail m
+WHERE m.Message_NormalizedSubject LIKE '%TQ-%'
+ORDER BY tq_ref DESC;
+```
+
+Extract the highest number from the subject lines. The next document is that number + 1. Do NOT guess or start from 001 — the user will catch it.
+
+The numbering is project-wide (not per-discipline). A single serial sequence covers all TQs regardless of zone code (1E0, 1A0, 1K0, etc.).
+
+### Signature Block
+
+Every formal document (TQ, RFI, letter, transmittal) MUST end with a signature block table:
+
+```python
+doc.add_h2("8", "SIGNATURE BLOCK")
+sig_headers = ["Role", "Name", "Signature", "Date"]
+sig_rows = [
+    ["Prepared by", "Eng. Mohamed Sultan Abbas", "", ""],
+    ["Reviewed by", "", "", ""],  # Add when a specialist subcontractor reviews technical content
+    ["Checked by", "", "", ""],
+    ["Approved by", "", "", ""],
+]
+doc.add_table(sig_headers, sig_rows, col_widths_cm=[4, 5, 4, 4])
+```
+
+Four rows: Prepared by, Reviewed by (add when a specialist subcontractor reviews technical content), Checked by, Approved by. Leave blank rows for reviewers to fill. Do NOT use a single-row "Prepared by" table — the user expects the full review chain.
+
+When the document concerns a specialist scope (AV, lighting, MEP, showcases), add a "Reviewed by" row for that specialist between Prepared by and Checked by.
+
+### RFI Audience — Know Who the Recipient Is
+
+When drafting an RFI or Technical Query about AV/media content:
+
+- The **recipient is MoC (via CG)**, not the subcontractor.
+- The AV/IT and interactive specialist (Rawasin) is **already appointed** — do not imply gaps in their appointment or scope.
+- Do not include obligations on Samaya's side in the RFI. The RFI asks MoC what they will provide, when, and in what format.
+- Reference SOW Section 2.2 (AV software/media excluded from Contractor scope, supplied by others) and SOW p.17 (MoC-supplied items: images/film list, commissioned art pieces) as the contractual basis for the RFI.
+- Reference the DMP (PL-0029) design stage gates to explain why the information is needed now (before 90% gate / IFC).
+
+## Multi-Turn Task Protocol
+
+When the user says "read all msg", "read the conversation", or similar, consolidate the full thread before acting. Do not jump to a conclusion from the last message alone. Re-read the conversation, identify the current state and pending deliverable, then confirm before producing output.
+
 ## Pitfalls
 
+- **NEVER use emojis or AI symbols (checkmark, cross, warning, circle symbols) in formal Samaya DOCX documents.** Use text alternatives: Signed, Draft, Not Available, Executed, Pending, Approved, Rejected. The user will reject documents with emoji status indicators. This applies to ALL formal documents — SOWs, reports, registers, letters, transmittals.
 - **Never use pandoc for Samaya documents.** The user will reject non-branded output. Use SamayaDoc from the repo.
 - **Never hand-code python-docx styling.** The user's first response will be "Why not follow samaya doc style."
 - **Always fill TBDs before presenting.** The user will say "all TBD you have to fill according to project status." Search project data first (registers, prequal list, Outlook emails, repo scope docs).
-- **OneDrive = unreliable.** The template file and many project files are OneDrive placeholders that return EDEADLK. Use the repo clone (`/Volumes/MIcro/Temp/aseer-museum-pm/`) instead.
+- **OneDrive = unreliable.** The template file and many project files are OneDrive placeholders that return EDEADLK. Use the repo clone instead.
 - **SamayaColors.NAVY is NOT #003366.** The actual value is `RGBColor(0x1e, 0x29, 0x3b)`. Guessing wrong navy color = style rejection.
 - **Who does what: check the prequalification register first.** When the user asks who does a specific scope, search `01_Registers/prequalification_register.md` for the discipline code before guessing. The PQ register has the definitive assignment.
 - **Assessment report approval status: check Adel snapshots.** The file `99_Archive/adel_snapshots/file_list.txt` reveals CG response PDFs in `Approval/` subfolders even when no CG email was sent. An `Approval/` folder with a CG reply PDF means CG responded.
@@ -102,6 +177,8 @@ SamayaColors reference:
 
 ## Reference files
 
+- `references/subcontractor-sow-raci-docx.md` — Full 9-section subcontractor SOW + filled RACI matrix DOCX generation pattern.
 - `references/assessment-report-tracking.md` — How to find who does assessment work and track their report status across Outlook SQLite, Adel snapshots, and repo registers.
-- `references/nrs-comments-investigation.md` — How to find NRS (Nissen Richards Studio) review comments: search Outlook SQLite `Message_Preview` for email body text, check cached PDF attachments in `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Files/S0/*/Attachments/`, and fall back to OneDrive document control folders when image-based redlines can't be OCR'd.
-- `references/approved-plan-ingestion.md` — Pipeline for converting approved Code B plan PDFs/markdown to formal read-only docs in `00_Contracts/`: DS header stripping, frontmatter, repo filing, register updates, and common pitfalls.
+- `references/nrs-comments-investigation.md` — How to find NRS (Nissen Richards Studio) review comments.
+- `references/approved-plan-ingestion.md` — Pipeline for converting approved Code B plan PDFs/markdown to formal read-only docs.
+- `references/multi-sheet-excel-to-markdown-register.md` — Pattern for extracting data from multi-sheet Excel files (object schedules, BOQs) and producing structured markdown registers.

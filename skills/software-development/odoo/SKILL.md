@@ -32,7 +32,7 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 scr
 
 `purchase.order` has `project_id` on the **header**. `analytic_distribution` only on `purchase.order.line`.
 
-See `references/odoo-18-field-schemas.md` for full schema.l field lists.
+See `references/odoo-18-field-schemas.md` for full schema. See `references/odoo-api-key-management.md` for API key renewal.
 
 ## ⚠️ Odoo 18 Domain Quirks (CRITICAL)
 
@@ -128,13 +128,12 @@ Requires Python 3 only (stdlib `xmlrpc.client` — no pip install needed).
 
 ## Browser-Based Interaction (Moqtana Odoo)
 
-For Moqtana Odoo, some operations are better done via the browser UI than XML-RPC (e.g., viewing Kanban boards, adding subtasks inline, checking progress percentages).
+For Moqtana Odoo, some operations are better done via the browser UI than XML-RPC.
 
 ### Login Flow (Moqtana)
-1. Navigate to `https://odoo.moqtana.sa` → website frontend loads with Moqtana branding
-2. Click **"Sign in"** link (usually ref=e20) → Odoo login form appears
-3. Enter Email: `mohamedsultanabbas@gmail.com` + Password (user supplies at runtime)
-4. Click **"Log in"** → Odoo dashboard loads
+1. Navigate to `https://odoo.moqtana.sa` → click **"Sign in"** → Odoo login form
+2. Enter Email: `mohamedsultanabbas@gmail.com` + Password (user supplies at runtime)
+3. Click **"Log in"** → Odoo dashboard loads
 
 ### ⚠ Password Handling
 - The password (`1batagoniaA`) must be entered by the user at runtime — **DO NOT persist it to disk** without explicit user consent

@@ -29,6 +29,83 @@ ORDER BY Message_TimeReceived DESC
 LIMIT 10;
 ```
 
+### Search by sender/recipient email address (precise)
+Use `Message_SenderAddressList` and `Message_ToRecipientAddressList` for exact email matching (more reliable than `Message_SenderList`/`Message_DisplayTo` which may contain display names only):
+```sql
+SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
+       Message_NormalizedSubject as Subject,
+       Message_SenderList as Sender,
+       Message_DisplayTo as Recipient,
+       Message_SenderAddressList as SenderEmail,
+       Message_ToRecipientAddressList as ToEmail,
+       substr(Message_Preview, 1, 200) as Preview
+FROM Mail
+WHERE Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
+   OR Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%'
+ORDER BY Message_TimeReceived DESC
+LIMIT 30;
+```
+
+### Search by person name (sender/recipient display name)
+```sql
+SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
+       Message_NormalizedSubject,
+       Message_SenderList,
+       Message_DisplayTo
+FROM Mail
+WHERE Message_SenderList LIKE '%Raoof%'
+   OR Message_DisplayTo LIKE '%Raoof%'
+ORDER BY Message_TimeReceived DESC
+LIMIT 20;
+```
+
+### Combined: person + keyword + folder context
+```sql
+SELECT m.Record_RecordID as ID,
+       datetime(m.Message_TimeReceived, 'unixepoch') as Received,
+       m.Message_NormalizedSubject as Subject,
+       m.Message_SenderList as Sender,
+       m.Message_DisplayTo as Recipient,
+       m.Message_SenderAddressList as SenderEmail,
+       m.Message_ToRecipientAddressList as ToEmail,
+       f.Folder_Name as Folder,
+       substr(m.Message_Preview, 1, 100) as Preview
+FROM Mail m
+LEFT JOIN Folders f ON m.Record_FolderID = f.Record_RecordID
+WHERE (m.Message_NormalizedSubject LIKE '%مصنع%'
+   OR m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
+   OR m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%')
+ORDER BY m.Message_TimeReceived DESC
+LIMIT 50;
+```
+
+### Classify direction (FROM/TO a person)
+```sql
+SELECT m.Record_RecordID as ID,
+       CASE WHEN m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%' THEN 'FROM'
+            WHEN m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%' THEN 'TO'
+            ELSE 'Related'
+       END as Direction,
+       datetime(m.Message_TimeReceived, 'unixepoch') as Received,
+       m.Message_NormalizedSubject as Subject,
+       m.Message_SenderList as Sender,
+       m.Message_DisplayTo as Recipient,
+       substr(m.Message_Preview, 1, 100) as Preview
+FROM Mail m
+WHERE m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
+   OR m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%'
+ORDER BY m.Message_TimeReceived DESC
+LIMIT 30;
+```
+
+### Count total matching emails
+```sql
+SELECT COUNT(*) as Total
+FROM Mail
+WHERE Message_NormalizedSubject LIKE '%keyword%'
+   OR Message_SenderAddressList LIKE '%person@domain.com%';
+```
+
 ### Find CG response codes (B / C)
 ```sql
 SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
@@ -48,6 +125,24 @@ WHERE Message_HasAttachment = 1
   AND Message_NormalizedSubject LIKE '%keyword%';
 ```
 
+### List all folders
+```sql
+SELECT Record_RecordID, Folder_Name, Folder_SpecialFolderType
+FROM Folders
+ORDER BY Record_RecordID;
+```
+
+### List tables
+```sql
+.tables
+```
+
+### Show table schema
+```sql
+PRAGMA table_info(Mail);
+PRAGMA table_info(Folders);
+```
+
 ## Extracting Attachments from .olk15MsgAttachment Files
 
 1. Find the attachment path from the Blocks table:
@@ -60,20 +155,22 @@ WHERE mb.Record_RecordID = <EMAIL_ID>;
 
 2. Full path: `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/<PathToDataFile>`
 
-3. Decode the base64-encoded PDF:
+3. Decode the base64-encoded PDF (⚠️ marker is `Content-transfer-encoding: base64\r\r`, offset +35):
 ```python
 import base64, subprocess
+from pathlib import Path
 
-with open('file.olk15MsgAttachment', 'rb') as f:
-    data = f.read()
-text = data.decode('latin-1')
-idx = text.find('base64')
-b64 = text[idx+7:].strip()
-pdf_data = base64.b64decode(b64)
+data = Path('file.olk15MsgAttachment').read_bytes()
+idx = data.find(b'Content-transfer-encoding: base64')
+b64_data = data[idx + 35:]  # skip marker + \r\r
+text = b64_data.decode('ascii', errors='replace')
+clean = text.replace('\r', '').replace('\n', '')
+pad = len(clean) % 4
+if pad:
+    clean += '=' * (4 - pad)
+pdf_data = base64.b64decode(clean)
 
-with open('/tmp/output.pdf', 'wb') as out:
-    out.write(pdf_data)
-
+Path('/tmp/output.pdf').write_bytes(pdf_data)
 r = subprocess.run(['pdftotext', '/tmp/output.pdf', '-'],
     capture_output=True, text=True, timeout=30)
 print(r.stdout)

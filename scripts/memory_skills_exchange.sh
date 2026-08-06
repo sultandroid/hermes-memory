@@ -230,7 +230,43 @@ if [ -f "$HOME/.hermes/memories/USER.md" ]; then
 fi
 echo "  ✓ Grok: unified memory written to ~/.grok/memory/"
 
-# ─── 6. SUMMARY ───
+# ─── 6. SYNC TO GITHUB (hermes-memory repo) ───
+echo ""
+echo "─── Step 6: Sync to GitHub ───"
+
+REPO="$HOME/hermes-memory"
+if [ -d "$REPO/.git" ]; then
+    cd "$REPO"
+    git pull --rebase origin main 2>/dev/null || echo "Nothing to pull"
+
+    # Update MEMORY.md and USER.md from Hermes
+    cp "$HOME/.hermes/memories/MEMORY.md" "$REPO/MEMORY.md" 2>/dev/null || echo "No MEMORY.md"
+    cp "$HOME/.hermes/memories/USER.md" "$REPO/USER.md" 2>/dev/null || echo "No USER.md"
+
+    # Update unified memory
+    mkdir -p "$REPO/unified"
+    cp "$SHARED_DIR/UNIFIED_MEMORY.md" "$REPO/unified/UNIFIED_MEMORY.md" 2>/dev/null || true
+
+    # Sync skills
+    rsync -a --delete "$HOME/.hermes/skills/" "$REPO/skills/" 2>/dev/null || true
+
+    # Sync scripts
+    rsync -a --delete "$HOME/.hermes/scripts/" "$REPO/scripts/" 2>/dev/null || true
+
+    # Commit and push
+    if git diff --quiet && git diff --cached --quiet; then
+        echo "  ✓ No changes to commit"
+    else
+        git add -A
+        git commit -m "Auto-sync $TIMESTAMP"
+        git push origin main
+        echo "  ✅ Memory + Skills synced to GitHub"
+    fi
+else
+    echo "  ✗ hermes-memory repo not found at $REPO"
+fi
+
+# ─── 7. SUMMARY ───
 echo ""
 echo "─── Exchange Summary ───"
 echo ""

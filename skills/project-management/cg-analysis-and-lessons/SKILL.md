@@ -67,6 +67,8 @@ The daily cron at 1 PM KSA is a **safety net** — catches anything the event-dr
    - Verbatim CG comment text
    - Code assigned (A/B/C/D/U)
 
+4. **Check for identical verbatim comments across suppliers in the same batch** — when multiple suppliers in the same scope category (e.g., Setwork) receive the exact same CG comment word-for-word, it signals a blanket rejection of the category, not individual supplier evaluation. See `references/cg-reviewer-behavior-patterns.md` §"Identical Verbatim Comment Pattern" for the detection workflow and response strategy.
+
 ### Phase 2: Build CG Rejection Pattern Register
 
 Create `Technical_Office/CG_Analysis/cg_rejection_patterns.md`:

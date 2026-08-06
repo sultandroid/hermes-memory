@@ -200,6 +200,24 @@ cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "03_Scope/<name>/<file>"
 - **Compliance gaps are not the same as SOW gaps** — a package can have a compliant SOW but still have an open compliance gap (e.g. AD Engineering SOW is compliant, but GAP-MEP-001 for MEP installer remains).
 - **The 3-layer system is empty by default** — creating the folders and READMEs is the first pass. Populating them with actual content (filed SOW PDFs, real submission dates, CG response logs) is the ongoing work.
 
+## Email-Scan-to-Conflict-Detection Workflow
+
+When the user asks to "find any conflicts" after a batch email scan, follow the workflow in `references/cross-specialist-conflict-detection.md`:
+
+1. **Phase 1-2** — SQLite query for specialist/subcontractor emails (2-month window) + extract CG codes from preview
+2. **Phase 3** — Download attachments (Python AppleScript generator + inline osascript fallback)
+3. **Phase 4** — Read documents (pdftotext/textutil/openpyxl, delegate parallel sub-agents)
+4. **Phase 5** — Cross-reference against specialist_register.md, prequalification_register.md, subcontractor_package_register.md
+5. **Phase 6** — Detect 5 conflict types: scope overlap, all-suppliers-rejected, contradictory CG, material non-compliance, unclear scope boundary
+6. **Phase 7** — Report: CG summary table → 🔴 Conflicts → 🟡 Risks → ✅ Actions
+
+**Key conflict patterns to watch for:**
+- **BMS scope** — 4 claimants (GITCO, SPS, Rawasin, JADCO) — no single strategy
+- **Setwork suppliers** — all 3 rejected same day (BTT, Saudi Emaar, Tannah) — no approved supplier
+- **Material compliance** — GUBI porcelain failed 3 spec requirements (R9 vs R10, PEI 3 vs PEI 4, chemical resistance)
+- **AV Design** — rejected even though Rawasin has an executed contract — design rework needed, not contract
+- **Subcontract Management Plan** — rejected (D) — no approved governance framework for managing subs
+
 ## Verification
 
 After completing an audit:

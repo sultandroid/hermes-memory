@@ -8,6 +8,31 @@ description: Fill Engineer-provided compliance sheets (Excel) with material data
 ## When to use
 The Engineer has sent their own compliance sheet format (Excel) with spec clauses already written. They want it filled with actual achieved values from datasheets, not a new sheet you created.
 
+## CRS (Comment Resolution Sheet) Template — Aseer Museum
+
+**Approved blank CRS template locations (use these, never build from scratch):**
+- Repo: `Technical_Office/Compliance_System/templates/CRS_TEMPLATE_BLANK.xlsx`
+- OneDrive: `04_Docs/09_Registers/CRS_Templates/CRS_TEMPLATE_BLANK.xlsx`
+
+**CRS template structure (columns):**
+- Header rows 1-10: PROJECT NAME, CRS NUMBER, DOCUMENT No., DOCUMENT TITLE, DISCIPLINE, DOCUMENT TYPE, DATE, Rev, DATA TABLES legend
+- Data rows start at row 11: `No. | Initial | Sheet | Reviewer Comment (E:I) | Originator Reply (J:O) | Reply By (P) | Reply Status (Q:R)`
+- Bottom rows: approval status legend (A/B/C/D), reviewer signature block
+
+**CRITICAL PITFALL — leftover comments from template:**
+When you copy the approved template (e.g. ZD-0094) to build a new CRS, the template's OWN data rows (11+) still contain the previous document's comments (e.g. Anwar/Noman comments from the Subcontract Management Plan). **You MUST clear rows 11+ before filling** or the new CRS will contain extra foreign comments. The template's data rows are merged cells — unmerge them first (`ws.unmerge_cells`), then set values to None, then fill your own rows.
+
+**CRITICAL RULE — CRS must sit BESIDE the CG response file:**
+For any submittal returned **Code C** (Revise & Resubmit), the CRS file MUST be placed in the SAME folder as the original CG response PDF, i.e. the `02_CG_Responses/` folder of the relevant plan/discipline. Do NOT put the CRS in a separate `Submission_Plan_CRS/` or `01_Source_Files/` folder. Both files together:
+- `.../02_CG_Responses/MOC-MUS-ASE-1E0-ZD-0102.pdf` (CG response)
+- `.../02_CG_Responses/MOC-MUS-ASE-1E0-ZD-0102_CRS_Rev01.xlsx` (our CRS reply)
+This keeps the CG comment + our response together for the resubmission package.
+
+**Fill pattern (verified working):**
+- Header value cells are merged — write to top-left: `D5` (CRS No), `H5` (CRS Rev), `K5` (DATE), `D6` (Doc No), `H6` (Doc Rev), `K6` (Discipline), `D7` (Title), `K7` (Doc Type)
+- Data rows: col1=No, col2=Initial, col3=Sheet, col5=Reviewer Comment, col10=Originator Reply, col16=Reply By, col17=Reply Status
+- Use plain "Accepted"/"Closed" wording; no symbols
+
 ## Steps
 
 ### 1. Read the Engineer's format

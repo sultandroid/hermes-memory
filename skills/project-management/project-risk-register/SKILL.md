@@ -130,8 +130,102 @@ The Download Snapshot workbook columns MUST match the website table columns exac
 - Never place master PRR IDs or internal register names in a discipline register's evidence. A risk ID may remain as an identifier in the master register, but public evidence must cite consultant-visible documents or neutral wording. Remove self-references such as `RMP APP` and `PRR-APP-*` from evidence text.
 - **Split download filename from server filename in HTML templates.** The `href` attribute points to the server file (e.g. `EXP-RISK-PRR-2026-036_RevC12_ACTIVE.xlsx`) but the `download` attribute should be a user-friendly name with project name, register code, snapshot date, and time (e.g. `Aseer_Regional_Museum_PRR_2026-07-25_1430.xlsx`). Use separate placeholders (`__XLSX_HREF__` and `__XLSX_DOWNLOAD__`) in the HTML template and generate both from the build script. The thumb rule: the server name is versioned and auto-incremented; the download name is what the user saves to their desktop.
 
-## Reference Files
+## Updating Risk Scores from CG Responses
 
+When a CG response arrives that changes the status of a risk (e.g. a Code C submission gets Code B on resubmission):
+
+1. **Verify the CG response in Outlook** — confirm the doc ref, date, and code from the actual email, not from memory or inference
+2. **Recalculate P×S** — if the risk event has passed or been resolved, reduce probability and/or severity accordingly
+3. **Update the risk JSON** — change `status`, `score`, `rating`, `probability`, `severity`, `last_reviewed`, and `target_close`
+4. **Update the event/consequence text** — reflect the new reality (e.g. "Rev.02 got Code B — BOD now approved")
+5. **Mark completed actions** — any action that was waiting on this CG response gets `status: Completed` with evidence
+6. **Add a history entry** — date, action taken, by whom, and what changed
+7. **Do NOT close the risk** if residual actions remain (e.g. site investigations still in progress) — downgrade to Watch instead
+
+### Example: PRR-DES-07 (Structural DD Code C → B)
+
+| Field | Before | After |
+|-------|--------|-------|
+| Score | 16 Critical | 9 High |
+| Status | Open | Watch |
+| P×S | 4×4 | 3×3 |
+| A6 (resubmit) | Not Started | Completed |
+| Event text | "CG returned Rev.01 as Code C" | "Rev.02 got Code B — BOD approved" |
+
+## Risk Review / Discussion Protocol (Telegram / One-by-One)
+
+When the user asks to "show risks" or "discuss risks" in a conversational channel (Telegram, chat):
+
+### Presentation Format
+
+Present each risk as a structured card with these fields in order:
+
+| Field | Example |
+|-------|---------|
+| **ID** | PRR-DES-05 |
+| **Category** | DES (Design) |
+| **Title** | New MoC object list triggers cross-discipline DD redesign |
+| **P×S** | 4 × 4 = **16** |
+| **Rating** | **Critical** |
+| **Status** | Open |
+| **Owner** | Design Manager |
+| **Cause** | MoC issued new object list after DD gate passed |
+| **Consequence** | Cascading redesign across all disciplines — 90%/IFC gates slip |
+| **Response Strategy** | [Avoid] Issue cross-discipline impact register; agree cut-off date with MoC |
+| **Actions** | Table of action items with #, text, owner, due date, status |
+| **Target Close** | 2026-08-21 |
+
+### Mandatory Elements
+
+1. **Always state the action needed** — after presenting the risk, explicitly say what the user/owner should do next. The user said: *"always tell me the action or the response so i know what is the update you need"* (18-Jul-2026 session).
+
+2. **Flag overdue actions** — if any action item is past its due date, highlight it with "(overdue X days)".
+
+3. **Answer "did we add this before?"** — when the user asks if a risk existed previously, search session history and provide the timeline:
+   - When the risk was created
+   - What changed in each revision
+   - Whether the RFI/action was actually executed or just planned
+   - Source: the risk was added during which merge/update event
+
+4. **Show the full action plan** — not just the response strategy. The user needs to see individual action items with owners and due dates to know who to chase.
+
+5. **One risk per turn** — present one risk, wait for discussion, then move to the next. Do not dump multiple risks in a single message unless the user asks for a summary.
+
+### Order of Review
+
+1. Critical risks first (highest score first)
+2. Then High risks
+3. Then Medium risks
+4. Within each rating, newest risks first (by creation date)
+
+### Pitfalls
+
+- Do NOT embed score text in the Response/Action field — the user will reject it
+- Do NOT present risks without their action items — the user needs to know what to do
+- When the user says "show the most recent risks", sort by creation date descending, not by ID
+- If a risk has no actions defined, say "No discrete actions recorded" rather than fabricating them
+- When the user asks about a specific risk, load its full JSON from `risks.json` (not just the markdown table) to get actions, evidence, history, and treatment file path
+
+### Drafting RFIs / Emails from Risk Discussions
+
+When the user asks to draft an email or RFI about a specific risk (e.g. PRR-AV-01 — AV content 'by others'):
+
+1. **Load the full risk JSON** from `risks.json` — the markdown table doesn't show actions, evidence, or history
+2. **Check if the action was already planned** — the risk's `actions` array may already contain the RFI as a planned action. If so, the email is executing an existing action, not creating a new one
+3. **Flag overdue actions** — if the RFI action was due days/weeks ago, note it in the draft
+4. **Include contract references** — every RFI must cite the governing contract documents:
+   - **ER** (Employer's Requirements) — service life, performance criteria, AV equipment specs
+   - **SOW §2.2** — scope exclusions (e.g. "AV software/media → supplied by others")
+   - **SOW p.17** — MoC-supplied items list (research, text, images, film list)
+   - **RACI Matrix** — who is Responsible/Accountable for each AV item (AV-01 through AV-08)
+   - **MoC Object Schedule** — what objects exist and what display methods they need
+5. **Distinguish physical objects from digital content** — the MoC object list contains physical artifacts only. AV content (videos, motion graphics, interactives) is a separate scope. The RFI must clarify this boundary explicitly
+6. **Structure the RFI by gallery** — group questions by gallery (Welcome Gallery screens, Flowersmen slideshow) with specific object IDs
+7. **Add a contractual protection question** — if content specs arrive after hardware freeze, who bears rework cost? Cite Contract Art. 14 (variations)
+8. **Send the draft as plain text** — the user copies and sends manually. No Outlook drafts, no attachments. Keep the draft short — no preamble explaining what the email contains
+
+## Reference Files
+- `references/av-content-vs-object-list.md` — Distinction between MoC-approved physical object list (295 artifacts) and AV digital content (videos, motion graphics, interactives). Critical for PRR-AV-01: the object list contains NO AV content files. Use when discussing AV content risks or drafting RFIs about 'by others' content boundaries.
 - `references/design-coordination-risk-identification.md` — 7-phase methodology for extracting coordination risks between AV/IT/ELV specialist submissions and base build MEP infrastructure. Covers BOQ power load extraction, rack room heat analysis, projection path spatial conflicts, containment segregation, UPS strategy gaps, and scope boundary risks. Use when reviewing a specialist design submission (AV, IT, Security, ELV) before IFC or before D&B tender.
 - `references/template-application-pattern.md` — Apply one existing register's column layout, styling, sheets, and dashboard structure to another existing register. Covers data column mapping, scoring scale bridging, source styling capture, Cover preservation, and verification.
 - `references/subcontractor-risk-register-pattern.md` — Markdown risk register for single-subcontractor packages during contract negotiation. Phase-gate aligned (D0→D300), sourced from contract documents (offer, SOW, DMP), not project memory. Use when the user is negotiating with a specific subcontractor and needs decision-support risks, not a governance deliverable.

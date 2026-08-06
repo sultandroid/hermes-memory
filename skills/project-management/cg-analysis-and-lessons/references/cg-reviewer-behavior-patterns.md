@@ -41,6 +41,17 @@
 8. Cross-disciplinary coordination gaps
 9. Organisational chart / team structure deficiencies
 10. Disputed milestones / contractual interpretation differences
+11. **Setwork supplier lacks museum-specific experience** — CG rejects prequalification (Code D) when a supplier's portfolio shows only residential/commercial/office furniture with no museum or cultural exhibition projects. Both BTT and Saudi Emaar received identical verbatim rejection: "The supplier lacks relevant experience in similar projects." This is the #1 blocker for setwork supplier prequal on museum projects.
+12. **Furniture supplier insufficient documentation** — CG gives Code C (not D) for furniture suppliers who submit catalogues but lack: references of similar projects, sample fabrication drawings, detailed scope of work, and evidence of completed projects. CG distinguishes between "no relevant experience" (Code D for setwork) and "insufficient evidence of capability" (Code C for furniture).
+
+## Identical Verbatim Comment Pattern
+
+When multiple suppliers for the same scope category receive the **exact same CG comment verbatim**, it signals a systematic issue with the submission package, not individual supplier quality. In Aug 2026, BTT and Saudi Emaar (both Setwork suppliers) both received: *"The supplier lacks relevant experience in similar projects."* — word-for-word identical. This means:
+
+- CG applied a blanket rejection to the entire Setwork supplier category
+- The issue is the submission package framing (how the experience was presented), not the individual supplier's capability
+- The fix is to re-frame the submission to explicitly highlight museum/cultural project experience, or find suppliers with verifiable museum references
+- Furniture suppliers (Anaroque) got a different treatment (Code C, not D) — CG distinguishes between scope categories even within the same submission batch
 
 ## What CG Will Reject
 

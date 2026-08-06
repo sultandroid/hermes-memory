@@ -6,11 +6,12 @@ description: Process any incoming document (PDF, DOCX, XLSX, MD, email) — extr
 
 ## When to use
 
-Any time a document arrives (email attachment, uploaded file, Aconex transmittal, new file in repo) and needs to be:
+Any time a document arrives (email attachment, uploaded file, Aconex transmittal, new file in repo, external download link) and needs to be:
 - Classified by type (IR, NCR, ZD, PQ, Contract, Plan, Invoice, RFI, SI, Letter, MoM, etc.)
 - Extracted for key fields (dates, references, status codes, parties, amounts)
 - Linked to affected risk register entries
 - Logged in the appropriate markdown registers
+- **Converted from binary (Excel/PDF/ZIP) to structured markdown** in the repo — see `references/external-file-to-repo-markdown.md` for the full workflow covering Zoho downloads, multi-sheet Excel with dynamic column mapping, gallery-by-gallery analysis, and risk identification
 
 ## Script location
 
@@ -83,6 +84,12 @@ Files are skipped if their hash matches a previously processed entry (incrementa
 
 The script has a keyword-to-risk-ID map covering ~40 risk IDs across PRR, DDR, HSE, and AVR registers. When a document mentions a keyword (e.g. "showcase", "glasbau", "mep", "oddy"), the corresponding risk gets an evidence entry appended.
 
+## Reference files
+
+| File | Covers |
+|------|--------|
+| `references/pq-knowledge-file-pattern.md` | Batch conversion of prequalification PDFs to structured MD knowledge files — fallback chain for corrupted PDFs, trade classification, CG comment patterns, clearance paths |
+
 ## Pitfalls
 
 - **risk_register mapping uses `{prefix}_risks.json`** — the `risk_register` entry in `REGISTER_FILES` has a `{prefix}` placeholder that isn't resolved. The script falls through to the direct `RISK_JSON_MAP` for risk updates, but the register update step logs a "file not found" warning. This is cosmetic — risk JSONs are still updated correctly.
@@ -91,3 +98,12 @@ The script has a keyword-to-risk-ID map covering ~40 risk IDs across PRR, DDR, H
 - **Markdown table appending** — inserts a row after the `|---|` separator line. If the table has no separator, the append fails. All standard registers have this.
 - **Pre-commit hook blocks 00_Contracts/** — if backfill processes contract files, `git add -A` will stage them and the commit will fail. Use `git reset HEAD 00_Contracts/` before committing.
 - **Post-commit hook modifies risks.json** — after commit, the hook regenerates `risks.json`. Use `git stash` before `git pull --rebase`.
+- **Corrupted PDFs are common** — many project PDFs have broken xref tables, missing endstream markers, or damaged object streams. pdftotext will silently produce no output (exit code 1) with no useful error. **Fallback chain for PDF extraction:**
+  1. `pdftotext file.pdf /tmp/output.txt` — fastest, works for 90% of clean PDFs
+  2. `pdftotext -layout file.pdf /tmp/output.txt` — helps with some corrupted xref tables
+  3. `python3 -c "import fitz; doc=fitz.open('file.pdf'); ..."` (PyMuPDF) — handles many corrupted PDFs that pdftotext cannot, though it may lose images and some formatting
+  4. `python3 -c "from pdfminer.high_level import extract_text; ..."` — last resort for text extraction
+  5. `python3 -c "import pdfplumber; ..."` — alternative fallback for table-heavy PDFs
+  - If ALL tools fail (Unexpected EOF, object is not a stream), the PDF is genuinely corrupted and must be re-sourced from the sender.
+  - **Always check output file size** after extraction — a 0-byte or tiny output means extraction failed even if exit code was 0.
+  - For PQ documents specifically, the cover sheet text is often extractable even when the body (catalog pages) is image-based. Don't assume a short extraction means the PDF is empty — check the page count.

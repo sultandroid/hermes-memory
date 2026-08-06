@@ -17,14 +17,8 @@ git pull --rebase origin main 2>/dev/null || echo "Nothing to pull"
 cp "$HOME/.hermes/memories/MEMORY.md" "$REPO/MEMORY.md" 2>/dev/null || echo "No MEMORY.md"
 cp "$HOME/.hermes/memories/USER.md" "$REPO/USER.md" 2>/dev/null || echo "No USER.md"
 
-# 3. Run exchange script to update UNIFIED_MEMORY.md
-if [ -f "$HOME/.hermes/scripts/memory_skills_exchange.sh" ]; then
-    bash "$HOME/.hermes/scripts/memory_skills_exchange.sh" 2>/dev/null || true
-    if [ -f "$HOME/.hermes/shared_exchange/UNIFIED_MEMORY.md" ]; then
-        mkdir -p "$REPO/unified"
-        cp "$HOME/.hermes/shared_exchange/UNIFIED_MEMORY.md" "$REPO/unified/UNIFIED_MEMORY.md"
-    fi
-fi
+# 3. Unified memory is already synced by memory_skills_exchange.sh (runs separately)
+#    No need to re-run it here — would cause double GitHub push.
 
 # 4. Sync ODOO.md if reference updated
 if [ -f "$HOME/.hermes/hermes-agent/samaya_odoo_hermes_setup.md" ]; then

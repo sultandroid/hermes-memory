@@ -9,13 +9,99 @@ created_by: agent
 
 Use when working with files in `~/Library/CloudStorage/OneDrive-...` (or any OneDrive mount point) on macOS and reads/writes fail in confusing ways. Covers the three failure modes that look similar but have different fixes, and the fallback to a local working copy.
 
-## The three failure modes
+## Bypass techniques that sometimes work
+
+When standard `cp`, `ditto`, `rsync`, `dd`, and `strings` all fail with EDEADLK, these techniques may work. Try in this order:
+
+### 1. `cp -c` (clonefile/APFS copy-on-write)
+
+```bash
+cp -c "/path/to/OneDrive/file.xlsx" /Volumes/MIcro/.pi-tmp/work/
+```
+
+`cp -c` uses APFS clonefile(2) which can bypass the File Provider lock in some cases where regular `cp` (which uses fcopyfile) cannot. **Not universal** — it worked for one file in a session but failed for others in the same directory. Worth exactly one attempt before falling back to the retry-loop or reboot.
+
+### 2. Python retry-loop with `io.BytesIO`
+
+Read the file into memory via Python with retries, then parse from the in-memory buffer:
+
+```python
+import time, io
+
+path = '/path/to/OneDrive/file.xlsx'
+for attempt in range(10):
+    try:
+        with open(path, 'rb') as f:
+            data = f.read()
+        # Parse from memory — bypasses the lock for the parser
+        import openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(data), data_only=True)
+        # ... use wb normally
+        break
+    except OSError as e:
+        if 'Resource deadlock' in str(e):
+            time.sleep(2)
+            continue
+        raise
+```
+
+This works because the `open()` call is the only point of contact with the locked file. Once the bytes are in memory, the parser never touches the filesystem again. The retry loop (up to 10 attempts with 2 s delay) usually succeeds within 4-6 attempts as the File Provider lock is transient at the read level. **Does not work during write-block** — only for reads.
+
+### 3. `ditto --norsrc`
+
+```bash
+ditto --norsrc "/path/to/OneDrive/file.xlsx" /tmp/copy.xlsx
+```
+
+`--norsrc` skips extended attributes and resource forks, which can sometimes avoid the lock. Rarely works — try before the retry-loop, not after.
+
+### 5. Generate from template instead of copying (best for locked template files)
+
+When the locked file is a **template** (DOCX, XLSX, HTML) that can be regenerated programmatically, skip the copy entirely:
+
+- **DOCX**: Use `samaya_doc_template.py` (at `_Style-Guides/Doc Style Guide/samaya_doc_template.py`) to generate a fresh branded document
+- **XLSX**: Use `openpyxl` to create a new workbook with the same structure
+- **HTML**: Recreate from known brand specs
+
+This avoids the OneDrive lock entirely and produces a clean file. Only works when the file is a template/starter, not when it contains unique data.
+
+```python
+# Example: generate Samaya DOCX instead of copying locked OneDrive file
+import sys
+sys.path.insert(0, '_Style-Guides/Doc Style Guide')
+from samaya_doc_template import SamayaDoc
+
+doc = SamayaDoc()
+doc.create_header('Project Name', 'REF-001', 'DOC', 'A', 'Aug 2026')
+doc.add_h1('DOCUMENT TITLE')
+doc.add_body('Content here.')
+doc.save('/tmp/Generated_Template.docx')
+```
+
+When all shell-level copy methods fail, AppleScript's Finder `duplicate` command can sometimes bypass the lock because Finder uses a different I/O path:
+
+```applescript
+tell application "Finder"
+    set src to POSIX file "/path/to/OneDrive/file.xlsx" as alias
+    set dst to POSIX file "/Volumes/MIcro/.pi-tmp/work/" as alias
+    duplicate src to dst
+end tell
+```
+
+**Caveats:**
+- This command **hangs indefinitely** (no timeout) if the lock is persistent — the terminal tool will time out after 15-30s with no output
+- It creates a 0-byte file on the destination if it fails silently
+- Only worth one attempt. If it hangs, kill it and move to reboot
+- The 0-byte file it leaves behind is harmless — just overwrite it later
+
+## The four failure modes
 
 | Mode | File on disk | Behaviour | Recovery |
 |---|---|---|---|
 | **Transient EDEADLK** | Real bytes, just briefly locked | `cp` fails with `Resource deadlock avoided`, retries succeed within 15-60 s | `sleep 30; retry` |
 | **Stale stub** (Files-on-Demand not hydrated) | Real-looking size, fake content | `unzip -l` says "End-of-central-directory signature not found"; `openpyxl` raises `BadZipFile`; `textutil` errors; `cat` shows PDF binary header | Read from the working copy on the Micro volume (or the user's external backup drive), edit there, write back when OneDrive lock clears |
 | **Write-block** (File Provider TCC) | Fully local, readable | ALL write methods fail with `Operation not permitted`: `cp`, `mv`, `ditto`, `cat >`, `mkdir`, Python `open('wb')`, AppleScript Finder `duplicate`/`move`. Creating new files or dirs also blocked. | Stage files to non-OneDrive volume (MICro, /tmp/), open both Finder windows, tell user to drag manually. Only Finder and OneDrive app can write. |
+| **Persistent EDEADLK** (kernel-level File Provider lock) | Real bytes, locked at kernel level | `cp`, `dd`, `rsync`, `ditto`, `strings`, `cat`, `file`, Python `open()`, `os.read()` ALL fail with `Resource deadlock avoided`. Even after `kill -9` of all OneDrive processes (`OneDrive`, `OneDrive Sync Service`, `OneDrive Finder Extension`) and `launchctl bootout` of the sync service. `lsof` shows no process holding the file. `brctl status` says "Path is outside of any CloudDocs app library". | **Only reboot clears this lock.** The lock is held by the macOS File Provider kernel extension, not a user-space process. No amount of process killing (`kill -9`, `killall -9 OneDrive*`), launchctl unloading, or brctl eviction will release it. After reboot, read files before OneDrive re-establishes its sync session. Alternative: use the OneDrive/SharePoint web UI in browser to download files, or ask the user to copy files manually via Finder to a non-OneDrive volume (Micro, Desktop, /tmp/). |
 
 **Diagnose first.** A 0-byte file or a fresh EDEADLK is one thing. A file with a real-looking size (15 KB, 79 KB, 471 KB) that won't unzip is the stub. Don't waste 5+ tool calls retrying — check `brctl status` for `SYNC DISABLED (app not installed)`, then go straight to the working-copy path. If `cp file /path/to/OneDrive/` fails with `Operation not permitted` but the source file is readable, this is the write-block — don't retry, use the Finder-drag workaround instead.
 

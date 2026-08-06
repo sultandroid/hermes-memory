@@ -203,6 +203,10 @@ When the designer initially pushes back on a CG comment but then prepares draft 
 - Keep the Action Required focused on what remains (e.g., "Update title sheet and submit final")
 - The designer's frustration or pushback language stays in the source email — do not carry it into the CR Sheet
 
+### CRS from the Approved MOC Template (Fresh Code-C Response)
+
+When CG returns Code C and you must produce the CRS that accompanies the Rev 01 resubmission, **copy the latest approved CRS Excel template and refill it** (preserves the exact MOC layout, merges, masthead) rather than building a fresh workbook. See `references/crs-from-template-cell-map.md` for the full verified cell map (header fields + comment data rows), the MergedCell writing rule, and the confidential design-transition note.
+
 ### CRS Revision Update (Existing CRS to Rev 01+)
 
 When CG returns a CRS on a submitted document and you have prepared Rev 01 of the document addressing the comments, update the CRS to Rev 01 with originator replies. See `references/crs-revision-update.md` for the full workflow with openpyxl patterns, reply templates by comment type, formal code mapping, and filing instructions.
@@ -478,6 +482,7 @@ After producing the CRS, apply changes directly to the plan document:
 | Contingency tables | Section 7.2, 8.2 | Update score ranges to match new 5x5 bands |
 
 ## Pitfalls
+- **Appending rows to an append-only markdown register: NEVER use `patch` with `replace_all=true`.** In `00_Status/action_items.md`-style registers, table rows repeat across sections (the same "Review Stage 4 Showcase Lighting Package" line appears twice), so a `replace_all` find-and-replace duplicates the new block into EVERY occurrence — corrupting the whole file. Restore with `git checkout -- <file>` and redo. The reliable append is: `write_file` a temp file with just the new rows, then `cat tempfile >> register.md` and `rm tempfile` (the terminal `>>` heredoc is blocked by the `&` tool guard). Only `patch` when you can anchor on a genuinely unique line — and even then, prefer appending at EOF.
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks
 - Comments may have inline status markers like "OK", "OK - comply with Ad.", "OK - Update in DL" — these need careful parsing
 - The RACI matrix defines who is responsible for what; always consult it before assigning actions

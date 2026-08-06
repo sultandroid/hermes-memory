@@ -311,6 +311,40 @@ for path, expected_prefix in [
 
 Fix contamination by keeping only the expected prefix and renaming any SMP leftovers.
 
+## Rebuild → commit → push workflow (after a risks.json change)
+
+When a risk is added/updated in `risks.json` AND the user asks to "update the webapp too", run the full build, then commit + push:
+
+```bash
+# 1. Rebuild the HTML page from risks.json (reflects new risk, rev bump)
+python3 webapp/build_risk.py          # → src/index.html (prints risk count + rev)
+
+# 2. Regenerate Excel snapshots, bumping the counter for a fresh snapshot
+python3 webapp/build_snapshots.py --bump   # → src/EXP-RISK-PRR-YYYY-NNN_Rev<rev>_ACTIVE.xlsx
+
+# 3. Verify the new risk actually landed in the page
+#    (use search_files on src/index.html for the new risk ID)
+
+# 4. Stage: the new snapshot xlsx is GITIGNORED (*.xlsx at .gitignore)
+#    but its predecessor was force-added, so track the new one explicitly:
+git add -f 06_Risk_System/webapp/src/EXP-RISK-PRR-*.xlsx
+git add 06_Risk_System/webapp/snapshot_counter.json 06_Risk_System/webapp/src/index.html
+git commit -m "..."
+```
+
+**Push conflict (remote-ahead + post-commit hook dirty `index.html`):** The repo's post-commit hook regenerates register webapps and dirties `06_Risk_System/webapp/src/index.html` after every commit, so a non-fast-forward push is common. Sequence:
+
+```bash
+# Discard the local post-commit-dirited index.html BEFORE pulling (else rebase conflicts)
+git checkout -- 06_Risk_System/webapp/src/index.html
+git pull --rebase origin main
+# The hook dirties index.html AGAIN after the rebase commit — discard once more
+git checkout -- 06_Risk_System/webapp/src/index.html
+git push origin main
+```
+
+Do NOT force-push — the discard-and-rebase flow preserves the remote's newer commits and is safe because `index.html` is auto-generated.
+
 ## Auto-deploy cron overrides SCP
 
 The `deploy-registers-on-commit` cron (every 15 min) deploys from git — it **overwrites** manually SCP'd files. Commit built HTML files to git after SCP to keep them in sync.
