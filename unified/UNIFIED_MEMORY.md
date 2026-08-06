@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-07-31 07:31:18
+Generated: 2026-08-06 16:13:38
 
 ---
 
@@ -17,9 +17,8 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Never cite unread sources. OneDrive EDEADLK = use Micro volume. .olk15Msg base64 after 'base64' header.
-British English only. Never Arabic in replies — summarize Arabic sources.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
+User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -36,16 +35,17 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
 Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
+Always use the full research-enabled pipeline:
 
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
-GitHub Discussions for multi-agent planning. Surge.sh = test/temp only. Production = Hostinger (samaya-factory.com).
-LN register: English-only, newest first. Dashboard goal: merge Risk+LN+Reports into bilingual SPA at samaya-factory.com. /aseer/ viz app URL unchanged.
-Sultan House (B210, Al-Firdous) — residential finishing at land210.vercel.app. Eng office: Amjad Consultancy ACG. NOT Samaya.
-Sultan House: no Samaya branding. Surge: sultan-house-report.surge.sh.
-Personal projects (Sultan House/Building 210) are NOT Samaya — no Samaya branding/footer. Use 'CONFIDENTIAL'.
-Egyptian background — checks Thanaweya Amma results through government portals (natega.youm7.com, emis.gov.eg). Has an Egyptian phone (011... format) and uses sultan@samayainvest.com for personal matters. Prefers English-only replies; short directive fragments; keeps asking until it works ("try now").
+CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
+Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid GitHub).
+Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
+CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
+Factory warehouse monitor: classify by PO's project_id, not warehouse name. project_id=244 = Samaya Factory = correct. Chatter notes: plain text only, no icons/tags/markdown.
+Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -63,6 +63,8 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
+CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
+Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -80,11 +82,11 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Mohamed Samir** (Construction Manager)
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
 - **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
-You are the **Commander**. Your job is to **lead, plan, delegate, review, and deliver**. Do NOT do grunt work yourself — deploy your labor army.
-1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 
 ## Agents & Tools
 
+Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
+Chatter notes in Odoo: plain text only, no icons, no tags, no markdown. Short and direct like a human message.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -103,17 +105,15 @@ task_group: Hermes Agent configuration
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 - The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
-- `hermes_cli/auth.py`: `PROVIDER_REGISTRY["nous"]` with `auth_type="oauth_device_code"`, `DEFAULT_NOUS_PORTAL_URL`, `DEFAULT_NOUS_INFERENCE_URL`.
-- `hermes_cli/config.py`: `NOUS_BASE_URL` optional env metadata.
 
 ## Contracts & Documents
 
-Contract: lump-sum D&B, scope creep flag to Adel. VO Art.14(5)(e).
-Sultan House (B210, Al-Firdous) — residential finishing at land210.vercel.app. Eng office: Amjad Consultancy ACG. NOT Samaya.
-Code B plans: PDF→MD with YAML frontmatter (agent_edit:prohibited) → 00_Contracts/. Drafts stay in 03_Plans/. Strip DS header forms.
-Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries.
+CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
+Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
+MoC object list (Jul 2026) = 295 physical artifacts, NOT AV content. Only 11 objects need screens/projectors. AV media content (videos, motion graphics, interactives) is separate scope not in object list.
+Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries. Email cron MUST update actual registers (submittal/prequal/assessment/risk/action_items), not just review log; verify CG codes from actual email preview, not cron summary.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
-Eng. Mohamed Sultan, Tech Office Mgr. Prefers plain British English docs — no special chars, no AI clichés. Concise delivery. Fill TBDs from project data before presenting. Contract-aware, audits against approved plans.
+Risk review: check Outlook emails for evidence before updating scores. User spots when CG comments don't apply to actual submission stage. Works risks systematically in priority order.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -141,9 +141,8 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 
 ## Locations
 
-Never cite unread sources. OneDrive EDEADLK = use Micro volume. .olk15Msg base64 after 'base64' header.
-For documents to Egyptian consulting offices (Amjad etc.), use Arabic or bilingual AR/EN — not English-only.
-Font preference for Arabic content: Cairo (Google Fonts). Use for bilingual EN/AR documents.
+OneDrive EDEADLK = copy to Micro volume first. .olk15Msg base64 after 'base64' header.
+User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -156,3 +155,4 @@ He prefers execution plus verification over explanation-only help. For printable
 - Pi config, macOS storage, and museum ELV review: ~/.pi/agent/settings.json, /System/Volumes/Data, Library/CloudStorage 25G, BMA, VESDA, technical earth
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
+rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl

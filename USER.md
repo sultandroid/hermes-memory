@@ -6,6 +6,6 @@ Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotatio
 §
 When I say "بسط اللغه مش فاهم" (simplify, I don't understand), strip all technical detail and give the plain answer in simple Arabic. No code, no SQL, no complex explanations — just the direct answer.
 §
-Formal RFIs/emails to CG/MoC: cite contract refs (SOW §, ER §, RACI, DMP). Signature block: Prepared by (me) → Reviewed by (specialist) → Checked by (Waris Sultan, PM) → Approved by (Adel Darwish, PD). Verify TQ serial vs Aconex.
+User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 §
 Risk review: check Outlook emails for evidence before updating scores. User spots when CG comments don't apply to actual submission stage. Works risks systematically in priority order.

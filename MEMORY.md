@@ -22,4 +22,6 @@ MoC object list (Jul 2026) = 295 physical artifacts, NOT AV content. Only 11 obj
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
-Last Aconex scan: 2026-08-05. Hossam CG: ZD-0102 C, ZD-0078 C, ZD-0105 B, ZD-0100 C. Hesham: ZD-0080, ZD-0103, ZD-0084, ZD-0089, SI-01. Jim: SMP, Audit 02, First Floor dwgs. Dogan: Showcase Lighting WeTransfer. Abdrabo: CVs reminder. Zamzam: DOC-STR-061, SDR-ME-004, IR-EL-051. Aconex: WTRAN-000143-148, CGP-WTRAN-000220-227.
+Factory warehouse monitor: classify by PO's project_id, not warehouse name. project_id=244 = Samaya Factory = correct. Chatter notes: plain text only, no icons/tags/markdown.
+§
+Chatter notes in Odoo: plain text only, no icons, no tags, no markdown. Short and direct like a human message.

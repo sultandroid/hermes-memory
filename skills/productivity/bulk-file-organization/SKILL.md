@@ -191,6 +191,53 @@ os.rename(old, new)   # Python atomic rename on same filesystem
 - Check the document metadata/title when possible to confirm content
 - User correction of folder naming is a high-priority signal — do not defer
 
+### Pass 5b: Content-hash dedup (before deleting anything)
+
+When loose files at root duplicate files inside an already-organized numbered subfolder tree, dedup by **md5 content hash**, never by filename. Several distinct-looking names can be byte-identical:
+
+| Pattern | Example | Why it's a dup |
+|---|---|---|
+| Download-ID prefix | `48558_MOC-MUS-ASE-1A0-1G-0005.pdf` | Leading number is a OneDrive/email download ID, not part of the doc number |
+| `_dup`/`_dup1`/`_dup2`/`_dup3` | `MOC-...-0003_dup3.pdf` | Finder copy suffix |
+| `(1)` / ` - Copy` | `MOC-...-0005 - Copy.pdf` | Browser/email re-save |
+| Same doc in `Approval/` | `.../Approval/MOC-...-0005.pdf` | Already filed |
+
+```python
+import os, hashlib
+from collections import defaultdict
+def md5(p):
+    h=hashlib.md5()
+    with open(p,'rb') as f:
+        for c in iter(lambda:f.read(65536),b''): h.update(c)
+    return h.hexdigest()
+by_hash=defaultdict(list)
+for dp,_,fns in os.walk(ROOT):
+    for fn in fns:
+        if fn.startswith("._"): continue   # skip AppleDouble
+        by_hash[md5(os.path.join(dp,fn))].append(os.path.join(dp,fn))
+dups={h:pl for h,pl in by_hash.items() if len(pl)>1}
+```
+
+Before executing: always present the duplicate groups to the user and ask the **keep-history decision** — e.g. each submittal contains both the original and `Rev.01`. Ask whether to keep both (preserve history, safest) or collapse to the latest revision only. Never silently delete the older revision inside an organized folder.
+
+### Pass 5c2: Inspect archives (zip/rar) BEFORE extracting
+
+The folder's compressed files may already be extracted (the extraction sits beside the archive). Blindly extracting floods the folder with duplicates. Inspect first, then only extract the ones not already materialized:
+
+```bash
+zipinfo -1 "file.zip" | head -20     # list zip entries (paths)
+7z l "file.rar" 2>/dev/null | tail   # list rar entries
+# Then check: does a sibling dir already contain these files? (compare entry paths vs on-disk tree)
+```
+
+Disposition:
+- Archive **already extracted** (sibling folder with same content) → just delete the archive (+ its `._` shadow).
+- Archive **not extracted** (no matching on-disk folder) → extract, then delete the archive.
+- Archive contains a **nested archive** (`CAD/.../0002.rar` inside a zip) → note it; extract the nested one too.
+- Strip the temp `~$*.xlsx` Excel-lock entry found inside rar files; it is not a document.
+
+Then **re-run the md5 dedup** from Pass 5b after extraction — extraction can surface new duplicates with files already on disk.
+
 ### Pass 6: Build target structure
 
 Before moving, plan the new directory tree. Number prefix for ordering:

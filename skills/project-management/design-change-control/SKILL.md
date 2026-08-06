@@ -150,13 +150,163 @@ When user sends screenshots of Stage 3/Stage 4 drawings:
 6. **Image OCR is lossy** — tesseract may miss text in small fonts, tables, or complex layouts. Cross-reference with original PDF where possible.
 7. **Don't embed images directly in Excel data rows** — openpyxl places them as floating objects that overlap cells. Use hyperlinks in cells + a dedicated "Embedded Images" sheet instead.
 
+## NRS Audit Report Handling — Proactive Design Quality Audits
+
+NRS (Nissen Richards Studio) periodically issues audit reports that are **proactive quality checks**, not CG comments. These are distinct from CG rejection patterns and need their own handling workflow.
+
+### What NRS Audit Reports Are
+
+| Feature | NRS Audit | CG Comment Response |
+|---------|-----------|-------------------|
+| **Source** | NRS (designer) — proactive | CG (consultant) — reactive review |
+| **Purpose** | Flag design discrepancies before they become CG issues | Respond to CG's review findings |
+| **Tone** | Collaborative — "we found this issue" | Formal — "CG requires this change" |
+| **Action** | Samaya decides how to address | Samaya must comply or formally dispute |
+| **Risk linkage** | May already be covered by existing PRR/DDR risks | Often triggers new risk entries |
+
+### Workflow
+
+#### Step 1: Extract the Report Content
+
+NRS audit reports arrive as email attachments (PDF). Extract via Outlook:
+
+```bash
+# Get attachment name
+osascript -e '
+tell application "Microsoft Outlook"
+  set theMessage to message id <EMAIL_ID>
+  set atts to attachments of theMessage
+  repeat with att in atts
+    log name of att
+  end repeat
+end tell
+'
+
+# Save attachment
+osascript -e '
+tell application "Microsoft Outlook"
+  set theMessage to message id <EMAIL_ID>
+  set atts to attachments of theMessage
+  repeat with att in atts
+    save att in "/tmp/" & name of att
+  end repeat
+end tell
+'
+```
+
+If Outlook save fails (common), use the .olk15Msg base64 extraction method from `outlook-data-extraction` skill.
+
+#### Step 2: Create Analysis Sidecar
+
+File under `03_Design_Files/Architecture/NRS_Reports/` with YAML frontmatter:
+
+```yaml
+---
+last_updated: YYYY-MM-DD
+owner_agent: Hermes
+status: active
+source: <EMAIL_ID>_<PDF_FILENAME>
+---
+```
+
+Content structure:
+- **Summary** — one paragraph on what the report covers
+- **Key Points** — bullet list of findings
+- **Actions Required** — checklist of what needs to happen
+
+#### Step 3: Consolidate Multiple Reports
+
+When NRS issues multiple audit reports (e.g., Stage 3 Audit with 15 items + Stage 4 Audit Report 02 with design studies), **merge them into one master document**:
+
+| Report | Focus | Items |
+|--------|-------|-------|
+| Stage 3 Audit (May 2026) | Architectural/scenographic discrepancies — ceiling heights, finishes, fire hose reels, bench dimensions, fabric FR, AV totems, paving, steps, ramp | 15 items |
+| Audit Report 02 (Aug 2026) | Showcase design study — G3 Al Muftaha gallery, object list, showcase length, plinth design, label design | 4+ items |
+
+**Master document structure:**
+```
+01_Registers/nrs_audit_master_register.md
+```
+- Section per report (date + focus)
+- Consolidated table with: Item #, Report, Finding, NRS Proposal, Status, Risk Link, Action
+- Summary: total items, open, closed, by category
+
+#### Step 4: Cross-Map Against Existing Risks
+
+For each audit finding, check the risk register (`06_Risk_System/risks.json`):
+
+| Finding | Check Existing Risk | Action |
+|---------|-------------------|--------|
+| Showcase length insufficient for 34+ objects | PRR-PRC-02 (Showcase long-lead, Critical 12) | Add evidence + new action: "Confirm variation for extended showcase with GBH" |
+| Object list not frozen | PRR-CNS-03 (Score 4 Medium) | **Upgrade score** — 4 Medium is too low for 34+ objects in G3 alone. Raise to 9 High minimum. |
+| Variation needed for GBH drawing amendments | PRR-COM-03 (Variation tracking, Score 8 High) | Add specific action for this variation |
+| Label design issue (vertical labels cast shadows) | No existing risk | Add new risk or expand PRR-PRC-02 evidence |
+
+**Decision rules:**
+- If an existing risk **covers the territory** (same root cause, same consequence) → update evidence + add action
+- If an existing risk **partially covers** but score is too low → upgrade score
+- If no existing risk covers → create new risk entry
+
+#### Step 5: Generate Action Plan
+
+Extract actions from each finding into a structured table:
+
+| # | Finding | Action | Owner | Due | Status |
+|---|---------|--------|-------|-----|--------|
+| 1 | Showcase 5.2m insufficient for 34+ objects | Confirm variation for extended showcase (6400mm, 4x1600mm bays) | TO / Procurement | TBD | Pending |
+| 2 | Object list incomplete | MoC to provide comprehensive object list for G3 | PM / MoC | TBD | Pending |
+| 3 | Object groupings unclear | MoC to clarify groupings, hierarchy, star objects | PM / MoC | TBD | Pending |
+| 4 | Vertical labels cast shadows | Redesign with angled plinth + integrated label rail | NRS | TBD | Pending |
+| 5 | GBH needs drawing amendments | Issue variation instruction to GBH | Procurement | TBD | Pending |
+
+#### Step 6: File the Report
+
+```
+03_Design_Files/Architecture/NRS_Reports/
+  +-- <EMAIL_ID>_<PDF_FILENAME>          (original PDF, if extractable)
+  +-- <EMAIL_ID>_analysis.md             (analysis sidecar)
+  +-- nrs_audit_master_register.md       (consolidated master, if multiple reports)
+```
+
+### Pitfalls (NRS Audit Specific)
+
+- **NRS audit ≠ CG comment.** Do not treat NRS findings as CG requirements. NRS is flagging issues proactively. Samaya decides how to address them.
+- **Don't create new risks unnecessarily.** Most NRS findings are already covered by existing PRR/DDR risks. Check thoroughly before adding new entries.
+- **Score inflation risk.** PRR-CNS-03 (object list not frozen) at 4 Medium is too low for a gallery with 34+ objects. But don't inflate scores without evidence — use the NRS report as the evidence to justify the upgrade.
+- **Variation vs in-scope.** Not every NRS finding needs a variation. Some are design refinements within the existing scope. Check the SOW before flagging as variation.
+- **NRS reports are image-based PDFs.** NRS stamped/redlined drawing PDFs are scanned AutoCAD plots. `pdftotext` and OCR return empty output. Open in PDF viewer or use the email body text as the primary source.
+- **Email body is often sufficient.** Jim Richards' emails usually summarise the key findings in the body text. The PDF attachment is the detailed version. Use the email body for quick analysis, the PDF for detailed evidence.
+
+### Example: NRS Audit Report 02 (Aug 2026)
+
+**Source:** Email 50122, Jim Richards, 5-Aug-2026
+**Attachment:** MOC-ASE-AR-ARC-GEN-DDD-DS02-00_compressed.pdf
+**Focus:** G3 Al Muftaha Gallery showcase design study
+
+**Key findings:**
+- Showcase 03.05-SC-01: 5.2m length insufficient for 34+ objects
+- NRS recommends: angled plinth + integrated label rail, extend to 6400mm (4x1600mm bays)
+- Vertical labels not recommended (shadow + readability issues)
+- GBH would need to amend fabrication drawings if variation instructed
+- MoC must provide: comprehensive object list, groupings/hierarchy, star objects
+
+**Risk mapping:**
+| Finding | Risk | Action |
+|---------|------|--------|
+| Showcase too short | PRR-PRC-02 (Critical 12) | Add action: confirm variation for extended showcase |
+| Object list incomplete | PRR-CNS-03 (upgrade to 9 High) | Add evidence from NRS report |
+| GBH drawing amendments | PRR-PRC-02 | Add action: issue variation instruction |
+| Label design | Covered by PRR-PRC-02 evidence | Note in evidence |
+
 ## Related Skills
 
 - `project-register-manager` — openpyxl techniques for creating and styling Excel registers with the same formatting conventions
 - `submittal-register-management` — submittal tracking (DCR is a related but distinct register type)
 - `project-scope-verification` — when the change triggers a scope question
+- `cg-response-protocol` — Stage-boundary triage (CRS vs RFI decision for out-of-stage CG comments)
 
 ## Related Reference Files
 
 - `references/aseer-showcase-stage3-to-stage4-dcr-example.md` — Worked example of DCR for Aseer Museum showcase changes
 - `references/contractor-correspondence-strategy.md` — How to respond to CG/consultant design changes without accepting liability, including the "draft to PM + ally first" workflow, email templates, and key phrases to use/avoid
+- `references/nrs-audit-report-workflow.md` — Full worked example of NRS Audit Report 02 processing: extraction, analysis, risk mapping, action plan generation

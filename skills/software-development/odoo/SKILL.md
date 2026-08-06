@@ -13,7 +13,7 @@ triggers:
 
 # Odoo — Query & Manage Moqtana / Samaya Odoo 18
 
-## ⚠️ SSL Certificate — XML-RPC on macOS
+## SSL Certificate — XML-RPC on macOS
 
 Python 3.13+ on macOS may fail with `SSL: CERTIFICATE_VERIFY_FAILED`. Fix:
 
@@ -21,9 +21,9 @@ Python 3.13+ on macOS may fail with `SSL: CERTIFICATE_VERIFY_FAILED`. Fix:
 SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 script.py
 ```
 
-## ⚠️ Odoo 18 Field Name Quirks
+## Odoo 18 Field Name Quirks
 
-`mrp.production` uses different field names than some docs suggest:
+`mrp.production` uses different field names:
 
 | Wrong (doesn't exist) | Correct |
 |---|---|

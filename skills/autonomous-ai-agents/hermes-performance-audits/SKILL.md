@@ -88,3 +88,4 @@ Keep it short:
 ## Reference
 
 - `references/hermes-speed-audit-2026-06.md` — condensed example audit findings and safe command set from a real session.
+- `references/git-rebase-conflict-recovery.md` — patterns for recovering from rebase conflicts, detached HEAD, and non-fast-forward push rejections during auto-sync cron jobs.

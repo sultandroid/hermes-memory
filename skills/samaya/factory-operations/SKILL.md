@@ -7,6 +7,8 @@ triggers:
   - User asks for factory status / تقرير المصنع
   - User wants to review production + purchasing + communications together
   - User says "احبار ملفات الاداريات" / "ربط المواضيع"
+  - User sends a job request form (طلب استحداث وظيفة) or iqama file (إقامات)
+  - User asks for offer letters / عروض وظيفية
 ---
 
 # Samaya Factory Operations — Manager Dashboard
@@ -304,6 +306,35 @@ This is calculated in the weekly report but not written back to Odoo.
 
 Only materials under `Raw materials` / `Raw Materials` category tree (60+ subcategories including MDF, Plywood, Steel, Paint, Wood Veneer, Acrylic, Chemical & Glue, Fabric, Foam, etc.) are tracked. Consumables categories are excluded from stock alerts.
 
+## Warehouse Receipt Monitoring (Wrong Warehouse Detection)
+
+### The Cron Job
+
+A cron job (job_id `03d25c46e1d1`) runs daily at 6:00 AM to detect receipts on `FA/WH/FA` (Factory Warehouse) that genuinely don't belong to the factory.
+
+**Classification logic (corrected):**
+1. Get all stock pickings on FA/WH/FA (location_dest_id = 45) in last 7 days
+2. For each, get the origin field → PO reference
+3. Look up the PO's project_id in Odoo
+4. If project_id = 244 (Samaya Factory) → correct receipt, skip
+5. If project_id != 244 → wrong warehouse, flag it
+
+**Script location:** `~/.hermes/scripts/factory_warehouse_monitor.py`
+
+### Chatter Notes Format
+
+Notes posted to Odoo chatter must be:
+- Plain text only — no icons, no tags, no markdown formatting
+- Short and direct, like a human message
+- Example: `[تأكيد المخزن] تم استلام هذا الأمر على مخزن المصنع لكن طلب الشراء (P02247) يخص مشروع: جبل عمر (Maalim Al-Haramein) — وليس المصنع.`
+
+### How to Verify Manually
+
+1. Open the receipt: `https://samayainv.odoo.com/web#id={picking_id}&model=stock.picking&view_type=form`
+2. Check the "Source Document" (origin) field → PO number
+3. Open the PO: `https://samayainv.odoo.com/web#id={po_id}&model=purchase.order&view_type=form`
+4. Check the "Project" field → if Samaya Factory (244), the receipt is correct
+
 ## ⚠️ Critical Rules
 
 - **Odoo is READ-ONLY** — never add fields, automations, or programmatic modifications without explicit permission
@@ -316,6 +347,14 @@ Only materials under `Raw materials` / `Raw Materials` category tree (60+ subcat
 - `samaya-cashout-report` — Detailed Excel cashout report from Odoo POs
 - `factory-violations` — Employee violation management (disciplinary memos)
 - `odoo` — Odoo connection, field schemas, SSL fix
+- `samaya-docx-template` — SamayaDoc class for DOCX generation (used by offer letters)
+
+## 📎 Reference Files
+
+| File | Purpose |
+|------|---------|
+| `references/raoof-delay-report-2026-08-04.md` | Example delay report analysis from Raoof |
+| `references/job-offer-letters.md` | Workflow for generating factory job offer letters from request form + iqama file |
 
 ## ⚠️ Pitfalls
 

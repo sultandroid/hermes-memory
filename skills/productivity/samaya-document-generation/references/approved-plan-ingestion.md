@@ -87,3 +87,34 @@ The `00_Contracts/` directory has a pre-commit guard. Use `git commit --no-verif
 - **Post-commit hook rebuilds index.html**: After commit, stash the auto-generated index.html change before pushing.
 - **Plans_MD directory**: OneDrive often has a `00_Master_Index/Plans_MD/` subdirectory containing pre-converted markdown files. These are already stripped of DS headers and ready to use — just add frontmatter.
 - **Single file replaces multi-file split**: When upgrading from an old split-file structure to a full document, add `supersedes:` in the frontmatter and remove all old split files from git.
+
+## Git divergence + post-commit hook conflicts (recurring)
+
+The repo has a `post-commit` hook that rebuilds `06_Risk_System/webapp/src/index.html` on EVERY commit. This repeatedly causes rebase/pull failures and push rejections. The full resolution pattern:
+
+**1. Push rejected (remote has work) — the standard flow:**
+```bash
+git stash                        # save any uncommitted changes
+git pull --rebase origin main    # may fail: hook rebuilt index.html mid-rebase
+git checkout 06_Risk_System/webapp/src/index.html   # discard hook's auto-rebuild
+git stash pop
+git push origin main
+```
+
+**2. Rebase fails mid-way with conflicts.** Check state with `ls .git/rebase-merge` (rebase in progress) vs `.git/rebase-apply`. Resolve each conflict file. For AUTO-GENERATED files (index.html, .sync_state.json, compliance_matrix.md, specialist_register.md, adel_snapshots/file_list.txt) the incoming version is usually newer — prefer it:
+```bash
+git diff --name-only --diff-filter=U   # list conflicted files
+# For each auto-generated file, keep the incoming (theirs) version:
+git checkout --theirs path/to/file
+git add path/to/file
+# For hand-edited registers, merge manually (see below)
+```
+
+**3. `git rebase --continue` hangs on the post-commit hook's scp deploy.** The hook tries to scp the rebuilt index.html to the server and can block for 30s+. It eventually times out but the rebase still completes. Run with non-interactive editors and a generous timeout:
+```bash
+GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git rebase --continue   # timeout 90
+```
+
+**4. Merge-conflict markers in hand-edited registers.** When both sides changed a register (e.g. specialist_register.md), inspect the `<<<<<<< / ======= / >>>>>>>` blocks and pick per-block. Prefer the incoming version when it carries newer dated data (e.g. "Daily email sync 2026-08-05" had richer rows). After resolving, clean up any stray `|` or `||` from table-row edits and re-run `git add` + `git rebase --continue`.
+
+**5. After any merge/rebase, re-verify registers** — merges can leak DDR risks into `risks.json` or restore stale IDs. See `register-webapp-maintenance` skill for the verification script.

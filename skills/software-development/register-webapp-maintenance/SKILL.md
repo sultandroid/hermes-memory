@@ -342,18 +342,6 @@ The AVR page (`.../Risk/AV/`) already had proper relative paths (`href="../DDR/"
 
 Build scripts only replace `__RISK_DATA__` in template.html with JSON data. Other tokens like `__REVISION__`, `__TOTAL__`, `__CATS__` used in register cards HTML are **NOT handled** — they render as literal text. Hardcode these directly in template.html.
 
-## AVR already had correct template
-
-The AVR page (`.../Risk/AV/`) already had proper relative paths (`href="../DDR/"`, `href="../HSE/"`) and correct `reg-current` assignment from the start. It did not need the register cards fix — only DDR and HSE needed it.
-
-### Build token replacement
-
-Build scripts only replace `__RISK_DATA__` in template.html with JSON data. Other tokens like `__REVISION__`, `__TOTAL__`, `__CATS__` used in register cards HTML are **NOT handled** — they render as literal text. Hardcode these directly in template.html.
-
-## AVR already had correct template
-
-The AVR page (`.../Risk/AV/`) already had proper relative paths (`href="../DDR/"`, `href="../HSE/"`) and correct `reg-current` assignment from the start. It did not need the register cards fix — only DDR and HSE needed it.
-
 ## Post-commit hook interferes with git operations
 
 The post-commit hook at `.git/hooks/post-commit` runs `update-all-registers.sh` on EVERY commit, including rebase commits from `git pull --rebase`. This can:
@@ -365,6 +353,41 @@ The post-commit hook at `.git/hooks/post-commit` runs `update-all-registers.sh` 
 **Fix options:**
 - Disable hook during complex git ops: `chmod -x .git/hooks/post-commit && git pull && chmod +x .git/hooks/post-commit`
 - Or ensure all changes flow through `template.html` + `risks.json` → `build_risk.py`, never edit `src/index.html` directly for structural changes
+
+## Rebase merge-conflict resolution (recurring, 2026-08)
+
+The post-commit hook fires on rebase commits and rebuilds `src/index.html`, causing conflicts across multiple auto-generated files. The working sequence that resolves the full flow:
+
+```bash
+# 1. Push rejected → pull --rebase
+git stash
+git pull --rebase origin main
+
+# 2. Hook may fail rebase by rebuilding index.html mid-rebase → discard it
+git checkout 06_Risk_System/webapp/src/index.html
+git stash pop
+git push origin main
+
+# 3. If rebase is mid-flight (multi-commit) and conflicts appear:
+#    a. List conflicts
+git diff --name-only --diff-filter=U
+#    b. For AUTO-GENERATED files (index.html, .sync_state.json, compliance_matrix.md,
+#       specialist_register.md, adel_snapshots/file_list.txt) keep the INCOMING (theirs) —
+#       a daily email sync from another session often carries newer data:
+git checkout --theirs .sync_state.json
+git checkout --theirs 06_Risk_System/webapp/src/index.html
+git checkout --theirs Technical_Office/Compliance_System/compliance_matrix.md
+git add .
+git rebase --continue   # may hang on post-commit scp deploy; use timeout 90 + GIT_EDITOR=true
+
+# 4. `git rebase --continue` hangs → run with non-interactive editor + longer timeout
+GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git rebase --continue
+git push origin main
+```
+
+**When a conflict is in a HAND-EDITED register (e.g. `specialist_register.md`)**: do NOT blindly take theirs. Inspect the `<<<<<<< / ======= / >>>>>>>` blocks per file. The incoming "Daily email sync" version usually has richer newer rows (AD Eng, ZNA, Glasbau Hahn 1G-0009 Code C, all setwork PQs) — prefer it, but merge carefully and clean up any stray `|`/`||` table-cell artifacts from the conflict resolution. Then `git add` + `git rebase --continue`.
+
+**Post-rebase**: verify no DDR risks leaked into `risks.json` (see the verification section below). The rebase can silently revert risk IDs.
 
 ## Server has stale files at alternate paths
 

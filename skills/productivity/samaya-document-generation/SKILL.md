@@ -171,7 +171,7 @@ When the user says "read all msg", "read the conversation", or similar, consolid
 - **Assessment report approval status: check Adel snapshots.** The file `99_Archive/adel_snapshots/file_list.txt` reveals CG response PDFs in `Approval/` subfolders even when no CG email was sent. An `Approval/` folder with a CG reply PDF means CG responded.
 - **Extract NRS comments from Outlook .olk15MsgAttachment files:** These are MIME containers with base64-encoded PDFs. Join `Mail_OwnedBlocks` on `Blocks` to get the `PathToDataFile`, then decode the base64 portion after the `base64` header to recover the original PDF. Use `pdftotext` for text extraction.
 - **Verify table rendering.** After generating, check that tables have proper widths (sum to ~16.5cm for A4 portrait) and alternating row shading.
-- **Sections with many tables need page breaks.** Insert `doc.doc.add_page_break()` between major sections for readability.
+- **Sections with many tables need page breaks.** Use `doc.doc.add_page_break()` — the SamayaDoc class has NO `add_page_break()` method, so call the underlying python-docx `Document` (`self.doc`) directly. Same pattern for any python-docx API the template doesn't wrap (e.g. `doc.doc.sections[0]`). The template exposes `self.doc` as the python-docx `Document` object.
 - **Do NOT send interim drafts.** Generate the full completed document in one pass.
 - **Git push may fail with divergent branches.** Use `git pull origin main --no-rebase` to merge remote changes before pushing.
 

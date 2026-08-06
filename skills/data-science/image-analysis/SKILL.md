@@ -634,6 +634,7 @@ Outputs exact dimensions, bit depth, color mode. A PNG with `16-bit/color RGBA, 
 
 - `references/stone-dimension-estimation.md` — Worked example: estimating stone dimensions from a close-up photo with no scale reference, comparing to OB218 (1500×600mm)
 - `references/tiny-image-text-extraction.md` — Worked example: reading text from a 468×40 screenshot caption with OCR + ASCII pixel rendering + cross-character comparison
+- `references/macos-swift-vision-ocr.md` — Fallback when `tesseract` fails (`Image file ... cannot be read!`) or `vision_analyze` is unavailable: read full-screen screenshots / meeting captions with the built-in Swift Vision framework (`swift` script, bilingual AR/EN). Use when OCR on a large screenshot errors or the model can't see the image.
 
 ## Verification
 

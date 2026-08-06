@@ -358,6 +358,10 @@ This avoids AppleScript for ~70% of CG responses (Code B approvals).
 
 **Pitfall:** `Message_Preview` truncated to ~500 chars. If long preamble before the code line, fall back to AppleScript `plain text content`.
 
+**Pitfall — CG code may be in forwarded body, not top-level preview.** When Hossam Mabrouk forwards a CG response (e.g. ZD-0103 Rev.01), the top-level `Message_Preview` may only show "@Hesham Abdelhameed The Contractor Must to submit..." with no A/B/C/D code. The actual CG code (e.g. "D – Rejected") is in the *forwarded* message body below. Use AppleScript `plain text content of m` to read the full thread. If the preview shows a reply/forward instruction but no code, always extract the full body — the code is in the quoted original message.
+
+**Pitfall — "Resubmit as new submission number" is a distinct rejection mode.** CG may reject a Rev.01 not with Code C/D but with an instruction to "submit with a new submission and provide the justification/reason for the change accordingly." This is a procedural rejection — the document must be resubmitted under a new doc ref, not revised under the same ref. Log this as **Rejected — Resubmit as New** in the register, not as Code C or D. It implies the revision was procedurally invalid (wrong ref, wrong routing), not substantively deficient.
+
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
 
 1. **Lead with the verdict.** First sentence: "POSSIBLE" or "NOT POSSIBLE — only X of Y items."
@@ -888,6 +892,26 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 **Verify CG codes from the actual email, not the cron summary.** The cron's CG-code extraction can MISLABEL a document's title. Example (2026-08-06): the cron called ZD-0103 "Compliance & Understanding Report" but the actual email subject was "Earthing LPS Compliance Understanding Report" (Code D). Always re-query the email preview (`Message_Preview`) for the exact doc title and code before writing it to a register. The CG email from Hossam Mabrouk is authoritative — trust it over the cron's summary.
 
 **Pitfall — `patch` tool fails on duplicate register rows.** Some registers (e.g. `assessment_evaluation_register.md`) contain the SAME block of rows twice (a `||`-prefixed section and a `|||`-prefixed section with identical doc refs). `patch` with a non-unique anchor fails with "Found N matches" and loops. Do NOT keep retrying with slightly different context — switch to a Python script that inserts after the FIRST occurrence only:
+
+**Pitfall — `patch replace_all=true` can create duplicate rows.** When `replace_all=true` matches the same old_string in multiple locations (e.g. a row that appears in both a `||`-prefixed and `|||`-prefixed section), it replaces ALL occurrences, creating duplicate rows. After a `replace_all` operation, always verify the file for duplicates and deduplicate if needed. Use a Python one-liner via terminal to remove exact duplicate lines:
+
+```bash
+python3 -c "
+with open('path/to/register.md', 'r') as f:
+    lines = f.readlines()
+seen = set()
+new_lines = []
+for line in lines:
+    stripped = line.strip()
+    if stripped in seen and 'DOC-REF' in line:
+        continue  # skip duplicate
+    seen.add(stripped)
+    new_lines.append(line)
+with open('path/to/register.md', 'w') as f:
+    f.writelines(new_lines)
+print('Dedup done')
+"
+```
 ```python
 with open(path) as f: lines = f.readlines()
 if any("ZD-XXXX Rev.01" in l for l in lines):
@@ -1119,3 +1143,4 @@ Path is relative to `Data/` — construct full path:
 - `references/batch-applescript-per-email.md`
 - `references/pq-email-processing.md` — PQ-specific workflow: sender mapping, two-phase processing (draft vs formal), CG code extraction from preview, dual-register cascade, pitfalls (Final transmittal ≠ Approved)
 - `references/multi-project-routing-script.py` — Reusable Python router for multi-project email attachment routing (Aseer, Zamzam, Jabal Omar). Document-code-based patterns, OneDrive paths, dedup handling.\n- `references/electrical-compliance-report-cascade.md` — Electrical Compliance & Understanding Report → assessment + risk register cascade (missing-reports & Code-C systems risk, Aconex attachment=0 handling)
+- `references/screen-ocr-fallback.md` — read on-screen text (live meeting captions, dialogs, terminal output) via `screencapture` + Swift Vision OCR, for sessions without `computer_use` or when the model lacks vision
