@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-06 16:13:38
+Generated: 2026-08-07 09:26:30
 
 ---
 
@@ -44,7 +44,7 @@ CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. 
 Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid GitHub).
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Factory warehouse monitor: classify by PO's project_id, not warehouse name. project_id=244 = Samaya Factory = correct. Chatter notes: plain text only, no icons/tags/markdown.
+Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
 Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
@@ -86,7 +86,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Agents & Tools
 
 Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
-Chatter notes in Odoo: plain text only, no icons, no tags, no markdown. Short and direct like a human message.
+Memory GitHub push = Step 6 in memory_skills_exchange.sh (syncs MEMORY/USER/skills/scripts, commit+push). memory_github_sync.sh de-coupled (no longer re-runs exchange; only ODOO/PROJECTS_FULL). Only ONE script owns the push.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
