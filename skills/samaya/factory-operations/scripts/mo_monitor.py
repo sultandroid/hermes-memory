@@ -102,12 +102,9 @@ def delete_old_reminders(mo_id):
 # === 4. وضع تذكير جديد ===
 def post_reminder(mo):
     mo_id = mo['id']
-    mo_name = mo['name']
-    prod = mo['product_id'][1] if mo['product_id'] else '?'
-    qty = mo.get('product_qty', 0)
-    date_start = (mo.get('date_start') or '')[:10]
     delete_old_reminders(mo_id)
-    body = f'''<p>🔔 <strong>تذكير بصرف المواد</strong> <span style="display:none">{REMINDER_MARKER}</span></p><p>يرجى تسجيل المواد الخاصة بأمر التصنيع <strong>{mo_name}</strong></p><p>المنتج: {prod}</p><p>الكمية: {qty}</p><p>تاريخ البدء: {date_start}</p><p>ملاحظة: لا يمكن إغلاق أمر التصنيع بدون تسجيل المواد ووقت مراكز العمل</p>'''
+    # Note sits ON the MO chatter — no MO name / product / qty needed.
+    body = f'''<p>يرجى تسجيل المواد المستهلكة ووقت مراكز العمل.</p> <span style="display:none">{REMINDER_MARKER}</span>'''
     try:
         models.execute_kw(db, uid, key, 'mrp.production', 'message_post', [mo_id], {
             'body': body, 'message_type': 'comment', 'subtype_xmlid': 'mail.mt_comment'

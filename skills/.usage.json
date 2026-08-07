@@ -758,12 +758,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-07T05:23:55.777096+00:00",
+    "last_used_at": "2026-08-07T11:50:17.408251+00:00",
     "last_viewed_at": "2026-08-06T10:31:04.980276+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 247,
+    "use_count": 249,
     "view_count": 85
   },
   "entity-intake": {
@@ -874,14 +874,14 @@
     "archived_at": null,
     "created_at": "2026-08-02T05:20:52.386649+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-06T09:38:47.163501+00:00",
-    "last_used_at": "2026-08-06T09:38:29.840198+00:00",
-    "last_viewed_at": "2026-08-06T09:38:29.838276+00:00",
-    "patch_count": 13,
+    "last_patched_at": "2026-08-07T06:49:34.707675+00:00",
+    "last_used_at": "2026-08-07T06:49:01.735964+00:00",
+    "last_viewed_at": "2026-08-07T06:49:01.733166+00:00",
+    "patch_count": 16,
     "pinned": false,
     "state": "active",
-    "use_count": 14,
-    "view_count": 14
+    "use_count": 15,
+    "view_count": 15
   },
   "factory-violations": {
     "archived_at": null,
@@ -979,12 +979,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-07T05:23:55.799112+00:00",
+    "last_used_at": "2026-08-07T11:50:17.429884+00:00",
     "last_viewed_at": "2026-08-06T06:59:54.405904+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 186,
+    "use_count": 188,
     "view_count": 24
   },
   "google-workspace": {
@@ -1785,12 +1785,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-06T10:49:04.431874+00:00",
-    "last_used_at": "2026-08-07T05:23:55.754450+00:00",
+    "last_used_at": "2026-08-07T11:50:17.386486+00:00",
     "last_viewed_at": "2026-08-06T10:48:47.714870+00:00",
     "patch_count": 278,
     "pinned": false,
     "state": "active",
-    "use_count": 643,
+    "use_count": 645,
     "view_count": 439
   },
   "p5js": {

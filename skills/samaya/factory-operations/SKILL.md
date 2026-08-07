@@ -246,21 +246,16 @@ Save to `samaya-profile/00_Admin/factory_manager_report_YYYY-MM-DD.md`:
 | Script | Location | Purpose | Schedule |
 |--------|----------|---------|----------|
 | `mo_monitor.py remind` | `~/.hermes/scripts/mo_monitor.py` | Check MOs without materials, post reminder in chatter | Every 2 days, workdays 8am-5pm |
-| `mo_monitor.py weekly` | same | Generate Word report + JSON snapshot | Weekly (Saturday) |
-| `mo_monitor.py check` | same | Quick health check (no materials, negative stock, low stock) | On demand |
 
 ### MO Compliance Monitoring
 
 **Reminder rule:** Every 2 workdays (Sat-Thu, 8am-5pm), check MOs in `progress`/`confirmed` state that are older than 2 days with no `move_raw_ids`. Post a plain-text reminder in the chatter:
 
 ```
-🔔 تذكير بصرف المواد
-يرجى تسجيل المواد الخاصة بأمر التصنيع {MO_NAME}
-المنتج: {PRODUCT}
-الكمية: {QTY}
-تاريخ البدء: {DATE}
-ملاحظة: لا يمكن إغلاق أمر التصنيع بدون تسجيل المواد ووقت مراكز العمل
+يرجى تسجيل المواد المستهلكة ووقت مراكز العمل.
 ```
+
+**⚠️ Chatter note content (user-mandated):** The note sits ON the MO's own chatter page, so **do NOT** repeat the MO name, product, or quantity — it is redundant clutter the user rejects. The exact format above is final; do not add "أمر التصنيع {MO_NAME}", "المنتج:", "الكمية:", "تاريخ البدء:", or "قبل إغلاقه" back in. The user explicitly said "نظف وحدث ولا تكرر الاخطاء ابدا".
 
 **Deduplication:** Before posting a new reminder, delete any previous reminder containing the marker `__REMINDER_MARKER__` from the same MO's chatter. This prevents spam.
 
@@ -365,3 +360,4 @@ Notes posted to Odoo chatter must be:
 - **Outlook SQLite is the ONLY email source** — do NOT use Gmail IMAP for factory emails
 - **Credit suppliers** (Saba Najad, Mada Aljezera) are statement balances, not individual POs
 - **Don't confuse tickets with violations** — helpdesk ticket closures are HR actions, not disciplinary records
+- **MO monitor script has 3+ copies** — `~/.hermes/scripts/mo_monitor.py`, `~/.hermes/skills/samaya/factory-operations/scripts/mo_monitor.py`, `~/samaya-workspace/INVENTORY/scripts/monitor_mo_materials.py`, plus copies in `shared_exchange/` and `hermes-memory/`. Editing the chatter note template in ONE copy is not enough — a stale verbose template in another copy will re-post the old format. Update all copies together whenever the note format changes.
