@@ -278,7 +278,6 @@ When building the final report, use this structure:
 ## Multi-Project Email Pipeline
 
 The user corrected that the email pipeline should scan ALL project emails, not just Aseer Museum. When setting up or updating the pipeline cron job, use a multi-project prompt that checks all project folders and classifies by document code prefix:
-
 | Prefix | Project |
 |--------|---------|
 | `MOC-MUS-ASE`, `MOC-ASEER-SIC` | Aseer Museum |
@@ -286,3 +285,7 @@ The user corrected that the email pipeline should scan ALL project emails, not j
 | `AL JALAL`, `JALAL` | Al Galal & Al Gamal (Jabal Omar retail) |
 
 The cron job name should reflect this — "Project Email Pipeline" not "Aseer Email Pipeline".
+
+## Predicting Disputes in a New Design-Services Proposal
+
+When a new specialist submits a **design-services proposal** (e.g. a landscape design fee), predict the likely disputes BEFORE signing by mining existing consultant contracts (ZNA/NRS/AD), the SOW_RACI_Conflict_Matrix, lessons-learned register, and invoice log. See `references/design-proposal-dispute-prediction.md` for the 6 recurring flashpoints (payment tied to submission vs approval, excess review cycles, discipline boundary, delay disclaimers, advance recoverability, undefined BOQ ownership) and the pre-negotiation fixes. Key rule: a design-services fee is NOT a construction price — always separate "design fee" from "no priced construction BOQ exists yet."

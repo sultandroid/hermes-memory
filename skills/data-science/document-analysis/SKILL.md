@@ -233,6 +233,8 @@ tesseract /tmp/page1_binary.png stdout -l eng > /tmp/pass3.txt
 
 **Pitfall — don't trust a single pass.** OCR on the same image can produce different results depending on contrast, binarization, and PSM mode. Always run at least 2-3 variants and cross-reference. The most reliable text is the intersection of multiple passes.
 
+**Pitfall — run a full-page OCR pass BEFORE narrow-crop hunting.** When a table value (e.g. a fee/amount) is missed, the instinct is to crop tighter and re-OCR — but repeated narrow crops often keep missing it while a single full-page pass catches it. In a scanned 3-page proposal, the amount `175,000.00` was recovered by the FIRST full-page `tesseract` pass (PSM 6) on the page image, while ~10 successive zoomed crops of the same table region returned only headers. Workflow: (1) extract page images with `pdfimages -png doc.pdf /tmp/pg` (or `pdftoppm`), (2) run a full-page OCR pass per page first, (3) only zoom-crop for values the full pass missed. Don't burn cycles re-cropping a region the full pass already read.
+
 ### Table Reconstruction from Garbled OCR
 
 Image-based PDFs with tabular data (inspection certificates, test reports, material data sheets) produce garbled OCR output where table cells are jumbled, column headers are scrambled, and values are misaligned. Use this multi-strategy pipeline to recover structured data.
