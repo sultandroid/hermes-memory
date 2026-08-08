@@ -758,12 +758,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-08T03:26:01.893911+00:00",
+    "last_used_at": "2026-08-08T12:33:09.869409+00:00",
     "last_viewed_at": "2026-08-06T10:31:04.980276+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 254,
+    "use_count": 257,
     "view_count": 85
   },
   "entity-intake": {
@@ -979,13 +979,13 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-08T03:26:01.924207+00:00",
-    "last_viewed_at": "2026-08-06T06:59:54.405904+00:00",
+    "last_used_at": "2026-08-08T12:33:09.892540+00:00",
+    "last_viewed_at": "2026-08-08T12:23:17.285911+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 193,
-    "view_count": 24
+    "use_count": 198,
+    "view_count": 26
   },
   "google-workspace": {
     "archived_at": null,
@@ -1771,27 +1771,27 @@
     "archived_at": null,
     "created_at": "2026-07-26T14:02:06.755308+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-02T05:19:17.629858+00:00",
-    "last_used_at": "2026-08-06T03:03:14.591162+00:00",
-    "last_viewed_at": "2026-08-06T03:03:14.587334+00:00",
-    "patch_count": 5,
+    "last_patched_at": "2026-08-08T12:23:43.168168+00:00",
+    "last_used_at": "2026-08-08T12:23:38.998991+00:00",
+    "last_viewed_at": "2026-08-08T12:23:38.996631+00:00",
+    "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 12,
-    "view_count": 12
+    "use_count": 14,
+    "view_count": 14
   },
   "outlook-email": {
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-06T10:49:04.431874+00:00",
-    "last_used_at": "2026-08-08T03:26:01.808409+00:00",
-    "last_viewed_at": "2026-08-06T10:48:47.714870+00:00",
-    "patch_count": 278,
+    "last_patched_at": "2026-08-08T12:19:59.094222+00:00",
+    "last_used_at": "2026-08-08T12:33:09.846211+00:00",
+    "last_viewed_at": "2026-08-08T12:19:45.376967+00:00",
+    "patch_count": 279,
     "pinned": false,
     "state": "active",
-    "use_count": 651,
-    "view_count": 439
+    "use_count": 655,
+    "view_count": 440
   },
   "p5js": {
     "archived_at": null,
@@ -2279,13 +2279,13 @@
     "created_at": "2026-07-26T06:28:31.438809+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-06T09:22:46.016165+00:00",
-    "last_used_at": "2026-08-06T09:21:27.045110+00:00",
-    "last_viewed_at": "2026-08-06T09:21:27.041937+00:00",
+    "last_used_at": "2026-08-08T11:04:39.946887+00:00",
+    "last_viewed_at": "2026-08-08T11:04:39.944023+00:00",
     "patch_count": 36,
     "pinned": false,
     "state": "active",
-    "use_count": 32,
-    "view_count": 32
+    "use_count": 33,
+    "view_count": 33
   },
   "register-webapp-operations": {
     "archived_at": null,
@@ -2486,14 +2486,14 @@
     "archived_at": null,
     "created_at": "2026-07-26T06:38:34.904211+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-06T18:32:06.196048+00:00",
-    "last_used_at": "2026-08-06T18:31:43.156750+00:00",
-    "last_viewed_at": "2026-08-06T18:31:43.154228+00:00",
-    "patch_count": 29,
+    "last_patched_at": "2026-08-08T12:20:19.804732+00:00",
+    "last_used_at": "2026-08-08T12:20:08.998881+00:00",
+    "last_viewed_at": "2026-08-08T12:20:08.996840+00:00",
+    "patch_count": 30,
     "pinned": false,
     "state": "active",
-    "use_count": 35,
-    "view_count": 35
+    "use_count": 39,
+    "view_count": 39
   },
   "samaya-docx-template": {
     "archived_at": null,

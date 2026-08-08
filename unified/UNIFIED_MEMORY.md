@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-08 09:05:15
+Generated: 2026-08-08 16:43:09
 
 ---
 
@@ -86,7 +86,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Agents & Tools
 
 Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
-Memory GitHub push = Step 6 in memory_skills_exchange.sh (syncs MEMORY/USER/skills/scripts, commit+push). memory_github_sync.sh de-coupled (no longer re-runs exchange; only ODOO/PROJECTS_FULL). Only ONE script owns the push.
+Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.

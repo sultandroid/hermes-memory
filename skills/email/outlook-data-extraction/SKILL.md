@@ -189,6 +189,8 @@ cat ~/ocr_out.txt
 ## Pitfalls
 
 - Column `Message_Body` does NOT exist — use `Message_Preview` for text content
+- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
+- `Message_Preview` is truncated (~255 chars). Full body text is NOT in the SQLite row — for long bodies, extract the `.olk15MsgAttachment` MIME (or an HTML `Email_Content.html` block) rather than relying on the preview. Search only needs subject/preview; content extraction needs the block file.
 - The `Files` table is a virtual table (`FilesVTabModule`) — cannot query directly
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
 - Some attachment PDFs are image-only (CAD plots) — `pdftotext` returns empty; use OCR

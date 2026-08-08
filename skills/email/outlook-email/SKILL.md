@@ -317,6 +317,10 @@ set msub to subject of m  -- OK
 
 **Inbox message ordering is oldest-first (CRITICAL).** Message index 1 is the **newest** message. This applies to ALL folders.
 
+**Pitfall — closeout reports can be PARTIALLY closed, not fully.** When a Safety Observation Report (SOR) or NCR closeout email arrives with an attached closeout report, do NOT mark the register item "Closed" from the email body alone. Read the attached PDF: a single SOR may have multiple observation items, and only some may be resolved. Example (2026-08): SOR-013 had 3 items — item 3 (housekeeping) closed 06-Aug but items 1-2 (glass panel storage) were still "In Progress". Marking it fully "Closed" in the NCR register was wrong and had to be corrected to "Partially Closed (items 1-2 open)". Always open the closeout PDF and check each numbered item's status before writing "Closed"/"Open" to the register.
+
+**Pitfall — `.eml` (message/rfc822) attachments save as 0-byte files.** The `save att in saveFile` command "succeeds" (exit 0) but writes a 0-byte file when the attachment is a forwarded `.eml`. The actual content is nested inside the forwarded message and is not directly extractable via AppleScript. Detect: after extraction, check `ls -la` — a 0-byte `.eml` means the content is embedded. Flag for manual open in Outlook rather than burning retries.
+
 ### Reading CG Response Codes from Preview Text (No Attachment Extraction)
 
 CG responses from Hossam Mabrouk follow a consistent pattern: `Message_Preview` starts with a classification line, then contains the CG code. You can read A/B/C/D codes **without extracting attachments** — saves ~30s per email.

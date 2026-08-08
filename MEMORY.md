@@ -24,4 +24,6 @@ User expects proactive search of Outlook SQLite and OneDrive for source docs rat
 §
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
 §
-Memory GitHub push = Step 6 in memory_skills_exchange.sh (syncs MEMORY/USER/skills/scripts, commit+push). memory_github_sync.sh de-coupled (no longer re-runs exchange; only ODOO/PROJECTS_FULL). Only ONE script owns the push.
+Memory GitHub push = Step 6 in memory_skills_exchange.sh (owns the push).
+§
+Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
