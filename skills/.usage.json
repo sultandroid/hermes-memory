@@ -1746,12 +1746,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-08-07T13:28:30.169605+00:00",
+    "last_used_at": "2026-08-08T06:05:19.043587+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 346,
+    "use_count": 347,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
