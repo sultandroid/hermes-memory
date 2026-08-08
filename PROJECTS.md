@@ -21,7 +21,7 @@
 | 9 | RCRC Exhibition Proposal | CONSULTING | `sultandroid/RCRC-Exhibition-Proposal` | `~/projects/RCRC-Exhibition-Proposal` | — | Active |
 | 10 | Samaya Costing & Pricing | WORK | `sultandroid/samaya-costing-pricing` | `~/projects/samaya-costing-pricing` | — | Active |
 | 11 | Tqanny (8 sub-projects) | WORK | OneDrive-Personal — no GitHub | `OneDrive-Personal(2)/Work/PWork/01_PROJECTS/Tqanny_Projects/` | — | Various |
-| 12 | Sultan House (B210) | PERSONAL | (not yet — scaffold when work begins) | — | — | Active |
+| 12 | Sultan House (B210) | PERSONAL | `sultandroid/sultan-house` | `~/projects/sultan-house` | — | Active |
 
 For project status, key dates, deliverables — see each project repo's `PROJECTS.md`.
 
@@ -133,9 +133,12 @@ All follow standard structure: 00_Admin · 01_CLIENT_INPUTS · 02_Submittals · 
 
 Residential finishing. Project code B210. Personal project — **no Samaya branding**, use 'CONFIDENTIAL' header per `USER.md`.
 
-- Dashboard: `land210.vercel.app`
+- Repo: `sultandroid/sultan-house` (standalone, created 08-08-2026)
+- Local: `~/projects/sultan-house` (in Hermes home dir)
+- Dashboard: `land210.vercel.app` · Surge report: `sultan-house-report.surge.sh`
 - Eng office: Amjad Consultancy ACG
-- Status: see `~/projects/sultan-house/PROJECTS.md` (scaffold from `templates/PROJECT_TEMPLATE/` when work starts)
+- Modules: PROJECT · FINANCES · WORK_ITEMS · PAYMENTS · CONTRACTORS · CONTRACTS_LEGAL · PROGRESS · REPORTS · DECISIONS
+- Financial snapshot (imported): contract 632,000 EGP · paid 550,000 (4 installments) · expenses 414,585 · balance +93,956.5 · 40/40 items (100%)
 
 ---
 

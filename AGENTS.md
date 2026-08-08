@@ -48,7 +48,7 @@ Then **route to the project repo**:
 | WORK | Aseer Weekly Dashboard | `sultandroid/aseer-weekly-dashboard` | `~/projects/aseer-weekly-dashboard` |
 | WORK | Samaya Workspace | `sultandroid/samaya-workspace` | `~/projects/samaya-workspace` |
 | CONSULTING | RCRC Exhibition | `sultandroid/RCRC-Exhibition-Proposal` | `~/projects/RCRC-Exhibition-Proposal` |
-| PERSONAL | Sultan House | (not yet a repo — see `PROJECTS.md`) | — |
+| PERSONAL | Sultan House | `sultandroid/sultan-house` | `~/projects/sultan-house` |
 
 If the project has no repo yet but the work meets the "create a repo" rule (see §6), scaffold one from `templates/PROJECT_TEMPLATE/`.
 
