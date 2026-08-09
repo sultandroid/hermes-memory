@@ -21,8 +21,11 @@ triggers:
 | **مدير الإنتاج (Production Manager)** | رؤوف محمد رضا الديب | Production planning, shop floor, workforce, quality |
 | **مدير القسم الفني / 3D** | أحمد عواد فرحات | Technical design, 3D modeling |
 | **مدير قسم الفايبر** | عصام إبراهيم عز الدين | Fiberglass production |
+| **مشرف الصيانة + مشغل CNC** | محمد خاجا معين الدين | Machine maintenance + CNC operator. Odoo ID 2760, dept Eventech(46), email kmoinuddin24@gmail.com, phone 966551435149, manager Raouf(903) |
 
 **⚠️ Warith Sultan has NO relation to the factory** — he is Aseer Museum project director only.
+
+**⚠️ Odoo job_title reflects the IQAMA (residence permit) role, NOT the real role.** E.g. Moin El-Din is listed "Carpenter" but is actually Maintenance Supervisor + CNC operator. Always confirm the real role with the user before using job_title for maintenance/operator assignments.
 
 ## 📡 Data Sources
 
@@ -235,6 +238,28 @@ Save to `samaya-profile/00_Admin/factory_manager_report_YYYY-MM-DD.md`:
 1. ...
 ```
 
+## 📐 Lean Manufacturing System (`samaya-profile/03_Workshop/lean/`)
+
+A deployable Lean system lives in the repo at `03_Workshop/lean/`. It bundles 5 integrated tools plus preventive maintenance:
+
+| Tool | Folder / File | Frequency |
+|------|---------------|-----------|
+| Gemba Walk | `01_gemba_walk/` (checklist + log) | Daily 15-30 min |
+| Kaizen | `02_kaizen/` (form + register) | Weekly |
+| 5S | `03_5s/` (audit checklist + scores) | Weekly |
+| 5 Whys | `04_5whys/5whys_form.md` | On every problem |
+| Preventive Maintenance | `04_preventive_maintenance/` | Weekly per machine |
+| Continuous Improvement | `05_continuous_improvement/ci_register.md` + Excel | Continuous |
+| Lean Input (seed) | `06_lean_input/` (register + raw JSON) | From WhatsApp/email |
+
+**Gemba triage rule (user-corrected):** ~90% of walk observations are *immediate process fixes* (execution errors, delays, wrong layout) → fix on the spot, mark "⚡ immediate action", close same day. Only *recurring* problems get a 5 Whys analysis; only *improvement ideas* become Kaizen cards. Don't force every observation through a Kaizen/5-Whys funnel — that's overhead the user rejected.
+
+**Lean scope discipline (user-corrected):** Lean tracks machine **downtime, efficiency, capacity** — NOT machine asset value / cost / depreciation. Asset value is accounting, not Lean. Do not add cost tracking to Lean registers.
+
+**PM checklists are machine-specific** — checks differ by machine type. Chiller water (level/temp/leaks/distilled-water change), belts (tension/cracks/age), lenses & mirrors (clean/no-crack/no-coating-peel), assist gas, nozzle, exhaust. CO2 laser checks lenses+mirrors; fiber laser checks focus lens + protective window (replaced most often). See `references/cnc_laser_machines.md` for the machine inventory.
+
+**Odoo hosting consideration:** The same structure maps cleanly to Odoo — one Project "Lean Manufacturing" with 3 stages (جديد/قيد التنفيذ/مغلق) and tags for the tool type (Gemba/Immediate/Kaizen/5-Whys/5S). 5S scoring can live in Quality module. Preventive maintenance maps to the Maintenance module (real PM schedules fix the "no PM system" 5-Whys root cause). User prefers to build/collect data on the repo first, then decide on Odoo — don't jump to Odoo.
+
 ## 🏪 Inventory Monitoring System
 
 ### Architecture
@@ -350,6 +375,8 @@ Notes posted to Odoo chatter must be:
 |------|---------|
 | `references/raoof-delay-report-2026-08-04.md` | Example delay report analysis from Raoof |
 | `references/job-offer-letters.md` | Workflow for generating factory job offer letters from request form + iqama file |
+| `references/cnc_laser_machines.md` | CNC/Laser machine inventory from Odoo + PM check categories per machine type |
+| `scripts/whatsapp_lean_classify.py` | Classify Lean input items from WhatsApp `_chat.txt` export (handles LRM/unicode quirks) |
 
 ## ⚠️ Pitfalls
 
@@ -360,4 +387,7 @@ Notes posted to Odoo chatter must be:
 - **Outlook SQLite is the ONLY email source** — do NOT use Gmail IMAP for factory emails
 - **Credit suppliers** (Saba Najad, Mada Aljezera) are statement balances, not individual POs
 - **Don't confuse tickets with violations** — helpdesk ticket closures are HR actions, not disciplinary records
+- **Odoo job_title = iqama role, not real role** — confirm real role (esp. for maintenance/CNC operators) with the user before relying on it
+- **Lean ≠ asset accounting** — track downtime/efficiency/capacity, never machine value/cost. Don't force every Gemba observation through Kaizen/5-Whys (most are immediate fixes)
+- **WhatsApp export parse bug** — lines start with `\u200e` LRM; strip line before regex, else you get "parsed 0 lines". Use `scripts/whatsapp_lean_classify.py`
 - **MO monitor script has 3+ copies** — `~/.hermes/scripts/mo_monitor.py`, `~/.hermes/skills/samaya/factory-operations/scripts/mo_monitor.py`, `~/samaya-workspace/INVENTORY/scripts/monitor_mo_materials.py`, plus copies in `shared_exchange/` and `hermes-memory/`. Editing the chatter note template in ONE copy is not enough — a stale verbose template in another copy will re-post the old format. Update all copies together whenever the note format changes.

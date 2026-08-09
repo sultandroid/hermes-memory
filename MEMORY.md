@@ -16,14 +16,14 @@ Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each proj
 §
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 §
-PO approval checklist: (1) quotation attached, (2) match prices per line, (3) verify total matches quotation, (4) check price within ±20% of standard_price, (5) update list_price, (6) add supplier with vendor product name + code in seller_ids, (7) post confirmation. Service POs skip 5-6.
+PO approval: (1) quotation attached (2) prices match per line (3) total matches (4) price within ±20% of standard_price (5) update list_price (6) add supplier vendor name+code in seller_ids (7) post confirmation. Service POs skip 5-6.
 §
-MoC object list (Jul 2026) = 295 physical artifacts, NOT AV content. Only 11 objects need screens/projectors. AV media content (videos, motion graphics, interactives) is separate scope not in object list.
+MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
 §
-Memory GitHub push = Step 6 in memory_skills_exchange.sh (owns the push).
-§
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
+§
+Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
