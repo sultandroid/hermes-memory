@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-08 16:43:09
+Generated: 2026-08-09 09:00:39
 
 ---
 
@@ -45,6 +45,7 @@ Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandr
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
+Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
 Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
@@ -58,7 +59,6 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
-- Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
 
 ## Key People
 
@@ -87,6 +87,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
+Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -104,13 +105,12 @@ task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 - `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
-- The task remained mid-inspection; future work should first confirm the intended auth path for Nous, then apply the secret through the correct Hermes surface, then verify with a non-secret status check.
 
 ## Contracts & Documents
 
 CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
-MoC object list (Jul 2026) = 295 physical artifacts, NOT AV content. Only 11 objects need screens/projectors. AV media content (videos, motion graphics, interactives) is separate scope not in object list.
+MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
 Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries. Email cron MUST update actual registers (submittal/prequal/assessment/risk/action_items), not just review log; verify CG codes from actual email preview, not cron summary.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 Risk review: check Outlook emails for evidence before updating scores. User spots when CG comments don't apply to actual submission stage. Works risks systematically in priority order.
