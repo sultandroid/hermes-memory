@@ -758,12 +758,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-09T04:48:19.201212+00:00",
+    "last_used_at": "2026-08-09T11:03:24.896613+00:00",
     "last_viewed_at": "2026-08-06T10:31:04.980276+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 262,
+    "use_count": 264,
     "view_count": 85
   },
   "entity-intake": {
@@ -875,13 +875,13 @@
     "created_at": "2026-08-02T05:20:52.386649+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-08T17:42:17.745046+00:00",
-    "last_used_at": "2026-08-08T17:39:48.827115+00:00",
-    "last_viewed_at": "2026-08-08T17:39:48.825060+00:00",
+    "last_used_at": "2026-08-09T06:54:13.686675+00:00",
+    "last_viewed_at": "2026-08-09T06:54:13.679441+00:00",
     "patch_count": 22,
     "pinned": false,
     "state": "active",
-    "use_count": 17,
-    "view_count": 17
+    "use_count": 18,
+    "view_count": 18
   },
   "factory-violations": {
     "archived_at": null,
@@ -979,12 +979,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-09T04:48:19.221714+00:00",
+    "last_used_at": "2026-08-09T11:03:24.918686+00:00",
     "last_viewed_at": "2026-08-08T15:49:09.533933+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 205,
+    "use_count": 207,
     "view_count": 28
   },
   "github-private-repo-discovery": {
@@ -1629,13 +1629,13 @@
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-06T07:46:28.681559+00:00",
-    "last_used_at": "2026-08-08T17:18:00.756830+00:00",
-    "last_viewed_at": "2026-08-08T17:18:00.754791+00:00",
+    "last_used_at": "2026-08-09T06:54:13.682780+00:00",
+    "last_viewed_at": "2026-08-09T06:54:13.675556+00:00",
     "patch_count": 252,
     "pinned": false,
     "state": "active",
-    "use_count": 395,
-    "view_count": 395
+    "use_count": 396,
+    "view_count": 396
   },
   "odoo-bulk-audit": {
     "archived_at": null,
@@ -1811,12 +1811,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-08T12:19:59.094222+00:00",
-    "last_used_at": "2026-08-09T04:48:19.180690+00:00",
+    "last_used_at": "2026-08-09T11:03:24.860587+00:00",
     "last_viewed_at": "2026-08-08T15:32:56.992123+00:00",
     "patch_count": 279,
     "pinned": false,
     "state": "active",
-    "use_count": 662,
+    "use_count": 664,
     "view_count": 441
   },
   "p5js": {
