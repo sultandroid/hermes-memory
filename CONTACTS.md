@@ -30,16 +30,17 @@
 
 ## Samaya Sales / Commercial (added 2026-08-10 — from Odoo hr.employee)
 
-| Name | Job Title (Odoo) | Manager (parent) | Email | Phone | Odoo ID | Dept |
-|------|------------------|------------------|-------|-------|---------|------|
-| **خالد احمد محمد العبيدي** (Khaled Al-Obaidi) | **Sales Department Manager** | فواز عبدالله محمد المحرج (CEO, id=953) | k.abeedy@samayainvest.com | 966500686620 | **900** | Samaya / قسم المبيعات (101) |
-| **علاء حسين نمر الشوا** (Alaa Al Shawa) | **Salesman** | خالد احمد محمد العبيدي (id=900) | a.alshawa@samayainvest.com | 966509133868 | **945** | Samaya / قسم المبيعات (101) |
+| Name | Job Title | Manager (parent) | Email | Phone | Odoo ID | Dept |
+|------|-----------|------------------|-------|-------|---------|------|
+| **خالد احمد محمد العبيدي** (Khaled Al-Obaidi) | **Sales Department Manager** (Odoo) | فواز عبدالله محمد المحرج (CEO, id=953) | k.abeedy@samayainvest.com | 966500686620 | **900** | Samaya / قسم المبيعات (101) |
+| **علاء حسين نمر الشوا** (Alaa Al Shawa) | **Sales Coordinator** (توقيع البريد) — Odoo: salesman | خالد احمد محمد العبيدي (id=900) | a.alshawa@samayainvest.com | 966509133868 | **945** | Samaya / قسم المبيعات (101) |
 | فواز عبدالله محمد المحرج | Chief Executive Officer | — | fawaz@samayainvest.com | 966555212600 | 953 | Samaya / مكتب الرئيس التنفيدي (93) |
 | ياسر بن احمد حمدان الذيباني | Sales Manager | مشعل معتمد خوجلي مصطفى (id=1008) | yaser01@samaya.me | 966531051078 | 3057 | Rawasin (38) |
 | مشعل معتمد خوجلي مصطفى | Sales and Operations Manager | حسين عبد الحكم خليل كريم (id=3417) | meshalkhojali@taibahgifts.com | 966533390062 | 1008 | Taibah Gifts (28) |
 
 > **ملاحظات Odoo (تحقق 2026-08-10):**
-> - **التسلسل الإداري للمبيعات:** علاء (salesman) ← خالد (Sales Dept Manager) ← فواز (CEO).
+> - **التسلسل الإداري للمبيعات:** علاء (Sales Coordinator) ← خالد (Sales Dept Manager) ← فواز (CEO).
+> - **المسمى الوظيفي:** توقيع البريد أدق من Odoo — علاء = **Sales Coordinator** (Odoo يسجّله "salesman" فقط). عند تعارض، يُفضَّل توقيع البريد.
 > - **`hire_date` غير مسجلة** في Odoo لهذه الجهات (فارغة) — لا يوجد تاريخ مباشرة.
 > - **سجلات res.partner المكررة:** علاء (1553/5534)، خالد (1508/5533/5546/8026) — يُفضَّل السجل العربي/الأحدث.
 > - **قاعدة ربط Odoo:** كل جهة سمايا تُربط برقمها في Odoo (`hr.employee` → id، و`res.partner` → id) لتسهيل الربط الآلي.
