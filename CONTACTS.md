@@ -28,15 +28,21 @@
 | Talha Yousf | — | talha.yousaf@samayainvest.com | 154 |
 | Mohammed Hakmi | Lighting Engineer | m.hakami@samayainvest.com | — |
 
-## Samaya Sales / Commercial (added 2026-08-10)
+## Samaya Sales / Commercial (added 2026-08-10 — from Odoo hr.employee)
 
-| Name | Role | Email | Phone | Odoo ID (res.partner) | Notes |
-|------|------|-------|-------|---------|-------|
-| Alaa Al Shawa (علاء حسين نمر الشوا) | Sales Coordinator | A.alshawa@samayainvest.com | +966 509133868 | 1553 (علاء) / 5534 (Alaa) | Sends RFQ requests to factory (e.g. display stands) |
-| Khaled Al-Obaidi (خالد احمد محمد العبيدي) | Sales / Commercial | K.abeedy@samayainvest.com | — | 1508 (خالد) / 5533 (Khaled) / 5546 / 8026 | CC on RFQ requests |
-| Sultan Issa | Technical Office Manager | sultan@samayainvest.com | — | 151 (res.users) / 5503 (partner) | Receives RFQ from sales for factory pricing |
+| Name | Job Title (Odoo) | Manager (parent) | Email | Phone | Odoo ID | Dept |
+|------|------------------|------------------|-------|-------|---------|------|
+| **خالد احمد محمد العبيدي** (Khaled Al-Obaidi) | **Sales Department Manager** | فواز عبدالله محمد المحرج (CEO, id=953) | k.abeedy@samayainvest.com | 966500686620 | **900** | Samaya / قسم المبيعات (101) |
+| **علاء حسين نمر الشوا** (Alaa Al Shawa) | **Salesman** | خالد احمد محمد العبيدي (id=900) | a.alshawa@samayainvest.com | 966509133868 | **945** | Samaya / قسم المبيعات (101) |
+| فواز عبدالله محمد المحرج | Chief Executive Officer | — | fawaz@samayainvest.com | 966555212600 | 953 | Samaya / مكتب الرئيس التنفيدي (93) |
+| ياسر بن احمد حمدان الذيباني | Sales Manager | مشعل معتمد خوجلي مصطفى (id=1008) | yaser01@samaya.me | 966531051078 | 3057 | Rawasin (38) |
+| مشعل معتمد خوجلي مصطفى | Sales and Operations Manager | حسين عبد الحكم خليل كريم (id=3417) | meshalkhojali@taibahgifts.com | 966533390062 | 1008 | Taibah Gifts (28) |
 
-> **قاعدة ربط Odoo:** كل جهة سمايا تُربط برقمها في Odoo (`res.users` / `res.partner` → Odoo ID) لتسهيل الربط الآلي. عند استلام جهة جديدة، استخرج Odoo ID من `res.partner` بالبريد الإلكتروني قبل إضافتها. (تحقق 2026-08-10 — بعض الجهات لها سجلات مكررة في Odoo؛ يُفضَّل السجل العربي/الأحدث.)
+> **ملاحظات Odoo (تحقق 2026-08-10):**
+> - **التسلسل الإداري للمبيعات:** علاء (salesman) ← خالد (Sales Dept Manager) ← فواز (CEO).
+> - **`hire_date` غير مسجلة** في Odoo لهذه الجهات (فارغة) — لا يوجد تاريخ مباشرة.
+> - **سجلات res.partner المكررة:** علاء (1553/5534)، خالد (1508/5533/5546/8026) — يُفضَّل السجل العربي/الأحدث.
+> - **قاعدة ربط Odoo:** كل جهة سمايا تُربط برقمها في Odoo (`hr.employee` → id، و`res.partner` → id) لتسهيل الربط الآلي.
 
 ## External
 
