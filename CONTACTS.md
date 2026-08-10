@@ -28,6 +28,14 @@
 | Talha Yousf | — | talha.yousaf@samayainvest.com | 154 |
 | Mohammed Hakmi | Lighting Engineer | m.hakami@samayainvest.com | — |
 
+## Samaya Sales / Commercial (added 2026-08-10)
+
+| Name | Role | Email | Phone | Notes |
+|------|------|-------|-------|-------|
+| Alaa Alshawa | Sales Coordinator | A.alshawa@samayainvest.com | +966 509133868 | Sends RFQ requests to factory (e.g. display stands) |
+| Khaled Alobaidi | Sales / Commercial | K.abeedy@samayainvest.com | — | CC on RFQ requests |
+| Sultan Issa | Technical Office Manager | sultan@samayainvest.com | — | Receives RFQ from sales for factory pricing |
+
 ## External
 
 | Name | Role | Email |
