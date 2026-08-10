@@ -65,6 +65,19 @@ def post_note(uid, models, picking_id, message):
     models.execute_kw(ODOO_DB, uid, ODOO_KEY, 'stock.picking', 'message_post',
         [picking_id], {'body': message, 'message_type': 'comment'})
 
+NOTE_MARKER = 'تأكيد مخزن المصنع'
+
+def already_noted(uid, models, picking_id):
+    """True if this monitor already posted its marker note to this picking's chatter."""
+    msgs = models.execute_kw(ODOO_DB, uid, ODOO_KEY, 'mail.message', 'search_read',
+        [[
+            ['model', '=', 'stock.picking'],
+            ['res_id', '=', picking_id],
+            ['body', 'ilike', NOTE_MARKER],
+        ]],
+        {'fields': ['id'], 'limit': 1})
+    return bool(msgs)
+
 def main():
     days = 7
     delete_notes = False
@@ -81,6 +94,7 @@ def main():
     wrong = []
     correct = []
     untrackable = []
+    already_flagged = []
     
     for p in pickings:
         origin = p.get('origin', '')
@@ -102,14 +116,18 @@ def main():
         if proj_id == FACTORY_PROJECT_ID:
             correct.append(p)
         else:
-            wrong.append({'picking': p, 'po': po_name, 'project': proj_name, 'project_id': proj_id})
+            if already_noted(uid, models, p['id']):
+                already_flagged.append({'picking': p, 'po': po_name, 'project': proj_name, 'project_id': proj_id})
+            else:
+                wrong.append({'picking': p, 'po': po_name, 'project': proj_name, 'project_id': proj_id})
     
     # Output — plain text, no icons, no tags
     print(f'Warehouse Receipt Check ({datetime.now().strftime("%Y-%m-%d %H:%M")})')
     print(f'Period: last {days} days')
     print(f'Total receipts on FA/WH/FA: {len(pickings)}')
     print(f'Correct (factory PO): {len(correct)}')
-    print(f'Wrong warehouse: {len(wrong)}')
+    print(f'Wrong warehouse, already flagged (skipped): {len(already_flagged)}')
+    print(f'Wrong warehouse, new: {len(wrong)}')
     print(f'Untrackable: {len(untrackable)}')
     print()
     

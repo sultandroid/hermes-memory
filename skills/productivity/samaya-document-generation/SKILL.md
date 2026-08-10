@@ -28,6 +28,21 @@ The repo clone at `~/aseer-museum-pm/` is the reliable source for SamayaDoc. One
 
 When the user says "read all msg", "read the conversation", or similar, consolidate the full thread before acting. Do not jump to a conclusion from the last message alone. Re-read the conversation, identify the current state and pending deliverable, then confirm before producing output.
 
+### Read ALL Attachments, Not Just Bodies (user mandate)
+
+When the user says "check mails", "update all registers", or "read all and update", they expect the **attachments** to be read, converted to markdown, and used to update registers — NOT just the email bodies/previews.
+
+Workflow:
+1. Extract attachments (AppleScript batch → `/tmp/`)
+2. `pdftotext -layout` PDFs, `textutil` DOCX, `openpyxl` XLSX
+3. **Convert key content to markdown** under the relevant repo folder (e.g. `04_Docs/.../02_CG_Responses/<ref>_<title>.md`, `04_Cost/<vendor>_Invoices.md`)
+4. Update registers from attachment content: invoice amounts, NCR closeout status, scope changes, contract milestones
+5. Commit
+
+**Critical: SOR/NCR closeout reports can be PARTIALLY closed.** Read the PDF and check each numbered observation item's status before writing "Closed"/"Open" to the NCR register. A closeout email is NOT proof of full closure. Example (2026-08): SOR-013 items 1-2 (glass panel) stayed In Progress while item 3 closed — mark "Partially Closed".
+
+**Critical: `.eml` (message/rfc822) attachments extract as 0-byte files.** Detect via `ls -la` after extraction, flag for manual open in Outlook, do not burn retries.
+
 ## Pipeline
 
 ### Step 1: Read and Understand the Draft
