@@ -30,11 +30,13 @@
 
 ## Samaya Sales / Commercial (added 2026-08-10)
 
-| Name | Role | Email | Phone | Notes |
-|------|------|-------|-------|-------|
-| Alaa Alshawa | Sales Coordinator | A.alshawa@samayainvest.com | +966 509133868 | Sends RFQ requests to factory (e.g. display stands) |
-| Khaled Alobaidi | Sales / Commercial | K.abeedy@samayainvest.com | — | CC on RFQ requests |
-| Sultan Issa | Technical Office Manager | sultan@samayainvest.com | — | Receives RFQ from sales for factory pricing |
+| Name | Role | Email | Phone | Odoo ID (res.partner) | Notes |
+|------|------|-------|-------|---------|-------|
+| Alaa Al Shawa (علاء حسين نمر الشوا) | Sales Coordinator | A.alshawa@samayainvest.com | +966 509133868 | 1553 (علاء) / 5534 (Alaa) | Sends RFQ requests to factory (e.g. display stands) |
+| Khaled Al-Obaidi (خالد احمد محمد العبيدي) | Sales / Commercial | K.abeedy@samayainvest.com | — | 1508 (خالد) / 5533 (Khaled) / 5546 / 8026 | CC on RFQ requests |
+| Sultan Issa | Technical Office Manager | sultan@samayainvest.com | — | 151 (res.users) / 5503 (partner) | Receives RFQ from sales for factory pricing |
+
+> **قاعدة ربط Odoo:** كل جهة سمايا تُربط برقمها في Odoo (`res.users` / `res.partner` → Odoo ID) لتسهيل الربط الآلي. عند استلام جهة جديدة، استخرج Odoo ID من `res.partner` بالبريد الإلكتروني قبل إضافتها. (تحقق 2026-08-10 — بعض الجهات لها سجلات مكررة في Odoo؛ يُفضَّل السجل العربي/الأحدث.)
 
 ## External
 
