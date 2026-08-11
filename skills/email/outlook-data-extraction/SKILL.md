@@ -178,7 +178,7 @@ print(r.stdout)
 
 ## OCR for Image-Based PDFs (Stamped Drawings)
 
-When `pdftotext` returns empty (CAD plots, stamped redline drawings):
+When `pdftotext` returns empty (CAD plots, stamped redline drawings, scanned Arabic review forms):
 ```bash
 # Convert to image
 sips -s format jpeg -Z 1200 input.pdf --out ~/output.jpg
@@ -186,12 +186,29 @@ tesseract ~/output.jpg ~/ocr_out
 cat ~/ocr_out.txt
 ```
 
+**Pitfall — tesseract fails to open files in some directories.** If tesseract errors `failed to open locally with tail <file>` / `image file not found`, `cd /tmp` first and pass the absolute path — it cannot read files from certain working dirs (e.g. a `/tmp/email_attachments/` subdir). Run from `/tmp`.
+
+**Pitfall — `sips` only converts page 1 of a multi-page PDF.** For multi-page scanned docs use `pdftoppm` per page:
+```bash
+pdfinfo file.pdf | grep -i pages
+pdftoppm -f 1 -l 1 -r 200 -jpeg "<pdf>" /tmp/out
+tesseract /tmp/out-1.jpg stdout -l ara+eng
+```
+`-l ara+eng` is required for Arabic review forms (consultant/NAMA/CG stamped approvals).
+
+**Pitfall — CG/consultant review code is a checked box, not text.** On Arabic review forms the A/B/C/D code is a checkbox in the "Review Result" section. OCR that region to confirm the code (e.g. Code C = Resubmit). The code governs the register status, not the transmittal subject line.
+
+**Pitfall — nested/unsaveable attachments save as 0-byte files.** A `.zip` CAD attachment may extract as 0 bytes via AppleScript `save` (it "succeeds" but writes nothing). Detect with `ls -la` and flag for manual open in Outlook rather than retrying.
+
 ## Pitfalls
 
-- Column `Message_Body` does NOT exist — use `Message_Preview` for text content
-- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
+- Column `Message_Body` does NOT exist — use `Message_Preview` for text content- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
 - `Message_Preview` is truncated (~255 chars). Full body text is NOT in the SQLite row — for long bodies, extract the `.olk15MsgAttachment` MIME (or an HTML `Email_Content.html` block) rather than relying on the preview. Search only needs subject/preview; content extraction needs the block file.
 - The `Files` table is a virtual table (`FilesVTabModule`) — cannot query directly
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
 - Some attachment PDFs are image-only (CAD plots) — `pdftotext` returns empty; use OCR
 - OneDrive placeholders with "Resource deadlock avoided" — use Outlook DB or GitHub repo clone as fallback
+
+## References
+
+- `references/kimi-attachment-qc.md` — Kimi v0.23.3 QC of extracted email attachments: flags, background-run pattern for large batches, OCR of scanned Arabic review forms, 0-byte attachment pitfall
