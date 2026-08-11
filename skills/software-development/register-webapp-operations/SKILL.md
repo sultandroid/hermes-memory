@@ -276,11 +276,37 @@ r.get("severity", ""),
 ```bash
 # Remove specific old files
 rm src/EXP-RISK-PRR-2026-0{04,05,06}_RevC*_ACTIVE.xlsx
-# Clean all but the latest
+# Clean all but the latest (local)
 ls -t src/EXP-RISK-PRR-*.xlsx | tail -n +2 | xargs rm
 ```
 
-Also clean old files on the server via SSH when deploying new snapshots.
+**Server-side cleanup (required — old files accumulate there too):** The deploy rsyncs `src/` but does NOT delete stale xlsx on the server. Clean all-but-latest per register over SSH after deploying:
+
+```bash
+ssh -p 65002 u517606786@samaya-factory.com \
+  "cd /home/u517606786/domains/samaya-factory.com/public_html/aseer/registers/Risk; \
+   ls -t EXP-RISK-PRR-*.xlsx | tail -n +2 | xargs rm -f; \
+   ls -t DDR/EXP-RISK-DDR-*.xlsx | tail -n +2 | xargs rm -f; \
+   ls -t HSE/EXP-RISK-HSE-*.xlsx | tail -n +2 | xargs rm -f; \
+   ls -t AV/EXP-RISK-AV-*.xlsx | tail -n +2 | xargs rm -f"
+```
+
+**Git rename-detection gotcha when cleaning snapshots:** Old snapshots were force-added to git (`git add -f`), so deleting them + adding the new one makes git report them as **renames** (`R old → new`), not add+delete. To stage the deletions correctly use `git add -u` on the snapshot dirs (not just `git add -f` on the new file):
+
+```bash
+git add -f 06_Risk_System/webapp/src/EXP-RISK-PRR-*.xlsx   # new file
+git add -u 06_Risk_System/webapp/src/ 06_Risk_System/webapp/av/src/  # stage deletions/renames
+git add 06_Risk_System/webapp/snapshot_counter.json
+```
+
+**Full "update all register snapshots" workflow** (when the user asks to refresh the webapp + snapshots across all 4 registers):
+1. `python3 build_snapshots.py --bump` → PRR/DDR/HSE fresh snapshots
+2. `cd av && python3 build_av.py` → AVR snapshot (separate build, own sequence)
+3. Clean old snapshots locally (all-but-latest per register)
+4. `bash deploy.sh` → rsyncs all 4 pages + snapshots
+5. Clean old snapshots on the server (SSH, above)
+6. Verify all 4 live pages HTTP 200 + snapshot counter updated
+7. `git add -f` new xlsx + `git add -u` deletions + counter, commit, push
 
 ### Risks.json and source data contamination
 
@@ -345,6 +371,41 @@ git push origin main
 
 Do NOT force-push — the discard-and-rebase flow preserves the remote's newer commits and is safe because `index.html` is auto-generated.
 
+## Deploy SSH key — use id_rsa, NOT id_ed25519
+
+`deploy.sh` must use `-i ~/.ssh/id_rsa`. The server **rejects** `~/.ssh/id_ed25519` (`Permission denied (publickey,password)`), even though the default-key SSH works. If a deploy fails with permission denied, check the `-i` key in `deploy.sh` and switch it to `id_rsa`. Verify which key works before assuming a network problem:
+
+```bash
+for k in id_rsa id_ed25519; do
+  ssh -p 65002 -i ~/.ssh/$k -o BatchMode=yes u517606786@samaya-factory.com "echo OK_$k" 2>&1 | head -1
+done
+```
+
+## Verify the DEPLOYED site, not just the local build
+
+The local `webapp/src/index.html` and the deployed `samaya-factory.com/aseer/registers/Risk/index.html` can drift (auto-deploy cron, stale SCP, missed deploy). After any rebuild, confirm the LIVE revision and card count via SSH (not HTTP — LiteSpeed caches):
+
+```bash
+ssh -p 65002 u517606786@samaya-factory.com \
+  "grep -o '\"revision\":\"[^\"]*\"' .../registers/Risk/index.html | head -1; \
+   grep -o '\"id\":\"PRR-[A-Z]*-[0-9]*\"' .../registers/Risk/index.html | sort -u | wc -l"
+```
+
+**Card-count gotcha:** a superseded risk merged into another (e.g. `PRR-DES-08` merged into `PRR-AVS-02`) still appears in the `history` text as `"Merged with PRR-DES-08"`. So `grep -o 'PRR-[A-Z]*-[0-9]*'` (bare, no `"id":` prefix) over-counts by 1. Count only `"id":"PRR-..."` occurrences for the true card count.
+
+**Sub-agent review findings are self-reports — cross-check them.** When a delegated reviewer (kimi/Codex) audits the registers, verify its claims against the actual files before acting. In one session kimi falsely reported the local webapp was stale (C12/72) and the markdown register was missing 2 rows — both were wrong on direct inspection (local was C20/73, all 73 rows present). The reliable checks are the JSON-vs-HTML ID diff and the MD table-row count:
+
+```python
+import json, re
+src = {r['id'] for r in json.load(open('risks.json'))['risks']}
+html = re.search(r'const RISK = (\{.+?\});', open('webapp/src/index.html').read(), re.DOTALL)
+ids = {r['id'] for r in json.loads(html.group(1))['risks']}
+print('missing in webapp:', sorted(src - ids), '| extra:', sorted(ids - src))
+md = open('01_Registers/risk_register.md').read()
+rows = set(re.findall(r'^\| \d+ \| (PRR-[A-Z]*-[0-9]*) ', md, re.M))
+print('MD rows:', len(rows), '| missing:', sorted(src - rows))
+```
+
 ## Auto-deploy cron overrides SCP
 
 The `deploy-registers-on-commit` cron (every 15 min) deploys from git — it **overwrites** manually SCP'd files. Commit built HTML files to git after SCP to keep them in sync.
@@ -383,11 +444,27 @@ ssh -p 65002 u517606786@samaya-factory.com "cat /home/u517606786/domains/samaya-
 mkdir -p /tmp/lessons-learned-app
 ```
 
+**Remote dir missing → scp fails.** The LN deploy (`update-all-registers.sh`) SCPs directly to `$REMOTE_BASE/LN/index.html`. If the remote `LN/` dir doesn't exist (e.g. after server rebuild), scp fails with `dest open ... No such file or directory`. Fix: create the dir first, and the script now does this automatically:
+```bash
+ssh -p 65002 u517606786@samaya-factory.com "mkdir -p /home/u517606786/domains/samaya-factory.com/public_html/build/aseer/registers/LN"
+```
+
 **Verification:** After any commit, check the hook output for `Rebuilt LN: N lessons` and `LN: HTTP 200`.
 
 **Data source:** Only `03_Plans/11_Quality/lessons_learned_register.md` is parsed. The `01_Registers/lessons_learned_register.md` is NOT included in the webapp — it's a separate simplified register.
 
 **ID format requirement:** The parser (inline Python in `update-all-registers.sh`) scans for `LL-` in the ID cell. Rows with numeric-only IDs (e.g. `14 | ...`) are **silently skipped**. Always prefix lesson IDs with `LL-` (e.g. `LL-018`).
+
+**Summary-only lessons never reach the webapp.** The parser reads ONLY the table rows (lines starting with `|` that contain `LL-`). A lesson that appears only in the summary sections — "Lessons by Governing Plan" (§2), "Lessons by Status" (§3), or the PQP-KPI list — but has NO full table row is silently dropped from the webapp. Symptom: the register header says N lessons but the live page shows N−1. Fix: add the complete table row (all 13 columns) in the correct numeric position. Verify with `grep -oE 'LL-[0-9]+' /tmp/lessons-learned-app/index.html | sort -u` vs the register's `LL-` IDs.
+
+**Adding a lesson = update 5 places, not just the table.** When capturing a new lesson, keep the register internally consistent or the webapp count and the summary counts diverge:
+1. Insert the full table row (13 columns) in numeric order.
+2. Bump the header count line (`> **Current quarter:** ... — **N captured**`).
+3. Add the lesson to the correct "Lessons by Governing Plan" subsection and bump its count.
+4. Update the "Lessons by Status" table (Open / In Progress / Closed counts + ID lists).
+5. Bump `last_updated` in the frontmatter.
+
+Then rebuild via `update-all-registers.sh` and confirm `Rebuilt LN: N lessons` + `LN: HTTP 200`.
 
 **Reference:** `references/register-source-mapping.md` — full source file mapping across all registers.
 

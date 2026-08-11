@@ -46,6 +46,9 @@ All individual labor job-type rows (carpenter, painter, welder, etc.) → merge 
 ### Supervision
 Keep only **Engineering Supervision 10%**. Remove Project Management 5%.
 
+### Machine / Equipment Investment List Reconciliation
+When a feasibility study or capex sheet claims a machine-investment total, verify it by reading the total cell's formula (`data_only=False`), recomputing the exact range, and testing BOTH interpretations of the price column (line-total vs per-unit × qty). Flag qty>1 lines that look per-unit, and check whether the formula's start row silently excludes existing/legacy machines. See `references/machine-investment-list-reconciliation.md` for the full recipe and the Madinah Factory worked example.
+
 ### Capitalization Register Reclassification (IAS 16)
 See `references/capitalization-register-reclassification.md` — for when Finance sends a capital asset register (رسملة) and you need to reclassify it into project execution categories (On-Site Work, Off-Site Manufacturing, AV/IT, Furniture, Indirect Costs) and cross-map against BOQ divisions. Produces a 6-sheet Excel output.
 

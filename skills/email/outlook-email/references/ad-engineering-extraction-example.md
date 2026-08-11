@@ -60,3 +60,36 @@ Created `Technical_Office/Submission_Tracker/README.md` covering all 30 packages
 | Rashed Bati | mr@adeng.com.sa | Electrical design SOW |
 | Osama Abdel Shafi | osama@adeng.com.sa | RFP stage |
 | BD | BD@adeng.com.sa | Business Development |
+
+## Signed Agreement OCR — Worked Example (2026-08-11)
+
+Email 50442 ("Aseer Museum - Finalized Contract Agreement and Scope of Work for Acceptance")
+carried the **signed + stamped 10-page scanned PDF** of the AD Engineering agreement.
+`pdftotext` returned empty (image-based). Multi-page OCR path:
+
+```bash
+pdfinfo "50442_....pdf" | grep -i pages        # → 10 pages
+# page 1 (parties/recitals):
+pdftoppm -f 1 -l 1 -r 150 -jpeg "50442_....pdf" /tmp/ad_ag
+tesseract /tmp/ad_ag-01.jpg - 2>/dev/null | head -50
+# pages 2-8 (scope, fees, payment, milestones):
+for p in 2 3 4 5 6 7 8; do
+  pdftoppm -f $p -l $p -r 150 -jpeg "50442_....pdf" /tmp/ad_ag$p
+done
+tesseract /tmp/ad_ag6-06.jpg - 2>/dev/null | grep -iE "SAR|fee|payment|%|total|milestone"
+```
+
+**Output-name gotcha:** `pdftoppm` zero-pads — page 2 → `ad_ag2-02.jpg`, page 6 → `ad_ag6-06.jpg`.
+Glob the actual filename, don't assume `-01`.
+
+**Key terms extracted:**
+- Contract Price **SAR 225,000** (Two Hundred Twenty-Five Thousand)
+- Payment: Mobilization 15% · 50% Design SAR 67,500 · 90% Design SAR 67,500 · Final/IFC 25%
+- Milestones: 50% DD 9-Aug (MEP) / 5-Sep (Elec) · 90% IFC 1-Oct · 100% Final IFC
+- Payment NOT conditional on Samaya receiving payment from owner (pay-when-paid excluded)
+- Liability cap = total Contract Price; termination for convenience 15 calendar days notice
+
+**Lesson:** For scanned consultancy agreements, fee/payment/milestone clauses cluster on the
+last few pages (payment schedule + liability). OCR page 1 (parties) + final 3-4 pages
+(fees/payment/liability) first; only read middle scope pages if needed. `grep` for
+fee/payment keywords per page is far faster than reading every page.

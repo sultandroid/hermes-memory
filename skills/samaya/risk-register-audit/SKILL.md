@@ -8,6 +8,8 @@ description: "Audit Aseer Museum risk register entries against real evidence fro
 ## Purpose
 Verify all risk register entries against real evidence before updating. Every claim must be traceable to a real file or record.
 
+> **Recurring task — "check all email scans, any risks to update/close?":** see `references/email-scan-risk-review.md` for the full workflow (scan locations, cross-reference pattern, sub-approval ≠ parent-closure pitfall, update pattern).
+
 ## Evidence Sources (in priority order)
 
 | Source | Path | What to Check |

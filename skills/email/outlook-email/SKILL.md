@@ -1108,7 +1108,13 @@ Path is relative to `Data/` — construct full path:
 
 **Pitfall — multiple attachments per email:** Each attachment gets its own row in `Mail_OwnedBlocks` with a distinct `BlockID`. Check for multiple rows.
 
-**Pitfall — image-based PDFs:** CAD/stamped drawings return empty `pdftotext`. Use `sips -s format jpeg` + `tesseract` for OCR.
+**Pitfall — image-based PDFs:** CAD/stamped drawings and scanned contracts return empty `pdftotext`. For a **single-page** image PDF, `sips -s format jpeg file.pdf --out out.jpg` + `tesseract` works. For a **multi-page** scanned PDF (contracts, stamped agreements), `sips` only converts **page 1** — use `pdftoppm` per page instead:
+```bash
+pdfinfo file.pdf | grep -i pages          # get page count first
+pdftoppm -f N -l N -r 150 -jpeg file.pdf /tmp/pg   # one page at a time
+tesseract /tmp/pg-N.jpg - 2>/dev/null | grep -iE "SAR|fee|payment|%|total|milestone"
+```
+`pdftoppm` names output `prefix-NN.jpg` (zero-padded, e.g. `pg2-02.jpg` for page 2) — glob the actual filename, don't assume `-01`. Loop pages 2..N to read fees/payment/milestone clauses. 150 DPI is enough for OCR.
 
 ## Reference files
 

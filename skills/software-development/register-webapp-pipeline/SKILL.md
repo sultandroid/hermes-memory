@@ -46,6 +46,14 @@ All registers must follow `{REG}-{RBS}-{NN}` format:
 
 **Key rule**: Always fix BOTH the source JSON data AND the built HTML. Build scripts regenerate output from source — fixing only the HTML is temporary.
 
+**CRITICAL — sync direction is JSON → MD, never MD → JSON.** `risks.json` is the single source of truth. `risk_sync.py` regenerates `01_Registers/risk_register.md` FROM the JSON. If you edit the markdown register directly (e.g. to add a new risk or update a cause/response_action), the next `risk_sync.py` run **overwrites your edit**. The correct workflow when adding/updating a risk:
+1. Edit `06_Risk_System/risks.json` (add the risk object with full schema: id, category, title, cause, event, consequence, probability, severity, score, rating, status, owner, target_close, created, last_reviewed, response_action, actions[], history[], diagram, action_due).
+2. Run `python3 risk_sync.py` to regenerate the markdown register.
+3. Run `python3 webapp/build_risk.py` to rebuild the webapp HTML.
+4. Run `python3 webapp/build_snapshots.py --bump` to regenerate the Excel snapshot.
+5. Commit risks.json + risk_register.md + webapp/src/index.html + snapshot_counter.json (the .xlsx is gitignored — stays in OneDrive).
+Verify the new risk appears in all three layers (JSON, MD, webapp) before reporting done.
+
 ## HSE & DDR Field Mapping (UPDATED 2026-07-26)
 
 **Both HSE and DDR now use standard field names.** Do NOT map old/different field names.
@@ -279,6 +287,14 @@ The file on disk is always correct — what curl or the browser returns may be c
 - **Trigger the cron, don't manually copy** — the `Daily Risk Snapshot Sync` cron (job_id `ef2495d20159`) handles OneDrive delivery. Prefer `cronjob(action='run', job_id='ef2495d20159')` over manual `cp` to OneDrive. Only manually copy if the cron is failing and immediate delivery is needed — and always delete-old-first.
 - **Pre-commit hook blocks 00_Contracts/ commits** — The repo's pre-commit hook rejects any commit that stages files under `00_Contracts/` (read-only per AGENTS.md). If untracked contract files exist, `git add -A` will stage them and the commit will fail. Use `git add <specific files>` or `git reset HEAD 00_Contracts/` before committing.
 - **Post-commit hook modifies risks.json** — After every commit, a post-commit hook regenerates `06_Risk_System/risks.json`. This creates unstaged changes. When pulling with rebase, stash these first or use `git stash && git pull --rebase && git stash pop`.
+- **Post-commit hook causes a rebase LOOP (recurring, severe)** — The post-commit hook regenerates files (risks.json, webapp/src/index.html, adel_snapshots, compliance_matrix) on EVERY commit. During a multi-commit `git pull --rebase`, each replayed commit re-triggers the hook, leaving new unstaged changes that block the next rebase step with "cannot pull with rebase: You have unstaged changes." This can cascade into a stale `.git/rebase-merge` state. **Full recovery sequence:**
+  1. Commit the auto-generated changes: `git add -A && git commit -m "Auto-sync (post-commit)" --no-verify`
+  2. If rebase is stuck, clear the stale state: `rm -fr .git/rebase-merge && git rebase --abort` (ignore "no rebase in progress")
+  3. Drop stale stashes that are just auto-sync noise: `git stash drop stash@{N}` (verify each is only sync_state/webapp noise, not real work)
+  4. Rebase with a non-interactive editor so the hook can't hang: `GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git pull --rebase origin main`
+  5. If a conflict appears in an auto-generated file (e.g. `webapp/src/index.html`, `risks.json`), resolve by keeping the remote version: `git checkout --theirs <file>` then `git add <file>`
+  6. Continue: `GIT_EDITOR=true git rebase --continue`, then `git push origin main`
+  **Prevention:** before pulling, `git checkout 06_Risk_System/webapp/src/index.html` to discard the auto-generated copy so it can't conflict. Use `--no-verify` on the auto-sync commit so the hook doesn't re-fire mid-rebase.
 - **OneDrive snapshots — stale hardcoded URLs** — The `sync_risk_snapshots.sh` script hardcodes snapshot filenames like `EXP-RISK-PRR-2026-012_RevC11_ACTIVE.xlsx`. These go stale when snapshot numbers increment with each `--bump`. Fix: update the script to copy from local repo instead of downloading from server, or discover the latest filename before downloading.
 - **Pull doesn't mean data changed** — a pull with 30 commits may add fishbone diagrams and fix scores, but NOT change `response_action`/strategy fields. Verify source JSON fields before generating snapshots; don't assume what the pull contained.
 - **OneDrive cp may write stub files** — CloudStorage File Provider can create stub files instead of real content. After copying to OneDrive, verify file size matches the source (within 5%). If stubbed (file exists but seems wrong), open in Excel directly to force hydration.

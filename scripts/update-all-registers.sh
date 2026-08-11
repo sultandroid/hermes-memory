@@ -117,6 +117,7 @@ print(f"Rebuilt LN: {len(lessons)} lessons, dated {today}")
 PYEOF
 
     echo "Deploying LN..."
+    ssh $SSH_OPTS -p $SSH_PORT "$SERVER" "mkdir -p $REMOTE_BASE/LN"
     scp $SSH_OPTS -P $SSH_PORT "$INDEX_LN" "$SERVER:$REMOTE_BASE/LN/index.html"
 else
     echo "SKIP: LN markdown not found"
