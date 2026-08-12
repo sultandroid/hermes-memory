@@ -1,19 +1,19 @@
 ---
 issue_number: 3
 status: open
-raised: 2026-08-12T13:29:13
-email_ref: inbox/طلب-شراء-صناديق-خشبية---يرجى-الاعتماد.md
-project: samaya-factory
+raised: 2026-08-12T13:42:24
+email_ref: inbox/code-action.md
+project: unrouted
 priority: high
 ---
-# ISSUE-003 — escalation
+# ISSUE-003 — reply-required
 
 ## Why raised
-High-priority sender awaiting reply
+Email asks for action/reply
 
 ## Evidence
-- Sender: raoof@samayainvest.com
-- Subject: طلب شراء صناديق خشبية - يرجى الاعتماد
+- Sender: unknown
+- Subject: Code / Action
 
 ## Required action
 <reply / chase / escalate>

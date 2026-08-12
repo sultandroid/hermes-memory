@@ -64,6 +64,24 @@
       "trust": "high",
       "reply_speed": "medium",
       "notes": "Invoices, project management"
+    },
+    {
+      "email": "mohamed.elmahlawy@ace-mb.com",
+      "name": "unknown",
+      "role": "unknown",
+      "project": "aseer-museum",
+      "trust": "unknown",
+      "reply_speed": "unknown",
+      "notes": "Backfilled from email_scan_2026-07-15.md"
+    },
+    {
+      "email": "sherif.abdalmageed@egec.com.sa",
+      "name": "unknown",
+      "role": "unknown",
+      "project": "aseer-museum",
+      "trust": "unknown",
+      "reply_speed": "unknown",
+      "notes": "Backfilled from email_scan_2026-08-05.md"
     }
   ]
 }

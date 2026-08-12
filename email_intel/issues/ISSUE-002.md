@@ -1,19 +1,19 @@
 ---
 issue_number: 2
 status: open
-raised: 2026-08-12T13:29:13
-email_ref: inbox/طلب-شراء-صناديق-خشبية---يرجى-الاعتماد.md
+raised: 2026-08-12T13:42:24
+email_ref: inbox/approved-w-comments.md
 project: samaya-factory
-priority: medium
+priority: high
 ---
-# ISSUE-002 — gap
+# ISSUE-002 — reply-required
 
 ## Why raised
-Email references an attachment/document
+Email asks for action/reply
 
 ## Evidence
-- Sender: raoof@samayainvest.com
-- Subject: طلب شراء صناديق خشبية - يرجى الاعتماد
+- Sender: unknown
+- Subject: Approved w/ Comments.
 
 ## Required action
 <reply / chase / escalate>

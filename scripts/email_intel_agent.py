@@ -131,7 +131,9 @@ def route_to_project(subject, body, sender_email, projects):
 # STAGE 4: BEHAVIOR ANALYSIS
 # ──────────────────────────────────────────────────────────────────────────────
 def update_behavior(sender_email, sender_name, profiles):
-    prof = profiles.get(sender_email, {
+    # Use email as key when present, else the name (legacy scans often lack emails)
+    key = sender_email if sender_email and sender_email != "unknown" else (sender_name or "unknown")
+    prof = profiles.get(key, {
         "email": sender_email,
         "name": sender_name,
         "emails_seen": 0,
@@ -141,7 +143,7 @@ def update_behavior(sender_email, sender_name, profiles):
     })
     prof["emails_seen"] += 1
     prof["last_seen"] = now_iso()
-    profiles[sender_email] = prof
+    profiles[key] = prof
     return prof
 
 # ──────────────────────────────────────────────────────────────────────────────
