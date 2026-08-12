@@ -200,6 +200,16 @@ tesseract /tmp/out-1.jpg stdout -l ara+eng
 
 **Pitfall — nested/unsaveable attachments save as 0-byte files.** A `.zip` CAD attachment may extract as 0 bytes via AppleScript `save` (it "succeeds" but writes nothing). Detect with `ls -la` and flag for manual open in Outlook rather than retrying.
 
+## Batch "read all attachments" workflow (proven)
+
+When the user asks to read/extract every attachment from recent emails:
+
+1. **Query attachments by email id** — get `PathToDataFile` from `Mail_OwnedBlocks` JOIN `Blocks` for each `Record_RecordID` with `Message_HasAttachment=1`. Path lives under `.../Data/`, replace `%20` with space before opening.
+2. **Decode each `.olk15MsgAttachment`** — find `Content-transfer-encoding: base64`, take bytes after it (+35), strip the MIME boundary (`split(b"--=_")[0]`), strip all whitespace, re-pad base64, decode. Save as a real file; identify type by magic bytes (PDF/ZIP/PNG/JPG/OLE).
+3. **Convert to text**: `pdftotext -layout` for text PDFs; `openpyxl` for xlsx; **OCR** any PDF whose text is 1 byte (image-only scan).
+4. **OCR pitfall (reconfirmed):** `pdftoppm -f 1 -l N -r 200 -jpeg <pdf> /tmp/out` then run `tesseract /tmp/out-N.jpg <out> -l ara+eng` **from `/tmp`** — tesseract fails from arbitrary dirs. Note base64-encoded attachment filenames produce near-identical strings (e.g. `...2YbYqtmK2KzYqQ_` vs `...2YbYqtmK2zYqQ_`) — run `ls` on the actual filename before OCR, don't trust the pattern.
+5. **Delegate reading to a labor** (Kimi/Claude): concatenate text files into batches ≤~20KB each (Kimi times out on larger single-turn payloads), then fire one `kimi -p "$(cat batch.md)" --output-format text` per batch as **parallel background terminal calls**. Returns structured per-doc summaries. Note: Kimi CLI now takes the prompt as a positional `-p <prompt>` arg — the legacy `--print` / stdin-pipe interface is removed (2026-08).
+
 ## Pitfalls
 
 - Column `Message_Body` does NOT exist — use `Message_Preview` for text content- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
@@ -208,6 +218,7 @@ tesseract /tmp/out-1.jpg stdout -l ara+eng
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
 - Some attachment PDFs are image-only (CAD plots) — `pdftotext` returns empty; use OCR
 - OneDrive placeholders with "Resource deadlock avoided" — use Outlook DB or GitHub repo clone as fallback
+- **Cross-check registers BEFORE adding entries** — the daily email-sync cron (`register-auto-update`) auto-captures many CG responses/submittals (e.g. PQ-0130 rigging Code D, HVAC/Drain gateways, SOR-003/013 closeout were already in `submittal_register.md` / `risk_register.md` when the manual pass ran). After reading attachments, `grep` the target register for the doc ref (e.g. `PQ-0130`, `1G-0004`) and add ONLY genuinely missing entries — do not duplicate rows the cron already filed. The manual pass should backfill gaps (e.g. SOR-016 missing from `sor_register.md`, PQ-0130 missing from `prequalification_register.md`) rather than re-add what exists.
 
 ## References
 

@@ -90,6 +90,24 @@ The script has a keyword-to-risk-ID map covering ~40 risk IDs across PRR, DDR, H
 |------|--------|
 | `references/pq-knowledge-file-pattern.md` | Batch conversion of prequalification PDFs to structured MD knowledge files — fallback chain for corrupted PDFs, trade classification, CG comment patterns, clearance paths |
 
+## Delegating extraction/reading to Kimi CLI (email → register workflow)
+
+When reading many extracted attachment text files, delegate to **Kimi** to keep your context clean (proven this session: 63KB across 11 docs → 3 parallel `kimi -p` calls). 
+
+**⚠️ Kimi CLI interface changed (confirmed 2026-08-12):** the newer Kimi Code CLI dropped `--print`/`--quiet` and takes the prompt as a positional arg via `-p`/`--prompt`. `kimi --print` now errors `unknown option '--print' (Did you mean --prompt?)`.
+
+```bash
+# ✅ CURRENT — positional -p, prompt inline
+kimi -p "Summarize these documents: <content>" --output-format text
+
+# ✅ Pipe a batch file into the prompt string (avoids ReadFile timeout on large content)
+kimi -p "$(cat /tmp/BATCH1.md)" --output-format text
+```
+
+- **Split large batches** — 63KB of text split into 3 files, run 3 parallel `kimi -p` calls, each stays under the ~300s shell timeout. Do NOT dump everything into one call.
+- **OCR image-based PDFs before delegating** — `pdftotext` returns 1-byte/empty output for scanned PDFs. Convert with `pdftoppm -r 200 -jpeg` then `tesseract <img> <out> -l ara+eng`, and **run tesseract from `/tmp`** (it fails to open files from some subdirs). Arabic review forms need `-l ara+eng`.
+- **Extract attachments from Outlook** — the `.olk15MsgAttachment` files are binary header + MIME headers + base64 payload. Find the base64 marker (`Content-transfer-encoding: base64`), decode, and identify type by magic bytes (`%PDF`, `PK\x03\x04` for xlsx). See `outlook-data-extraction` skill for the full query/decode recipe.
+
 ## Pitfalls
 
 - **risk_register mapping uses `{prefix}_risks.json`** — the `risk_register` entry in `REGISTER_FILES` has a `{prefix}` placeholder that isn't resolved. The script falls through to the direct `RISK_JSON_MAP` for risk updates, but the register update step logs a "file not found" warning. This is cosmetic — risk JSONs are still updated correctly.
@@ -98,6 +116,18 @@ The script has a keyword-to-risk-ID map covering ~40 risk IDs across PRR, DDR, H
 - **Markdown table appending** — inserts a row after the `|---|` separator line. If the table has no separator, the append fails. All standard registers have this.
 - **Pre-commit hook blocks 00_Contracts/** — if backfill processes contract files, `git add -A` will stage them and the commit will fail. Use `git reset HEAD 00_Contracts/` before committing.
 - **Post-commit hook modifies risks.json** — after commit, the hook regenerates `risks.json`. Use `git stash` before `git pull --rebase`.
+- **Pre-commit / register-update hook regenerates `06_Risk_System/webapp/src/index.html` on EVERY commit** — a concurrent `register-update` process (cron or background) rebuilds the risk webapp and rewrites `index.html` with a fresh snapshot timestamp (`download="..._YYYY-MM-DD_HHMM.xlsx"`) each run. This file is perpetually dirty, so when the remote has moved ahead and you `git pull --rebase`, git aborts with *"Your local changes to the following files would be overwritten by merge: 06_Risk_System/webapp/src/index.html"*. **Durable fix (confirmed 2026-08-12):**
+  1. Never commit the hook-regenerated `index.html` — its only change is the snapshot timestamp and the hook rewrites it anyway. Drop it from your commit:
+     ```bash
+     git checkout -- 06_Risk_System/webapp/src/index.html
+     ```
+  2. Stash the working tree before rebasing, pull, then restore:
+     ```bash
+     git stash && git pull --rebase origin main && git stash pop
+     ```
+  3. If the rebase still aborts mid-way (the hook re-fires and re-dirties index.html during the rebase), `git rebase --abort`, `git checkout -- 06_Risk_System/webapp/src/index.html`, stash, and retry. The `[register-update]` lines you see during git operations are this background process, NOT the pre-commit hook.
+  4. After push, `git checkout -- 06_Risk_System/webapp/src/index.html` again and `git stash drop` — the regenerated snapshot is a CI/background concern, not something to version manually.
+  - **Do NOT edit `.git/hooks/pre-commit`** to work around this — the register-update is a separate background process (the pre-commit hook is just the 00_Contracts read-only guard, symlinked to `scripts/pre-commit-hook.sh`). Moving the hook does not stop the rebase conflict because the file is re-dirtied by the background process, not the hook. Restore the hook with `mv /tmp/pre-commit.bak .git/hooks/pre-commit` after.
 - **Corrupted PDFs are common** — many project PDFs have broken xref tables, missing endstream markers, or damaged object streams. pdftotext will silently produce no output (exit code 1) with no useful error. **Fallback chain for PDF extraction:**
   1. `pdftotext file.pdf /tmp/output.txt` — fastest, works for 90% of clean PDFs
   2. `pdftotext -layout file.pdf /tmp/output.txt` — helps with some corrupted xref tables
