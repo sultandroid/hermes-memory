@@ -164,11 +164,12 @@ python3 scripts/email_intel_agent.py --issues
 
 The Mac Pro runs **macOS with Outlook + AppleScript** — it is the ONLY machine that can read the user's Microsoft/Outlook mailbox directly (this Linux box cannot, and the mailbox requires MFA/App-Password that only the Mac's interactive Outlook session can satisfy).
 
-**The Mac Pro agent is the EMAIL INGESTION FRONT-END.** Its job is to **pull emails out of Outlook and hand them to this hub system as `.eml`/`.md` files** — nothing more. It does NOT own the intelligence layer; this hub does.
+**Primary mailbox: `sultan@samayainvest.com`** (Microsoft 365 / Outlook). The Mac Pro agent is the **EMAIL INGESTION FRONT-END** for this mailbox. Its job is to **pull emails out of Outlook and hand them to this hub system as `.eml`/`.md` files** — nothing more. It does NOT own the intelligence layer; this hub does.
 
 ### Required responsibilities (in order)
 
 1. **Export new emails from Outlook** (AppleScript → save as `.eml` or extract body+attachments to `.md`).
+   - Source mailbox: **`sultan@samayainvest.com`** (Microsoft 365 / Outlook).
    - Use the existing `bim_fetch_emails.applescript` / `bim_download_attachment.applescript` patterns as a starting point.
    - Export to a staging dir, e.g. `~/email_intel_staging/`.
 
