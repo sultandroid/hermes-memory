@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "last_updated": "2026-08-12",
+  "projects": [
+    {
+      "id": "aseer-museum",
+      "repo": "sultandroid/aseer-museum-pm",
+      "local_path": "~/projects/aseer-museum-pm",
+      "email_domains": ["@cg.com.sa", "@nissenrichardsstudio.com", "@ace.com"],
+      "keywords": ["aseer", "museum", "MOC", "CG", "NRS", "ACE", "متاحف", "متحف"]
+    },
+    {
+      "id": "samaya-factory",
+      "repo": "sultandroid/new-samaya-factory",
+      "local_path": "~/projects/new-samaya-factory",
+      "email_domains": ["@samayainvest.com"],
+      "keywords": ["samaya", "factory", "ورشة", "مصنع", "OT", "اوفر تايم"]
+    },
+    {
+      "id": "october129-building",
+      "repo": "sultandroid/october129-building",
+      "local_path": "~/projects/october129-building",
+      "email_domains": [],
+      "keywords": ["october129", "129", "عمارة", "مبنى"]
+    },
+    {
+      "id": "sultan-house",
+      "repo": "sultandroid/sultan-house",
+      "local_path": "~/projects/sultan-house",
+      "email_domains": [],
+      "keywords": ["sultan-house", "house", "منزل", "بيت"]
+    },
+    {
+      "id": "school-mobility",
+      "repo": "sultandroid/school-mobility-child-safety",
+      "local_path": "~/projects/school-mobility-child-safety",
+      "email_domains": [],
+      "keywords": ["school", "mobility", "child", "النقل", "مدرسة"]
+    }
+  ]
+}

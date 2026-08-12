@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "last_updated": "2026-08-12",
+  "contacts": [
+    {
+      "email": "sultan@samayainvest.com",
+      "name": "Sultan Issa",
+      "role": "Technical Office Manager",
+      "project": "samaya",
+      "trust": "high",
+      "reply_speed": "fast",
+      "notes": "User's own work account"
+    },
+    {
+      "email": "raoof@samayainvest.com",
+      "name": "Raoof",
+      "role": "Workshop Supervisor",
+      "project": "samaya-factory",
+      "trust": "high",
+      "reply_speed": "fast",
+      "notes": "Sends OT files, PO requests, leave requests"
+    },
+    {
+      "email": "hmabrouk@cg.com.sa",
+      "name": "Hossam Mabrouk",
+      "role": "CG Consultant (ACE)",
+      "project": "aseer-museum",
+      "trust": "high",
+      "reply_speed": "medium",
+      "notes": "CG responses, NCR closeouts"
+    },
+    {
+      "email": "malrezeni@cg.com.sa",
+      "name": "Mansour Al-Mutairi",
+      "role": "Acting CG Project Manager",
+      "project": "aseer-museum",
+      "trust": "high",
+      "reply_speed": "medium",
+      "notes": "Replaced Elbaz, Jul 2026"
+    },
+    {
+      "email": "jim.r@nissenrichardsstudio.com",
+      "name": "Jim Richards",
+      "role": "Director — Nissen Richards Studio",
+      "project": "aseer-museum",
+      "trust": "high",
+      "reply_speed": "medium",
+      "notes": "NRS design lead, invoices"
+    },
+    {
+      "email": "hesham.a@samayainvest.com",
+      "name": "Hesham Abd Elhameed",
+      "role": "Document Control",
+      "project": "samaya",
+      "trust": "high",
+      "reply_speed": "fast",
+      "notes": "Submittals, coordination"
+    },
+    {
+      "email": "adel@samayainvest.com",
+      "name": "Adel Darwesh",
+      "role": "Project Manager",
+      "project": "samaya",
+      "trust": "high",
+      "reply_speed": "medium",
+      "notes": "Invoices, project management"
+    }
+  ]
+}
