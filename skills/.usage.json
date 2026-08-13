@@ -758,12 +758,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-13T11:34:52.149059+00:00",
+    "last_used_at": "2026-08-13T14:38:22.552150+00:00",
     "last_viewed_at": "2026-08-06T10:31:04.980276+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 294,
+    "use_count": 295,
     "view_count": 85
   },
   "entity-intake": {
@@ -979,12 +979,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-13T11:34:52.204084+00:00",
+    "last_used_at": "2026-08-13T14:38:22.573388+00:00",
     "last_viewed_at": "2026-08-11T09:23:27.555422+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 239,
+    "use_count": 240,
     "view_count": 30
   },
   "github-private-repo-discovery": {
@@ -1811,12 +1811,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-13T09:35:35.567380+00:00",
-    "last_used_at": "2026-08-13T11:34:52.090750+00:00",
+    "last_used_at": "2026-08-13T14:38:22.530740+00:00",
     "last_viewed_at": "2026-08-13T09:35:30.107911+00:00",
     "patch_count": 286,
     "pinned": false,
     "state": "active",
-    "use_count": 710,
+    "use_count": 711,
     "view_count": 453
   },
   "p5js": {
