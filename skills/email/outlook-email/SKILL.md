@@ -814,6 +814,10 @@ For processing many project emails (10+), delegate individual emails to sub-agen
 
 Cannot be auto-downloaded. Report exact links to the user for manual download.
 
+**Distinguish cloud-link types — they are NOT all the same:**
+- **WeTransfer / external transfer links** — NOT downloadable from this environment. Flag to the user for manual download with ⚠️ expiry warning.
+- **Samaya internal SharePoint links** (`samayainvestksa-my.sharepoint.com/...`) — internal submittal deliveries (e.g. Scenography Report from Ali Abdelrahman). These are accessible to the user (no expiry risk like WeTransfer) and are NOT a download blocker — just report the link and note the deliverable. The full URL is in the email body, NOT the preview (preview truncates at ~500 chars). Use AppleScript `plain text content of m` to recover the complete link. Example (2026-08-13): Scenography Report email preview showed only "Attached link which contain..." — the actual `https://samayainvestksa-my.sharepoint.com/:f:/g/personal/sultan_samayainvest_com/...` was only in the full body.
+
 ### Project folder serial-number convention
 
 Use consistent `NN_` prefix with underscore (not dash).
@@ -949,6 +953,8 @@ Apply updates in order: submittal register first (source of truth), then special
 
 ### Phase 6 — Archive
 Log the batch to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML frontmatter (last_updated, owner_agent: Hermes, status: active, source). This log serves as the dedup reference for the next scan.
+
+**Dedup step (do this BEFORE classifying NEW vs already-reported):** Read the most recent `email_scan_*.md` in `03_Plans/08_Risk/reviews/` (e.g. `ls -t ... | head -1`) and compare its refs/subjects against the current query results. Anything already in the last log is NOT new — skip it. Only items absent from the last log get 🆕/⚠️ status. This is what makes the "only report NEW since last check" requirement reliable; without reading the prior log you risk re-reporting the same Aconex transmittals every run.
 
 ### Phase 7 — Build / Update Submission Register
 See `references/email-deliverables-to-submission-plan.md`.
