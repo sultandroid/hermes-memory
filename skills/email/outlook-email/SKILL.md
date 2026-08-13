@@ -893,7 +893,10 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 - `01_Registers/submittal_register.md` — status column per doc ref (ZD/1G/PQ) to the new CG code + date; append row if absent
 - `01_Registers/prequalification_register.md` — PQ codes
 - `01_Registers/assessment_evaluation_register.md` — electrical/mechanical assessment reports
+- `01_Registers/si_register.md` — **CG Site Instructions (SI-0NN)**. New SI → append a row (ref `MOC-MUS-CG-ASE-1KN-SE-NNN` / `Classification-...-SI-HSE-NNNN-OPEN`, date, subject, Status OPEN) + bump `last_updated` frontmatter. Check the register's current max SI number first — a new SI (e.g. SI-022 when the register ends at SI-020) is genuinely new; an Aconex transmittal (e.g. `CGP-TRANSMIT-NNNNNN`) is just the same SI's CDE sync, not a separate item.
 - `01_Registers/risk_register.md` + `06_Risk_System/risks.json` — new risks from Code D/C; update revision + total in BOTH (risks.json is SoT; recompute Summary counts from actual rows, don't hand-edit)
+
+**SI → risk decision rule:** A new CG Site Instruction is usually *evidence for an existing risk*, NOT a new risk row. Before creating a new PRR row, check whether the SI's discipline already has a mapped risk (e.g. an HSE/Compliance SI links to `PRR-HSE-01`). If so, append the SI ref to that risk's Evidence column and leave the score/stats unchanged. Only create a NEW risk when the SI introduces a genuinely new, uncaptured exposure with its own score. Example (2026-08-13): CG SI-022 (C&D waste management non-compliance) was OPEN and new to `si_register.md`, but linked as evidence under `PRR-HSE-01` — no new risk, no stats change.
 - `00_Status/action_items.md` — action item per Code C/D with owner + due
 - `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` — review log (append-only)
 
