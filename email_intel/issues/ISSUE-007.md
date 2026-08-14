@@ -2,7 +2,7 @@
 issue_number: 7
 status: open
 raised: 2026-08-12T13:42:25
-email_ref: inbox/corrective-actions-for-closeout-submitted.md
+email_ref: inbox/2026-08-08-sor-013-corrective-actions-for-closeout-submitted.md
 project: unrouted
 priority: high
 ---

@@ -2,7 +2,7 @@
 issue_number: 6
 status: open
 raised: 2026-08-12T13:42:25
-email_ref: inbox/urgent-finalization-of-sow-and-draft-agreement-with-ad-engin.md
+email_ref: inbox/2026-08-08-mohamed-mustafa-urgent-finalization-of-sow-and-draft-agreement-with-ad-engin.md
 project: unrouted
 priority: high
 ---

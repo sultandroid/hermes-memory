@@ -204,9 +204,15 @@ def detect_issues(subject, body, sender_email, sender, project, threads, issues)
         issue_path = ISSUES / f"ISSUE-{n:03d}.md"
         if issue_path.exists():
             continue
+        # email_ref must point to the actual inbox file (date-sender-subject), not a bare slug
+        email_ref = None
+        for f in sorted(INBOX.glob("*.md")):
+            if slugify(subject) in f.name:
+                email_ref = f"inbox/{f.name}"
+                break
         issue_path.write_text(
             f"---\nissue_number: {n}\nstatus: open\nraised: {now_iso()}\n"
-            f"email_ref: inbox/{slugify(subject)}.md\nproject: {project or 'unrouted'}\n"
+            f"email_ref: {email_ref or 'inbox/<unmatched>.md'}\nproject: {project or 'unrouted'}\n"
             f"priority: {prio}\n---\n# ISSUE-{n:03d} — {kind}\n\n"
             f"## Why raised\n{reason}\n\n## Evidence\n- Sender: {sender_email}\n"
             f"- Subject: {subject}\n\n## Required action\n<reply / chase / escalate>\n\n"

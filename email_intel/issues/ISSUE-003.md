@@ -2,7 +2,7 @@
 issue_number: 3
 status: open
 raised: 2026-08-12T13:42:24
-email_ref: inbox/code-action.md
+email_ref: inbox/2026-08-08-doc-code-action.md
 project: unrouted
 priority: high
 ---

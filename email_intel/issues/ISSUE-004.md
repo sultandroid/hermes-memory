@@ -2,7 +2,7 @@
 issue_number: 4
 status: open
 raised: 2026-08-12T13:42:24
-email_ref: inbox/closed-corrective-actions-cg-closeout.md
+email_ref: inbox/2026-08-09-hossam-mabrouk-sundus-alfeer-closed-corrective-actions-cg-closeout.md
 project: aseer-museum
 priority: high
 ---

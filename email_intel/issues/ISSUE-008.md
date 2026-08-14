@@ -2,7 +2,7 @@
 issue_number: 8
 status: open
 raised: 2026-08-12T13:42:25
-email_ref: inbox/action-taken.md
+email_ref: inbox/2026-08-05-sender-action-taken.md
 project: unrouted
 priority: high
 ---

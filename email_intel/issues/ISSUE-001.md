@@ -2,7 +2,7 @@
 issue_number: 1
 status: open
 raised: 2026-08-12T13:42:24
-email_ref: inbox/showcases-shop-drawings-top-urgently.md
+email_ref: inbox/2026-08-04-ali-abdelrahman-showcases-shop-drawings-top-urgently.md
 project: unrouted
 priority: high
 ---

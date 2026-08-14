@@ -217,7 +217,9 @@ def write_inbox_email(sender, subject, project, source_file, dry_run):
     sender_name = extract_name(sender)
     # Use name as identifier when no email present (legacy scans often lack emails)
     ident = sender_email or sender_name or "unknown"
-    date = datetime.now().strftime("%Y-%m-%d")
+    # Use the scan file's date (email_scan_YYYY-MM-DD.md) not today's date
+    m = re.search(r"email_scan_(\d{4}-\d{2}-\d{2})", source_file or "")
+    date = m.group(1) if m else datetime.now().strftime("%Y-%m-%d")
     fname = f"{date}-{slugify(ident)}-{slugify(subject)}.md"
     dest = INBOX / fname
     if dest.exists():

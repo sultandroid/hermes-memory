@@ -2,7 +2,7 @@
 issue_number: 5
 status: open
 raised: 2026-08-12T13:42:25
-email_ref: inbox/physical-attendance-in-riyadh-11-13-aug-contractual-fee-conf.md
+email_ref: inbox/2026-08-08-jim-richards-ali-physical-attendance-in-riyadh-11-13-aug-contractual-fee-conf.md
 project: unrouted
 priority: high
 ---

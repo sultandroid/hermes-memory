@@ -1,0 +1,9 @@
+From: Hossam Mabrouk <no-email>
+Subject: MOC-MUS-ASE-MEP-ZD-0067 Rev.03 / Fire Alarm & Fire Suppression Assessment Reports
+Date: 2026-08-06
+Project: aseer-museum
+Source: email_scan_2026-08-06-4.md
+Status: backfilled
+
+Backfilled from legacy email scan report. Original sender: Hossam Mabrouk
+Subject: MOC-MUS-ASE-MEP-ZD-0067 Rev.03 / Fire Alarm & Fire Suppression Assessment Reports
