@@ -374,6 +374,7 @@ Notes posted to Odoo chatter must be:
 | File | Purpose |
 |------|---------|
 | `references/raoof-delay-report-2026-08-04.md` | Example delay report analysis from Raoof |
+| `references/mo-hours-days-report.md` | Build active-MOs report: actual hours (workorder `duration`/60) + days since `date_start`. Includes the `mrp.workorder` field pitfalls (`duration_actual` doesn't exist; `duration` is minutes) |
 | `references/job-offer-letters.md` | Workflow for generating factory job offer letters from request form + iqama file |
 | `references/cnc_laser_machines.md` | CNC/Laser machine inventory from Odoo + PM check categories per machine type |
 | `scripts/whatsapp_lean_classify.py` | Classify Lean input items from WhatsApp `_chat.txt` export (handles LRM/unicode quirks) |
