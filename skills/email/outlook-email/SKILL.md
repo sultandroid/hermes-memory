@@ -337,17 +337,20 @@ REF. MOC-MUS-ASE-1E0-ZD-0089
 ```sql
 SELECT m.Record_RecordID, m.Message_NormalizedSubject,
   CASE
+    WHEN m.Message_Preview LIKE '%B - Approved with Comments%' THEN 'B'
     WHEN m.Message_Preview LIKE '%A - Approved%' THEN 'A'
-    WHEN m.Message_Preview LIKE '%B - Approved%' THEN 'B'
     WHEN m.Message_Preview LIKE '%C - Revise%' THEN 'C'
-    WHEN m.Message_Preview LIKE '%D - Rejected%' THEN 'D'
-    WHEN m.Message_Preview LIKE '%Approved with%' THEN 'B'
+    WHEN m.Message_Preview LIKE '%D%Rejected%' THEN 'D'
+    WHEN m.Message_Preview LIKE '%Approved%' THEN 'B'
     ELSE 'UNKNOWN'
   END as cg_code
 FROM Mail m
 WHERE m.Record_RecordID IN (49279, 49271, 49259)
   AND m.Message_SenderList = 'Hossam Mabrouk';
 ```
+Exact-phrase branches come FIRST with the explicit letter prefix (e.g. `'B - Approved with Comments'`), so a bare-`A` branch can never swallow the B-line. The loose `'%Approved%'` fallback is LAST. This ordering is critical — see the CASE-order pitfall below.
+
+**Pitfall — CASE branch ORDER mislabels "B - Approved with Comments" as Code A.** A first branch `WHEN ... LIKE '%A%Approved%' THEN 'A'` matches the phrase "**B** - Approved with Comments" because the literal "Approved" contains an "A" and the `%` wildcards span the "B -". The loose pattern swallows the B-line, returning 'A'. Consequence (2026-08-14): PQ-0145 and PQ-0146 interlock suppliers were auto-classified Code A but were genuinely Code B — caught only by re-reading the previews. **Rule: order the CASE branches by the explicit code letter first, never a bare `%A%` wildcard branch.** Match the distinct full phrases — `'B - Approved with Comments'`, `'A - Approved'`, `'C - Revise'`, `'D – Rejected'` — with the letter prefix included, and put the loose fallbacks (`'%Approved%'` → B) LAST. Verify a sample of `UNKNOWN` rows against the actual preview text before writing codes to registers, per the "verify from the actual email" rule below.
 
 **Pitfall — CG code uses en-dash, not hyphen.** The preview text uses `D – Rejected` (en-dash, U+2013), not `D - Rejected`. The CASE pattern `LIKE '%D - Rejected%'` (hyphen) does NOT match `D – Rejected` (en-dash). Use `LIKE '%D%Rejected%'` or `LIKE '%D – Rejected%'` with the actual en-dash character. Similarly, `Approved with Comment - B` uses a hyphen, so `LIKE '%Approved with%'` catches it. Always test the actual preview text before hardcoding CASE patterns.
 
