@@ -1,0 +1,10 @@
+---
+thread_id: THREAD-aseer-regional-museum-floor-and-ceiling-drawings-ga-plan-upd
+project: aseer-museum
+messages: 1
+created: 2026-08-15T00:49:50
+---
+
+# THREAD-aseer-regional-museum-floor-and-ceiling-drawings-ga-plan-upd
+
+- 2026-08-15T00:49:50 | unknown | Aseer Regional Museum: Floor and Ceiling drawings + GA plan updates

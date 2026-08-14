@@ -1,0 +1,22 @@
+---
+issue_number: 257
+status: open
+raised: 2026-08-15T00:49:51
+email_ref: inbox/2026-07-01-muhammad-almakarem-نموذج-تقديم-مستندات-doc-اعتماد-الخطة-الفنية-لترحيل-كابل-التأ.md
+project: aseer-museum
+priority: medium
+---
+# ISSUE-257 — contradiction
+
+## Why raised
+Possible contradiction/discrepancy
+
+## Evidence
+- Sender: unknown
+- Subject: نموذج تقديم مستندات (DOC) اعتماد الخطة الفنية لترحيل كابل التأريض المتعارض مع أعمال النفق وإدارة المخاطر بمشروع مركز استقبال الزوار بمتحف زمزم
+
+## Required action
+<reply / chase / escalate>
+
+## Resolution
+<filled when closed>

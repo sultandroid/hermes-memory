@@ -1,0 +1,9 @@
+From: Abdallah Omer <no-email>
+Subject: MEP Design Services – Asir Regional Museum Project طلب عرض سعر تصميم متحف عسير
+Date: 2026-06-30
+Project: aseer-museum
+Source: outlook-sqlite-backfill
+Status: backfilled
+
+Backfilled from Outlook SQLite. Original sender: Abdallah Omer
+Subject: MEP Design Services – Asir Regional Museum Project طلب عرض سعر تصميم متحف عسير
