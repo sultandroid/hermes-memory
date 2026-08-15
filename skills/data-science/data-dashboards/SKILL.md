@@ -52,6 +52,7 @@ Single HTML file
 | Percentages | Horizontal bar | Approval rates, completion % |
 | Time series | Horizontal bar | Days overdue, durations (indexAxis: 'y') |
 | 2D matrix | Stacked bar | Heatmap alternative for small dimensions |
+| Single metric / load | Half-doughnut gauge | System snapshot, % used — `circumference:180, rotation:270` |
 
 ## Samaya Brand Tokens
 
@@ -183,6 +184,15 @@ npx surge /tmp/surge-deploy/ my-domain.surge.sh
 ```
 
 Access: `https://my-domain.surge.sh/dashboard.html`
+
+## Internal Ops Dashboard Variant
+
+For a **private server landing page** (not a client-facing report), use a dark theme
+with a live clock, KPI cards, a half-doughnut gauge, and a service-status table. Drop
+client branding — use a neutral "Server Hub / Operations Dashboard" identity. Deploy to
+Nginx Proxy Manager instead of Surge. See
+`references/nginx-proxy-manager-deploy.md` for the NPM server layout, the "Default Site"
+diagnosis, and the deploy/verify steps.
 
 ## Pitfalls
 

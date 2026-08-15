@@ -232,6 +232,26 @@ Document-code-based routing rules for the Aseer Museum project. Maps MOC-MUS-ASE
 | *Design_Phase_Deliverables_Tracker* | Design Deliverables Tracker | `04_Docs/09_Registers/01_Design_Deliverables_Tracker/` |
 | *Calibration*Report* | Calibration Reports | `00_Status/Calibration_Reports/` |
 
+## Email Intel — cross-project intelligence layer (hermes-memory)
+
+Separate from the per-project routing above. Lives in `~/hermes-memory/email_intel/` (hub repo, NOT a project repo). It is the **analyst**; the Mac/Outlook agent is only the **sensor** (exports emails, never analyzes).
+
+- Layout: `inbox/*.md` (one per email), `contacts.json`, `projects.json`, `behavior/sender_profiles.json`, `threads/THREAD-*.md`, `issues/ISSUE-NNN.md`. MD/JSON only — no binaries, no Excel.
+- Scripts: `scripts/email_intel_agent.py` (pipeline: ingest→classify→route→behavior→thread→issues) and `scripts/email_intel_backfill.py` (reads `email_scan_*.md` reports). Run `--run` for full pipeline, `--issues` to list open issues.
+- **The scan-report backfill only reaches back to when the `email_scan_*.md` reports start (mid-July).** To backfill further (e.g. to April), pull directly from the Outlook SQLite DB — see `references/email-intel-outlook-backfill.md` for the recipe and the `scripts/email_intel_outlook_backfill.py` importer.
+- **Issue detector is keyword-based and over-raises.** It flags any email containing urgent/please/action/confirm as "reply-required" (306 of 318 issues in one run). Treat the issue list as raw flags needing a triage pass against the project registers — do NOT report them as verified action items.
+
+### READ-THE-CONTENT RULE (user correction 2026-08-15)
+
+**Metadata-only email processing is NOT acceptable.** The user explicitly rejected classifying emails by subject/sender alone: *"No we have to read and understand for updating registers and projects … also we have to read and understand attached."* A scan that only logs subjects, routes files, and writes a review log is a FAILED run. For every project-critical email you must:
+
+1. **Read the actual body** — `Message_Preview` is truncated (~255–500 chars). For full content use AppleScript `plain text content of msg` (see `outlook-email` skill) or `.olk15Message` body extraction. CG codes, instructions, and action requests may live in the forwarded/quoted body below the preview.
+2. **Read the attachments** — extract and read CG response PDFs (Code C/D especially), contracts, SOWs, comment sheets. The register-driving content (reviewer comments, rejection reasons, approval conditions) is in the attachments, not the subject.
+3. **Update the actual registers** — submittal, prequalification, letters, invoice, si, risk, action_items — with the understood content, not just note "email received."
+4. **Process in batches of ~10** — read 10 emails (bodies + attachments), update registers, commit, then the next 10. The user explicitly asked for this cadence ("make it 19 mails by 10 mails and take your time"). Do not try to bulk-process hundreds in one pass.
+
+**Pitfall — backfill inbox files are header-only.** The `email_intel/inbox/*.md` files created by the backfill importer contain ONLY `From/Subject/Date/Project` — no body, no attachments (median ~350 bytes). They are a metadata index, NOT readable content. Do not claim you "read" emails from these files. To actually read, pull from Outlook SQLite (`Message_Preview`) or AppleScript (`plain text content`).
+
 ## Key Senders
 
 | Sender | Role | Priority |

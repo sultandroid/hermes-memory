@@ -8,9 +8,9 @@ CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. 
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
 §
-Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
+Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python.
 §
-Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid GitHub).
+Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid).
 §
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
 §

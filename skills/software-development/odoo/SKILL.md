@@ -32,7 +32,7 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 scr
 
 `purchase.order` has `project_id` on the **header**. `analytic_distribution` only on `purchase.order.line`.
 
-See `references/odoo-18-field-schemas.md` for full schema. See `references/odoo-api-key-management.md` for API key renewal.
+See `references/odoo-18-field-schemas.md` for full schema. See `references/moqtana-server-topology.md` for the Moqtana droplet ports (NPM :80/:81, Odoo :8069) and the "Default Site" diagnosis. See `references/odoo-api-key-management.md` for API key renewal.
 
 ## ⚠️ Odoo 18 Domain Quirks (CRITICAL)
 
