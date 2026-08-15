@@ -132,6 +132,7 @@ Both are the same model in Odoo. An RFQ starts as draft, and after the user revi
 | 3D Middle East (check/create) | — | Artec Spider II scanner |
 | **مؤسسة أرساد الخليج للتجارة (ARSSAD ALKHALIJ)** | **8193** | **Faro Focus Premium 200m / Faro Blink** |
 | **Radinance Group** | **6366** | **Autodesk AEC Collection / BIM Collaborate licensing** |
+| **A. TOP IMPORT & EXPORT LMED** | **2377** | **Brass & stainless steel patinated samples (China, eman@atoppo.com)** |
 
 ## 5. Common Product IDs (Samaya Odoo)
 
@@ -145,6 +146,7 @@ Both are the same model in Odoo. An RFQ starts as draft, and after the user revi
 | **Faro Blink** | **27783** | **140,000** |
 | **Architecture Engineering & Construction Collection Commercial** | **23589** | **$50/user/month** |
 | **BIM Collaborate Pro** | **23590** | **$50/user/month (est.)** |
+| **Brass & Stainless Steel Sheet Samples (Patinated Effect)** | **28744** | **522 USD (8 pcs, 200×150mm, 2mm; `SAM-FIN-PB-001-SMP`)** |
 
 ## 6. Real-World Example: Faro Focus Premium 200m RFQ
 
@@ -276,3 +278,42 @@ rfq_id = models.execute_kw(db, uid, pwd, 'purchase.order', 'create', [{
 - **International suppliers** (UAE, Dubai): Use **USD** (ID 1) for RFQ, add note about SAR equivalent
 - **Local KSA suppliers**: Always use **SAR** (ID 150)
 - After creating PO in draft, verify currency — default is USD (ID 1) even if SAR was specified in some configurations
+
+## 9. Pitfalls — RFQ Creation
+
+### ⚠ `date_planned` (expected delivery) defaults to TODAY — and the ORDER LINE drives the display
+
+When you create a `purchase.order` without `date_planned`, Odoo sets it to the current date/time. For an RFQ with a production lead time, that is wrong — the expected delivery should be **today + production days**. Always set it at creation, or fix it right after:
+
+```python
+from datetime import datetime, timedelta
+expected = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')  # 7-day production
+models.execute_kw(db, uid, key, 'purchase.order', 'write', [[rfq_id], {'date_planned': expected}])
+```
+
+**⚠ CRITICAL:** `purchase.order` (header) and each `purchase.order.line` have **separate** `date_planned` fields, and the **order-line value is what the UI displays** as the expected date. Fixing only the header leaves the RFQ showing today — the user will say "still expected date the same". Fix BOTH, and always verify at the line level:
+
+```python
+lines = models.execute_kw(db, uid, key, 'purchase.order.line', 'search_read',
+    [[['order_id', '=', rfq_id]]], {'fields': ['id', 'date_planned']})
+# write date_planned on each line too, then re-read lines to confirm
+```
+
+Verify after with `search_read` on `purchase.order.line` (not just the header): confirm each line's `date_planned` is the future date. Note: once the RFQ is in `sent` state, both are still writable via `write`.
+
+### ⚠ The terminal `&` backgrounding guard rejects heredoc Python
+
+The terminal tool rejects any command containing a bare `&` (it interprets it as backgrounding). A Python heredoc that uses `&` inside string literals (e.g. `'Brass & Stainless Steel'`, `'A. TOP IMPORT & EXPORT'`) triggers this false positive: `Foreground command uses '&' backgrounding`. **Workaround:** write the Python script to a file with `write_file`, then run `python3 /tmp/script.py`. Do NOT try to inline the heredoc — it will be rejected.
+
+### ⚠ RFQ from a PI (Proforma Invoice) — capture the full cost picture
+
+When creating an RFQ from a supplier PI, the commodity line price is only part of the total. A PI typically also lists freight (DHL), bank charges, and terms (EXW, production time). Decide with the user whether to add these as separate order lines (so the RFQ total matches the PI) or keep them in the `notes` field. The user may also correct spec details (sample size, production days, remove a test requirement) — apply those edits to the product description, the order line `name`, AND the `notes` in one pass so they stay consistent.
+
+### ⚠ Editing an RFQ after creation — update all three places
+
+A spec correction (size, lead time, removed requirement) must be applied to **three** fields or they drift out of sync:
+1. `product.product` — `name` + `description`
+2. `purchase.order.line` — `name` (find via `search_read [['order_id','=',rfq_id]]`)
+3. `purchase.order` — `notes`
+
+Always update all three in the same script.

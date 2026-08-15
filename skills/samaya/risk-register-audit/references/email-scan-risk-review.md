@@ -46,7 +46,7 @@ ls -t 03_Plans/08_Risk/reviews/email_scan_*.md
 
 ## Update pattern (when a risk needs updating)
 
-Append to `evidence` (don't replace — keep the audit trail), bump `last_reviewed`, add a `history` entry with the date + what changed. Then rebuild + deploy:
+Append to `evidence` (don't replace — keep the audit trail), bump `last_reviewed`, add a `history` entry with the date + what changed. A runnable helper is at `scripts/update_risks.py` — copy it, fill the `UPDATES`/`HISTORY` dicts, run it. Then rebuild + deploy:
 
 ```bash
 cd 06_Risk_System && python3 webapp/build_risk.py && python3 risk_sync.py

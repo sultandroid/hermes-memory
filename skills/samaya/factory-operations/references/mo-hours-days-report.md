@@ -14,7 +14,8 @@ workorder durations.
 mos = models.execute_kw(db, uid, key, 'mrp.production', 'search_read',
     [[('state', 'in', ['progress', 'confirmed', 'to_close'])]],
     {'fields': ['id', 'name', 'product_id', 'product_qty', 'state',
-                'date_start', 'date_finished', 'workorder_ids'],
+                'date_start', 'date_finished', 'workorder_ids',
+                'x_studio_justification_1'],
      'order': 'date_start asc'})
 
 rows = []
@@ -29,8 +30,17 @@ for m in mos:
     done_wos = sum(1 for w in wos if w.get('state') == 'done')
     rows.append([m['name'], m['product_id'][1], m['product_qty'], m['state'],
                  str(ds)[:10], days, round(exp_h, 1), round(act_h, 1),
-                 f"{done_wos}/{len(wos)}"])
+                 f"{done_wos}/{len(wos)}",
+                 (m.get('x_studio_justification_1') or '').strip()])
 ```
+
+## Justification field (user-requested column)
+
+The MO **justification** lives in Odoo on `mrp.production` as the Studio field
+**`x_studio_justification_1`** (type `char`, label "justification"). Add it to the
+`fields` list and read it as `m.get('x_studio_justification_1')`. It is sparsely
+populated — on 15-08-2026 only 13 of 35 active MOs had a value; the rest are
+blank. Do not assume it is filled; the column will be mostly empty.
 
 ## ⚠️ Pitfalls (Odoo mrp.workorder)
 
@@ -56,8 +66,25 @@ Order by `date_start asc` (oldest first). Flag outliers:
 Sample rows (for a 14-08-2026 report): FA/WH/SWH/00001 = 267 days/0h (stuck);
 WH/MO/00537 = 44 days/697h (highest consumption); WH/MO/00339 = 159 days/245h.
 
-## Open question
+## Excel output (user preference, 15-08-2026)
 
-Ask the user WHERE the report goes before finalizing: daily Telegram message to
-the factory group (like `daily_procurement_report.py`) vs a file in the repo
-(like `OPERATIONS/daily/` or `reports/`). Not yet scheduled as a cron.
+The user wants this report as an **Excel file**, not a Telegram table. Build it
+with openpyxl and save to
+`samaya-profile/04_Financial/manufacturing_orders/active_mos_report.xlsx`.
+
+Columns (Arabic headers): الأمر | المنتج | الكمية | الحالة | بدأ | يوم |
+ساعات متوقعة | ساعات فعلية | أوامر عمل | **التبرير (Justification)**.
+- State labels: progress=قيد التنفيذ, confirmed=مؤكد, to_close=للإغلاق.
+- Styling: navy `1F3864` header / white bold text, freeze `A3`, auto-filter
+  `A2:J{last}`.
+- Highlight: red fill = stuck (≥200 days AND 0 actual hours); amber fill =
+  ≥200 actual hours.
+- The justification column is mostly empty (see above) — that is expected.
+
+A working generator lives at `~/.hermes/tmp/mo_report_excel.py` (recreate if
+needed; it is a one-off, not yet committed to the repo).
+
+## Delivery
+
+Resolved 15-08-2026: the report is a **repo Excel file** (path above), not a
+daily Telegram message. Not yet scheduled as a cron — regenerate on demand.

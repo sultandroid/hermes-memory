@@ -228,9 +228,10 @@ This decouples aesthetic approval (CG decides immediately) from technical certif
 5. Escalate to Procurement Manager (07) and Materials Manager (06) lanes
 6. Disclose variation risk explicitly in CG submission — never hide supplier disclaimers
 
-### Reference file
+### Reference files
 
-See `references/patinated-brass-datasheet-eden-analysis.md` for a worked example of EDEN-DESIGN patinated brass datasheet analysis.
+- `references/patinated-brass-datasheet-eden-analysis.md` — worked example of EDEN-DESIGN patinated brass datasheet analysis (risk disclaimers, register mappings).
+- `references/metal-finish-specs-for-pi-rfq.md` — canonical spec text for the two Aseer metal finishes (EDEN brass + SS 304 PVD) ready to drop into PIs, RFQs, and sample requests.
 
 ## Submittal Statement Format (to CG)
 
@@ -252,6 +253,8 @@ No explanation, no context paragraph, no quantity variance notes. Just the state
 
 ## Pitfalls
 
+- **`ws.insert_rows()` does NOT shift merged-cell ranges.** openpyxl moves cell *values* down but leaves `merged_cells.ranges` pointing at the old rows, so merges silently misalign (e.g. a "Total" merge now covers the wrong rows). After any `insert_rows`, unmerge ALL ranges and re-merge the corrected ones. Also re-check every formula that references a shifted row (e.g. `=T19+T23` → `=T20+T24`).
+- **Writing to a merged cell's non-anchor cell raises `AttributeError: 'MergedCell' object attribute 'value' is read-only`.** Write only to the top-left anchor of each merge.
 - **Only 2 materials submitted out of ~110+** is the typical starting state — don't be alarmed, this is normal for Stage 4
 - **~35 items marked "TBC Locally Sourced"** need local supplier identification (stone, glass, paint, some flooring)
 - **Oddy testing is a museum-specific requirement** — materials inside showcases (glass, fabric, powder coated steel) need museum-grade Oddy testing before approval
