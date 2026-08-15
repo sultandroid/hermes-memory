@@ -28,6 +28,7 @@ User asks to:
 
 **When the user says "update repo" or "follow repo instructions", do NOT start with ad-hoc register edits.** The `aseer-museum-pm` repo has a document intake pipeline at `scripts/document_intake.py`. Run it first:
 
+**User rule — "Always check GitHub issues and answer" (2026-08-15):** Before answering a project question or claiming a state, check the repo's open GitHub issues (`gh issue list --repo sultandroid/aseer-museum-pm --state open`). Open issues may already document a known gap, a pending request, or a decision the user expects you to act on. When the user says "check issues on GitHub", they want you to (a) list open issues, (b) find answers from Outlook/OneDrive/repo registers, and (c) reply on the issue. The `Repo Issue Auto-Responder` cron (every 2h) does this autonomously across `aseer-museum-pm`, `aseer-museum-viz`, `samaya-workspace`, `samaya-profile` — searching Outlook SQLite + Adel Darwish's OneDrive folder + repo registers for evidence before replying. Do not self-reply to issues authored by `sultandroid` unless asked.
 ```bash
 cd /Users/mohamedessa/aseer-museum-pm
 python3 scripts/document_intake.py --scan-dir 05_Comms

@@ -784,12 +784,12 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-15T10:01:47.141424+00:00",
+    "last_used_at": "2026-08-15T13:02:16.457475+00:00",
     "last_viewed_at": "2026-08-14T22:05:33.119471+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 313,
+    "use_count": 314,
     "view_count": 89
   },
   "entity-intake": {
@@ -1005,12 +1005,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-15T11:00:39.468864+00:00",
+    "last_used_at": "2026-08-15T13:02:16.644836+00:00",
     "last_viewed_at": "2026-08-15T11:00:39.454989+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 255,
+    "use_count": 256,
     "view_count": 31
   },
   "github-private-repo-discovery": {
@@ -1836,14 +1836,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-15T05:11:07.313351+00:00",
-    "last_used_at": "2026-08-15T12:58:14.910688+00:00",
-    "last_viewed_at": "2026-08-15T12:58:14.899867+00:00",
-    "patch_count": 294,
+    "last_patched_at": "2026-08-15T14:52:36.556710+00:00",
+    "last_used_at": "2026-08-15T14:51:43.315337+00:00",
+    "last_viewed_at": "2026-08-15T14:51:43.303165+00:00",
+    "patch_count": 296,
     "pinned": false,
     "state": "active",
-    "use_count": 732,
-    "view_count": 458
+    "use_count": 734,
+    "view_count": 459
   },
   "p5js": {
     "archived_at": null,
@@ -2213,14 +2213,14 @@
     "archived_at": null,
     "created_at": "2026-06-14T01:46:19.442167+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-06T00:35:34.887180+00:00",
-    "last_used_at": "2026-08-06T14:27:36.138998+00:00",
-    "last_viewed_at": "2026-08-06T14:27:36.135573+00:00",
-    "patch_count": 62,
+    "last_patched_at": "2026-08-15T14:52:12.373269+00:00",
+    "last_used_at": "2026-08-15T14:52:43.125995+00:00",
+    "last_viewed_at": "2026-08-15T14:52:43.114595+00:00",
+    "patch_count": 64,
     "pinned": false,
     "state": "active",
-    "use_count": 82,
-    "view_count": 82
+    "use_count": 84,
+    "view_count": 84
   },
   "project-scope-verification": {
     "archived_at": null,
