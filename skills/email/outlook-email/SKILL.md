@@ -143,7 +143,7 @@ JOIN folders f ON m.Record_FolderID = f.Record_RecordID
 WHERE m.Record_RecordID = <ID>;
 ```
 
-The `Message_Preview` column holds the first ~500 chars of the email body — enough to understand the purpose. For longer bodies, try AppleScript (`properties of theMsg` — requires Accessibility permissions).
+The `Message_Preview` column holds a **capped** slice of the email body — **measured at exactly 255 chars** on the active `Data/Outlook.sqlite` (2026-08-15: `SELECT length(Message_Preview)` = 255 for every email checked). For bodies that fit, it's enough to understand the purpose; for anything needing the full body (longer threads, forwarded CG codes, full WeTransfer/SharePoint URLs), the preview is USELESS — do not assume ~500 chars. Verify cap with `SELECT length(Message_Preview) FROM Mail WHERE Record_RecordID=<ID>;`, then fall back to AppleScript `plain text content of m` or the `.olk15Message` body extraction (see TNEF section). The 255-char cap means: (a) a CG code in a forwarded body will NOT be in the preview, (b) a full sharepoint.com link will be cut off mid-URL, (c) Arabic/BOM preamble eats most of the budget leaving almost no real content.
 
 ### Useful query patterns
 
@@ -363,7 +363,7 @@ Exact-phrase branches come FIRST with the explicit letter prefix (e.g. `'B - App
 
 This avoids AppleScript for ~70% of CG responses (Code B approvals).
 
-**Pitfall:** `Message_Preview` truncated to ~500 chars. If long preamble before the code line, fall back to AppleScript `plain text content`.
+**Pitfall:** `Message_Preview` truncated to **255 chars** (not ~500). If long preamble before the code line, fall back to AppleScript `plain text content`.
 
 **Pitfall — CG code may be in forwarded body, not top-level preview.** When Hossam Mabrouk forwards a CG response (e.g. ZD-0103 Rev.01), the top-level `Message_Preview` may only show "@Hesham Abdelhameed The Contractor Must to submit..." with no A/B/C/D code. The actual CG code (e.g. "D – Rejected") is in the *forwarded* message body below. Use AppleScript `plain text content of m` to read the full thread. If the preview shows a reply/forward instruction but no code, always extract the full body — the code is in the quoted original message.
 
@@ -511,7 +511,7 @@ ORDER BY m.Message_TimeReceived DESC;
 4. Update `VIOLATIONS/INDEX.md` with the new row
 5. Update the stats footer (total count, last updated)
 
-**Pitfall — email preview truncation:** `Message_Preview` is ~500 chars. For full body, use AppleScript `plain text content of msg`. If the preview contains enough info (date, employee name, violation type, action), skip AppleScript.
+**Pitfall — email preview truncation:** `Message_Preview` is **255 chars** (measured 2026-08-15). For full body, use AppleScript `plain text content of msg`. If the preview contains enough info (date, employee name, violation type, action), skip AppleScript.
 
 **Pitfall — employees not in Odoo:** Some workers (e.g. هريدهاي, عبد المجاهد) may not have Odoo records or biotime codes. Note this in the memo and use available info.
 
@@ -819,7 +819,7 @@ Cannot be auto-downloaded. Report exact links to the user for manual download.
 
 **Distinguish cloud-link types — they are NOT all the same:**
 - **WeTransfer / external transfer links** — NOT downloadable from this environment. Flag to the user for manual download with ⚠️ expiry warning.
-- **Samaya internal SharePoint links** (`samayainvestksa-my.sharepoint.com/...`) — internal submittal deliveries (e.g. Scenography Report from Ali Abdelrahman). These are accessible to the user (no expiry risk like WeTransfer) and are NOT a download blocker — just report the link and note the deliverable. The full URL is in the email body, NOT the preview (preview truncates at ~500 chars). Use AppleScript `plain text content of m` to recover the complete link. Example (2026-08-13): Scenography Report email preview showed only "Attached link which contain..." — the actual `https://samayainvestksa-my.sharepoint.com/:f:/g/personal/sultan_samayainvest_com/...` was only in the full body.
+- **Samaya internal SharePoint links** (`samayainvestksa-my.sharepoint.com/...`) — internal submittal deliveries (e.g. Scenography Report from Ali Abdelrahman). These are accessible to the user (no expiry risk like WeTransfer) and are NOT a download blocker — just report the link and note the deliverable. The full URL is in the email body, NOT the preview (preview truncates at **255 chars**). Use AppleScript `plain text content of m` to recover the complete link. Example (2026-08-13): Scenography Report email preview showed only "Attached link which contain..." — the actual `https://samayainvestksa-my.sharepoint.com/:f:/g/personal/sultan_samayainvest_com/...` was only in the full body.
 
 ### Project folder serial-number convention
 
@@ -962,6 +962,8 @@ Log the batch to `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` with YAML f
 
 **Dedup step (do this BEFORE classifying NEW vs already-reported):** Read the most recent `email_scan_*.md` in `03_Plans/08_Risk/reviews/` (e.g. `ls -t ... | head -1`) and compare its refs/subjects against the current query results. Anything already in the last log is NOT new — skip it. Only items absent from the last log get 🆕/⚠️ status. This is what makes the "only report NEW since last check" requirement reliable; without reading the prior log you risk re-reporting the same Aconex transmittals every run.
 
+**Pitfall — grep the register BEFORE adding an action item (backfill dedup).** During long backward-chronological backfill (process date-by-date from recent to old), many email threads were already captured on an earlier forward pass — the doc code (ZD/PQ/1G/SI ref) is already a row in `submittal_register.md`, and the corresponding action is already in `action_items.md` (from the forward run or the reply thread). Before adding a NEW action or register row for a batch, `grep -in "<doc-ref>|<keyword>" 00_Status/action_items.md 01_Registers/submittal_register.md` first. If the ref is already tracked, skip it — only add rows for genuinely NEW items (e.g. a CG code change on an existing row, or a distinct new request like "provide 2 alternative manufacturers" not previously logged). This prevents the register from accumulating duplicate rows for the same document. Concretely in the Jul 2026 backfill, most 12–15 Jul emails (ZNA/AD agreements, 1G-0001, ZD-0020/0082/0076/0081/0093, PQ-0105, ZD-0064, TQ-0021, NCR-1KH-009) were already registered — only a handful (ZD-0006 Rev.05 Code B, MA-0007 manufacturer request, CG Recovery Plan, AD Eng 15% advance) were genuinely new.
+
 ### Phase 7 — Build / Update Submission Register
 See `references/email-deliverables-to-submission-plan.md`.
 
@@ -1100,7 +1102,7 @@ tnef /tmp/email_winmail.dat -C /tmp/tnef_output/
 
 **Limitation:** The TNEF data is stored inside the `.olk15Message` file in a proprietary binary structure, not as a separate MIME part. Extracting the raw TNEF stream from the binary requires finding the TNEF magic bytes (`0x78 0x9f 0x3e 0x22`) within the file, which may not be present in all cases. When the TNEF data is embedded in the binary header area (before the MIME headers), it cannot be extracted by simple byte search.
 
-**Workaround:** For TNEF emails, the `Message_Preview` column in SQLite provides the first ~500 chars. For full body, AppleScript is the only reliable method.
+**Workaround:** For TNEF emails, the `Message_Preview` column in SQLite provides the first **255 chars** (measured 2026-08-15, NOT ~500). For full body, AppleScript is the only reliable method.
 
 ### Base64 PDF extraction from .olk15MsgAttachment (no AppleScript)
 

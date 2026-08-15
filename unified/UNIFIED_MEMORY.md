@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-14 16:07:39
+Generated: 2026-08-15 09:00:14
 
 ---
 
@@ -41,7 +41,7 @@ Always use the full research-enabled pipeline:
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
-Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid GitHub).
+Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid).
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
@@ -63,6 +63,7 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
+Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -81,11 +82,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
 - **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
-- **Dr. Waleed Abdelmabood Salah** (BIM Manager, Aseer)
 
 ## Agents & Tools
 
-Odoo server 167.99.224.43: pdftotext, mutool, tesseract (AR+EN), openpyxl, python-docx, Pillow installed. Use /opt/odoo-tools/bin/python for scripts.
+Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python.
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
 Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
