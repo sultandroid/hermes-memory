@@ -20,7 +20,27 @@ metadata:
 
 ## Workflow
 
-### Step 0: Find Governing Design Documents FIRST
+### Step 0: Drafting the RFP Solicitation Email (before the Excel)
+
+When the user asks to "draft an RFP email" / "send RFP to <vendor>" to invite a
+specialist to bid, the deliverable is a **solicitation email**, not the Excel workbook.
+Source the scope from the repo, not from memory:
+
+1. **Pull the SOW draft** — `03_Plans/15_Subcontractor_Deliverables/Draft_SOW_RACI/<NN>_<Specialty>_SOW_RACI_Draft.md`
+   (e.g. `06_Rigging_Contractor_SOW_RACI_Draft.md`). Its "Included Scope" table is the
+   authoritative scope basis.
+2. **Check the subcontractor folder** — `24_Subcontractors/<NN>_<Specialty>/_MANAGER_DASHBOARD/SPEC.md`
+   and `SCOPE_REQUEST.md` for the current package status and any open items.
+3. **Email structure** (concise, per user preference — no preamble):
+   - Subject: `Request for Proposal (RFP) — <Specialty> Specialist — <Project>`
+   - Project overview (name, client, contractor, contract no., design stage)
+   - Scope of Work (from the SOW draft's Included Scope table)
+   - Submission requirements (company profile, technical + commercial proposal, programme, HSE, references)
+   - Contact block (Technical Office Manager)
+4. **Do NOT invent scope** — if the SOW draft is marked "Do not issue until OI-x closed",
+   note the open items rather than asserting a finalized scope.
+
+### Step 0b: Find Governing Design Documents FIRST
 
 Before extracting vendor data or generating an RFP:
 1. Search the project's design files (`03_Design_Files/`) and subcontractor `02_Reference_Drawings/` for the governing design report

@@ -120,14 +120,14 @@
     "archived_at": null,
     "created_at": "2026-06-07T09:16:51.782024+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-10T11:27:54.140604+00:00",
-    "last_used_at": "2026-08-10T11:27:43.760137+00:00",
-    "last_viewed_at": "2026-08-10T11:27:43.757286+00:00",
-    "patch_count": 102,
+    "last_patched_at": "2026-08-16T08:01:08.117349+00:00",
+    "last_used_at": "2026-08-16T08:00:55.033614+00:00",
+    "last_viewed_at": "2026-08-16T08:00:55.030724+00:00",
+    "patch_count": 103,
     "pinned": false,
     "state": "active",
-    "use_count": 143,
-    "view_count": 143
+    "use_count": 144,
+    "view_count": 144
   },
   "aseer-email-routing": {
     "archived_at": null,
@@ -251,13 +251,13 @@
     "created_at": "2026-05-28T15:10:19.576513+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T16:41:27.665530+00:00",
-    "last_used_at": "2026-08-14T21:43:34.772086+00:00",
-    "last_viewed_at": "2026-08-14T21:43:34.765786+00:00",
+    "last_used_at": "2026-08-16T11:08:08.858827+00:00",
+    "last_viewed_at": "2026-08-16T11:08:08.856893+00:00",
     "patch_count": 393,
     "pinned": false,
     "state": "active",
-    "use_count": 539,
-    "view_count": 539
+    "use_count": 541,
+    "view_count": 541
   },
   "bim-technical-documentation": {
     "archived_at": null,
@@ -784,13 +784,13 @@
     "created_at": "2026-07-15T08:48:17.224840+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-24T09:54:55.683176+00:00",
-    "last_used_at": "2026-08-16T05:04:10.040733+00:00",
-    "last_viewed_at": "2026-08-14T22:05:33.119471+00:00",
+    "last_used_at": "2026-08-16T11:07:53.653921+00:00",
+    "last_viewed_at": "2026-08-16T11:07:53.651843+00:00",
     "patch_count": 47,
     "pinned": false,
     "state": "active",
-    "use_count": 319,
-    "view_count": 89
+    "use_count": 324,
+    "view_count": 92
   },
   "entity-intake": {
     "archived_at": null,
@@ -1005,12 +1005,12 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-16T05:04:10.081696+00:00",
+    "last_used_at": "2026-08-16T11:05:39.457941+00:00",
     "last_viewed_at": "2026-08-15T11:00:39.454989+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 261,
+    "use_count": 263,
     "view_count": 31
   },
   "github-private-repo-discovery": {
@@ -1654,14 +1654,14 @@
     "archived_at": null,
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-15T10:08:39.810053+00:00",
-    "last_used_at": "2026-08-15T10:07:55.655644+00:00",
-    "last_viewed_at": "2026-08-15T10:07:55.651446+00:00",
-    "patch_count": 259,
+    "last_patched_at": "2026-08-16T10:50:53.109260+00:00",
+    "last_used_at": "2026-08-16T11:07:48.273498+00:00",
+    "last_viewed_at": "2026-08-16T11:07:48.271033+00:00",
+    "patch_count": 262,
     "pinned": false,
     "state": "active",
-    "use_count": 407,
-    "view_count": 407
+    "use_count": 413,
+    "view_count": 413
   },
   "odoo-bulk-audit": {
     "archived_at": null,
@@ -1798,12 +1798,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-08-16T06:05:49.782040+00:00",
+    "last_used_at": "2026-08-16T13:00:54.626900+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 363,
+    "use_count": 364,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1836,14 +1836,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-15T14:52:36.556710+00:00",
-    "last_used_at": "2026-08-16T05:04:09.992141+00:00",
-    "last_viewed_at": "2026-08-15T14:51:43.303165+00:00",
-    "patch_count": 296,
+    "last_patched_at": "2026-08-16T08:52:09.758522+00:00",
+    "last_used_at": "2026-08-16T11:17:31.491107+00:00",
+    "last_viewed_at": "2026-08-16T11:17:31.489257+00:00",
+    "patch_count": 300,
     "pinned": false,
     "state": "active",
-    "use_count": 740,
-    "view_count": 459
+    "use_count": 748,
+    "view_count": 465
   },
   "p5js": {
     "archived_at": null,
@@ -2226,14 +2226,14 @@
     "archived_at": null,
     "created_at": "2026-06-13T03:30:03.427421+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-25T12:37:02.878217+00:00",
-    "last_used_at": "2026-07-25T12:36:50.408190+00:00",
-    "last_viewed_at": "2026-07-25T12:36:50.406243+00:00",
-    "patch_count": 39,
+    "last_patched_at": "2026-08-16T11:20:24.124763+00:00",
+    "last_used_at": "2026-08-16T11:20:17.957817+00:00",
+    "last_viewed_at": "2026-08-16T11:20:17.956015+00:00",
+    "patch_count": 48,
     "pinned": false,
     "state": "active",
-    "use_count": 53,
-    "view_count": 53
+    "use_count": 59,
+    "view_count": 59
   },
   "project-status-publishing": {
     "archived_at": null,
@@ -2421,14 +2421,14 @@
     "archived_at": null,
     "created_at": "2026-07-03T07:16:47.253049+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-03T15:59:34.332170+00:00",
-    "last_used_at": "2026-07-12T13:33:00.353900+00:00",
-    "last_viewed_at": "2026-07-12T13:33:00.349643+00:00",
-    "patch_count": 2,
+    "last_patched_at": "2026-08-16T11:08:58.704664+00:00",
+    "last_used_at": "2026-08-16T11:08:51.190135+00:00",
+    "last_viewed_at": "2026-08-16T11:08:51.187496+00:00",
+    "patch_count": 3,
     "pinned": false,
     "state": "stale",
-    "use_count": 5,
-    "view_count": 5
+    "use_count": 7,
+    "view_count": 7
   },
   "risk-register-audit": {
     "archived_at": null,

@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-16 09:05:47
+Generated: 2026-08-16 16:00:52
 
 ---
 
@@ -42,11 +42,12 @@ Always use the full research-enabled pipeline:
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
 Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid).
-Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide. Each project has _Style-Guides/README.md + assets/ with local logos.
+Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
-Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
-Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
+Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean: samaya-profile/03_Workshop/lean/.
+Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
+Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For Samaya visual work, when he says to follow a style guide, treat the authoritative guide as the governing spec before making visual changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -58,14 +59,13 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
-  - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
 
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
-Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python.
+Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New. User emp 975, partner 5503.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Factory Manager at Samaya. Arabic for factory tasks. PO approval: match quotations vs PO lines, verify totals, check price ranges vs standard_price, update list_price, add supplier to seller_ids BEFORE approval. Prefers terminal code to add skills himself.
+Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -85,9 +85,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 ## Agents & Tools
 
-Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python.
+Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New. User emp 975, partner 5503.
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
-Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean system at samaya-profile/03_Workshop/lean/.
+Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean: samaya-profile/03_Workshop/lean/.
+Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
 - Hermes runtime failures can come from stale pre-pull processes. If source imports work but tools still crash, compare process age to the latest pull before editing code.
@@ -104,7 +105,6 @@ task: inspect Hermes auth/config for Nous credential storage and prepare to add 
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
-- `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 
 ## Contracts & Documents
 

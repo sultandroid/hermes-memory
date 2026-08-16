@@ -25,6 +25,16 @@ Identify the project root. For Samaya BIM projects (Aseer, Zamzam, etc.) these l
 
 Check `_Project_Memory/PROJECT_MEMORY.md` first — it often contains a fast answer for common scope questions.
 
+**EDEADLK workaround — use the local clone FIRST.** OneDrive frequently throws `Resource deadlock avoided (os error 11)` on read/cp/grep of contract/ER/SOW files (both raw PDFs and extracted `.md` mirrors). The local git clone `~/aseer-museum-pm/` holds extracted, searchable markdown of the contract, ER, and SOW and is EDEADLK-free. Search it FIRST:
+- `~/aseer-museum-pm/00_Contracts/Contract_0010003521_Full_EN.md` — main contract
+- `~/aseer-museum-pm/00_Project_Charter/er_document.md` — Employer's Requirements (extracted text)
+- `~/aseer-museum-pm/03_Plans/01_DMP/04_Scope_of_Works_Summary.md` — SOW summary with ER/SoW clause citations
+- `~/aseer-museum-pm/01_Registers/deliverables_master_list.md` + `drawing_register.md` — deliverables/drawings with source-clause traceability
+- `~/aseer-museum-pm/03_Scope/AD_Engineering/` — MEP designer SOW + drawing list PDFs
+- `~/aseer-museum-pm/03_Scope/Nama_Consulting_FLS/` — FLS specialist scope/status
+
+Only fall back to OneDrive paths when the local clone lacks the document. This avoids the deadlock entirely and is faster. (Note: `read_file` on an EDEADLK'd OneDrive file returns empty content with a non-zero file_size — a telltale sign the file is unsynced; switch to the clone.)
+
 ### 2. Search in priority order
 
 Contractual authority hierarchy (higher overrides lower):
@@ -590,10 +600,17 @@ Run `find /path/to/project -maxdepth 3 -type f \\( -name '*.pdf' -o -name '*.dwg
 ### Step 6: Report with evidence
 Always cite WHERE each file was found (full path) or state "no matching file found on disk." Include Odoo task references as context, not as evidence of delivery.
 
+## Subcontractor Scope Summary (recurring "give me a summary of [discipline] scope")
+
+When the user asks for a one-shot summary of a subcontractor's scope (Structural, ICT/Telecom, Landscape, MEP, FLS, etc.), use the standard file set + output shape. See `references/subcontractor-scope-summary.md` for the full workflow, discipline-specific notes, and pitfalls (notably: always state appointment/contract status explicitly — the user will follow up with "contract not done yet?" if you don't).
+
 ## Reference files
 
+- `references/subcontractor-contract-status.md` — verify whether a subcontractor/specialist is **contracted vs prequalifying vs in-negotiation** (the "is X contracted yet?" question). States table, where to look (contract folders, specialist/package registers, scope READMEs), reading contract PDFs, and pitfalls (register firm name ≠ signed party, just-signed contracts, truncated email previews)
+- `references/subcontractor-scope-summary.md` — recurring "summarize a subcontractor's scope" pattern: file set, output shape, discipline notes, pitfalls
 - `references/email-archive-search.md` — searching project email archives for scope/pricing info; detecting corrupted archived emails; project code references (1311, 22047, P00444)
 - `references/material-compliance-example.md` — worked example: evaluating Ritver paint/coating products against Aseer Museum project specs, including the "confirm which project" pitfall
+- `references/smoke-management-scope-example.md` — worked example: smoke management is in scope (ER §1.2, AD MEP SOW, S-P-20), with the design/strategy/install three-way split, the "MEP contractor not yet awarded" caveat, AND the **scope-vs-design-feasibility** distinction (a required system that "can't fit" is a design-strategy problem to resolve, not a scope gap to drop)
 
 ## Cross-Contract Scope Conflict Audit
 

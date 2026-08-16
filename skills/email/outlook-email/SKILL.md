@@ -444,7 +444,9 @@ ORDER BY m.Message_TimeSent;
 ```
 
 See `references/email-thread-analysis.md` for a complete worked example.
+See `references/html-body-strip-pattern.md` for the HTML-body-strip-to-text pattern that preserves tables (block tags → newline, `</td>` → `|`), plus `pdftotext -layout` for PDFs and python-docx for DOCX attachment content.
 See `references/email-chain-tracing.md` for tracing forwarded email chains (FW:).
+See `references/chaser-reminder-email-pattern.md` for the chaser/reminder email class (Samaya chasing a specialist for documents/CG-comment responses) — 255-char preview truncation, recall-message noise, corrupt CG-comments attachment handling.
 See `references/cg-email-triage.md` for CG consultant response scanning.
 See `references/email-triage-pattern.md` for the complete inbox review workflow.
 See `references/submission-plan-and-schedule-workflow.md` for building CG submission plans from email data.
