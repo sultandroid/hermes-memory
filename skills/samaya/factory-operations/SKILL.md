@@ -378,6 +378,7 @@ Notes posted to Odoo chatter must be:
 | `references/job-offer-letters.md` | Workflow for generating factory job offer letters from request form + iqama file |
 | `references/cnc_laser_machines.md` | CNC/Laser machine inventory from Odoo + PM check categories per machine type |
 | `references/whatsapp-hr-context.md` | Use WhatsApp `_chat.txt` export as the source for factory HR/termination/salary decisions (Odoo hr.employee is thin); Saudi Labor Law Art. 75 notice periods |
+| `references/overtime-followup-email.md` | Draft HR follow-up email on delayed overtime: cite facts (strike/refusal timeline) + Odoo helpdesk ticket numbers (#2611 June, #2755 July open) |
 | `scripts/whatsapp_lean_classify.py` | Classify Lean input items from WhatsApp `_chat.txt` export (handles LRM/unicode quirks) |
 
 ## ⚠️ Pitfalls
@@ -391,6 +392,8 @@ Notes posted to Odoo chatter must be:
 - **Don't confuse tickets with violations** — helpdesk ticket closures are HR actions, not disciplinary records
 - **Odoo job_title = iqama role, not real role** — confirm real role (esp. for maintenance/CNC operators) with the user before relying on it
 - **Odoo hr.employee is thin for factory workers** — the sultan@samayainvest.com account (uid 151) can't read `identification_id, gender, birthday, marital, country_id, notes, contract_id` (needs "Employees / Officer: Manage all employees"). For HR/termination/salary context, use the WhatsApp `_chat.txt` export instead — see `references/whatsapp-hr-context.md`
+- **User-supplied Odoo employee IDs can be wrong** — always `search` by name and confirm the record matches the person before acting (e.g. user said "سهيل رقم 898" but 898 is a different inactive employee; سهيل is 1629). See `references/whatsapp-hr-context.md`
+- **`hire_date` (char) is the hire field, NOT `date_of_hire`** — `date_of_hire` and `work_location` don't exist on `hr.employee` (raise "Invalid field"). `create_date` is record-creation, not hire date. Service length for these workers comes from the WhatsApp chat, not Odoo.
 - **Lean ≠ asset accounting** — track downtime/efficiency/capacity, never machine value/cost. Don't force every Gemba observation through Kaizen/5-Whys (most are immediate fixes)
 - **WhatsApp export parse bug** — lines start with `\u200e` LRM; strip line before regex, else you get "parsed 0 lines". Use `scripts/whatsapp_lean_classify.py`
 - **MO monitor script has 3+ copies** — `~/.hermes/scripts/mo_monitor.py`, `~/.hermes/skills/samaya/factory-operations/scripts/mo_monitor.py`, `~/samaya-workspace/INVENTORY/scripts/monitor_mo_materials.py`, plus copies in `shared_exchange/` and `hermes-memory/`. Editing the chatter note template in ONE copy is not enough — a stale verbose template in another copy will re-post the old format. Update all copies together whenever the note format changes.

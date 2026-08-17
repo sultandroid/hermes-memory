@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-17 09:00:53
+Generated: 2026-08-17 16:00:34
 
 ---
 
@@ -41,7 +41,6 @@ Always use the full research-enabled pipeline:
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
-Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid).
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
@@ -59,6 +58,7 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
+  - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
 
 ## Key People
 
@@ -88,6 +88,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New. User emp 975, partner 5503.
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
 Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean: samaya-profile/03_Workshop/lean/.
+Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -104,7 +105,6 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
 task: inspect Hermes auth/config for Nous credential storage and prepare to add a user-supplied secret
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
-- Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 
 ## Contracts & Documents
 

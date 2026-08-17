@@ -123,7 +123,7 @@ def classify_ref(ref):
 
 ### Report structure
 
-- **Sheet 1: By Project** — one row per project group showing: unpaid count, unpaid total, bill-paid, chatter-paid, credit supplier allocation (مدى / صبا), and **Total Needed** (unpaid + credit suppliers for that group)
+- **Sheet 1: By Project** — one row per project group showing: unpaid count, **PO Numbers (comma-separated list of unpaid PO #s — user explicitly wants this column)**, unpaid total, bill-paid, chatter-paid, credit supplier allocation (مدى / صبا), and **Total Needed** (unpaid + credit suppliers for that group)
 - **Sheet 2: Detail** — all POs listed under project-group headers, with credit supplier rows (مدى / صبا) per group in purple fill, showing their PO count and total
 
 ### Execution
@@ -199,6 +199,16 @@ for mid in msg_ids[:15]:
 | يرجي ارفاق الفاتورة الضريبية | Payment sent, waiting for tax invoice |
 
 **Known chatter-paid POs (paid outside Odoo):** P01924, P01939, P01894, P01977 — these have transfer images in chatter or "مدفوع من العهده" note. Maintain this set and update as new evidence emerges.
+
+**Faster عهده detection — check vendor reference, not chatter (IMPORTANT):** The hardcoded set above is incomplete. Many Factory POs carry the marker directly in their **vendor reference** (`partner_ref`): `مدفوع من العهده`, `مدفوع م العهده`, or `مدفوعه`. These are paid from Ibrahim's allowance and should be classified as `chatter_paid` (paid outside Odoo) WITHOUT reading chatter — it's a single field check, far cheaper than per-PO chatter reads.
+
+```python
+# After the bill_paid / hardcoded chatter checks:
+if not paid and ('مدفوع من العهده' in ref or 'مدفوع م العهده' in ref or 'مدفوعه' in ref):
+    paid = True; pay_source = 'chatter_paid'
+```
+
+This reclassified ~29 عهدة إبراهيم POs (18,551 SAR) from unpaid to paid in the by-project report, dropping Factory unpaid from 397,674 → 379,122 SAR. **Always apply this check** — the hardcoded set alone understates paid POs and inflates cashout required. The `classify_ref` regex already maps these refs to the 'عهدة إبراهيم' group; the payment classification must match.
 
 **Adjusted cashout:** `truly_unpaid = total_unpaid_bill - chatter_evidence_paid`. Report both numbers so user can verify.
 

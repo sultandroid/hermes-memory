@@ -29,6 +29,7 @@ Extract structured data from PDFs and Excel exports for BIM/museum project regis
 | macOS text-based PDF (fastest) | `pdftotext -layout -enc UTF-8` | Available on macOS via poppler, handles bilingual AR/EN |
 | **Bilingual KSA government contract (AR/EN dual-column)** | **`pdftotext -layout` + Python Unicode split** | **Split each line at first Arabic Unicode char (\u0600-\u06FF) into separate EN and AR files. Always produce TWO files, never merged. See `references/aseer-main-contract-extraction.md` for worked example.** |
 | Image-based PDF (no text layer) | PyMuPDF (`fitz`) → render to PNG → `tesseract` OCR | common for Illustrator/InDesign exports, scanned drawings |
+| **Scanned photo catalog (low-quality scans, OCR garbles)** | **Vision model reads the pixels directly** — configure `auxiliary.vision` to a vision-capable model (e.g. `qwen3.5:397b` on ollama-cloud) or call the vision API directly per page. Far more reliable than tesseract on photo scans. See `references/vision-api-fallback-grok.md` | museum artifact catalogs, product photos, packing lists |
 | **Slide deck PDF (PowerPoint/Keynote export)** | PyMuPDF → PNG → tesseract OCR, **then supplement with web sources** | 39-page slide decks with decorative elements; OCR is incomplete — always find a companion text document (overview PDF, published article) as primary source |
 | Scanned PDF (lightweight OCR) | `pytesseract` + Pillow | ~200MB tesseract, no PyTorch needed |
 | Complex layouts / equations / forms | `marker-pdf` | Best accuracy, ~3-5GB install |

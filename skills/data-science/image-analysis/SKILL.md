@@ -27,6 +27,51 @@ Use this skill when:
 - You need **quantitative** pixel data (not just a description)
 - You need to estimate dimensions, aspect ratios, or detect objects without a vision model
 
+## First Step: Configure a Vision-Capable Model (best fix)
+
+When `vision_analyze()` / `browser_vision()` fail with **"this model does not support image input"**, the root cause is that the *main* model (e.g. `deepseek-v4-flash`) has no vision, and the `auxiliary.vision` fallback is `provider: auto` with no model pinned — so it resolves to the same non-vision model. The cleanest fix is to **point the vision auxiliary at a vision-capable model on an already-configured provider**, then call it directly via the OpenAI-compatible endpoint.
+
+**1. Find a vision-capable model on your provider.** For ollama-cloud:
+```bash
+curl -s "https://ollama.com/v1/models" -H "Authorization: Bearer $OLLAMA_API_KEY" | python3 -c "import json,sys; [print(m['id']) for m in json.load(sys.stdin)['data']]"
+```
+Vision-capable on ollama-cloud (Aug 2026): `qwen3.5:397b`, `glm-5.2`, `gemma4:31b`, `kimi-k3`.
+
+**2. Configure the vision auxiliary** (persists across sessions):
+```bash
+hermes config set auxiliary.vision.provider "custom:ollama-cloud"
+hermes config set auxiliary.vision.model "qwen3.5:397b"
+hermes config set auxiliary.vision.base_url "https://ollama.com/v1"
+hermes config set auxiliary.vision.api_key "$OLLAMA_API_KEY"
+```
+
+**3. Call the vision model directly** (works even if the auxiliary wiring is mid-session). Use `ssl._create_unverified_context()` on macOS Python 3.13+ (cert verify fails otherwise):
+```python
+import os, base64, json, urllib.request, ssl
+key = os.environ['OLLAMA_API_KEY']   # source from ~/.hermes/.env if not in shell
+ctx = ssl._create_unverified_context()
+img = base64.b64encode(open('/path/to/page.png','rb').read()).decode()
+payload = {'model':'qwen3.5:397b','messages':[{'role':'user','content':[
+    {'type':'text','text':'Describe this scanned document. Is there a table of boxes? Any counts?'},
+    {'type':'image_url','image_url':{'url':'data:image/png;base64,'+img}}]}]}
+req = urllib.request.Request('https://ollama.com/v1/chat/completions',
+    data=json.dumps(payload).encode(),
+    headers={'Content-Type':'application/json','Authorization':'Bearer '+key})
+d = json.loads(urllib.request.urlopen(req, timeout=120, context=ctx).read())
+print(d['choices'][0]['message']['content'])
+```
+
+**4. For scanned PDFs** (no text layer), convert pages to PNG first, then feed each page to the vision model:
+```bash
+pdftoppm -png -r 150 input.pdf /tmp/pages/pg   # one pg-01.png ... pg-NN.png
+```
+Then loop the vision call over pages. Ask a **yes/no classification question** per page first ("Is this a table/list/inventory, or a single artifact label?") to find the page(s) of interest before doing detailed extraction — far cheaper than full extraction on every page.
+
+**Pitfalls:**
+- `OLLAMA_API_KEY` lives in `~/.hermes/.env`, NOT the shell — `export OLLAMA_API_KEY=$(grep -E "^OLLAMA_API_KEY=" ~/.hermes/.env | cut -d= -f2-)` before running.
+- Per-page vision calls are slow (~1 min each) and can time out on large PDFs. Run the loop in the background (`terminal(background=True, notify_on_complete=True)`) and write results incrementally to a file, not just at the end.
+- A subagent spawned via `delegate_task` inherits the parent's non-vision model — it will hit the same "does not support image input" error. Don't delegate vision reading to a leaf subagent unless you've pinned a vision model for delegation.
+
 ## First Step: Try OCR Directly
 
 Before diving into pixel analysis, try `pytesseract` on the **raw image** first. This often works on complex images (screenshots, error dialogs, UI elements, WhatsApp photos) and can reveal the content immediately:

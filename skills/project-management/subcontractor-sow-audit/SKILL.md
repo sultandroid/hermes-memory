@@ -39,7 +39,7 @@ Do NOT mark supply-only packages as "SOW missing" in the register. Mark them ⚪
 |--------|--------|------|----------------|
 | Project SOW | PS | `6380_KMS_RPT_PM_AS_00006` | Package scope, deliverables, exclusions |
 | Employer's Requirements | ER | `00_Project_Charter/er_document.md` | Performance criteria, codes, systems |
-| Appendix A Interface Matrix | ApxA | `03_Plans/15_Subcontractor_Deliverables/project_sow_appendix_a_b_extraction.md` | RACI split between Fit Out and MoC |
+| Appendix A Interface Matrix | ApxA | `05_Scope/project_sow_appendix_a_b_extraction.md` (may not be filed — check `05_Scope/`) | RACI split between Fit Out and MoC |
 | Appendix B Package Map | ApxB | Same file as ApxA | Package recognition and hierarchy |
 | Compliance Matrix | CM | `Technical_Office/Compliance_System/compliance_matrix.md` | Spec→supplier→PQ compliance status |
 
@@ -49,7 +49,7 @@ Every specialist package gets 3 folders in the repo:
 
 | Layer | Path | Content |
 |-------|------|---------|
-| SOW | `03_Scope/<name>/README.md` | Scope summary, filed SOW docs, exclusions, compliance gaps |
+| SOW | `05_Scope/<name>/README.md` | Scope summary, filed SOW docs, exclusions, compliance gaps |
 | Submission Plan | `02_Schedule/<name>/README.md` | Planned submissions with dates, review durations, status |
 | Submission Tracker | `Technical_Office/Submission_Tracker/<name>/README.md` | Live log of actual submissions and CG responses |
 
@@ -64,13 +64,13 @@ Every specialist package gets 3 folders in the repo:
 ### Step 1: Read the governing sources
 ```bash
 # Project SOW summary
-read_file 03_Scope/sow_summary.md
+read_file 05_Scope/sow_summary.md
 
 # ER summary
-read_file 03_Scope/er_summary.md
+read_file 05_Scope/er_summary.md
 
-# Appendix A/B extraction
-read_file 03_Plans/15_Subcontractor_Deliverables/project_sow_appendix_a_b_extraction.md
+# Appendix A/B extraction (if present; not always filed)
+read_file 05_Scope/project_sow_appendix_a_b_extraction.md 2>/dev/null || echo "appendix extraction not filed"
 
 # Compliance Matrix
 read_file Technical_Office/Compliance_System/compliance_matrix.md
@@ -89,13 +89,13 @@ read_file 03_Plans/15_Subcontractor_Deliverables/SOW_RACI_Conflict_Matrix.md
 ```
 
 ### Step 2: For each package, check against each source
-1. Read the package's SOW (from `03_Scope/<name>/` or OneDrive `24_Subcontractors/<name>/`)
+1. Read the package's SOW (from `05_Scope/<name>/` or OneDrive `24_Subcontractors/<name>/`)
 2. Read the governing source requirement
 3. Mark: ✅ Compliant · 🟡 Partial · ❌ Non-compliant · ⚪ Not assessed
 4. Document specific gaps with source reference
 
 ### Step 3: Create/update the 3-layer folders
-- `mkdir -p 03_Scope/<name>/` — write README.md with scope summary, filed docs, gaps
+- `mkdir -p 05_Scope/<name>/` — write README.md with scope summary, filed docs, gaps
 - `mkdir -p 02_Schedule/<name>/` — write README.md with planned submissions
 - `mkdir -p Technical_Office/Submission_Tracker/<name>/` — write README.md with live log
 
@@ -179,12 +179,12 @@ If no formal SOW PDF is found, search for these partial-evidence documents and f
 ### Step 3: Copy to repo
 
 ```bash
-cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "03_Scope/<name>/<file>"
+cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "05_Scope/<name>/<file>"
 ```
 
 ### Step 4: Update registers
 
-1. `03_Scope/<name>/README.md` — add filed docs table with compliance gaps
+1. `05_Scope/<name>/README.md` — add filed docs table with compliance gaps
 2. `specialist_register.md` — change SOW status to ✅, add gap notes
 3. `subcontractor_sow_raci_register.md` — change status to "filed in repo"
 4. `SOW_Compliance_Audit.md` — update the audit
@@ -199,11 +199,12 @@ cp "/Volumes/MIcro/Work/Aseer-Museum/<source_path>" "03_Scope/<name>/<file>"
 - **Interface conflicts block SOW finalisation** — 6 open conflicts (SRC-001 through SRC-006) need PM decisions before affected SOWs can move from draft to approved.
 - **Compliance gaps are not the same as SOW gaps** — a package can have a compliant SOW but still have an open compliance gap (e.g. AD Engineering SOW is compliant, but GAP-MEP-001 for MEP installer remains).
 - **The 3-layer system is empty by default** — creating the folders and READMEs is the first pass. Populating them with actual content (filed SOW PDFs, real submission dates, CG response logs) is the ongoing work.
+- **ICT/CITC Telecom Engineer SOW is a scope request, not an award** — `MOC-MUS-ASE-SAM-SOW-SC-014_R00` (issued 2026-06-07) covers telecom/data/fibre design + STC FTTH compliance + approvals, but the ICT Designer & Supplier is still TBD (🔴, action Mohammed Hakami + Hani Alghamdi). The `24_Subcontractors/06_ICT/` folder holds only prequal equipment datasheets (MediaCast, Netgear switches) — no supplier appointed. Don't mark it "SOW missing"; it's a draft scope request awaiting supplier identification. Full detail in `references/ict-citc-telecom-sow.md`.
+- **SOW docx files are readable via python-docx** — formal SOWs are often `.docx` (e.g. the CITC SOW). Use `python3 -c "from docx import Document; ..."` to dump paragraphs + tables rather than assuming PDF.
 
 ## Email-Scan-to-Conflict-Detection Workflow
 
 When the user asks to "find any conflicts" after a batch email scan, follow the workflow in `references/cross-specialist-conflict-detection.md`:
-
 1. **Phase 1-2** — SQLite query for specialist/subcontractor emails (2-month window) + extract CG codes from preview
 2. **Phase 3** — Download attachments (Python AppleScript generator + inline osascript fallback)
 3. **Phase 4** — Read documents (pdftotext/textutil/openpyxl, delegate parallel sub-agents)

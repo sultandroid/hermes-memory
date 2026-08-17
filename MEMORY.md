@@ -10,8 +10,6 @@ Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
 §
 Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New. User emp 975, partner 5503.
 §
-Local clones: ~/aseer-museum-viz, ~/samaya-workspace, ~/samaya-profile (sultandroid).
-§
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 §
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
@@ -27,3 +25,5 @@ Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). C
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
 §
 Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean: samaya-profile/03_Workshop/lean/.
+§
+Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.

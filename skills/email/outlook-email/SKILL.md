@@ -355,20 +355,34 @@ Exact-phrase branches come FIRST with the explicit letter prefix (e.g. `'B - App
 
 **Pitfall — CG code uses en-dash, not hyphen.** The preview text uses `D – Rejected` (en-dash, U+2013), not `D - Rejected`. The CASE pattern `LIKE '%D - Rejected%'` (hyphen) does NOT match `D – Rejected` (en-dash). Use `LIKE '%D%Rejected%'` or `LIKE '%D – Rejected%'` with the actual en-dash character. Similarly, `Approved with Comment - B` uses a hyphen, so `LIKE '%Approved with%'` catches it. Always test the actual preview text before hardcoding CASE patterns.
 
-**Workflow:**
+**Workflow (see the MANDATORY rule below — preview-code fast-path is for Triage only, not final register writes):**
 1. Query recent emails from CG senders with doc refs
-2. Extract CG codes from preview using CASE pattern
-3. Code B → log approval, update registers, no attachment needed
-4. Code C → extract PDF to read specific reviewer comments (preview may truncate)
-5. Only extract for Code C or when preview ambiguous
+2. Extract CG codes from preview using CASE pattern (fast triage)
+3. For the actual register update, ALWAYS extract the PDF and read the full document — Code B/C/D responses carry substantive reviewer remarks on later pages of the same PDF (see "See attached comments sheet" pattern below). The code alone is insufficient.
+4. Code C/D → capture each numbered CG comment verbatim in the register + action item
+5. Code B → capture the approved-with-comments remarks + reviewer(s) too; do NOT skip extraction
 
-This avoids AppleScript for ~70% of CG responses (Code B approvals).
+This preview-CASE shortcut is a *triage* accelerator (prioritising which emails to dig into), not a substitute for attachment reading.
 
 **Pitfall:** `Message_Preview` truncated to **255 chars** (not ~500). If long preamble before the code line, fall back to AppleScript `plain text content`.
 
 **Pitfall — CG code may be in forwarded body, not top-level preview.** When Hossam Mabrouk forwards a CG response (e.g. ZD-0103 Rev.01), the top-level `Message_Preview` may only show "@Hesham Abdelhameed The Contractor Must to submit..." with no A/B/C/D code. The actual CG code (e.g. "D – Rejected") is in the *forwarded* message body below. Use AppleScript `plain text content of m` to read the full thread. If the preview shows a reply/forward instruction but no code, always extract the full body — the code is in the quoted original message.
 
 **Pitfall — "Resubmit as new submission number" is a distinct rejection mode.** CG may reject a Rev.01 not with Code C/D but with an instruction to "submit with a new submission and provide the justification/reason for the change accordingly." This is a procedural rejection — the document must be resubmitted under a new doc ref, not revised under the same ref. Log this as **Rejected — Resubmit as New** in the register, not as Code C or D. It implies the revision was procedurally invalid (wrong ref, wrong routing), not substantively deficient.
+
+### MANDATORY: Read All Attachments, Not Just Previews/Codes (user rule)
+
+The user requires that every email scan **extract and READ the actual attachments**, not stop at the email preview or the CG status code. "Read all attachments and understand and remarks if any" is an explicit, recurring instruction. A scan that only logs codes/registers without reading the attached documents is incomplete. **This overrides the workflow below that says "Code B → no attachment needed"** — even Code B responses carry substantive reviewer remarks that drive the next submission.
+
+**Extraction-first workflow:**
+1. For every project email with `Message_HasAttachment=1`, extract the PDFs via AppleScript (batch generator — see above).
+2. `pdftotext -layout` **the full document** (all pages), not just the first page.
+3. Register the status code **AND** the actual reviewer remarks/comments, not just the A/B/C/D letter.
+4. The code alone is NOT the deliverable. The remarks drive the resubmission work — capture them verbatim in the register.
+
+**CG response "See attached comments sheet" pattern:** A CG response email may return a single PDF whose first page is the Document Submittal (DS) form showing only "See attached comments sheet" or "See attached." The actual reviewer comments are on **later pages of the same PDF** (often page 2: a `CG comments:` block with numbered items, plus reviewer name/signature lines like "Senior Architecture Engineer" / "CG Project Director"). Do NOT conclude the comments are missing or a separate attachment — run `pdftotext -layout` on the whole file and read past the DS form. Example (2026-08-17, ZD-0109): email preview + DS page 1 said only "B - Approved with Comments"; the 4 substantive comments (structural coordination, accessible routes, G5 Making Space, Main Entrance GA updates) and reviewers (Maged Zamzam / Mansour Alrezeni) were on page 2.
+
+**CG remark capture format for registers:** When logging a Code C/B, include a `**CG comments (N):**` block in the register row enumerating each numbered remark verbatim (or closely paraphrased), and note the reviewer(s). This is what makes the register actionable for the resubmission.
 
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
 
@@ -907,6 +921,8 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 - `03_Plans/08_Risk/reviews/email_scan_YYYY-MM-DD.md` — review log (append-only)
 
 **Verify CG codes from the actual email, not the cron summary.** The cron's CG-code extraction can MISLABEL a document's title. Example (2026-08-06): the cron called ZD-0103 "Compliance & Understanding Report" but the actual email subject was "Earthing LPS Compliance Understanding Report" (Code D). Always re-query the email preview (`Message_Preview`) for the exact doc title and code before writing it to a register. The CG email from Hossam Mabrouk is authoritative — trust it over the cron's summary.
+
+**Pitfall — sibling subagents may be editing the same register concurrently.** The email pipeline runs as a cron alongside other agents (Adel bank sync, document_intake, dashboard regen, other Hermes sessions). When `patch` returns a `_warning` like "modified by sibling subagent ... but this agent never read it", a concurrent agent has written the file since your last read. Re-read the file (or the specific rows) BEFORE writing, and re-verify your edit landed after the patch — otherwise you can clobber the sibling's changes or create duplicate rows. This is common on `submittal_register.md` during morning scans. Also note: the same register row may appear in BOTH a `||`-prefixed and a `|||`-prefixed section, so a `patch` anchor that isn't unique fails with "Found 2 matches" — for appends use a Python insert-after-FIRST-occurrence (matching `l.strip()==anchor.strip()`) instead of `patch`.
 
 **Pitfall — `patch` tool fails on duplicate register rows.** Some registers (e.g. `assessment_evaluation_register.md`) contain the SAME block of rows twice (a `||`-prefixed section and a `|||`-prefixed section with identical doc refs). `patch` with a non-unique anchor fails with "Found N matches" and loops. Do NOT keep retrying with slightly different context — switch to a Python script that inserts after the FIRST occurrence only:
 

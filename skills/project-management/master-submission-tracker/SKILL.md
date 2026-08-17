@@ -175,6 +175,16 @@ Add a link in the existing `submittal_dashboard.html` header:
 - **AV submittal registers are large** — Rawasin's register has 35+ items. These go in a sub-table under the AV section, not mixed with gateway submissions.
 - **Exhibition Fit-Out register** — also has many items (FO-xxx). Same treatment: sub-table under its section.
 
+## Step 6 — Overdue / At-Risk Status Report (per-discipline, from the CG xlsx)
+
+When the user asks "what's overdue in <discipline>" or "I need a system to track this tracker", build a **status report script** that parses the CG `Design_Phase_Deliverables_Tracker_*.xlsx` directly and classifies every deliverable by forecast date. This is the authoritative granular source — do NOT answer overdue questions from the summary `submission_tracker.md` alone.
+
+- Script: `scripts/design_tracker_overdue.py` (committed to `sultandroid/aseer-museum-pm`). Auto-finds the newest matching xlsx across `~/.hermes/cache/documents`, `~/Desktop`, `~/Downloads`, OneDrive, and the repo; parses all 10 discipline sheets; buckets each item as 🔴 Overdue / 🟠 At-risk (≤3d) / 🟡 Upcoming (≤7d) / ✅ Done; prints a daily-ready report.
+- Cron: `design-tracker-daily-status` (job `6c19cd75b518`, daily 08:00) runs the script and relays stdout verbatim. The report is informational — the cron must NOT modify files.
+- **Scoping correction (learned):** when the user says "electrical submittals" in the AD Engineering context, they mean the **Electrical sheet of the Design Phase Deliverables Tracker** (AD's own submission plan), NOT section 4 of `submission_tracker.md`. Ask/confirm which source before answering overdue questions — the two disagree on statuses and granularity.
+
 ## Related Workflows
 
 - `references/risk-review-workflow.md` — "next risk" pattern: navigate open risks by score, search Outlook for updates, update JSON, report changes. Used when the user says "next risk" or names a risk ID during a review session.
+- `references/design-tracker-xlsx-parsing.md` — pitfalls for parsing the CG Design Phase Deliverables Tracker xlsx (corrupted sheet dimensions, trailing-space sheet names, trailing-period statuses, gitignored data file).
+- `references/design-tracker-overdue-monitoring.md` — sheet structure + parsing pitfalls (trailing-space sheet names, `Submitted.` done-status, corrupted Electrical sheet dimension, 0-1 prep floats) and the **email cross-reference workflow**: after generating the overdue report, query Outlook for new Aconex `SIC.-WTRAN-000NNN` transmittals to see which overdue items got cleared, then update `submittal_register.md` and commit.
