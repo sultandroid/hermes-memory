@@ -226,6 +226,10 @@ For reviewing submitted drawing packages (PDFs) against PMC/CG reviewer comments
 
 This covers: reading the Document Issue Register, mapping actual PDFs, dispatching subagents by discipline with reviewer-comment context, per-discipline MD audit reports, and consolidating into a master CG compliance summary with an action checklist.
 
+## Subcontractor Audit-Response Gate Review (Pre-CG-Submission)
+
+When a specialist sub (e.g. Rawasin AV) answers CG audit comments with an `Audit Response.xlsx` and the package is about to go back to CG, gate-review it first to confirm the responses actually resolve the comments — classify each as answered / deferred / missing / scope-gap / deviation / vague-accountability, and produce an "Items to [Sub]" action matrix. See `references/subcontractor-audit-response-gate-review.md` for the full blocker taxonomy, gate rule, and a worked example (AV Package Part II).
+
 ## Personnel & Sign-Off Audit for Plan Documents
 
 When reviewing a project management plan document (Resource Plan, DMP, PEP, HSE Plan, BEP, etc.) for personnel and stakeholder accuracy — see `references/plan-document-personnel-audit.md`.

@@ -208,5 +208,5 @@ When the user says "read all msg", "read the conversation", or similar, consolid
 - `references/nrs-comments-investigation.md` — How to find NRS (Nissen Richards Studio) review comments.
 - `references/approved-plan-ingestion.md` — Pipeline for converting approved Code B plan PDFs/markdown to formal read-only docs.
 - `references/multi-sheet-excel-to-markdown-register.md` — Pattern for extracting data from multi-sheet Excel files (object schedules, BOQs) and producing structured markdown registers.
-- `references/kimi-cli-large-doc-extraction.md` — Use kimi CLI as a sub-agent to extract large PDFs (10k+ lines) into structured markdown. User-preferred pattern for big design/technical reports.
+- `references/kimi-cli-large-doc-extraction.md` — Use kimi CLI as a sub-agent to extract large PDFs (10k+ lines) into structured markdown. User-preferred pattern for big design/technical reports. Try kimi BEFORE delegate_task for large READS (delegate_task times out at 600s on 19k-line files; kimi succeeds via bounded batch prompts).
 - `references/design-report-to-risk-register.md` — Mine design/visitor-experience report content for risk-register updates (showcase capacity, art-commission structural loading, AV content scope). User correction: risks must come from the report body, not just the email scan.

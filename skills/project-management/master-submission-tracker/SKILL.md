@@ -183,6 +183,21 @@ When the user asks "what's overdue in <discipline>" or "I need a system to track
 - Cron: `design-tracker-daily-status` (job `6c19cd75b518`, daily 08:00) runs the script and relays stdout verbatim. The report is informational — the cron must NOT modify files.
 - **Scoping correction (learned):** when the user says "electrical submittals" in the AD Engineering context, they mean the **Electrical sheet of the Design Phase Deliverables Tracker** (AD's own submission plan), NOT section 4 of `submission_tracker.md`. Ask/confirm which source before answering overdue questions — the two disagree on statuses and granularity.
 
+## Pitfall — "Who's late?" ≠ "Who's technically behind" (ROOT-CAUSE TRIAGE)
+
+When the user asks **"which specialist is late / who do I invite to the recovery meeting"**, do NOT report raw percentages from the tracker as the whole answer. A low `Progress %` is frequently **not a technical delay** — it can be a procurement, contract, or administrative blocker that no technical meeting can resolve. Triage every low-percentage discipline into one of two buckets BEFORE proposing actions:
+
+1. **Administrative / procurement blocker** (fix = contract/signature/appointment, NOT a technical meeting):
+   - **ICT/Security**: percentage near 0% often means the **specialist contract is unsigned + first advance unpaid + PO not yet with the Executive Director** — even though CG prequalification is already **Code B**. CG may have even issued an **NCR against us for delaying the contracting** (e.g. Aseer NC-1E0-0010). Work that CAN proceed internally (scope freeze, 50% design prep, SOW review) should start in parallel with the procurement — but no formal contractor deliverables before contract signature.
+   - **Landscape**: an empty Progress cell usually means **no designer appointed at all** — a hiring decision, not a meeting item.
+   - **FLS Strategy / Clash Detection**: 0% often means **no lead assigned** (role vacant), not slow work.
+   - **Acoustic**: prequalifications stuck **Under Review by CG** for weeks → resource can't be secured until CG clears one; the action is a CG chase, not a commitment meeting.
+
+2. **Genuine technical delay** (fix = commitment meeting with the discipline lead):
+   - Disciplines that HAVE their resource, are producing, but have **low % AND low approval** — e.g. Structural 9% (0 approved), Electrical 31% (0 approved), BIM 23% (0 approved), Scenography submitted but 0% approved. These are the ones to invite and pin to dates.
+
+**Practical rule:** separate "not started because nobody is appointed / no contract" from "started but slow". The former needs Executive decisions (appointment, contract expedite, PO signature, CG PQ chase) escalated to the PM — it is often the LARGEST-volume work (ICT can be 40+ drawings), so a technical meeting alone will never recover it. Lead the escalation to the PM (e.g. "Eng. Waris") naming each blocker and its decision, before the recovery plan commits to dates that cannot be met.
+
 ## Related Workflows
 
 - `references/risk-review-workflow.md` — "next risk" pattern: navigate open risks by score, search Outlook for updates, update JSON, report changes. Used when the user says "next risk" or names a risk ID during a review session.

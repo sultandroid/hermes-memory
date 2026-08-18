@@ -309,4 +309,5 @@ Extract actions from each finding into a structured table:
 
 - `references/aseer-showcase-stage3-to-stage4-dcr-example.md` — Worked example of DCR for Aseer Museum showcase changes
 - `references/contractor-correspondence-strategy.md` — How to respond to CG/consultant design changes without accepting liability, including the "draft to PM + ally first" workflow, email templates, and key phrases to use/avoid
+- `references/material-substitution-control-lever.md` — Using a material-substitution request to the designer as a control lever, not a commitment: get the designer's opinion on record, then decide from the contractor's side; approval ≠ obligation; precedent control (one accepted change opens the door to many); positive-but-conditional designer replies are pending, not approved
 - `references/nrs-audit-report-workflow.md` — Full worked example of NRS Audit Report 02 processing: extraction, analysis, risk mapping, action plan generation

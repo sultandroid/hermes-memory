@@ -1,4 +1,4 @@
-Investigation: repo registers → Outlook SQLite → actual CG PDFs. Read source docs, not summaries. Email cron MUST update actual registers (submittal/prequal/assessment/risk/action_items), not just review log; verify CG codes from actual email preview, not cron summary.
+Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview.
 §
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 §
@@ -8,6 +8,8 @@ Factory Manager at Samaya, also assigned to manage the Technical Office for a 50
 §
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 §
-Risk review: check Outlook emails for evidence before updating scores. User spots when CG comments don't apply to actual submission stage. Works risks systematically in priority order.
+Risk review: check Outlook emails for evidence before updating scores; user spots CG comments that don't apply to the actual submission stage.
 §
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
+§
+Verify LATEST Outlook/tracker before calling a specialist delayed — user corrects stale claims (Acoustic contracted+invoiced; Landscape Evergreen B). Separate admin/procurement blockers (contract/advance/PO/appointment) from technical delay.

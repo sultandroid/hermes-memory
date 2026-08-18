@@ -20,10 +20,10 @@ MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
-Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
+Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
 §
 Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
 §
 Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.
 §
-Risk register (user 2026-08-18): Code B = final approval (CG never issues Code A). Close a risk whose core was a rejected plan once that plan gets Code B (actions stay open). Keep genuinely-open risks Open. No internal notes in register.
+Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.

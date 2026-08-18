@@ -1053,6 +1053,72 @@ Schedule: daily at 9 AM via `cronjob action=create schedule="0 9 * * *" script=~
 
 **Pre-run script integration:** When this cron fires, the monitor script output feeds into the agent as pre-run context. The agent then runs the SQLite queries independently to verify and produce the final report. If the monitor script returns an empty array `[]`, the agent reports "No violations detected."
 
+## Design Recovery Plan vs Revised Schedule vs EOT — Three Distinct Requests
+
+When CG/PMC/Planning asks for a **recovery plan**, do NOT conflate it with a revised schedule or an EOT. They are different deliverables with different acceptance criteria, and mixing them up causes a Code D rejection.
+
+| Request | What CG wants | Contractual context | Failure mode |
+|---------|---------------|---------------------|--------------|
+| **Recovery Plan** | How the current delay is recovered **WITHIN the existing contractual completion date** | Must stay inside the original completion date (e.g. 30-Sep-2026) | Code D if forecast finish exceeds the contractual date |
+| **Revised Schedule** | Updated dates/interim milestones reflecting current reality | May extend dates, often tied to an EOT claim | Rejected if CG asked for a recovery plan but got a revised schedule ("Not a revised schedule" is CG's explicit pushback) |
+| **EOT (Extension of Time)** | Formal claim to move the completion date | Separate contractual process (e.g. LT-0007 for 223 days) | Pending MoC/CG approval; not a substitute for a recovery plan |
+
+### The Contradiction to Handle Explicitly
+
+CG often demands a recovery plan **inside the original deadline** while a separate **EOT request is still pending**. These are in tension: the EOT (if granted) relaxes the deadline, but CG will not wait for its outcome. Handle both in the response:
+
+1. **Recovery plan baseline path** — how to finish design before the contractual date (this is what CG actually wants). Every interim milestone must fit inside the original completion date.
+2. **EOT contingency track** — note that the EOT claim (ref, days) is under review and covers any deliverables that legitimately cannot fit, WITHOUT making it part of the primary commitment.
+
+Do not let the recovery plan's forecast finish dates drift past the contractual date — that is the exact reason CG rejects the plan.
+
+### Code D Recovery-Plan Rejection — the verbatim reason
+> "The design phase forecast finish dates exceed the contractual completion date. The submitted schedule is therefore disapproved."
+
+A Code D on a recovery plan means a **full re-submission (Rev.01)**, not a revision under the same ref.
+
+### Worked example — ZD-0104 (Aseer, Aug 2026)
+- ZD-0104 "Design Phases Recovery Plan" submitted 03-Aug → CG Code D 04-Aug (reason above; the plan had 90% finishing 01-Oct and IFC 100% 14-Oct — both past 30-Sep).
+- Separate EOT LT-0007 (223 days, 30-Sep→11-May-2027) was pending with MoC the whole time.
+- 18-Aug CG re-requested a recovery plan "Not a revised schedule" → PM asked for an urgent cross-discipline design meeting to finalise it.
+- See `references/design-recovery-plan-case-zd-0104.md` for the full thread, the rejected schedule dates per discipline, and the review/response sequence.
+See `references/specialist-delay-diagnosis.md` for the pitfalls in answering "which specialist is behind": tracker lead-name ≠ appointed, low-% ≠ technical delay (check contract/PO/appointment), and stale registers vs today's emails (acoustic contract was signed while the register still showed "under review").
+
+### Response playbook
+1. **Confirm the deliverable type first** — recovery plan (inside date) vs revised schedule vs EOT. Ask if ambiguous; do not guess.
+2. **Urgent cross-discipline meeting** — the plan needs written confirmation of commitment from every designer/specialist (additional resources, overtime) before it goes to CG. Do not submit a plan no specialist has committed to.
+3. **Every interim date inside the original completion date.**
+4. **Code D on a plan = full Rev.01 re-submission**, not a fresh submittal under the same ref.
+5. **Do not submit explanations again** — CG rejected the first plan for date overflow; the fix is a real compressed schedule + confirmed resource commitments, not a re-worded document.
+
+## Proper Submission Sequence for Physical-Work Submittals (IR / Site Tests)
+
+When a submittal involves **physical work on site** (concrete core tests, soil boreholes/geotechnical investigation, rebar scanning, mock-ups), CG enforces a strict 6-step sequence. **An Inspection Request (IR) must be filed AFTER the work is physically done, never before** — filing an IR to request the work, instead of to inspect completed work, earns an automatic Code C.
+
+### CG's 6-step sequence (verbatim from a Code C rejection, Aseer 16-Aug-2026)
+| Step | Document | Purpose | Missing = rejection reason |
+|------|----------|---------|---------------------------|
+| 1 | Third-party testing agency prequalification | Approve the lab credentials | "Done" (first to be cleared) |
+| 2 | **Method Statement + drawings showing exact test locations** | How + where the work happens | "Missing" |
+| 3 | **SNA (Start New Activity)** | Request site clearance to begin | "Missing" |
+| 4 | **Execution** — physically conduct the test/work | The actual site activity | "Missing" |
+| 5 | **IR** — submit the Inspection Request | Inspect completed work | "Missing" |
+| 6 | **Reporting** — final third-party test report + close-out of comments | Prove results; feed into design | "Missing" |
+
+CG's verbatim framing: *"an IR cannot be issued before the physical work is actually executed."* An IR is an inspection request for work that is **complete**, not a start-activity notice.
+
+### Worked example — IR-0003 Core Test (Aseer, Aug 2026)
+- Submitted an IR for concrete core testing **before the coring was performed** → CG Code C 16-Aug-2026.
+- The Method Statement (MS-0017 Core Cutting) was only sent **after** the IR was already rejected — wrong order on our side.
+- The Location Plan (ZD-0110) separately got Code B — plan accepted, but the test still must happen in sequence.
+- **Root cause:** the team treated the IR as a "start the work" request. It is not.
+
+### Rule for drafting site-test submittals
+1. **Never file an IR for work not yet executed.** Check the physical status first — if the cores/boreholes haven't been drilled, the correct next document is the MS + SNA, not an IR.
+2. **Sequence the submittals**: MS + drawings (step 2) → SNA (step 3) → execution → IR (step 5) → test report (step 6).
+3. A **Code C on a site-test IR** usually means "you're out of sequence," not "your test method is wrong." Re-issue in the correct order rather than re-submitting the same IR.
+4. The lab payment/advance is an administrative gate that blocks step 4 (execution) — resolve it before promising test dates.
+
 ## Warning Letter (LT) Audit — Escalation Chain & Feasibility
 
 When CG issues a formal warning letter (LT-XXX), the audit methodology differs from NCR audit. Warning letters typically come after an SI NCR LT escalation chain and require feasibility assessment, not just procedural checks.

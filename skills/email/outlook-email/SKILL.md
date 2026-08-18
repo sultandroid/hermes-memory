@@ -1167,6 +1167,7 @@ tesseract /tmp/pg-N.jpg - 2>/dev/null | grep -iE "SAR|fee|payment|%|total|milest
 - `references/email-chain-tracing.md`
 - `references/cg-email-triage.md`
 - `references/cg-correspondence-analysis.md`
+- `references/specialist-delay-assessment.md` — identifying which design specialists are genuinely late: cross-ref vendor-domain emails + Design Phase Deliverables Tracker xlsx + repo registers; distinguish technical vs procurement vs client-blocked delay; pitfalls (Landscape "not appointed" vs "identified-not-appointed", Acoustic "PQs under review" vs "contract already signed")
 - `references/contract-review-from-email-attachment.md`
 - `references/onedrive-edeadlk.md`
 - `references/icloud-edeadlk-workaround.md`

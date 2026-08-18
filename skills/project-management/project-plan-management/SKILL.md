@@ -840,6 +840,8 @@ When updating RMP per CG comments:
 
 See `references/stakeholder-plan-post-approval-audit.md` for a worked example (Aseer Museum Stakeholder Plan ZD-0020 Rev.02, approved Jun 18-24, audited Jul 13 with 6 new stakeholders identified).
 
+See `references/nrs-stamp-verification.md` for the pre-signature workflow when NRS (Lead Designer) returns a stamped plan ("راجع قبل التوقيع"): verify the stamp's internal dates + the two critical compliance values (waste diversion 60%, Oddy 14-day) against the Outlook email chain — cross-check the stamped date equals the day NRS actually replied, not the submission day. Email previews are 255-char capped, so use AppleScript full body (`plain text content of theMsg`). Confirm the stamp visually via pymupdf image extract + vision (NRS's "stamp" is often just the logo block — real acceptance lives in the Appendix O report + email). Flag unfilled `[Doc Ref: ...]` placeholders before the user signs.
+
 See `references/00-contracts-archive-pattern-smp.md` for a worked example converting the approved Stakeholder Management Plan Rev.02 (Code B, 23 pages, 56 roles) into the `00_Contracts/` immutable archive with `agent_edit: prohibited` and `status: formal_read_only`.
 
 See `references/plan-audit-scmp-zd-0094.md` for a worked example (Subcontract Management Plan ZD-0094 Rev.00 — 12 issues found, verdict: NOT READY for submission).
