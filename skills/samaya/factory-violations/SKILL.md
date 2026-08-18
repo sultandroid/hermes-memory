@@ -72,6 +72,19 @@ session.post(f'{url}/web/dataset/call_kw', json={
 
 Filter to **Manufacturing department only** (`department_id.name ilike 'Manufacturing'`).
 
+### Find last violation by biotime code (Odoo helpdesk.ticket) — learned 2026-08-18
+
+When the user asks "what's the last complaint against biotime 586" (ما اخر شكوي منه), the authoritative source is **`helpdesk.ticket`** in Odoo (the ERP-Samaya emails are the notifications; the ticket holds the detail + chatter). Workflow:
+
+1. **Resolve biotime → employee name** via `hr.employee` (`biotime_code`), e.g. biotime 586 = محمد تميج الإسلام (Odoo ID 968, Carpentry).
+2. **Find the ticket** — Raoof's violation email subject `#2761 مخالفة <name>` maps directly to `helpdesk.ticket.id = 2761`. Search by `name` (`[('name','ilike','2761')]`) or by description containing the employee name.
+3. **Field-schema pitfalls** (`helpdesk.ticket` differs from project.task — these will throw `Invalid field` if guessed):
+   - There is **NO `subject`** field — use `name` (the ticket number/title).
+   - There is **NO `state`** — use `stage_id` (e.g. `[2, 'In Progress']`).
+   - `description` holds the violation text; read it to extract the cause (e.g. "اعتراض علي تنفيذ اوامر مشرف الورشة" = insubordination) + repeat flag ("مش اول مرة").
+4. **Pull the chatter** (`mail.message` where `model='helpdesk.ticket'`, `res_id=<id>`) for the escalation trail: Raoof's original complaint, the follow-up (`@Sultan Issa`), and who resolved/handed it to HR (e.g. Ahmed Alrabaei "وجه الموظف الى قسم الموارد البشرية"). If stage still `In Progress`, the ticket is not closed.
+5. **Check the local `VIOLATIONS/` register** for a formal memo. A ticket may exist in Odoo with NO memo filed in `VIOLATIONS/` (the register only covers VIOL-001..012, so a biotime 586 violation may be missing a formal memo) — flag the gap and offer to file one.
+
 ### 3. Create violation memo
 
 Each violation gets:
@@ -182,6 +195,8 @@ When the user writes in Arabic:
 
 ## Pitfalls
 
+- **`helpdesk.ticket` schema differs from `project.task`** — there is NO `subject` (use `name` = ticket number) and NO `state` (use `stage_id`). Guessing the wrong field raises `Invalid field ... on model 'helpdesk.ticket'`. A Raoof violation email subject `#2761 مخالفة <name>` maps directly to ticket id 2761.
+- **Raoof's violation emails are the index, not the record** — the `Erp-Samaya` notification emails show only a one-line preview ("وجه الموظف الى قسم الموارد البشرية"). The full cause + chatter trail lives in the Odoo `helpdesk.ticket` (search by name, read `description` + `mail.message` chatter).
 - **API key may be expired** — use password-based session auth instead
 - **Gmail IMAP does NOT work** for factory email search — use Outlook SQLite
 - **Only factory employees** (Manufacturing dept) — skip other departments

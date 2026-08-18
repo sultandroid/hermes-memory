@@ -8,8 +8,8 @@ Factory Manager at Samaya, also assigned to manage the Technical Office for a 50
 §
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 §
-Risk review: check Outlook emails for evidence before updating scores; user spots CG comments that don't apply to the actual submission stage.
+Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 §
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 §
-Verify LATEST Outlook/tracker before calling a specialist delayed — user corrects stale claims (Acoustic contracted+invoiced; Landscape Evergreen B). Separate admin/procurement blockers (contract/advance/PO/appointment) from technical delay.
+Verify LATEST Outlook/tracker before calling a specialist delayed (Acoustic contracted; Landscape Evergreen B). Separate admin/procurement blockers from technical delay.

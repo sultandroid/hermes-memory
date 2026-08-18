@@ -303,16 +303,18 @@ A deployable Lean system lives in the repo at `03_Workshop/lean/`. It bundles 5 
 
 ### PO Payment Tracking (via Odoo Chatter)
 
-**Key insight:** Ibrahim Shaaban (إبراهيم مصطفى شعبان, partner ID 4870) records actual payments in Odoo PO chatter comments, NOT as invoices. His comments include:
-- "مرفق لكم صورة التحويل" (transfer receipt attached)
-- "برجاء تحويل مبلغ X" (please transfer amount X)
-- "قائمة المهام تم" (task done — payment completed)
+**Key insight:** Ibrahim Shaaban (إبراهيم مصطفى شعبان) records actual payments in Odoo PO chatter comments, NOT as invoices. **His Odoo USER id is 5521** (filter `mail.message.author_id = 5521`); 4870 is his PARTNER id — the author filter on `mail.message` needs the user id, not partner id.
 
-**To find actual payments:**
-1. Query `mail.message` for each factory PO (project 244)
-2. Filter by `author_id = 4870` (Ibrahim Shaaban)
-3. Check body for payment keywords: `دفع`, `سداد`, `صرف`, `تحويل`, `عهدة`
-4. Cross-reference: a PO with `invoice_status=no` or `to invoice` but with Ibrahim's payment comment = **paid outside Odoo**
+**To find actual payments (learned 2026-08-18):**
+1. Query `mail.message` for each factory PO (project 244), filter `author_id = 5521`, `message_type = 'comment'`
+2. **Distinguish real transfers from task completions** — this is the critical step:
+   - 💰 **ACTUALLY PAID:** body contains `صورة التحويل` / `صورة تحويل الدفعة` (transfer screenshot attached). E.g. "مرفق لكم صورة التحويل" → paid. Often followed by Raoof uploading the tax invoice.
+   - ✅ **TASK DONE ONLY:** body contains `قائمة المهام تم` OR is **empty** → this is a `mail.activity` completion (approval workflow), NOT proof of a transfer. Empty-body messages are usually activity completions, not payments.
+3. **Check `attachment_ids`** on empty-body messages before concluding — transfer screenshots may be attached without body text. Inspect attachment filenames.
+4. **Cross-check project ownership:** a factory-linked PO is only a "factory payment" if `project_id ∈ {161, 244, 302, 307, 315}`. Factory-supplier POs on OTHER projects (Maalim Al-Haramein/Jabal Omar, admin tickets) are not factory payments.
+5. Cross-reference: a PO with `invoice_status=no`/`to invoice` but with Ibrahim's `صورة التحويل` comment = **paid outside Odoo**.
+
+**Report format for "paid today" answers:** group into (a) 💰 مدفوع فعلاً (transfer screenshot in chatter) with PO + vendor + amount + the quoted chatter evidence, (b) ✅ قائمة مهام "تم" (task complete, no transfer proof), and flag (c) which are genuinely factory project vs other projects.
 
 ### Inventory Snapshot
 

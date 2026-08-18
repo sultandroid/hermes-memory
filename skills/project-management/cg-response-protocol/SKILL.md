@@ -573,6 +573,28 @@ The study PDF is extracted from Outlook via AppleScript. Team action templates (
 - **Round column** must include both date and round number (e.g., "R2 . 2-Jun") for traceability across revisions.
 - **Verify which floor the CRS covers** — CG often reviews one floor at a time. Check drawing number prefixes (BF=Basement Floor, LG=Lower Ground, GF=Ground Floor) in the CRS drawing references. The document title may say "Basement Floor" only. Do not assume a CRS covers multiple floors unless explicitly stated. When forwarding to the designer, name the correct floor in the subject line.
 
+### CRS From a Specialist's "Audit Response" Workbook (Rawasin / AV-style)
+
+When the CRS input is a specialist's own response workbook (e.g. Rawasin's `Audit Response.xlsx` for AV Package Part II), NOT a CG CRS form, build the Samaya CRS from it. Source layout:
+
+- Two sheets: `1st Submital responce` and `2nd Submital responce.` (note trailing dot + space in sheet name — read by exact title).
+- Each comment is **two stacked rows**: CG comment (verbatim) in the first B-cell, then the specialist's reply in the next B-cell. The No. appears only on the first row. Iterate row-by-row collecting pairs — do not assume one comment per row.
+- The specialist's reply is the **Originator Reply**; keep the specialist's substance (Samaya may reframe wording). Never put Samaya-internal commentary (cost, schedule risk) in the reply column.
+- Assign the CRS doc ref from the underlying submittal (e.g. AV Part II = MOC-MUS-ASE-1E0-1G-0002). Confirm the ref + prior CG code from the submittal register (this package was Code D then Code C).
+- **Pre-submission status convention:** mark items `Open` (red) that still need resolution before CG submission, `Closed` (green) only for genuinely complete ones. The CRS is presented to the user for review and is NOT submission-ready until the Open blockers are cleared. Do not send to CG/specialist without user approval (user review gate).
+- Committing `.xlsx` to the `aseer-museum-pm` repo requires `git add -f` (the repo `.gitignore` blocks binary xlsx); the post-commit webapp-regen hook dirties `06_Risk_System/webapp/` — `git checkout --` those before pushing.
+
+### CG-Proposed Material Change — Control Lever (user strategy, Aseer flooring 2026-08)
+
+When CG (or a CG reviewer) proposes substituting a specified material/finish, treat it as a **control lever, not a commitment**:
+
+- Samaya (the D&B contractor) is NOT obliged to implement a CG-proposed substitution — CG proposals are suggestions/flags, not decisions (consistent with the NRS patinated-brass rule).
+- Route the proposal to the design authority (NRS/Jim) for a technical opinion — that opinion becomes Samaya's reference point.
+- Design authority rejects → Samaya closes it citing the technical reference.
+- Design authority approves → Samaya can STILL reject from its own side for schedule/scope reasons. The opinion is ammunition, not a mandate.
+- **Precedent risk:** each approved substitution opens the door to many more, and every change costs time + sample approval + schedule pressure (already tight). Treat a single material change as a gateway to be controlled, not rubber-stamped.
+- User prefers **local suppliers** (e.g. Sheed, sheedsa.com) over imports for substitutes — reduces import lead time/approval friction.
+
 ### Supplier Technical Rebuttal — When CG Demands Alternatives
 
 When CG rejects a material submittal (Code C) and demands "3 alternative suppliers" but the supplier has already provided a technical rebuttal:
@@ -770,6 +792,7 @@ Best regards,
 - **Before composing, verify the baseline:** Check what was in the first submission (data sheets, samples, TDS) vs what's new in the resubmission. The first submission may already have all technical data sheets complete — the resubmission is about responding to CG's open conditions, not adding missing TDS. List the baseline clearly so the email doesn't claim to be submitting things that were already submitted.
 
 See `references/ma-0006-showcase-resubmission-case.md` for the full worked example.
+For the AV Package Part II (1E0-1G-0002, Rawasin) CRS specifically, see `references/rawasin-av-crs-workflow.md` — exact doc ref, Adel-bank source path (OneDrive stubs + EDEADLK), the readable `/Volumes/MIcro/Download/AV Package Part II Rev. 001/` package layout, the CG 2nd-submittal verbatim file-name map, and the CDE export pitfall (only first 100 of N results).
 
 ## Plan-Level CG Comment Audit Against Contractual Obligations
 

@@ -381,9 +381,28 @@ for k in id_rsa id_ed25519; do
 done
 ```
 
+## STALE LOCAL CLONE regresses the live register (check origin BEFORE building)
+
+The single biggest risk when editing `risks.json` + rebuilding the webapp is a **stale local clone**: local `HEAD` can be far behind `origin/main` (e.g. local 69 risks/Rev C20 while remote+live are 73/Rev C21). Building `build_risk.py` from a stale clone and running `deploy.sh` **overwrites the live register with older data** — a silent regression. A stale clone is NOT the same as "deployed site drifted from local"; here the local is the wrong source.
+
+**Mandatory gate before ANY risks.json edit + build:**
+```bash
+cd /Users/mohamedessa/aseer-museum-pm
+git fetch origin
+echo "LOCAL:  $(git rev-parse HEAD)"
+echo "REMOTE: $(git rev-parse origin/main)"
+# Compare risk count + rev on each side:
+git show origin/main:06_Risk_System/risks.json | python3 -c \
+  "import json,sys; d=json.load(sys.stdin); print('remote risks:', len(d['risks']), 'rev:', d.get('revision'))"
+python3 -c "import json; d=json.load(open('06_Risk_System/risks.json')); print('local risks:', len(d['risks']), 'rev:', d.get('revision'))"
+```
+If local != remote, **`git reset --hard origin/main` first**, then re-apply your edit on the current data. Never build/deploy from a clone whose HEAD differs from origin.
+
+**Recovery if you already built+deployed the stale copy:** `git checkout -- <dirties>` → `git reset --hard origin/main` → redo the edit → rebuild → deploy. The live site may show a **higher** risk count than your stale clone (the live page is the newer source of truth — trust it over the local). Do not trust `git log` alone to confirm what's deployed; check the actual remote/`origin/main` state.
+
 ## Verify the DEPLOYED site, not just the local build
 
-The local `webapp/src/index.html` and the deployed `samaya-factory.com/aseer/registers/Risk/index.html` can drift (auto-deploy cron, stale SCP, missed deploy). After any rebuild, confirm the LIVE revision and card count via SSH (not HTTP — LiteSpeed caches):
+The local `webapp/src/index.html` and the deployed `samaya-factory.com/aseer/registers/Risk/index.html` can drift (auto-deploy cron, stale SCP, missed deploy, or a local build from a stale clone). After any rebuild, confirm the LIVE revision and card count via SSH (not HTTP — LiteSpeed caches):
 
 ```bash
 ssh -p 65002 u517606786@samaya-factory.com \
