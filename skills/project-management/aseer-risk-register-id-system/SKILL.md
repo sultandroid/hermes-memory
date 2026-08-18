@@ -245,6 +245,29 @@ Server `.htaccess` rewrites all requests to `/build/`. Two paths must be updated
 1. `/build/aseer/registers/{REGISTER}/index.html` — primary
 2. `/build/technical-office/aseer/registers/{REGISTER}/index.html` — Tech Office alias
 
+**Gotcha: `bash deploy.sh` alone does NOT make the site live.** `deploy.sh` rsyncs to `public_html/aseer/registers/Risk/` (the non-`/build/` path), but `.htaccess` rewrites every request to `/build/`. So the served page stays stale. The real live deploy happens ONLY via the git post-commit hook (`~/.hermes/scripts/update-all-registers.sh`), which rebuilds from source and deploys to `/build/`. **To make webapp changes appear, you MUST `git commit`** (the hook then builds + deploys + verifies HTTP 200). This bit us repeatedly: a build looked "not updated" on the live site until committed.
+
+Verify the served build path (not the bare URL), and bypass LiteSpeed cache with a `?cb=` param:
+```python
+import re, json, urllib.request
+c = urllib.request.urlopen(urllib.request.Request(
+    'https://samaya-factory.com/build/aseer/registers/Risk/index.html?cb=check',
+    headers={'Cache-Control':'no-cache'})).read().decode()
+d = json.loads(re.search(r'const RISK = (\{.*?\});', c, re.DOTALL).group(1))
+print(len(d['risks']), d.get('last_updated'))
+```
+
+## Recent Updates block (renderRecentUpdates in template.html)
+
+The block shows the latest risk activity. **Original design pitfall:** it sorted risks by `last_reviewed` and showed the top 5 — so when a bulk pass sets many risks to the same `last_reviewed` date (e.g. 20+ risks all 2026-08-18), the block showed near-identical rows and looked frozen even though data changed. User: *"Recent Updates block not updates in each update why?!"* — they expect it to surface what actually changed.
+
+Fix (applied 2026-08-18):
+- Flatten **every `history` entry** across all risks into events `{date, id, title, status, text: action + ' ' + note}`, sort by date desc, show top 8.
+- Add a `.ru-note` line under each title (CSS `.ru-table .ru-title .ru-note { color: var(--text-muted); font-size: 11.5px; ... }`) so the reader sees **what changed**, not just date+id+status.
+- **Filter noise rows:** skip history entries matching `/no score change/i`, `/duplicate scope absorbed/i` (merge bookkeeping — action field, not note), and `/^Created$/i` (created/import rows).
+- **Placement:** user wants the block ABOVE the register table (after the toolbar, before `.tcard`) so a reader sees changes first, not at the page bottom.
+- Column header "What changed" (not "Title"); keep the status pill.
+
 ## `risks.json` purity
 
 The build script `build_risk.py` generates `src/index.html` from `risks.json`. This file must contain ONLY PRR risks. DDR/AVR/HSE risks in `risks.json` will inflate the PRR page's risk count.

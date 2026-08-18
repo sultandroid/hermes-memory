@@ -8,7 +8,11 @@ description: "Audit Aseer Museum risk register entries against real evidence fro
 ## Purpose
 Verify all risk register entries against real evidence before updating. Every claim must be traceable to a real file or record.
 
-> **Recurring task — "check all email scans, any risks to update/close?":** see `references/email-scan-risk-review.md` for the full workflow (scan locations, cross-reference pattern, sub-approval ≠ parent-closure pitfall, update pattern).
+> **Recurring task — "check all email scans, any risks to update/close?":** see `references/email-scan-risk-review.md` for the full workflow (scan locations, cross-reference pattern, update pattern). It also covers the **Action-Plan Progress Pass** (user requires every snapshot to show progress — update `actions[]` status/due from evidence, roll forward In-Progress past-due dates, sync all mirrors, report the KPI delta) and two hard user rules: **(1) a risk whose core is "plan stays rejected (Code C/D)" is CLOSED once that plan reaches Code B** (actions stay in the action plan); **(2) never embed internal reasoning/justification in `response_action`/`title`** — keep it factual.
+
+> **Merging duplicate risks / OneDrive snapshot stubs:** see `references/merge-duplicate-risks.md` — de-dup groups, the full merge workflow (SoT `risks.json` → all mirrors → rebuild → deploy → verify), and the pitfall where `05_Submittle/REV01/` submission snapshots are 4.5KB HTML "This Page Does Not Exist" stubs that Excel rejects (fix: detect via `file` magic bytes, regenerate from `webapp/src/EXP-RISK-*_ACTIVE.xlsx`, move stubs to `_CORRUPT_/` not delete).
+
+> **Risk webapp UI (Recent Updates block, per-page header, multi-page rebuild, Rescheduled field):** see `references/risk-webapp-ui.md` — the Recent Updates block reads `history[]` (not `last_reviewed`) and shows the change note above the table, how to filter internal-noise history rows, the header `last_updated` source-of-truth per page (DDR/HSE/AV read their own JSON, not `risks.json`), that a `template.html` edit must be rebuilt into all four pages before deploy, and how to record a `target_close` move via the `rescheduled` object shown in the Ownership & Tracking drawer.
 
 ## Evidence Sources (in priority order)
 

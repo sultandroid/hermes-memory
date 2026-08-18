@@ -524,6 +524,45 @@ Typical failure:
 
 **Fix: always update template.html AND risks.json before committing any built output.**
 
+## Recent Updates Block — Show Real "What Changed", Above the Table
+
+The PRR page has a "Recent Updates" block (`#recentUpdates` + `renderRecentUpdates()` in `template.html`). User requirement (2026-08-18): it is a **reader-facing "what changed" feed**, and it must be positioned **ABOVE the register table** (immediately after the toolbar / before `.tcard`), so the reader sees recent changes first.
+
+**Pitfall — the original block showed a flat `last_reviewed` date and looked frozen.** The first implementation sorted risks by `last_reviewed` and showed ID+title+status. Because an action-plan progress pass sets `last_reviewed` to the same date (e.g. 2026-08-18) on ~23 risks at once, the block looked static and told the reader nothing about *what* changed. The user flagged it: "Recent Updates block not updates in each update why?!"
+
+**Fix — render from the `history[]` array, one row per real change:**
+```javascript
+function renderRecentUpdates(){
+  const events = [];
+  risks.forEach(function(r){
+    (r.history || []).forEach(function(h){
+      var d = h.date || ''; if (!d) return;
+      var note = h.note || h.action || '';
+      // SKIP internal noise:
+      if (/no score change/i.test(note)) return;
+      if (/duplicate scope absorbed/i.test(h.action||'')) return;   // merge bookkeeping
+      if (/^Created$/i.test((h.action||'').trim())) return;          // creation rows
+      var label = h.action || '';
+      var full = (label + ' ' + note).trim();
+      if (!full) return;
+      events.push({date:d, id:r.id, title:r.title||'', status:r.status||'', text:full});
+    });
+  });
+  events.sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1:0);
+  const top8 = events.slice(0,8);
+  // render table: Date | ID | title + note (what changed) | Status
+}
+```
+Columns: **Date · ID · What changed (title bold + grey note under it) · Status**. Rows clickable → `openDrawer(id)`. Show ~8 rows. Skip "No score change", merge-absorbed, and "Created" history rows — they are noise, not progress.
+
+**CSS for the note line:**
+```css
+.ru-table .ru-title .ru-t { font-weight:600; color:var(--text-main); }
+.ru-table .ru-title .ru-note { color:var(--text-muted); font-size:11.5px; line-height:1.4; margin-top:2px; }
+```
+
+**Deploy note:** the auto-deploy post-commit hook deploys the *built* `src/index.html` to `/build/...`. So after editing `template.html`, you must `python3 build_risk.py` (which injects data into the template) AND commit — the commit fires the hook that deploys. A bare SCP of `src/index.html` gets overwritten by the next 15-min cron if uncommitted. When verifying a change that touches the template, check the **built** `src/index.html` (not just curl the public URL) and append `?cb=` to bypass LiteSpeed cache.
+
 ## Separate Source Data Files per Register
 
 Each register has its own source data file and build script:

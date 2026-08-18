@@ -8,7 +8,7 @@ CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. 
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
 §
-Odoo server 167.99.224.43: SSH root key access works. NPM(80/81/443)+Odoo(8069)+PG; NPM data /opt/odoo/npm/data. Use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New. User emp 975, partner 5503.
+Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 §
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 §
@@ -20,10 +20,10 @@ MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
-Factory warehouse monitor: classify by PO's project_id (244 = Samaya Factory). Chatter notes: plain text only, no icons/tags/markdown.
-§
 Telegram group mode (set 2026-08-08): stay SILENT in group, reply only when asked, read every message; DM user privately only for: (1) clear technical contradiction/error, (2) decision needing confirmation, (3) escalation/pending-on-him. Silent guardian.
 §
-Moin El-Din (Odoo 2760) = maintenance supervisor + CNC operator (Odoo 'Carpenter' = iqama job, not real). CNC/Laser = workcenter 13 (FCNC), 8 machines. Lean: samaya-profile/03_Workshop/lean/.
+Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
 §
 Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.
+§
+Risk register (user 2026-08-18): Code B = final approval (CG never issues Code A). Close a risk whose core was a rejected plan once that plan gets Code B (actions stay open). Keep genuinely-open risks Open. No internal notes in register.

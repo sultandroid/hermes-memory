@@ -82,6 +82,12 @@ When adding a risk (e.g. derived from a plan obligation), edit `risks.json` then
 
 Then validate JSON on all four files, commit, `git pull --rebase && git push` (handle concurrent sub-agent commits per the SKILL.md conflict section — see `project-plan-management` §7 reference).
 
+> **Status/evidence updates use the SAME SoT pipeline as adding a risk.** Changing a risk's `status` (e.g. Watch→Open), `event`, or `evidence[]` is done by editing `risks.json` then running the identical `risk_sync.py` → `build_risk.py` → `build_snapshots.py --bump` → commit → `git pull --rebase && git push` → `webapp/deploy.sh` chain. Do NOT hand-edit `risk_register.md` — `risk_sync.py` overwrites it. When you change status, also append a dated entry to `history[]` (e.g. "Status raised Watch -> Open" with the reason + date) so the change is auditable.
+
+> **PITFALL — `Target Close` is a TARGET, not the actual closure date.** The `target_close` field (rendered as "Target Close" column in `risk_register.md`) is the *planned* close date. It is NOT evidence of when a risk was actually closed. A row showing `status=Closed, target_close=2026-08-15` does NOT mean it closed 15-Aug. To find the REAL closure date: `git log --all -S'"status": "Closed"' -- 06_Risk_System/risks.json` or `git blame -L <line> 01_Registers/risk_register.md` on the row, then read the commit date. In practice Aseer's Closed risks (COM-06, CON-03, DES-06, PRC-03, SCH-02) were actually closed in late Jul despite `target_close` values as late as mid-Aug. Always verify actual closure via git history before reporting "X closed [date]".
+
+> **PITFALL — `git pull --rebase` can stall on a duplicate `pick` in the todo list.** When a `git push` is rejected because remote moved, and your rebase reports "interactive rebase in progress" with the SAME commit listed twice in the todo (a duplicate `pick`), the working tree is clean and the fix is simply `GIT_EDITOR=true git rebase --continue`. Then discard the auto-generated `webapp/src/index.html` post-commit-hook dirt (`git checkout -- 06_Risk_System/webapp/src/index.html`) before pushing.
+
 **Risk object schema** (from `risks.json`): `id, category, title, cause, event, consequence, probability, severity, score, rating, status, owner, target_close, created, last_reviewed, treatment_file, evidence, response_action, actions[], history[], diagram.fishbone, action_due`.
 
 **Rating bands:** score = probability × severity; ≥12 Critical, ≥8 High, ≥4 Medium.

@@ -216,6 +216,8 @@ rm -f "$DST/04_AV_Risk_Register/"*.xlsx
 ```
 Then copy. Never copy first and delete after — the old files persist until explicitly removed.
 
+**Safer than `rm`: move old/corrupt files to a `_CORRUPT_<date>/` sibling folder instead of deleting.** This is OneDrive-safe (no destructive delete that propagates), preserves the audit trail, and is preferred over `rm -f` when the user's standing rule is "never delete without explicit confirmation." Use the same dated filename convention for the new files so each release is `Aseer_Museum_{PRR|DDR|HSE|AVR}_Snapshot_YYYY-MM-DD.xlsx` and older dates land in `_CORRUPT_/`.
+
 **Verify source data before generating:**
 After a `git pull`, verify the source JSON files actually contain the expected changes before generating snapshots. Pull commits may add fishbone diagrams, fix scores, or adjust dates — but they may NOT have changed the fields you expect (e.g. `response_action`/strategy). Check before building:
 ```bash

@@ -27,9 +27,17 @@ The script output is massive (600K+ chars). Do NOT try to register everything. I
 
 ### 2a. 7-Day Recency Filter (Script-Level)
 
-The detection script (`check_adel_files.sh`) now includes a **7-day recency filter** that silently suppresses files older than 7 days. This prevents false positives when the snapshot file is reset or re-deployed. The filter uses `date -v -7d` on macOS to compare file mtime against the cutoff.
+The detection script (`~/.hermes/scripts/check_adel_files.sh` — note it lives in `.hermes/scripts`, NOT the repo) includes a **7-day recency filter** that silently suppresses files older than 7 days. This prevents false positives when the snapshot file is reset or re-deployed. The filter uses `date -v -7d` on macOS to compare file mtime against the cutoff.
 
-**Do NOT remove this filter.** Without it, a snapshot reset causes ALL files (including Feb–Apr 2026 historicals) to appear as "new" in the next cron run.
+**Do NOT remove this filter.** Without it, a snapshot reset causes ALL files (including Feb–Apr 2026 historicals) to appear as "new" in the next cron run (3089 files were reported in one run when the filter was missing).
+
+**mtime must be ISO-8601 for the filter to sort.** The naive `stat -f '%Sm'` output is `Apr 24 13:11:16 2026` (month-name format) — NOT lexically comparable against an ISO cutoff. If you rebuild the inventory line, use ISO format or the filter silently fails to suppress anything:
+```bash
+find "$ADEL_DIR" -type f -exec stat -f '%N|%z|%Sm' -t '%Y-%m-%d %H:%M' {} \; | sed "s|$ADEL_DIR/||" | sort > /tmp/adel_current.txt
+# then filter:
+NEW_FILES=$(echo "$NEW_FILES" | awk -F'|' -v c="$(date -v -7d '+%Y-%m-%d %H:%M')" '$3 >= c')
+```
+Verified working 2026-08-17: cut the false-positive 3089-file report down to the 6 genuinely recent files.
 
 ### 2. Submittal Package Folder (02. DOC - Document Submittal/GN/)
 
