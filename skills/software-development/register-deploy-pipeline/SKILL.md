@@ -375,6 +375,37 @@ Use the URL by register type:
 - HSE: `https://samaya-factory.com/aseer/registers/Risk/HSE/`
 - AV: `https://samaya-factory.com/aseer/registers/Risk/AV/`
 
+## Rescheduled / pending-approval field (Ownership & Tracking drawer)
+
+When a risk's `target_close` is moved (e.g. by an EOT extension), record the reschedule in the risk JSON and render it in the Ownership & Tracking drawer so the change is visible and auditable. This is the pattern for "rescheduled + pending approval" risks.
+
+**Data model** (per risk in `risks.json`):
+
+```json
+{
+  "id": "PRR-SCH-01",
+  "target_close": "2027-05-11",
+  "rescheduled": {
+    "date": "2026-08-18",
+    "from": "2026-08-21",
+    "to": "2027-05-11",
+    "note": "EOT LT-0007 (223-day) to 11-May-2027 — completion rescheduled",
+    "pending": "Pending EOT approval (LT-0007)"
+  }
+}
+```
+
+- `target_close` is the NEW date; `rescheduled.from` preserves the old one.
+- `pending` is optional — when present it renders a status pill (e.g. "Pending EOT approval (LT-0007)") so a reschedule that is NOT yet approved is clearly flagged. Any risk carrying `rescheduled.pending` shows it automatically — no per-risk code.
+
+**Template render** (in the Ownership & Tracking `kv` block, after the Target close row):
+
+```javascript
+${r.rescheduled?`<div class="k">Rescheduled</div><div class="v mono">${esc(r.rescheduled.date||'')} · ${esc(r.rescheduled.from||'')} → ${esc(r.rescheduled.to||'')}</div><div class="k">Reason</div><div class="v">${esc(r.rescheduled.note||'')}</div>${r.rescheduled.pending?`<div class="k">Status</div><div class="v"><span class="rate-pill p-watch">${esc(r.rescheduled.pending)}</span></div>`:''}`:''}
+```
+
+`p-watch` is an existing pill class in the template — reuse it, don't invent a new one. After editing `template.html`, rebuild with `build_risk.py` and re-deploy.
+
 ## Created-date and project-status audit
 
 Before publishing a revised register, audit every risk against the project timeline and current status. For each risk check:
@@ -480,6 +511,11 @@ For the full toolbar standard (all four registers must match), see `references/t
 ## Pitfalls
 
 - **Local file may be stale** — the HTML source at `~/aseer-museum-pm/06_Risk_System/webapp/src/` is NOT the authoritative data source. The server often has newer risks added or edited directly. Before editing the local copy, always compare risk counts. If the server has more risks, download from server first and edit that.
+- **Local repo may be behind remote AND a local commit may never have been pushed** — the live site can be AHEAD of your local clone (e.g. live shows 73 risks/Rev C21 while local shows 69/Rev C20). Worse, a local commit you made earlier (e.g. a reschedule) may never have been pushed, so the remote/live simply doesn't have it. Recovery procedure (do this BEFORE editing any register):
+  1. `git fetch origin` then compare `git rev-parse HEAD` vs `git rev-parse origin/main` and compare risk counts: `git show origin/main:06_Risk_System/risks.json | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['risks']), d.get('revision'))"`.
+  2. If remote is ahead, `git reset --hard origin/main` (after stashing any unrelated WIP: `git stash push -m wip <files>`), then `git stash pop`.
+  3. Re-apply your intended edit on the CORRECT (remote) version. Verify the live page via the server file, not the browser — the browser/curl may serve a stale LiteSpeed cache even when the deployed file is correct. Confirm with `ssh ... "grep -o 'target_close[^,]*' .../index.html"` on the actual server path.
+  4. If your earlier commit was never pushed, re-apply it as a fresh edit on the current version rather than trying to rebase it in (the rebase will conflict against unrelated remote commits).
 - **Git restore overwrites server customizations** — the live server may have toolbar buttons, register nav links, CSS tweaks, or button handlers that the git repo doesn't have. These were added directly to the server file. Before restoring from git: download the server version, compare features, and re-add any missing customizations after restore. The safe JSON fix procedure: extract RISK JSON from server HTML, modify via json.loads/dumps, slice-replace only the JSON portion (using m.start(2)/m.end(2)), verify `<!DOCTYPE html>` + `</html>` still bookend the file.
 - **Sub-registers missing CSV/Print buttons** — older DDR/HSE/AVR pages built from an earlier template may lack `exportCSV()` function and `btnPrint` bindings. Fix: copy `exportCSV()` from PRR (register-agnostic, reads from RISK global), add `btnCsv.onclick = exportCSV; btnPrint.onclick = ()=>window.print();` to init(). After adding, verify all four toolbar buttons (Reset, Snapshot, CSV, Print) work on every register.
 - **Fixes must replicate to ALL sibling pages** — after fixing one register page (e.g. PRR), always check the other three (DDR, HSE, AVR) for the same issue. User catches discrepancies across registers. Common gaps: missing CSV/Print buttons, registerNav in wrong location (htitle vs hright), duplicate registerNav elements, missing register cards section.

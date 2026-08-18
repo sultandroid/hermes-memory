@@ -216,9 +216,24 @@ For each connected issue, produce a clear decision:
 3. **When** — deadline
 4. **Priority** — urgent / high / medium / low
 
-## 📊 Report Template
+## 📊 Daily Manager Report — AUTOMATED (cron)
 
-Save to `samaya-profile/00_Admin/factory_manager_report_YYYY-MM-DD.md`:
+The daily report is now **auto-generated** by cron job `f49274e17cde` (daily 08:00, deliver=origin).
+
+**Pipeline:**
+1. `~/.hermes/scripts/factory_daily_report.py` fetches sections 1-3 live:
+   - **MRP** state counts from Odoo `mrp.production` (limit 2000)
+   - **Factory POs** from `purchase.order` filtered by `FACTORY_PROJECT_IDS = {161, 244, 302, 307, 315}` + `FACTORY_SUPPLIER_IDS` (same sets as `fetch_factory_pos_v2.py`), plus top-5 vendors by open outstanding
+   - **Raoof emails** last 30 days from Outlook SQLite (`Message_SenderList LIKE '%Raoof%'`)
+2. The cron agent writes section 4 (القرارات) by cross-referencing the data, saves to `samaya-profile/00_Admin/factory_manager_report_YYYY-MM-DD.md`, commits to git (date in commit msg), and replies with an Arabic summary.
+
+**Report structure (4 sections):** 1️⃣ MRP counts · 2️⃣ PO totals + open/draft + top vendors · 3️⃣ Raoof emails · 4️⃣ Decisions (action/who/when/priority).
+
+**To regenerate manually:** `python3 ~/.hermes/scripts/factory_daily_report.py` (prints sections 1-3 as markdown; section 4 is a placeholder the agent fills).
+
+**Pitfall:** the script's `fetch_raoof_emails` uses `Message_SenderList LIKE '%Raoof%'` — the Outlook column is `Message_RecipientList` (NOT `Message_Recipients`, which doesn't exist). Raoof's sender names include "Raoof Eldeeb", "raoofeldeeb", "raoof@technose.net", "Raoof Aldeeb".
+
+### Legacy manual template (pre-automation reference)
 
 ```markdown
 # تقرير مدير المصنع — YYYY-MM-DD
