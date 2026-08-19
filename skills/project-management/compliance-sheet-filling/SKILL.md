@@ -22,19 +22,22 @@ The Engineer has sent their own compliance sheet format (Excel) with spec clause
 **CRITICAL PITFALL — leftover comments from template:**
 When you copy the approved template (e.g. ZD-0094) to build a new CRS, the template's OWN data rows (11+) still contain the previous document's comments (e.g. Anwar/Noman comments from the Subcontract Management Plan). **You MUST clear rows 11+ before filling** or the new CRS will contain extra foreign comments. The template's data rows are merged cells — unmerge them first (`ws.unmerge_cells`), then set values to None, then fill your own rows.
 
-**CRITICAL — DO NOT unmerge cells; REBUILD from scratch with NO merges (user-mandated format):**
-Unmerging the template's data region breaks the layout: the template has **inconsistent per-row merges** (some comment cells are `A:F`, others `E:I`), so writing into the merged anchors lands values in the wrong columns (comments spill into `No.`/`Sheet` columns). The user explicitly demands **no merged cells** in the CRS output ("FORMAT BROCKEN PLEASE DO NOT USE MERGE IN CELLS").
+**CRITICAL — DO NOT unmerge the template's data cells as a standalone step, and DO NOT rebuild the whole CRS from scratch. PRESERVE the template format (user-mandated).**
+The user's dominant, repeatedly-stated requirement is **"DO NOT CHANGE THE TEMPLATE AND FORMAT"** — the branded header (title block, PROJECT NAME, CRS NUMBER, DOCUMENT No/TITLE, DATA TABLES legend), the legend, and the reviewer signature block must all stay EXACTLY as the template ships them. Two failed approaches and the correct one:
 
-The **verified working approach** is to build a fresh `Workbook()` from scratch with **plain cells only** — no merges anywhere:
-- Create a new workbook: `wb = openpyxl.Workbook(); ws = wb.active; ws.title = 'CRS'`
-- Set column widths explicitly (`A:6, B:10, C:14, E:55, J:55, P:12, Q:14`)
-- Title row 1-2, meta block rows 4-8 (CRS No, Doc No, Doc Title, Discipline, Date)
-- Header row 10: navy `1F3864` fill, white bold font, centered — `No. | Initial | Sheet | Reviewer Comment | Originator Reply | Reply By | Reply Status`
-- Data rows 11+: plain cells with `wrap_text` alignment + thin borders on every cell
-- Legend row below data (A/B/C/D/F status codes)
-- Save OVER the target CRS file (the user edits it in place in OneDrive)
+- **WRONG — unmerge data cells then rewrite in place:** the template has **inconsistent per-row merges** (some comment cells `A:F`, others `E:I`, etc.), so writing into merged anchors lands values in the wrong columns (comments spill into `No.`/`Sheet`, rows drift off alignment). Also, `MergedCell.value` is read-only — you cannot clear merged cells directly.
+- **WRONG — rebuild the entire CRS from a fresh `Workbook()`:** this discards the branded template (header, legend, signatures) entirely. The user rejects it immediately ("DO NOT CHABGE THE TEMPLATE AND FORMAT"). A plain-sheet CRS loses the official look.
+- **CORRECT — keep the template, replace only the data region with a CONSISTENT merge pattern:**
+  1. Open the pristine template (use a backup copy of the blank template, or the user's existing CRS with the template format intact — NEVER the already-corrupted file).
+  2. Unmerge ONLY the data-region merges (rows 11+), leaving header rows 1-10 and the legend/signature rows untouched.
+  3. Clear the data cells (rows 11+). If clearing merged cells, either unmerge them first or clear via each merge's top-left anchor cell.
+  4. Re-create the data region with a **uniform** merge pattern for every row: `C:D` (Sheet), `E:I` (Reviewer Comment), `J:O` (Originator Reply), `Q:R` (Reply Status); columns A (No), B (Initial), P (Reply By) stay single cells. `ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=4)` etc.
+  5. Write values to the merge anchor (top-left) of each merged range: No→A, Initial→B, Sheet→C, Comment→E, Reply→J, Reply By→P, Status→Q.
+  6. Apply wrap_text + top vertical alignment to the comment/reply columns, thin borders to every data cell.
+  7. Save OVER the target CRS in OneDrive (the user edits it in place).
+This preserves the branded header/legend/signatures AND yields 23 aligned rows that don't corrupt.
 
-This produces a clean, stable CRS the user can manually edit — no merged-cell corruption.
+**Ready-made helper:** `scripts/fill_crs_preserve_template.py` — a re-runnable script that does the whole correct flow (unmerge data region → clear → re-merge uniformly → fill to anchors → style → save over target). Edit the config block at the top (TEMPLATE, COMMENTS_SRC, OUT, DOC_REF, DOC_TITLE) and run it.
 
 **CRITICAL RULE — CRS must sit BESIDE the CG response file:**
 For any submittal returned **Code C** (Revise & Resubmit), the CRS file MUST be placed in the SAME folder as the original CG response PDF, i.e. the `02_CG_Responses/` folder of the relevant plan/discipline. Do NOT put the CRS in a separate `Submission_Plan_CRS/` or `01_Source_Files/` folder. Both files together:

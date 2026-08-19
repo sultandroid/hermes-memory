@@ -157,3 +157,27 @@ When a template uses **merged cells** (e.g. Samaya CRS / Comments Resolution She
 3. **Merged header/label cells** (e.g. `A5:C5` "CRS NUMBER") must be written through the anchor only; `ws['D5'] = ...` fails when D5 is a merge child.
 4. **CRS-fill pattern** (Samaya Comments Resolution Sheet): the comment table uses merged column groups — E:I = Reviewer Comment, J:O = Originator Reply, Q:R = Reply Status, C:D = Sheet. Fill via the top-left of each group (E, J, Q, C) and the merge carries the value. Start at header+1 (usually row 11), and clear leftover template rows below your data (the old plan's comments).
 5. Verify by re-reading with a compact print of the affected columns — confirm your rows landed and no stale template text remains in trailing rows.
+
+## CRITICAL: Preserving a Merged Template's Footer & Layout
+
+**This is the #1 failure mode when filling a merged template (CRS, submittal register, etc.): destroying the footer/legend/signature block or breaking the layout by unmerging.**
+
+Hard rules learned the hard way:
+
+1. **NEVER unmerge a template's data region to "fix" it.** Unmerging cells breaks the layout irreversibly. The user will say "FORMAT BROKEN" — do not go down this path. The merges ARE the format.
+
+2. **NEVER rebuild the template from scratch** (fresh `openpyxl.Workbook()`). You lose the footer (A/B/C/D/F legend, SC/PMCM/MOC/Originator signature block, approval note) and its exact styling (bold headers, `FFCC9900` fills, medium borders). Always work on a copy of the pristine file and preserve those rows.
+
+3. **`openpyxl.insert_rows()` does NOT shift merged cells** (verified 3.1.2). It moves cell *values* but leaves the merge definitions at their old rows — producing a broken file where merges and data are out of sync. Do not use it on merged templates.
+
+4. **To shift the footer down (to make room for more data rows) while preserving its EXACT format: do XML-level row insertion.** Rewrite the sheet XML inside the .xlsx zip: for every `<row r="N">` with N >= footer_top, increment N (and each cell's `r="A{N}"`) by the shift amount; do the same for every `<mergeCell ref="A27:B28">` whose min row >= footer_top. This copies the footer byte-for-byte (values, merges, styles) to the new position. See `references/crs-merged-template-fill.md` for the full working recipe and a fill script.
+
+5. **Keep the pristine backup as your base.** Before any destructive edit, save a known-good copy (e.g. to Downloads). When you need to redo, rebuild from that backup — never from a partially-destroyed working file.
+
+6. **Fill via merge anchors only, never unmerge.** Write to the top-left cell of each merge group (`setv(r,c,v)` helper that walks `ws.merged_cells.ranges` and writes the anchor). Add extra data rows by *recreating* the same merge pattern (C:D, E:I, J:O, Q:R) for the new rows — copy the pattern from a known data row.
+
+7. **Only the target document's comments.** When refilling a CRS for a new submittal, the template may carry a previous plan's rows (e.g. old Subcontract Management Plan comments). Clear ONLY the data region and fill with the new document's comments — never leave unrelated template content. Pull the full comment set from the actual CG submittal cover page (18 comments for 1st submittal + 5 for 2nd), not just the partial Audit Response sheet.
+
+8. **If the user made manual edits, read and honor them** (e.g. "I made manual modification, keep it"). Compare the current file against the pristine backup to see exactly what changed, and preserve those changes when you refill.
+
+Full working recipe + code for the XML footer-shift and merge-anchor fill: `references/crs-merged-template-fill.md`.
