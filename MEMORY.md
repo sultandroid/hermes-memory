@@ -4,7 +4,7 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 §
 OneDrive EDEADLK = copy to Micro volume first. .olk15Msg base64 after 'base64' header.
 §
-CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
+CRS template: samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
 §
@@ -24,6 +24,8 @@ Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; D
 §
 Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
 §
-Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.
+Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
 §
-Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.
+Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
+§
+Aseer workshops: curator Jack Persekian decides object display (G11 stone vertical, both faces); Stéphane Pennec challenges materials (Corian poor for rotating plinths). User feeds points live.

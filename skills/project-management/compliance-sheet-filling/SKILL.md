@@ -22,11 +22,35 @@ The Engineer has sent their own compliance sheet format (Excel) with spec clause
 **CRITICAL PITFALL — leftover comments from template:**
 When you copy the approved template (e.g. ZD-0094) to build a new CRS, the template's OWN data rows (11+) still contain the previous document's comments (e.g. Anwar/Noman comments from the Subcontract Management Plan). **You MUST clear rows 11+ before filling** or the new CRS will contain extra foreign comments. The template's data rows are merged cells — unmerge them first (`ws.unmerge_cells`), then set values to None, then fill your own rows.
 
+**CRITICAL — DO NOT unmerge cells; REBUILD from scratch with NO merges (user-mandated format):**
+Unmerging the template's data region breaks the layout: the template has **inconsistent per-row merges** (some comment cells are `A:F`, others `E:I`), so writing into the merged anchors lands values in the wrong columns (comments spill into `No.`/`Sheet` columns). The user explicitly demands **no merged cells** in the CRS output ("FORMAT BROCKEN PLEASE DO NOT USE MERGE IN CELLS").
+
+The **verified working approach** is to build a fresh `Workbook()` from scratch with **plain cells only** — no merges anywhere:
+- Create a new workbook: `wb = openpyxl.Workbook(); ws = wb.active; ws.title = 'CRS'`
+- Set column widths explicitly (`A:6, B:10, C:14, E:55, J:55, P:12, Q:14`)
+- Title row 1-2, meta block rows 4-8 (CRS No, Doc No, Doc Title, Discipline, Date)
+- Header row 10: navy `1F3864` fill, white bold font, centered — `No. | Initial | Sheet | Reviewer Comment | Originator Reply | Reply By | Reply Status`
+- Data rows 11+: plain cells with `wrap_text` alignment + thin borders on every cell
+- Legend row below data (A/B/C/D/F status codes)
+- Save OVER the target CRS file (the user edits it in place in OneDrive)
+
+This produces a clean, stable CRS the user can manually edit — no merged-cell corruption.
+
 **CRITICAL RULE — CRS must sit BESIDE the CG response file:**
 For any submittal returned **Code C** (Revise & Resubmit), the CRS file MUST be placed in the SAME folder as the original CG response PDF, i.e. the `02_CG_Responses/` folder of the relevant plan/discipline. Do NOT put the CRS in a separate `Submission_Plan_CRS/` or `01_Source_Files/` folder. Both files together:
 - `.../02_CG_Responses/MOC-MUS-ASE-1E0-ZD-0102.pdf` (CG response)
 - `.../02_CG_Responses/MOC-MUS-ASE-1E0-ZD-0102_CRS_Rev01.xlsx` (our CRS reply)
 This keeps the CG comment + our response together for the resubmission package.
+
+**CRITICAL — source of CG comments = the ORIGINAL DS SUBMITTAL COVER PAGE, not the vendor's Audit Response sheet.**
+The vendor's `Audit Response.xlsx` is often a **SUBSET** of the CG comments — the vendor responds only to the comments they chose to address, silently dropping the rest. Example: an AV DD resubmission had **18 CG comments** on the original DS cover page but the vendor's Audit Response captured only **4**. Filling the CRS from the Audit Response produces an incomplete CRS that omits 14 CG comments — the user will reject it.
+
+Always build the CRS comment column from the CG's own submittal cover page / comment sheet, which lists the complete comment set AND the review code (A/B/C/D):
+- The CG response PDF attachment (e.g. `MOC-MUS-ASE-1E0-1G-0002.pdf` returned by CG) — extract with `pdftotext`, read the "CG comments:" section verbatim.
+- Find it in Outlook by doc ref: `Message_NormalizedSubject LIKE '%<doc-ref>%'`, extract the attachment with AppleScript.
+- The `Initial`/reviewer column = the CG reviewer named on the cover page (e.g. `Venugopal Poyakkara Veetil` — IT Specialist), not a generic "CG".
+
+Then fill Originator Reply from the vendor's Audit Response (match by comment topic), flagging any comment the vendor left unanswered. Verify the final CRS comment count equals the CG cover-page comment count before delivering.
 
 **Fill pattern (verified working):**
 - Header value cells are merged — write to top-left: `D5` (CRS No), `H5` (CRS Rev), `K5` (DATE), `D6` (Doc No), `H6` (Doc Rev), `K6` (Discipline), `D7` (Title), `K7` (Doc Type)

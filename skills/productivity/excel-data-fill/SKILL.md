@@ -131,3 +131,29 @@ These files have original formatting that must be preserved. Always:
 - **Verify after write** — re-read the file and print a summary to confirm data landed correctly.
 - **User repeating instruction = go to source** — If the user says the same thing 2+ times (e.g., "fill the names from your repo"), you're getting it wrong. STOP trying to reconstruct from memory. Read the ACTUAL source file to see what's already there, then fill only what's missing.
 - **WhatsApp origin files have original formatting** — WhatsApp temp files under `~/Library/Containers/net.whatsapp.WhatsApp/Data/tmp/documents/` have user-designed formatting. Never apply styles to these files. Only set `.value`.
+
+## Merged-Cell Pitfall (openpyxl `MergedCell.value` is read-only)
+
+When a template uses **merged cells** (e.g. Samaya CRS / Comments Resolution Sheets, submittal registers with merged column groups), `ws.cell(r,c).value = x` raises `AttributeError: 'MergedCell' object attribute 'value' is read-only` for any cell inside a merge except the top-left anchor.
+
+**Rules for merged templates:**
+1. **Build a set of merged coordinates first**, then write only to unmerged cells or the top-left anchor of each merge:
+   ```python
+   merged = set()
+   for mc in ws.merged_cells.ranges:
+       for row in ws[mc.coord]:
+           for cell in row:
+               merged.add((cell.row, cell.column))
+   def safe_set(r, c, v):
+       if (r, c) in merged:
+           for mc in ws.merged_cells.ranges:
+               if mc.min_row <= r <= mc.max_row and mc.min_col <= c <= mc.max_col:
+                   ws.cell(mc.min_row, mc.min_col).value = v  # top-left anchor only
+                   return
+       else:
+           ws.cell(r, c).value = v
+   ```
+2. **To CLEAR stale template rows that live inside merges**, you cannot `= None` individual merged cells. Clear the merge's top-left anchor (and any unmerged cells). Iterate `list(ws.merged_cells.ranges)` (snapshot — the live list mutates during clearing) and set the anchor's value to None.
+3. **Merged header/label cells** (e.g. `A5:C5` "CRS NUMBER") must be written through the anchor only; `ws['D5'] = ...` fails when D5 is a merge child.
+4. **CRS-fill pattern** (Samaya Comments Resolution Sheet): the comment table uses merged column groups — E:I = Reviewer Comment, J:O = Originator Reply, Q:R = Reply Status, C:D = Sheet. Fill via the top-left of each group (E, J, Q, C) and the merge carries the value. Start at header+1 (usually row 11), and clear leftover template rows below your data (the old plan's comments).
+5. Verify by re-reading with a compact print of the affected columns — confirm your rows landed and no stale template text remains in trailing rows.

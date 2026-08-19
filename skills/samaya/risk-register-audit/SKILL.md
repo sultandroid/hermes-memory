@@ -14,6 +14,8 @@ Verify all risk register entries against real evidence before updating. Every cl
 
 > **Risk webapp UI (Recent Updates block, per-page header, multi-page rebuild, Rescheduled field):** see `references/risk-webapp-ui.md` — the Recent Updates block reads `history[]` (not `last_reviewed`) and shows the change note above the table, how to filter internal-noise history rows, the header `last_updated` source-of-truth per page (DDR/HSE/AV read their own JSON, not `risks.json`), that a `template.html` edit must be rebuilt into all four pages before deploy, and how to record a `target_close` move via the `rescheduled` object shown in the Ownership & Tracking drawer.
 
+> **HARD RULE — `risks.json` is the PRR source of truth, NOT the markdown register.** The sync direction is **JSON → MD**: `python3 risk_sync.py` regenerates `01_Registers/risk_register.md` FROM `06_Risk_System/risks.json`. NEVER edit the `.md` register directly for PRR changes — it is a generated artifact and will be overwritten on the next sync. To update a PRR risk: edit `risks.json` (mutate the risk object, bump `revision`, set `last_updated`, append a `history[]` row), then run `risk_sync.py`, then `webapp/build_risk.py`. DDR/HSE/AV have their own JSONs/embedded HTML + their own rebuild commands. Excel snapshots: `webapp/build_snapshots.py --bump`, and the `.xlsx` files are **gitignored** (binaries stay in OneDrive) — `build_risk.py` auto-discovers the latest `src/EXP-RISK-PRR-2026-*_ACTIVE.xlsx` for the webapp download button.
+
 ## Evidence Sources (in priority order)
 
 | Source | Path | What to Check |

@@ -14,7 +14,6 @@ triggers:
 # Odoo — Query & Manage Moqtana / Samaya Odoo 18
 
 ## SSL Certificate — XML-RPC on macOS
-
 Python 3.13+ on macOS may fail with `SSL: CERTIFICATE_VERIFY_FAILED`. Fix:
 
 ```bash

@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-18 16:00:35
+Generated: 2026-08-19 09:00:32
 
 ---
 
@@ -17,9 +17,10 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.
+Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
+Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -35,15 +36,15 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
 7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
-Always NAME which labor does each task. Labors MUST cross-audit each other at PhD depth. ALL scripts/skills MUST be audited by a labor as "AI skills professional" before finalizing — this is mandatory QA.
 
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
-CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
+CRS template: samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.
+Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
+Aseer workshops: curator Jack Persekian decides object display (G11 stone vertical, both faces); Stéphane Pennec challenges materials (Corian poor for rotating plinths). User feeds points live.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -58,7 +59,6 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
-- Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
 
 ## Key People
 
@@ -88,8 +88,8 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
 Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
-Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — live in external attendance system.
-Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.
+Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
+Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم disputes) live in helpdesk.ticket team 'Human Resources And Administration' (id 10), NOT project.task. User prefers formal, well-crafted Arabic in HR tickets — corrects terse wording to be more professional/legalistic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -108,14 +108,11 @@ task_group: Hermes Agent configuration
 
 ## Contracts & Documents
 
-CRS template: https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx. Stage-boundary: "Noted. Belongs to next stage per DMP." Escalate to RFI only if CG rejects.
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
 MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
-Aseer risk system: risks.json = source of truth → edit JSON then risk_sync.py+build_risk.py; never edit risk_register.md directly (overwritten). Code B = final CG approval (never Code A). Excel snapshots gitignored. Meeting 'internal discussion' ≠ formal decision: internal→action_items, formal→decisions_log. User uses kimi CLI as helper agent.
 Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
-Risk review: check Outlook emails for evidence before updating scores; user spots CG comments that don't apply to the actual submission stage.
-Verify LATEST Outlook/tracker before calling a specialist delayed — user corrects stale claims (Acoustic contracted+invoiced; Landscape Evergreen B). Separate admin/procurement blockers (contract/advance/PO/appointment) from technical delay.
+Verify LATEST Outlook/tracker before calling a specialist delayed (Acoustic contracted; Landscape Evergreen B). Separate admin/procurement blockers from technical delay.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -138,6 +135,9 @@ task_group: Aseer Museum / Samaya Technical Office / subcontractor audit
 - `find`/`grep` evidence showing old references to `Subcontractors/08_Graphics_Contractor` in HTML and MD files.
 Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 02 + CRP PL-0027 Rev C01. Employer: MoC. PMC: ACE Moharram-Bakhoum. CG: Eng. Mohammad Elbaz (Acting PM), Eng. Abdrabo Shahin (Sr Structure/Reviewer). Samaya: PD Eng. Adel Darwish (Acting), Tech Office Eng. Mohamed Sultan, BIM Eng. Waleed Salah, CRP author Eng. Mohamed Elshikh. Design Lead: NRS (AoR). 52-stakeholder register (T1 Ops 6 / T2 Specialists 20 / T3 Authorities 14 / Ext MoC 7 / Statutory 5). 7 lifecycle phases, 7 report series, 11 standing meetings. SLAs: Submittal 14d, RFI/TQ 7d, SI 10d. 5-tier escalation L1→L5 (max 27d); 8 auto-fire triggers. 6 Authorities: SCD/GDCD, SEC, MoMRAH, CITC/CST, MOI, Aseer Emirate. KPIs: CDE 100%, RFI ≤7d, satisfaction ≥4.0/5.0. NRS Joint-Authorship model. CG Submission Sequence Rule (27-Apr-26): submittals without approved materials/design/specialist refs → Code C. All 8 CG comments CLOSED on SMP Rev 02.
 Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submittals (0A/3B/2C/1D/0U), SNA (2B/1U), RFI (4 open/20 closed), SI (~4 open), NCR (1C/4U), Outgoing (30 letters), Incoming (1 from CG). Status codes: A/B/C/D/E/F/U. Doc prefix: MOC-MUS-ASE-. Key open: NCR-001 (63d delay), SI-011/013/014/015, open RFIs: GN-007, GN-009, SIC-1A0-TQ-0020/0022. EOT Claim 01 Rev.00 (Apr 2026). Source: Aseer-Museum/Docs/09_Registers/Submittal_Tracker_IFC_Log/ (OneDrive .xlsb locked — save as .xlsx in Excel to read). NRS submittals: Submittal 11 (SC_01/SC_02 shop dwgs, May 25), Lighting/AV/M&E G11 & G13 (May 28), Invoice INV-4825 (May 28). Register 284 rows, updated May 25-28 2026.
+No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
+1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
+3. **Financial Manager** — BOQ, cost, commercial, claims, variations
 
 ## Locations
 

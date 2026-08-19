@@ -458,14 +458,14 @@
     "archived_at": null,
     "created_at": "2026-07-15T20:33:55.660480+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-05T20:45:31.041783+00:00",
-    "last_used_at": "2026-08-05T19:27:31.244199+00:00",
-    "last_viewed_at": "2026-08-05T19:27:31.240685+00:00",
-    "patch_count": 17,
+    "last_patched_at": "2026-08-19T05:57:29.745065+00:00",
+    "last_used_at": "2026-08-19T05:57:17.913225+00:00",
+    "last_viewed_at": "2026-08-19T05:57:17.911119+00:00",
+    "patch_count": 19,
     "pinned": false,
     "state": "active",
-    "use_count": 14,
-    "view_count": 14
+    "use_count": 18,
+    "view_count": 18
   },
   "compliance-system": {
     "archived_at": null,
@@ -861,14 +861,14 @@
     "archived_at": null,
     "created_at": "2026-07-21T09:23:57.731500+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-21T09:36:30.660767+00:00",
-    "last_used_at": "2026-07-21T09:36:04.622577+00:00",
-    "last_viewed_at": "2026-07-21T09:36:04.620251+00:00",
-    "patch_count": 3,
+    "last_patched_at": "2026-08-19T05:34:45.265613+00:00",
+    "last_used_at": "2026-08-19T05:34:44.221487+00:00",
+    "last_viewed_at": "2026-08-19T05:34:44.219629+00:00",
+    "patch_count": 4,
     "pinned": false,
     "state": "active",
-    "use_count": 3,
-    "view_count": 3
+    "use_count": 6,
+    "view_count": 6
   },
   "excel-submission-plan-routine": {
     "archived_at": null,
@@ -1654,14 +1654,14 @@
     "archived_at": null,
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-17T06:19:00.191980+00:00",
-    "last_used_at": "2026-08-19T02:58:26.695659+00:00",
-    "last_viewed_at": "2026-08-19T02:58:26.690915+00:00",
-    "patch_count": 263,
+    "last_patched_at": "2026-08-19T05:21:56.401020+00:00",
+    "last_used_at": "2026-08-19T05:21:37.016444+00:00",
+    "last_viewed_at": "2026-08-19T05:21:37.014129+00:00",
+    "patch_count": 265,
     "pinned": false,
     "state": "active",
-    "use_count": 416,
-    "view_count": 416
+    "use_count": 417,
+    "view_count": 417
   },
   "odoo-bulk-audit": {
     "archived_at": null,
@@ -1681,13 +1681,13 @@
     "created_at": "2026-05-31T22:14:12.936032+00:00",
     "created_by": null,
     "last_patched_at": "2026-06-27T18:51:47.710621+00:00",
-    "last_used_at": "2026-08-19T02:58:30.142718+00:00",
-    "last_viewed_at": "2026-08-19T02:58:30.138843+00:00",
+    "last_used_at": "2026-08-19T05:21:25.573208+00:00",
+    "last_viewed_at": "2026-08-19T05:21:25.571011+00:00",
     "patch_count": 12,
     "pinned": false,
     "state": "active",
-    "use_count": 16,
-    "view_count": 16
+    "use_count": 17,
+    "view_count": 17
   },
   "odoo-project-sync": {
     "archived_at": null,
@@ -2344,26 +2344,26 @@
     "created_at": "2026-07-26T10:42:39.161223+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-18T13:18:23.536375+00:00",
-    "last_used_at": "2026-08-18T13:17:55.553200+00:00",
-    "last_viewed_at": "2026-08-18T13:17:55.550830+00:00",
+    "last_used_at": "2026-08-19T05:44:28.612925+00:00",
+    "last_viewed_at": "2026-08-19T05:44:28.609256+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 33,
-    "view_count": 33
+    "use_count": 34,
+    "view_count": 34
   },
   "register-webapp-pipeline": {
     "archived_at": null,
     "created_at": "2026-07-26T10:27:10.717244+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-17T21:49:27.178643+00:00",
-    "last_used_at": "2026-08-18T11:55:32.354336+00:00",
-    "last_viewed_at": "2026-08-18T11:55:32.351847+00:00",
+    "last_used_at": "2026-08-19T05:57:36.379725+00:00",
+    "last_viewed_at": "2026-08-19T05:57:36.377613+00:00",
     "patch_count": 40,
     "pinned": false,
     "state": "active",
-    "use_count": 38,
-    "view_count": 38
+    "use_count": 39,
+    "view_count": 39
   },
   "register-webapp-template": {
     "archived_at": null,
@@ -2434,14 +2434,14 @@
     "archived_at": null,
     "created_at": "2026-07-20T11:59:43.837936+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-17T23:17:28.084112+00:00",
-    "last_used_at": "2026-08-17T23:17:21.236783+00:00",
-    "last_viewed_at": "2026-08-17T23:17:21.234886+00:00",
-    "patch_count": 21,
+    "last_patched_at": "2026-08-19T05:34:33.096362+00:00",
+    "last_used_at": "2026-08-19T05:34:32.076653+00:00",
+    "last_viewed_at": "2026-08-19T05:34:32.074668+00:00",
+    "patch_count": 22,
     "pinned": false,
     "state": "active",
-    "use_count": 32,
-    "view_count": 32
+    "use_count": 35,
+    "view_count": 35
   },
   "risk-register-cleanup": {
     "archived_at": null,
@@ -2460,14 +2460,14 @@
     "archived_at": null,
     "created_at": "2026-07-13T11:36:32.470665+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-18T15:11:57.097829+00:00",
-    "last_used_at": "2026-08-18T15:11:28.035733+00:00",
-    "last_viewed_at": "2026-08-18T15:11:28.032233+00:00",
-    "patch_count": 135,
+    "last_patched_at": "2026-08-19T05:49:16.750619+00:00",
+    "last_used_at": "2026-08-19T05:49:24.811288+00:00",
+    "last_viewed_at": "2026-08-19T05:49:24.809195+00:00",
+    "patch_count": 136,
     "pinned": false,
     "state": "active",
-    "use_count": 214,
-    "view_count": 214
+    "use_count": 217,
+    "view_count": 217
   },
   "saas-subscription-assessment": {
     "archived_at": null,
