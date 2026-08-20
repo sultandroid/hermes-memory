@@ -15,21 +15,15 @@ triggers:
 
 ## SSL Certificate — XML-RPC on macOS
 Python 3.13+ on macOS may fail with `SSL: CERTIFICATE_VERIFY_FAILED`. Fix:
-
-```bash
-SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 script.py
-```
+`SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 script.py`
 
 ## Odoo 18 Field Name Quirks
 
-`mrp.production` uses different field names:
-
-| Wrong (doesn't exist) | Correct |
-|---|---|
-| `date_planned_start` | `date_start` |
-| `date_planned_finished` | `date_finished` |
+`mrp.production` uses different field names: `date_planned_start`→`date_start`, `date_planned_finished`→`date_finished`.
 
 `purchase.order` has `project_id` on the **header**. `analytic_distribution` only on `purchase.order.line`.
+
+HR/Time Off (`hr.leave`) renamed fields — see `references/odoo-18-hr-overtime.md`.
 
 See `references/odoo-18-field-schemas.md` for full schema. See `references/moqtana-server-topology.md` for the Moqtana droplet ports (NPM :80/:81, Odoo :8069) and the "Default Site" diagnosis. See `references/odoo-api-key-management.md` for API key renewal.
 

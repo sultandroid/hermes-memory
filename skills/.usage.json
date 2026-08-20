@@ -472,12 +472,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-08-19T04:13:01.800092+00:00",
+    "last_used_at": "2026-08-20T04:00:15.355747+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 58,
+    "use_count": 59,
     "view_count": 20
   },
   "computer-use": {
@@ -1654,14 +1654,14 @@
     "archived_at": null,
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-19T05:21:56.401020+00:00",
-    "last_used_at": "2026-08-19T05:21:37.016444+00:00",
-    "last_viewed_at": "2026-08-19T05:21:37.014129+00:00",
-    "patch_count": 265,
+    "last_patched_at": "2026-08-20T03:29:16.984007+00:00",
+    "last_used_at": "2026-08-20T03:29:11.416278+00:00",
+    "last_viewed_at": "2026-08-20T03:29:11.414092+00:00",
+    "patch_count": 270,
     "pinned": false,
     "state": "active",
-    "use_count": 417,
-    "view_count": 417
+    "use_count": 421,
+    "view_count": 421
   },
   "odoo-bulk-audit": {
     "archived_at": null,
@@ -1837,12 +1837,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-18T08:34:19.099627+00:00",
-    "last_used_at": "2026-08-19T03:14:06.911515+00:00",
+    "last_used_at": "2026-08-20T03:00:48.933292+00:00",
     "last_viewed_at": "2026-08-18T09:01:25.289392+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 774,
+    "use_count": 775,
     "view_count": 477
   },
   "p5js": {
