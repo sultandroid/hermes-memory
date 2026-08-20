@@ -3007,13 +3007,13 @@
     "created_at": "2026-07-02T20:47:21.218074+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-12T22:51:35.558623+00:00",
-    "last_used_at": "2026-08-04T11:14:58.478862+00:00",
-    "last_viewed_at": "2026-08-04T11:14:58.472398+00:00",
+    "last_used_at": "2026-08-20T05:03:35.294072+00:00",
+    "last_viewed_at": "2026-08-20T05:03:35.290948+00:00",
     "patch_count": 12,
     "pinned": false,
     "state": "active",
-    "use_count": 21,
-    "view_count": 21
+    "use_count": 22,
+    "view_count": 22
   },
   "submittal-register-management": {
     "archived_at": null,
