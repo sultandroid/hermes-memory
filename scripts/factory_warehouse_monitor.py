@@ -27,7 +27,23 @@ from datetime import datetime, timedelta
 ODOO_URL = os.environ.get('ODOO_URL', 'https://samayainv.odoo.com')
 ODOO_DB = os.environ.get('ODOO_DB', 'peerless-tech-samaya-18-0-18447146')
 ODOO_USER = os.environ.get('ODOO_USER', 'sultan@samayainvest.com')
-ODOO_KEY = os.environ.get('ODOO_API_KEY', '')
+
+def _load_api_key():
+    """Load ODOO_API_KEY from ~/.config/samaya/odoo.env (cron has no env vars)."""
+    key = os.environ.get('ODOO_API_KEY', '')
+    if key:
+        return key
+    env_path = os.path.expanduser('~/.config/samaya/odoo.env')
+    try:
+        with open(env_path) as f:
+            for line in f:
+                if line.startswith('ODOO_API_KEY='):
+                    return line.split('=', 1)[1].strip()
+    except OSError:
+        pass
+    return ''
+
+ODOO_KEY = _load_api_key()
 
 FACTORY_PROJECT_ID = 244
 FACTORY_WAREHOUSE_LOCATION_ID = 45  # Physical Locations/Factory

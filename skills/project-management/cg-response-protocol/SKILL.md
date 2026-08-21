@@ -473,6 +473,23 @@ Keep the email thread showing:
 | C:Resubmit | CG returned with comments, blocked until resubmission | Yellow + "BLOCKED" prefix |
 | Deemed Approved | CG did not respond within review period | Green (same as Approved) |
 
+### Code Semantics for Automated Status Scripts — CRITICAL
+
+When any cron/script counts submittal or design-tracker rows by CG status code, **Code-C and Code-D are NEVER "done"**:
+
+| Code | Meaning | In an automation "done" bucket? |
+|------|---------|--------------------------------|
+| **Code-A / Code-B** | Approved / Approved with comments | ✅ YES — the only codes that count as complete |
+| **Code-C** | Revise & Resubmit (CG returned with comments) | ❌ NO — open work, must surface |
+| **Code-D** | Disapproved / Rejected | ❌ NO — must surface |
+
+**Worked failure (Aseer, 20-Aug-2026):** `scripts/design_tracker_overdue.py` had `"code-c"` and `"code-d"` inside its `DONE_STATUS` set. The daily cron (`design-tracker-daily-status`) therefore reported "Architecture: Done 272" when 62 rows were actually Code-C, and "Mechanical: Done 5" all of which were Code-C. The misleading summary hid genuine resubmission work. Fix (issue sultandroid/aseer-museum-pm#269):
+1. Remove `code-c` / `code-d` from the done set; keep only `code-a`/`code-b`/`approved`/`submitted`/`closed`.
+2. Add a **Code-C/Revise** bucket and a **Rejected** bucket so those rows surface in the report instead of vanishing into "Done".
+3. When cross-checking a report against a register, never trust the summary — re-read the raw sheet columns and confirm which **file** the script actually parsed.
+
+**Pitfall — stale source beats fresh register.** The status script's `find_latest_xlsx()` scans `~/.hermes/cache` then `01_Registers` for the newest `.xlsx`, but a CG-issued tracker can sit stale on disk for weeks. The verified `design_phase_deliverables_tracker.md` (rebuilt from the dated CG xlsx, e.g. `..._12-08-2026.xlsx`) is frequently AHEAD of the xlsx sitting in `01_Registers` — CG approved Code-C items that the stale xlsx still shows as Code-C. Before quoting "N overdue / N Code-C" in a status report, cross-check the md register or the actual dated CG source; if the xlsx mtime predates the md `last_updated`, treat the md as more current. Never label stale xlsx numbers as today's truth.
+
 ### CRS Triage — Filtering Comments Before Forwarding to Designer
 
 ### Recurring Pattern: Resubmitting Without Closing CRS Comments
