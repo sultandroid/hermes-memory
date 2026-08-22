@@ -382,6 +382,8 @@ The user requires that every email scan **extract and READ the actual attachment
 
 **CG response "See attached comments sheet" pattern:** A CG response email may return a single PDF whose first page is the Document Submittal (DS) form showing only "See attached comments sheet" or "See attached." The actual reviewer comments are on **later pages of the same PDF** (often page 2: a `CG comments:` block with numbered items, plus reviewer name/signature lines like "Senior Architecture Engineer" / "CG Project Director"). Do NOT conclude the comments are missing or a separate attachment — run `pdftotext -layout` on the whole file and read past the DS form. Example (2026-08-17, ZD-0109): email preview + DS page 1 said only "B - Approved with Comments"; the 4 substantive comments (structural coordination, accessible routes, G5 Making Space, Main Entrance GA updates) and reviewers (Maged Zamzam / Mansour Alrezeni) were on page 2.
 
+**Pitfall — CG Code C comments may be a CRS sheet in `.xlsx`, not a PDF.** The DS form page may say "Follow the attached CRS sheet" and the actual numbered reviewer comments live in an attached **Excel Comments Resolution Sheet (CRS)**, not in the PDF. Extract the `.xlsx` alongside the PDF and read it with `openpyxl` (iterate `ws.iter_rows(values_only=True)`, print non-empty cells). The CRS sheet has a `Reviewer Comment` column, a `Code` column (A/B/C/D/F per row), and a reviewer name/position/date block at the bottom. Example (2026-08-18, 1E0-1G-0004): DS page 1 said only "Follow the attached CRS sheet"; the 15 comments (BMR Designer role, CG logo, reference drawings, DMP adherence, LSZH cables, separate AV DBs, etc.) were all in the attached `..._1G-0004.xlsx` CRS sheet by Mohamed Elbaz. Always extract BOTH the PDF and any `.xlsx` attachment from a Code C email — the code alone and the DS page are insufficient.
+
 **CG remark capture format for registers:** When logging a Code C/B, include a `**CG comments (N):**` block in the register row enumerating each numbered remark verbatim (or closely paraphrased), and note the reviewer(s). This is what makes the register actionable for the resubmission.
 
 ### CG Deadline Assessment — "Possible or Not" Verdict Style
@@ -928,6 +930,8 @@ For each CG response PDF extracted, create a structured MD summary alongside it 
 
 **Pitfall — `patch replace_all=true` can create duplicate rows.** When `replace_all=true` matches the same old_string in multiple locations (e.g. a row that appears in both a `||`-prefixed and `|||`-prefixed section), it replaces ALL occurrences, creating duplicate rows. After a `replace_all` operation, always verify the file for duplicates and deduplicate if needed. Use a Python one-liner via terminal to remove exact duplicate lines:
 
+**Pitfall — `patch` can CORRUPT the pipe-nesting prefix on the anchor row when inserting a new row.** When you use `patch` to insert a new register row by replacing an existing anchor row with `anchor + newline + new_row`, the tool sometimes rewrites the anchor's leading `|`-prefix (e.g. `|||` → `|||||` or `|` → `||`), silently changing the row's nesting level in the markdown table. This happened 4× in one session (2026-08-22) on `submittal_register.md` and `sor_register.md` — each insert shifted the anchor row's pipe count, requiring a follow-up `patch` to restore it. **Rule: after every row-insert `patch`, re-read the anchor line and verify its leading pipe count is unchanged; if it drifted, fix it back immediately.** The pipe count encodes the row's section nesting — a wrong count breaks the register's table structure even though the diff looks clean. Prefer the Python insert-after-FIRST-occurrence approach (below) for appends to avoid this entirely.
+
 ```bash
 python3 -c "
 with open('path/to/register.md', 'r') as f:
@@ -1159,6 +1163,7 @@ tesseract /tmp/pg-N.jpg - 2>/dev/null | grep -iE "SAR|fee|payment|%|total|milest
 - `references/email-thread-analysis.md`
 - `references/cron-24h-email-scan.md` — cron scan pattern, dedup, multi-project reporting, iCloud EDEADLK workarounds
 - `references/olk15-attachment-parsing.md`
+- `references/olk15-attachment-locate-by-content.md` — find a specific `.olk15MsgAttachment` by content (random GUID filename) via `grep -E` on a unique doc-ref substring + `-newermt` bound, then base64-decode from the `JVBERi0` (`%PDF-`) marker; for when AppleScript `save` fails
 - `references/aconex-email-patterns.md`
 - `references/aconex-register-update-workflow.md` — Aconex transmittal → submittal register dedup workflow (cron-safe, pipe-alignment pitfalls)
 - `references/email-to-submission-plan.md`
@@ -1167,7 +1172,7 @@ tesseract /tmp/pg-N.jpg - 2>/dev/null | grep -iE "SAR|fee|payment|%|total|milest
 - `references/email-chain-tracing.md`
 - `references/cg-email-triage.md`
 - `references/cg-correspondence-analysis.md`
-- `references/specialist-delay-assessment.md` — identifying which design specialists are genuinely late: cross-ref vendor-domain emails + Design Phase Deliverables Tracker xlsx + repo registers; distinguish technical vs procurement vs client-blocked delay; pitfalls (Landscape "not appointed" vs "identified-not-appointed", Acoustic "PQs under review" vs "contract already signed")
+- `references/specialist-delay-assessment.md` — identifying which design specialists are genuinely late: cross-ref vendor-domain emails + Design Phase Deliverables Tracker xlsx + repo registers; distinguish technical vs procurement vs client-blocked delay; pitfalls (Landscape "not appointed" vs "identified-not-appointed", Acoustic "PQs under review" vs "contract already signed"); ALSO the drafting-email-to-PM variant — verify live contracting status from Outlook before listing design risks (MEP execution contractor = the true gap vs advanced MEP design; correct specialist name is TLC not "TSC"; acoustic/ICT already signed)
 - `references/contract-review-from-email-attachment.md`
 - `references/onedrive-edeadlk.md`
 - `references/icloud-edeadlk-workaround.md`

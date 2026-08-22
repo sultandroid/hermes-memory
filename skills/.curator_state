@@ -1,9 +1,9 @@
 {
-  "last_report_path": "/Users/mohamedessa/.hermes/logs/curator/20260814-184501",
-  "last_run_at": "2026-08-14T18:45:01.028297+00:00",
-  "last_run_duration_seconds": 1.347175,
-  "last_run_summary": "auto: 7 marked stale; llm: skipped (consolidation off)",
+  "last_report_path": "/Users/mohamedessa/.hermes/logs/curator/20260821-201605",
+  "last_run_at": "2026-08-21T20:16:05.175481+00:00",
+  "last_run_duration_seconds": 1.068548,
+  "last_run_summary": "auto: 4 marked stale, 1 reactivated; llm: skipped (consolidation off)",
   "last_run_summary_shown_at": "2026-07-16T20:56:43.566923+00:00",
   "paused": false,
-  "run_count": 11
+  "run_count": 12
 }

@@ -222,7 +222,7 @@ sc(ws5, ref_row+2, 1,
     f'صبا نجد: Statement balance = 158,574.27 SAR | Odoo Factory POs total = {saba_odo_total:,.2f} SAR ({len(saba)} POs)',
     bfont, wf)
 
-out = '/Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Orders/2026/0000 اداريات/00 تقارير الاعمال/Samaya_Factory_Cashout_Report_Updated.xlsx'
+out = '/tmp/Samaya_Factory_Cashout_Report_Updated.xlsx'
 wb.save(out)
 print(f'\nSaved: {out}', file=sys.stderr)
 print(f'\n=== FINAL REPORT ===')

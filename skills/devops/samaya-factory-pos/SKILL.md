@@ -225,7 +225,17 @@ The cron job is named "Factory PO Daily Update" and delivers to `all` channels.
 **Timeout notes (running manually):**
 - `new_pos_last_3_days.py` — fast, ~10s
 - `update_workshop_tracker.py` — **slowest**, can take 120-300s due to Odoo chatter reads on each PO. Set terminal timeout >= 300 when running interactively.
-- `build_cashout_report.py` — **depends on limit setting.** With `limit=200`: ~10-30s. With `limit=2000` (needed for full scan of 268 Factory POs): can take 120-300s because of per-PO `account.move.read()` bill lookups. Set timeout >= 300 for full scans.
+- `build_cashout_report.py` — **defaults on limit.** With `limit=200`: ~10-30s. With `limit=2000` (needed for full scan of 268 Factory POs): can take 120-300s because of per-PO `account.move.read()` bill lookups. Set timeout >= 300 for full scans.
+
+### OneDrive save failure (critical for cron — 2026-08-21)
+
+The scripts hard-code OneDrive output paths and call `wb.save(out)` directly. When OneDrive's File Provider kernel lock is active (persistent EDEADLK), `wb.save()` crashes with `OSError: [Errno 11] Resource deadlock avoided` **AFTER the Odoo data was fully computed** — the numbers print to stdout but the file is never written. `update_workshop_tracker.py` fails even earlier: it cannot even `load_workbook` the source tracker from the locked OneDrive path.
+
+**Recovery pattern (do NOT rerun blindly into the same crash):**
+1. Let the scripts print their computed totals (they reach `wb.save()` only after computing). Capture those numbers — they are the day's report.
+2. Patch the script's `out = ...` line to a `/tmp` path (e.g. `/tmp/Samaya_Factory_Cashout_Report_Updated.xlsx`), run again → it saves cleanly. Verify with openpyxl `load_workbook` that the workbook is valid.
+3. One attempt to copy back to the OneDrive path. If it fails with EDEADLK, `sleep 30` and retry once. If still locked, leave the file at `/tmp`, tell the user to drag it into the target folder via Finder, or note that a **Mac reboot** clears the kernel File Provider lock (see `macos-onedrive-recovery` skill — persistent EDEADLK, `brctl status` shows `SYNC DISABLED`). `cp`, `cp -c`, `ditto`, `dd`, `python open()`, and Finder `duplicate` all fail while it's active; only reboot reliably clears it.
+4. **`update_workshop_tracker.py` reads its source from OneDrive** — if that source file is locked, the tracker update cannot run at all this cycle. Skip it, report the tracker as blocked, and flag for a reboot + rerun. Do not fabricate a tracker update from stale data.
 
 ## New POs Detection
 

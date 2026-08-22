@@ -478,7 +478,29 @@ Return a compact table:
 
 - `samaya-docx-template` — DOCX generation with SamayaDoc template
 
-## Document pack for contract drafting (`08_Contract_Drafting/`)
+## Domain: Quotation-request package readiness check
+
+When the user wants to send a subcontractor folder to a new bidder (or a second bidder) for a **quotation**, do a completeness check BEFORE preparing the send. A folder holding only PQs + the incumbent's own proposal is usually NOT sufficient — a bidder cannot price a scope without the technical reference set.
+
+### Check list — "is this folder complete enough to request a quotation?"
+
+| Required for a usable bid package | Where it lives | If empty |
+|---|---|---|
+| ER / SOW (contract requirements baseline) | `03_Specifications_and_Standards/` or `Employer's Requirements Documents+ SOW/` | ❌ bidder can't see what they must comply with |
+| Scoping / reference drawings (existing + new-scope layouts) | `02_Reference_Drawings/`, `New Scoping Architectural Drawing/`, `existing drawing/` | ❌ bidder can't price dimensions/quantities |
+| RVT / model (if the design is model-based) | `RVT/` | ❌ bidder can't see the actual geometry |
+| BOQ / quantity schedule | `01_Schedule_and_BOQ/` | ⚠️ needed for build/install price, not design-only |
+| Prequalification of the candidate | `09_Prequalification/` | ⚠️ for tracking, not needed to price |
+
+**Pitfall — empty placeholder subfolders ≠ truly-empty.** On OneDrive files-on-demand, a folder that shows several subdirectories with 0 files each is usually **un-hydrated stubs**, not genuinely absent content. Judge completeness by the non-empty files you can actually read, and tell the user "N folders are empty placeholders (may be on-demand stubs or truly missing) — verify via web UI" rather than asserting the content is definitively gone. See `macos-onedrive-recovery` for the EDEADLK/stub distinction.
+
+### Pitfall — the ambiguous scope line-item must be resolved BEFORE sending the bid package
+
+A package sent with an ambiguous line-item (e.g. "Revit model updates" listed in the contract scope but excluded in the proposal) lets the bidder quote the SAME ambiguity to their own advantage — a seller can withdraw an item from scope **without lowering the price**. On the Aseer Museum landscape case, TLC priced Revit inside the 175k design fee, then excluded it at contract-signing without a price cut; the PM was left demanding "a clear SOW duly signed" to force the point. When assembling any quotation-request package, pin the disputed line-item explicitly (included vs excluded) in the SOW text before sending — otherwise the bidder and the reviewer are negotiating two different documents. A comparison/second-opinion bidder (e.g. a "personal-level" price-check to pressure the incumbent) must receive the same explicit SOW so the comparison is apples-to-apples.
+
+See `references/landscape-bid-package-readiness.md` for the worked example (TLC contracting dispute + Nawaf second-bid request).
+
+## Document status for contract drafting (`08_Contract_Drafting/`)
 
 When preparing to send a subcontractor their SOW, DMP, and CG comments for confirmation and contract draft review, create an `08_Contract_Drafting/` folder under the subcontractor's directory. Populate with:
 
