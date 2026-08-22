@@ -35,6 +35,19 @@ The subcontractor's response workbook is NOT the standard one-row-per-comment CR
 - Code C cells: red fill `#B01E2F`, white bold. Status: Closed=green `#C6EFCE`; Open=red `#FFC7CE`.
 - Write values BEFORE merged-cell handling; set col widths + row heights for readability.
 
+## Rev 001 compliance status (audited 22-Aug-2026) — predicted Code C
+Rev 001 (dates 05-08 to 07-08/2026) was checked against the Code D rejection (Venugopal, 02-Aug-2026). Result: **not ready; forecast Code C with 4+ comments still open.** Only comments 6 (proper format) and 7 (signed/stamped) are clean.
+
+| CG comment | Status in Rev 001 | Evidence |
+|---|---|---|
+| 1. Control Hierarchy project-specific + interface matrix | PARTIAL | Names Q-SYS Core 510i/TSC-70-G3 + 5" zone panels; BMS still "if required"; no interface responsibility matrix |
+| 2. Network reconcile **Zyxel GS2220-50HP**, port count, PoE budget, rack alloc, VLAN-to-device schedule, traffic segregation | **NOT COMPLIED** | `grep -i "Zyxel\|GS2220"` on the PDF = **0 hits**. VLAN/IP/QoS added but no switch model, no port count, no PoE budget, no rack allocation, no VLAN-to-device schedule |
+| 3. Control UI & Fault Monitoring doc | **NOT COMPLIED** | **Document does not exist in package.** CMS (BrightSign/WATCHOUT) doc is content ops, not a control-UI/fault-monitoring submission. No alarm matrix, no Mute-All admin protection, no PAVA/life-safety statement |
+| 4. Key Control — sequence of op, I/O/command list, protocol schedule, exception handling, testing | PARTIAL | Numbering gap (Item 8) fixed, but content still generic capability list; none of the 5 demanded elements added |
+| 5. UPS — rack-by-rack equipment schedule, mfr power data, battery calc, one-line | PARTIAL | Now shows 8,268W/25% margin/10-15kVA/PF>=0.9/15-30min battery; but no rack-by-rack schedule, no mfr power data, no battery calc; one-line explicitly deferred to electrical team |
+
+Readable package location also moved/changed this session: the `Rev 000/AV Package Part II Rev. 001/` folder under the project submittal path (`02_Submittals/3.1_DD Doucments AV/Part 02/`) mirrors the Micro volume copy — use whichever is mounted/readable. The AV submittal register (`04_Docs/09_Registers/03_AV_Submittal_Register/AV_Submittal_Register.xlsx`) tracks SOW deliverables only (AV-016/017/018/019 all still `P` at the 50% gate) — it does NOT record per-package CG response codes, so cross-check the actual rejection PDF, not the register.
+
 ## Pitfalls
 - **CDE "ExportDocs" export only includes first 100 of N results.** When the user sends an Aconex/CDE `ExportDocs-*.xlsx`, the AV/Rawasin files may not be in the visible 100 (often all weekly/daily reports, meeting minutes, demolition drawings). Do NOT conclude files are missing — search **Adel's bank** (`20- DDD/` DDD folder) for the doc ref instead.
 - **OneDrive stubs + EDEADLK:** reading files under `Adel Darwish's files - 01- Execution Documents/` fails (`Resource deadlock avoided` on cp, `File is not a zip file` on openpyxl). Use the `/Volumes/MIcro/Download/...` copy for actual parsing.

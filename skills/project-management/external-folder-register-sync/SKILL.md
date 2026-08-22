@@ -116,6 +116,10 @@ ls -lt "/path/to/subfolder/" 2>/dev/null || echo "FOLDER NOT FOUND"
 
 ### 5. Update registers
 
+For the master Aseer `RFI.xlsx` (Workshop No. 1 coordination log), see
+`references/aseer-rfi-workshop-register-structure.md` for its discipline-block layout,
+response-column semantics, and how to place a new coordination RFI.
+
 For each genuinely new item:
 
 - **RFI register**: Add new TQ rows, update status from "Open" to "CG response received" when Approval subfolder appears

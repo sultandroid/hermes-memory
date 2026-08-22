@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-22 09:00:34
+Generated: 2026-08-22 16:00:18
 
 ---
 
@@ -17,7 +17,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
+Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview. Formal SOW/proposal docs: verify scope against actual source docs (offers/contracts), not summaries; never reference internal .md/repo/tracker paths (contract-facing only); supplier-agnostic templates, not firm-specific.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
@@ -40,11 +40,10 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
-CRS template: samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
-Aseer workshops: curator Jack Persekian decides object display (G11 stone vertical, both faces); Stéphane Pennec challenges materials (Corian poor for rotating plinths). User feeds points live.
+Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
+Aseer workshops: curator Jack Persekian decides object display; Stéphane Pennec challenges materials.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -59,6 +58,7 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
+- Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
 
 ## Key People
 
@@ -89,7 +89,7 @@ Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/
 Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
 Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
 Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
-Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
+Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -108,7 +108,7 @@ task_group: Hermes Agent configuration
 
 ## Contracts & Documents
 
-Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
+Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
 MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
 Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview. Formal SOW/proposal docs: verify scope against actual source docs (offers/contracts), not summaries; never reference internal .md/repo/tracker paths (contract-facing only); supplier-agnostic templates, not firm-specific.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.

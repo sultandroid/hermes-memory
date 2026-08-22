@@ -245,6 +245,9 @@ WHERE m.Record_RecordID = <ID>;
 4. If the email's routing doesn't match the plan, flag it — but first verify facts from the DB, not from preview text
 
 See `references/cg-correspondence-analysis.md` for cross-referencing CG requests against the approved Communication Plan.
+See `references/rfi-register-prior-correspondence-check.md` for the "does this RFI already exist / have prior correspondence?" dedup workflow — search the register FIRST (entries often already present, e.g. `RFI.xlsx` rows 566-569 under `Coordination - ...` blocks, frequently with empty No./sender/response columns), then Outlook subject → preview/body → related active packages (Rigging series, AV Package); place pure interface/coordination queries in a `Coordination - <topic>` block, NOT the `Showcase` block; the RFI Tracker (`A2742-10.05-004 RFI Traker.docx`) is often OneDrive EDEADLK-locked — note "unreadable" not "absent".
+See `references/vendor-reply-drafting.md` for the "what's the reply to X / draft the reply to [vendor]" workflow — check Sent Items for an existing reply first, read the full thread body, then draft in the user's preferred format (manual-copy text, numbered list, flag open decisions).
+See `references/commercial-counter-schedule-drafting.md` for drafting a reply to a vendor COMMERCIAL email (payment schedule, fee proposal, resolution request) — check the repo for the already-agreed position (GitHub issue comments, `03_Plans/05_Cost/REVISED_*_<VENDOR>_<date>.md` formal letters, correspondence register) BEFORE drafting; verify the schedule sums to the outstanding balance; check the submittal register before conceding "stalled / no input" claims; propagate mid-draft scope changes everywhere.
 See `references/forwarded-document-analysis.md` for the thread-first workflow when the user forwards a document.
 See `references/cg-schedule-extraction.md` for extracting CG consultant schedule requirements from email chains.
 See `references/sender-discovery-patterns.md` for the iterative workflow to find the correct sender name format when you don't know it.
@@ -801,6 +804,39 @@ Use `make new outgoing message` (NOT `make new draft message`).
 **User preference: list format over tables in email drafts.** Use a simple numbered list (1. 2. 3.) — not an HTML table. Reserve tables for Excel deliverables only.
 
 **User preference: concise email drafts — no preamble.** Present only the email body text. No introductory explanation, no commentary.
+
+### Pitfall: adding recipients to an outgoing message FAILS on Outlook 16.90+ (verified 2026-08-22)
+
+`make new recipient at end of recipients of <msg> with properties {...}` fails for **every** key tried, all with `-1700 Can't make X into type properties of recipient`:
+
+```applescript
+-- ALL FAIL with -1700 on 16.90+:
+make new recipient at end of recipients of m with properties {address:"x@y.com"}
+make new recipient at end of recipients of m with properties {name:"X"}
+make new recipient at end of recipients of m with properties {email address:"x@y.com"}
+make new recipient at end of to recipients of m with properties {address:"x@y.com", name:"X"}
+make new recipient at end of recipients of m with properties {email address:{address:"x@y.com", name:"X"}}
+make new recipient with properties {address:"x@y.com"}
+```
+
+Also fails: `set email address of r to "x@y.com"` (`Can't make "x@y.com" into type email address`), `make new email address with properties {...}` (-2710), and creating a bare recipient then assigning fields (bare `make new recipient` errors with `-2710 Cannot create a recipient without a name or e-mail address`). Even `properties of m` on the new draft fails.
+
+**Subject+body in a single `make new outgoing message with properties {subject:..., body:...}` also fails** with `-1700 ... into type properties of outgoing message` when body is a long multi-line string. Creating with just `{subject:...}` works reliably and opens the compose window — but you still cannot attach recipients.
+
+**Gotcha — the draft is still created even when body/recipient steps fail.** Partial drafts (subject set, no recipients) land in the `Placeholder_Drafts_Placeholder` folder, NOT the `Drafts` folder. They show `Message_TimeReceived = 2001-01-01 03:00` in SQLite (never saved-to-send). Each failed attempt silently leaves an orphan draft — delete them to avoid accumulating clutter:
+
+```applescript
+tell application "Microsoft Outlook"
+	repeat with mid in {51261,51262,51263}   -- draft ids to purge
+		try
+			delete message id mid
+		end try
+	end repeat
+	return "done"
+end tell
+```
+
+**Reliable path:** Do NOT burn cycles iterating AppleScript recipient syntax (it is genuinely blocked on 16.90+). Create the draft with the subject only to open the compose window, then hand the user the full body text + To/CC addresses to paste — which already matches the user preference above (manual copy over automated drafts). Look up the confirmed recipient addresses from SQLite (`Message_SenderAddressList` for a known person, or `Message_ToRecipientAddressList`/`Message_CCRecipientAddressList` on a related email) so the user can paste them. This is the pragmatic resolution of an AppleScript-dictionary regression, not a workaround to keep hunting for.
 
 ## Batch Email Processing with Sub-Agents
 

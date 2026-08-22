@@ -4,9 +4,7 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 §
 OneDrive EDEADLK = copy to Micro volume first. .olk15Msg base64 after 'base64' header.
 §
-CRS template: samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx
-§
-Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel.
+Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
 §
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 §
@@ -26,6 +24,8 @@ Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (
 §
 Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
 §
-Aseer risk system: risks.json = SoT → edit JSON then risk_sync.py+build_risk.py (never edit risk_register.md directly). Excel snapshots gitignored. 'internal discussion'≠formal decision: internal→action_items, formal→decisions_log. kimi CLI = helper agent.
+Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 §
-Aseer workshops: curator Jack Persekian decides object display (G11 stone vertical, both faces); Stéphane Pennec challenges materials (Corian poor for rotating plinths). User feeds points live.
+Aseer workshops: curator Jack Persekian decides object display; Stéphane Pennec challenges materials.
+§
+RFI master: 04_Docs/04_RFIs/RFI.xlsx ('Coordination' rows 566-69). Before logging a new RFI, cross-check repo rfi_register.md+05_RFIs/+05_Comms/drafts (TQ-0027..39) for prior refs.

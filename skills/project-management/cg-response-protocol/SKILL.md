@@ -494,6 +494,21 @@ When any cron/script counts submittal or design-tracker rows by CG status code, 
 
 ### Recurring Pattern: Resubmitting Without Closing CRS Comments
 
+**Pre-submission compliance audit — check a Rev against its OWN rejection before submitting.** When the user asks "does this rev comply with all the comments", do NOT read the cover letter or the CRS. Audit the revised documents against the verbatim Code C/D rejection, comment by comment:
+
+1. **Get the rejection verbatim.** The resubmission cover PDF usually embeds the full Code C/D comment block (CG reviewer + dates). Extract it with `pdftotext -layout` and build the comment list from it — do not rely on the CRS or a summary. If the rejection names specific files (e.g. `AV Network Architecture...pdf`), map each comment to the actual file in the rev folder.
+2. **Grep the revised docs for the named requirements**, not the whole text. Every CG demand that names a concrete item (switch model, device, port count, schedule) must appear literally in the revised document.
+   - Example hit (AV Package Part II, 1G-0002 Rev 001): `pdftotext "AV Network Architecture...pdf" - | grep -i "Zyxel\|GS2220"` returned 0 hits — the switch CG explicitly required to be reconciled was entirely absent from the "revised" doc. The author updated the narrative but never put the required model in. One grep caught a silent gap.
+3. **Confirm demanded documents exist at all.** Sometimes a deliverable CG named (e.g. `Control System User Interface & Fault Monitoring.pdf`) simply is not in the package. `find -iname "*user*interface*" -o -iname "*fault*"` before claiming it was submitted.
+4. **Classify each comment**: COMPLIED / PARTIAL / NOT-COMPLIED. A comment is COMPLIED only if the concrete demanded artifact is present AND named in the text. "Added a VLAN scheme but no port count/PoE/rack-allocation" = PARTIAL, not complied.
+5. **Forecast the CG verdict from the compliance profile, not optimism:**
+   - If docs moved off pure-generic (named hardware, some schedules) but core engineering demands are still missing -> forecast **C** (not D), because the package is no longer "generic guidance."
+   - The killer gap that forces C is usually a document CG explicitly asked for that is entirely absent (e.g. the control-UI/fault-monitoring doc) plus an explicitly-named item that never appears (Zyxel switch).
+   - Only procedural comments (proper format, signed/stamped) are reliably closed in a Rev. Expect the C rejection to re-quote the still-open comment, not re-reason.
+6. **Timing**: CG review window ~14 working days; a partial Rev returns C with the same comments still Open — a third round. Do not submit a package with PARTIAL/NOT-COMPLIED blocks open; route back to the specialist (Rawasin) to supply the actual engineered deliverables.
+
+### Recurring Pattern: Resubmitting Without Closing CRS Comments
+
 This is a documented recurring issue on this project. Instances:
 - Structural DD (1C0-1G-0001) — Code C twice, 15 comments all Open both rounds
 - PEP (ZD-0086) — Code C twice, 26 comments all Open both rounds

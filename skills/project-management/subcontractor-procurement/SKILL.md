@@ -286,6 +286,39 @@ Letter of Tender template with: total price fields (excl. VAT, VAT, incl. VAT), 
 - **Organize with numbered folders**: After copying files, organize them into `01_BOQ/`, `02_Drawings/`, `03_Specifications/`, `04_Submittals/`, `05_Cost_Estimate/` (or similar numbered categories). Flat file dumps in the root of Tinder Doc/ will be rejected as unorganized.
 - **Fix double-nesting**: When moving folders like `Specifications/` or `Submittals/` into numbered folders, check for `03_Specifications/Specifications/` double-nesting and flatten it.
 
+## Payment Schedule Negotiation (BIM / Consultancy / Design Subcontractors)
+
+When a subcontractor proposes **calendar-date instalments** (e.g. "3 × USD 4,000 on 31-Aug / 30-Sep / 31-Oct") rather than deliverable-linked milestones, counter with a schedule tied to **accepted production deliverables**, not dates. This is the standard pattern for BIM, design, and consultancy subs.
+
+### BIM-specific milestone triggers
+
+| Instalment | Trigger (Delivery + Acceptance) |
+|---|---|
+| Advance / Mobilization | On acceptance of revised schedule (concession for carried team) |
+| 1st | Federated LOD 400 model (Arch + Struct + Mech/duct + Elec), free of critical clashes per BEP CL-01..05 |
+| 2nd | Clash Detection Report — critical clashes resolved & verified |
+| 3rd | 4D (schedule-linked) BIM — re-timed to precede project handover |
+| Final | LOD 500 As-Built + COBie dataset, handover-ready |
+
+### ⚠️ ARITHMETIC PITFALL — the counter-schedule MUST sum to the outstanding balance
+
+When you change one line (e.g. raise the final retention from USD 1,500 to USD 4,000) without rebalancing the others, the total drifts off the outstanding figure (e.g. 2,000+4,000+4,000+4,000 = 14,000 ≠ 13,500). **Always re-sum the table against the verified outstanding amount before sending.** The user caught this exact error in a real draft.
+
+**Verify the outstanding balance from the email thread, not memory.** Total contract − paid-to-date = outstanding. The vendor's own revised letter states the split — use it as the cross-check.
+
+### "Reserved resources / fair resolution" negotiation pattern
+
+When a vendor claims they carried a dedicated team through a stalled period and requests compensation:
+1. **Concede a small advance/mobilization line** (e.g. USD 1,500) paid on acceptance — recognises the carried team, shows good faith, and is the cheapest concession.
+2. **But counter the "no approvals from your side" claim** by citing the actual approved design input from the submittal register. Before drafting, check the register for approved (Code B / deemed approved) packages that provide the input the vendor claims is missing. Example: mechanical submittals (Plumbing 1M0-1G-0002 Code B, Fire Alarm & Suppression MEP-ZD-0067 Rev.03 Code B, HVAC deemed approved) were approved since early August — so the LOD 400 model could have been progressed immediately. This neutralises the reserved-period claim without conceding it.
+3. **Scope reduction as a lever** — offer to remove scope (e.g. architectural modelling, 5D cost BIM) and retain the vendor as a consultant for those areas only. Reduces their resource load and your cost, while keeping them engaged for the coordination-critical deliverables.
+
+### User style preference for these reply emails: keep it SIMPLE and direct
+
+The user repeatedly stripped verbose multi-part argumentative drafts down to the essentials. Structure the reply as: (1) the scope reduction / concession, (2) the agreed payment split as a table, (3) one line that the approved input is available now. Do NOT build a 5-part essay with "key changes vs your proposal" tables unless asked. Lead with what you're giving them, then the schedule, then the expectation.
+
+See `references/bim-payment-schedule-negotiation.md` for a full worked example (Radiance Group, Aseer Museum) with the exact counter-schedule, the arithmetic-drift pitfall, and the approved-input evidence pattern.
+
 ## Related Skills
 - `project-register-manager` — for register creation and management
 - `samaya-technical-office` — project context, folder structure, document conventions
