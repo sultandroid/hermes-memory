@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-23 09:00:34
+Generated: 2026-08-23 16:00:47
 
 ---
 
@@ -43,7 +43,6 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
-Aseer workshops: curator Jack Persekian decides object display; Stéphane Pennec challenges materials.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -59,12 +58,14 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
   - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
 - Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
+- Samaya profile audit, font-direction correction, and safe v4 rollback: v6, Tajawal, Amiri, use the font was in V4 in V6 not reverse, 0-byte placeholder
 
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
+User wants SIMPLE single-sheet Excel checklists for QA/QC pre-submission: full header (title/date), one section per submittal type, ☐/☑ checkbox + PASS/FAIL/NA dropdowns, any FAIL=do not submit. Lead with simple; detailed only if asked. openpyxl 3.1.5 lacks Checkbox form-control API — use ☐/☑ dropdown, not native checkboxes.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
@@ -81,14 +82,11 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 - **Ali Abdelrahman** (BIM Lead)
 - **Adel Darwish** (Project Director, Acting from 1-May-26)
 - **Mohamed Samir** (Construction Manager)
-- **Eng. Mohamed Sultan** (Samaya Technical Office Manager — handles day-to-day submittals, BIM docs, QC, registers)
 
 ## Agents & Tools
 
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
-Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
-Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -105,6 +103,8 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
  task_group: samaya_aseer_hermes
 task: inspect Hermes auth/config for Nous credential storage and prepare to add a user-supplied secret
 task_group: Hermes Agent configuration
+- when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
+- Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 
 ## Contracts & Documents
 

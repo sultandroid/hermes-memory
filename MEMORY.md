@@ -20,12 +20,8 @@ User expects proactive search of Outlook SQLite and OneDrive for source docs rat
 §
 Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
 §
-Moin El-Din (Odoo 2760) = maint supervisor + CNC op. CNC/Laser = workcenter 13 (FCNC).
-§
-Factory worker fingerprint/badge numbers NOT in Odoo hr.employee (badge_ids empty) — external attendance system.
-§
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 §
-Aseer workshops: curator Jack Persekian decides object display; Stéphane Pennec challenges materials.
-§
 RFI master: 04_Docs/04_RFIs/RFI.xlsx ('Coordination' rows 566-69). Before logging a new RFI, cross-check repo rfi_register.md+05_RFIs/+05_Comms/drafts (TQ-0027..39) for prior refs.
+§
+User wants SIMPLE single-sheet Excel checklists for QA/QC pre-submission: full header (title/date), one section per submittal type, ☐/☑ checkbox + PASS/FAIL/NA dropdowns, any FAIL=do not submit. Lead with simple; detailed only if asked. openpyxl 3.1.5 lacks Checkbox form-control API — use ☐/☑ dropdown, not native checkboxes.

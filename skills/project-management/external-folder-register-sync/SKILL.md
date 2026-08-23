@@ -131,6 +131,34 @@ For each genuinely new item:
 
 Always bump the `last_updated` field in the YAML frontmatter of every register you modify.
 
+## Pipeline-First Rule (user correction 2026-08-01)
+
+When the user says "update repo" after an email/scan batch, the **repo's own mandate** (AGENTS.md `Integrated Document-to-Register Pipeline`) expects you to run the intake pipeline first rather than hand-patching registers ad-hoc:
+
+```bash
+cd /Users/mohamedessa/aseer-museum-pm
+python3 scripts/document_intake.py --scan-dir 05_Comms     # emails/comms
+python3 scripts/document_intake.py --scan-dir 01_Registers  # existing register md
+```
+
+- `document_intake.py --incremental` does NOT exist — use `--scan-dir <dir>` or `--file <path>`.
+- The pipeline auto-classifies docs and updates registers, then tells you to run `full_sync_commit.py` for push/rebuild.
+- **Do NOT bypass the pipeline for straight register edits** — the user corrects ("follow repo instructions") when you patch registers manually instead. Register rows still need `last_updated` bumped in the YAML frontmatter of every register you touch.
+- The intake run mutates `.sync_state.json`, `06_Risk_System/webapp/src/index.html`, and compliance files — include these in your commit.
+
+## Git Push: post-commit hook hangs rebase (pitfall 2026-08-01)
+
+The repo has a `.git/hooks/post-commit` hook that auto-rebuilds register web apps. During `git rebase origin/main` the hook fires per commit and **hangs on an SSH deploy to samaya-factory.com** (timeout after 120s), leaving a stale `.git/rebase-merge` that blocks the next rebase. **Disable the hook for the rebase/push, then restore it:**
+
+```bash
+cd /Users/mohamedessa/aseer-museum-pm
+mv .git/hooks/post-commit .git/hooks/post-commit.bak
+git fetch origin && git rebase origin/main && git push origin main 2>&1
+mv .git/hooks/post-commit.bak .git/hooks/post-commit
+```
+
+If a rebase was already interrupted: `git rebase --abort; rm -rf .git/rebase-merge` before retrying. Check whether the hook is still present after recovery: `ls -la .git/hooks/post-commit`.
+
 ### 7. Daily Reports (04- Daily Report subfolder)
 
 The `04- Daily Report/` subfolder contains daily site reports in Arabic/English PDF format. These are **not registered in any repo register** — no daily report register exists.
@@ -244,3 +272,12 @@ OneDrive cloud-only files (0 blocks on disk) return "Resource deadlock avoided" 
 - **Script output truncation**: The script output can exceed 600K chars. Use `ls -ltR` on specific subfolders to get focused views rather than relying on the full script output.
 - **OneDrive deadlock on cloud-only files**: Files with 0 blocks on disk (cloud-only placeholders) cannot be read by any tool (`pdftotext`, `cp`, `head`, `python`) — they return "Resource deadlock avoided". The fix is to open each file individually with Preview (`open -a Preview "$file"`), wait 20s for hydration, then verify blocks > 0 with `stat -f "%b"`. Kill and restart OneDrive if Preview also fails.
 - **Daily report register**: When daily reports are found, create a new register at `01_Registers/daily_report_register.md` with YAML frontmatter, a table of all reports (date, report no, prepared by, key activities, manpower, issues), and a gap analysis section showing which months have reports and which are missing.
+- **OneDrive File Provider blocks ALL writes (distinct from read EDEADLK)**: The `onedrive-edeadlk` reference covers *reads* of cloud-only files. Separately, macOS OneDrive File Provider **rejects every programmatic write** into a synced folder with `Operation not permitted` (exit 1) — even after `killall OneDrive`, and even Finder AppleScript `duplicate`/`move` fail with `-8004`. `cp`, `mv`, `mkdir`, `touch`, `ditto`, `os.sendfile`, `Finder duplicate` all return `Operation not permitted` on CloudStorage paths. **There is no shell workaround — the ONLY reliable path is manual drag-and-drop in Finder.** When you must stage files for the user:
+  1. Build the organized folder structure in `/tmp/` or on the Micro volume (writable, same filesystem semantics).
+  2. Generate a `_FILE_MAPPING.csv`/`.md` listing each staged file → its OneDrive target folder.
+  3. `open` both the staging root and the OneDrive target folder in Finder, and tell the user to drag-drop each folder across.
+  4. Commit the mapping `.md` to the repo (a `.csv` is gitignored — use `.md` extension) so the placement intent is durable.
+  Verified 2026-08-01: 46 PQ files staged to `/tmp/filed_pq/PQ_Documents/` + `pq_attachment_mapping.md` because OneDrive rejected every write method. The Micro volume (`/Volumes/MIcro/Temp/`) is also write-enabled where the OneDrive path is not.
+- **Scrub declined-specialist names from ACTIVE files**: when a specialist declines and scope is reassigned (e.g. Lumotion → folded into Rawasin), the name must be removed from all active (non-archive) files — register rows, risk JSONs (`06_Risk_System/prr_risks.json`, `ddr_risks.json`, `risks.json`, `webapp/ddr/risks_ddr.json`), plan MDs, SOWs, trackers, scripts. Use a Python replace script over the file list; neutralize with a generic label ("the interactive specialist") rather than the firm name. Preserve `99_Archive/` (historical) untouched. Verify JSON still parses after replace. The user's instruction "don't [name] again anywhere" means grep the whole active tree and confirm zero hits.
+
+See `references/email-pq-to-register-workflow.md` for the full batch attachment → filing → register → knowledge-extraction recipe.

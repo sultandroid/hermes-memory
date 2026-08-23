@@ -166,10 +166,34 @@ emp_ids = models.execute_kw(db, uid, pw, "hr.employee", "search",
 |-------|------|-------|
 | `id` | int | Partner ID |
 | `name` | char | Partner name |
+| `parent_id` | many2one | `[id, 'Parent Company']` — set when this partner is a **child contact** under a company (e.g. an individual employee under their employer) |
+| `supplier_rank` | int | `>0` = vendor/supplier (has `supplier_rank`), `0` = not a vendor |
+| `email` | char | Contact email |
 
 **Known credit supplier IDs (Samaya Factory):**
 - Mada Aljezera: 2427
 - Saba Najad: 5603
+
+### PO lookup by a *person* — search the PARENT vendor, not the person
+
+An individual contact (e.g. **Dr. Waleed Salah**, BIM Manager, `parent_id` → **Radiance Group**) often carries NO purchase orders of their own — the POs are raised against the **parent company**. Querying `purchase.order` with `partner_id = <person_id>` returns `[]`. Pattern that works:
+
+```python
+# 1. Find the person; read parent_id to get the vendor company
+person = models.execute_kw(db, uid, pw, 'res.partner', 'search_read',
+    [[['name','ilike','Waleed']]],
+    {'fields':['id','name','email','parent_id','supplier_rank']})
+# -> parent_id: [6366, 'Radinance Group'], supplier_rank: 1
+
+# 2. Query POs under BOTH the person and the parent company (child inherits vendor status)
+pos = models.execute_kw(db, uid, pw, 'purchase.order', 'search_read',
+    [[['partner_id','in',[person_id, parent_company_id]]]],
+    {'fields':['id','name','partner_id','amount_total','state','invoice_status','project_id','date_order'], 'order':'create_date desc'})
+```
+
+**Lesson:** when the user asks to "open/see [person]'s purchase order page", resolve the person → parent company first, then list POs for `partner_id in [person, parent]`. Filter by `invoice_status='to invoice'` to find which PO is eligible for the next vendor bill. Report the Odoo hyperlink `{ODOO_BASE}/web#id=<po_id>&model=purchase.order` for the PO they want.
+
+**Field gotchas seen on Odoo 18:** `amount_to_invoice` does NOT exist on `purchase.order` (raises `Invalid field`). Use `invoice_status` + line-level `qty_invoiced`/`qty_received` instead.
 
 ## project.task
 
