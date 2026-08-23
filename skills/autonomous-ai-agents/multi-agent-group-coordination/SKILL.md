@@ -87,3 +87,7 @@ This skill covers **peer agents** in a shared chat — they are not under your c
 **When to load this skill:** You are in a Telegram group with other autonomous agents and need to coordinate, sync knowledge, or understand the group's interaction rules.
 
 **When NOT to load this skill:** You are delegating a task to a sub-labor (use `sub-labor-orchestrator` or `labor-clis` instead).
+
+## Sending a Message to the User's Telegram DM
+
+When the user asks to send a result to their Telegram from a CLI session, see `references/telegram-direct-send.md` — covers getting the bot token, finding the real chat ID from `state.db` (the config `home_channel` may be stale), using curl not Python urllib (macOS system Python raises an SSL cert error on api.telegram.org), and respecting the silent-in-group / DM-for-technical rule.

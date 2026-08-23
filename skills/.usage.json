@@ -121,13 +121,13 @@
     "created_at": "2026-06-07T09:16:51.782024+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-16T08:01:08.117349+00:00",
-    "last_used_at": "2026-08-23T08:09:19.072021+00:00",
-    "last_viewed_at": "2026-08-23T08:09:19.069651+00:00",
+    "last_used_at": "2026-08-23T14:34:17.906452+00:00",
+    "last_viewed_at": "2026-08-23T14:34:17.904213+00:00",
     "patch_count": 103,
     "pinned": false,
     "state": "active",
-    "use_count": 147,
-    "view_count": 147
+    "use_count": 149,
+    "view_count": 149
   },
   "aseer-email-routing": {
     "archived_at": null,
@@ -368,13 +368,13 @@
     "created_at": "2026-08-23T07:15:06.493168+00:00",
     "created_by": null,
     "last_patched_at": "2026-08-23T07:15:11.009469+00:00",
-    "last_used_at": null,
-    "last_viewed_at": null,
+    "last_used_at": "2026-08-23T14:18:51.792323+00:00",
+    "last_viewed_at": "2026-08-23T14:18:51.789554+00:00",
     "patch_count": 2,
     "pinned": false,
     "state": "active",
-    "use_count": 0,
-    "view_count": 0
+    "use_count": 1,
+    "view_count": 1
   },
   "ci-cd-automation": {
     "archived_at": null,
@@ -1070,13 +1070,13 @@
     "created_at": "2026-06-16T08:35:36.040705+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-08-21T03:55:25.279045+00:00",
-    "last_viewed_at": "2026-08-21T03:55:25.275496+00:00",
+    "last_used_at": "2026-08-23T14:16:15.633584+00:00",
+    "last_viewed_at": "2026-08-23T14:16:15.631269+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 45,
-    "view_count": 44
+    "use_count": 46,
+    "view_count": 45
   },
   "hermes-agent-skill-authoring": {
     "archived_at": null,
@@ -1576,14 +1576,14 @@
     "archived_at": null,
     "created_at": "2026-07-23T10:45:45.361558+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-23T11:08:34.852292+00:00",
-    "last_used_at": "2026-07-23T11:08:03.205962+00:00",
-    "last_viewed_at": "2026-07-23T11:08:03.204220+00:00",
-    "patch_count": 3,
+    "last_patched_at": "2026-08-23T14:19:30.437696+00:00",
+    "last_used_at": "2026-08-23T14:19:16.334406+00:00",
+    "last_viewed_at": "2026-08-23T14:19:16.331847+00:00",
+    "patch_count": 5,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "museum-project-management": {
     "archived_at": null,
@@ -2240,13 +2240,13 @@
     "created_at": "2026-06-13T03:30:03.427421+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-16T11:20:24.124763+00:00",
-    "last_used_at": "2026-08-16T11:20:17.957817+00:00",
-    "last_viewed_at": "2026-08-16T11:20:17.956015+00:00",
+    "last_used_at": "2026-08-23T14:13:08.805658+00:00",
+    "last_viewed_at": "2026-08-23T14:13:08.802157+00:00",
     "patch_count": 48,
     "pinned": false,
     "state": "active",
-    "use_count": 59,
-    "view_count": 59
+    "use_count": 60,
+    "view_count": 60
   },
   "project-status-publishing": {
     "archived_at": null,
@@ -2590,14 +2590,14 @@
     "archived_at": null,
     "created_at": "2026-07-18T05:04:44.087408+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-27T16:24:13.061927+00:00",
-    "last_used_at": "2026-08-23T07:15:45.948255+00:00",
-    "last_viewed_at": "2026-08-23T07:15:45.946342+00:00",
-    "patch_count": 51,
+    "last_patched_at": "2026-08-23T14:19:00.255508+00:00",
+    "last_used_at": "2026-08-23T14:18:32.907297+00:00",
+    "last_viewed_at": "2026-08-23T14:18:32.905135+00:00",
+    "patch_count": 53,
     "pinned": false,
     "state": "active",
-    "use_count": 65,
-    "view_count": 65
+    "use_count": 67,
+    "view_count": 67
   },
   "samaya-factory-deploy": {
     "archived_at": null,
@@ -2994,13 +2994,13 @@
     "created_at": "2026-07-21T16:08:39.514649+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-21T22:38:13.955094+00:00",
-    "last_used_at": "2026-08-21T22:37:57.745688+00:00",
-    "last_viewed_at": "2026-08-21T22:37:57.743751+00:00",
+    "last_used_at": "2026-08-23T14:13:08.803805+00:00",
+    "last_viewed_at": "2026-08-23T14:13:08.800163+00:00",
     "patch_count": 41,
     "pinned": false,
     "state": "active",
-    "use_count": 28,
-    "view_count": 28
+    "use_count": 29,
+    "view_count": 29
   },
   "subcontractor-submittal-registers": {
     "archived_at": null,
@@ -3045,14 +3045,14 @@
     "archived_at": null,
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-23T06:38:58.858988+00:00",
-    "last_used_at": "2026-08-23T06:38:27.932659+00:00",
-    "last_viewed_at": "2026-08-23T06:38:27.929479+00:00",
-    "patch_count": 113,
+    "last_patched_at": "2026-08-23T14:36:08.837048+00:00",
+    "last_used_at": "2026-08-23T14:36:00.023423+00:00",
+    "last_viewed_at": "2026-08-23T14:36:00.020700+00:00",
+    "patch_count": 117,
     "pinned": false,
     "state": "active",
-    "use_count": 183,
-    "view_count": 183
+    "use_count": 189,
+    "view_count": 189
   },
   "supplier-prequalification": {
     "archived_at": null,

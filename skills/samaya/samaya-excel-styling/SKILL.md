@@ -1044,6 +1044,39 @@ Dashboard rules:
 
 Verification must inspect formula strings with `data_only=False`, cached values with `data_only=True`, stale/blank category rows, Top Owners placement below preceding tables, Owner/Target fields in both sheets, and HTTP 200 for each live XLSX download.
 
+## Checkbox Column — Use a ☐/☑ Dropdown, Not Native Form Controls
+
+When a checklist needs a "tick box" column, **do not use native Excel form checkboxes**. The openpyxl `Checkbox` helper class is only present in 3.1.5+ and even then the high-level API is unreliable across builds; hand-building OLE form-control XML is fragile and does not print cleanly.
+
+**Robust, printable pattern:** a `☐,☑` DataValidation dropdown in the Check column.
+
+```python
+from openpyxl.worksheet.datavalidation import DataValidation
+dv = DataValidation(type="list", formula1='"☐,☑"', allow_blank=True, showDropDown=False)
+dv.error = "Select ☐ (not checked) or ☑ (checked)"; dv.errorTitle = "Invalid"
+ws.add_data_validation(dv)
+dv.add(f"D8:D{last}")
+```
+
+Works in Excel, LibreOffice, and prints cleanly. Pair it with a `PASS,FAIL,NA` dropdown in an adjacent Status column.
+
+### Single-Sheet Checklist Deliverable (user's accepted format)
+
+When the user asks for a checklist as a file, they want a **single-sheet Excel workbook** (not multi-sheet, not markdown). The user iterated through three versions and settled on this shape — build it this way the first time:
+
+- **One sheet** titled "Submittal Checklist" — all sections on a single tab.
+- **Full header block** (rows 1-6):
+  - Row 1: title bar (navy fill, white bold 16pt, centered).
+  - Row 2: subtitle "Pre-submission quality gate - tick each box. Any unchecked critical item = DO NOT SUBMIT."
+  - Rows 3-4: info row 1 — Submittal No. | Name/Title | Type | Discipline | Revision | Date (gold headers, blank value cells).
+  - Rows 5-6: info row 2 — CG Reviewer | Previous CG Code | Response Date | Prepared By | QA/QC Reviewed By | Date of Review.
+- **Column headers** (row 7): `# | Check Item | What to verify | Check | Status | Remarks`.
+- **Per-type sections** as gold section-header rows (merged across all 6 columns): A. Document Control, B. Material MA, C. Prequal PQ, D. Design ZD/IFC/DD, E. HSE, F. Programme, G. Site Test/IR, H. CG Comment Closure.
+- **Checkbox column (D)** with the `☐,☑` dropdown; **Status column (E)** with `PASS,FAIL,NA`.
+- Freeze panes at A8 (below header); A4 portrait print with header rows 1-7 repeated (`ws.print_title_rows = "1:7"`).
+
+The working generator pattern is at `/tmp/build_submittal_checklist.py` (sections as a data list of `(title, [(item, detail), ...])`). Reuse that structure.
+
 ## Reference
 
 See `references/risk-register-example.md` for the full script structure and sheet-by-sheet breakouts from the Aseer Museum risk register session.
