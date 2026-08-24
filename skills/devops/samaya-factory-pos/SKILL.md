@@ -222,6 +222,13 @@ A cron job runs daily at 2:00 PM KSA to refresh both reports. It:
 
 The cron job is named "Factory PO Daily Update" and delivers to `all` channels.
 
+**Script location (IMPORTANT):** All three scripts live in THIS skill directory at `~/.hermes/skills/devops/samaya-factory-pos/scripts/` — NOT in `/tmp`. The cron job prompt may reference `/tmp/build_cashout_report.py`, `/tmp/update_workshop_tracker.py`, `/tmp/new_pos_last_3_days.py`, but those paths do not exist. Always run from the skill dir:
+```bash
+cd ~/.hermes/skills/devops/samaya-factory-pos/scripts && \
+SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 <script>.py
+```
+`new_pos_last_3_days.py` scans the last **3 days** (not 24h) — label the report section "New POs (last 3 days)" accordingly.
+
 **Timeout notes (running manually):**
 - `new_pos_last_3_days.py` — fast, ~10s
 - `update_workshop_tracker.py` — **slowest**, can take 120-300s due to Odoo chatter reads on each PO. Set terminal timeout >= 300 when running interactively.
@@ -236,6 +243,8 @@ The scripts hard-code OneDrive output paths and call `wb.save(out)` directly. Wh
 2. Patch the script's `out = ...` line to a `/tmp` path (e.g. `/tmp/Samaya_Factory_Cashout_Report_Updated.xlsx`), run again → it saves cleanly. Verify with openpyxl `load_workbook` that the workbook is valid.
 3. One attempt to copy back to the OneDrive path. If it fails with EDEADLK, `sleep 30` and retry once. If still locked, leave the file at `/tmp`, tell the user to drag it into the target folder via Finder, or note that a **Mac reboot** clears the kernel File Provider lock (see `macos-onedrive-recovery` skill — persistent EDEADLK, `brctl status` shows `SYNC DISABLED`). `cp`, `cp -c`, `ditto`, `dd`, `python open()`, and Finder `duplicate` all fail while it's active; only reboot reliably clears it.
 4. **`update_workshop_tracker.py` reads its source from OneDrive** — if that source file is locked, the tracker update cannot run at all this cycle. Skip it, report the tracker as blocked, and flag for a reboot + rerun. Do not fabricate a tracker update from stale data.
+
+**EDEADLK can be PARTIAL (observed 2026-08-24):** The lock is not always global. In one cycle the workshop tracker (`ورشة المشتريات.xlsx`) saved directly to OneDrive successfully while the cashout report copy to `00 تقارير الاعمال/` failed with EDEADLK. So: attempt each OneDrive write independently; a failure on one path does NOT mean the others are locked. Report per-file status (which saved, which is blocked at /tmp) rather than assuming the whole drive is down.
 
 ## New POs Detection
 

@@ -215,6 +215,9 @@ See `cg-analysis-and-lessons` skill for full reviewer profiles, forecast engine,
 - "Noted." - for accepted process comments
 - "All applicable loads in BOD per SBC. Showcase weights from manufacturer. Artwork weights from curator." - for technical clarifications
 
+## Specialist Drawing-Package QC
+When QC'ing a specialist drawing package (ZNA lighting, Rawasin AV) at a stage gate: split formal/doc-control comments (go to specialist) from internal technical review (discipline lead); check the Design Phase Deliverables Tracker before flagging missing deliverables; CAD zips beside PDFs = source, not a package. See `references/specialist-drawing-package-qc.md`.
+
 ## Multi-Round CRS Disposition Matrix Pattern
 
 When CG issues multiple rounds of comments on the same document (e.g., R1 9-Mar, R2 2-Jun, R3 18-Jun), use a **single consolidated disposition matrix** with round-separator rows:

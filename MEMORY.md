@@ -8,8 +8,6 @@ Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deli
 §
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 §
-Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
-§
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 §
 PO approval: (1) quotation attached (2) prices match per line (3) total matches (4) price within ±20% of standard_price (5) update list_price (6) add supplier vendor name+code in seller_ids (7) post confirmation. Service POs skip 5-6.
@@ -22,8 +20,8 @@ Telegram group: silent unless asked; DM only for tech errors, decisions needing 
 §
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 §
-RFI master: 04_Docs/04_RFIs/RFI.xlsx ('Coordination' rows 566-69). Before logging a new RFI, cross-check repo rfi_register.md+05_RFIs/+05_Comms/drafts (TQ-0027..39) for prior refs.
-§
 Aseer DD submittals: 3.2_DD Submissions/=dated folder. QA single-sheet, FAIL=no submit. Review: formal=user, technical=Eng. Abdullah Omer. ZNA=Dogan.
 §
 Formal SOWs/docs: use 'Section' not '§' symbol. SOW naming: appointed specialists by name (e.g. AD Eng, ZNA); unappointed = generic 'Specialist'.
+§
+Samaya factory supervisor = محمد عبدالجليل عبد النبي عطية (biotime 683, m.abdelglil@samayainvest.com), NOT مشرف مشاريع. Employee biotime/names from samaya-workspace OT_SYSTEM/data/odoo_employees_biotime.csv (repo), not Odoo re-query.

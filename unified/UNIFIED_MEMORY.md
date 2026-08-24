@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-24 09:00:48
+Generated: 2026-08-24 16:05:26
 
 ---
 
@@ -40,11 +40,11 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
-Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG submission for Rawasin(T2-09). Specialist=electronics/lighting/program/scent/AV/install only, not replicas/glass/counter/joinery.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Aseer DD submittals: 3.2_DD Submissions/=dated folder. QA single-sheet, FAIL=no submit. Review: formal=user, technical=Eng. Abdullah Omer. ZNA=Dogan.
+Samaya factory supervisor = محمد عبدالجليل عبد النبي عطية (biotime 683, m.abdelglil@samayainvest.com), NOT مشرف مشاريع. Employee biotime/names from samaya-workspace OT_SYSTEM/data/odoo_employees_biotime.csv (repo), not Odoo re-query.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
@@ -88,6 +88,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
+Samaya factory supervisor = محمد عبدالجليل عبد النبي عطية (biotime 683, m.abdelglil@samayainvest.com), NOT مشرف مشاريع. Employee biotime/names from samaya-workspace OT_SYSTEM/data/odoo_employees_biotime.csv (repo), not Odoo re-query.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -104,7 +105,6 @@ description: Read-only audit of the Aseer graphics contractor folder plus an inc
 task: inspect Hermes auth/config for Nous credential storage and prepare to add a user-supplied secret
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
-- Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
 
 ## Contracts & Documents
 
