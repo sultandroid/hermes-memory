@@ -354,27 +354,27 @@
     "archived_at": null,
     "created_at": "2026-07-09T05:14:23.739476+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-22T10:13:58.678993+00:00",
-    "last_used_at": "2026-08-22T10:13:53.109199+00:00",
-    "last_viewed_at": "2026-08-22T10:13:53.106848+00:00",
-    "patch_count": 113,
+    "last_patched_at": "2026-08-23T19:11:47.835247+00:00",
+    "last_used_at": "2026-08-23T19:10:29.287062+00:00",
+    "last_viewed_at": "2026-08-23T19:10:29.284667+00:00",
+    "patch_count": 117,
     "pinned": false,
     "state": "active",
-    "use_count": 172,
-    "view_count": 172
+    "use_count": 174,
+    "view_count": 174
   },
   "cg-submittal-review-checklist": {
     "archived_at": null,
     "created_at": "2026-08-23T07:15:06.493168+00:00",
     "created_by": null,
     "last_patched_at": "2026-08-23T07:15:11.009469+00:00",
-    "last_used_at": "2026-08-23T14:18:51.792323+00:00",
-    "last_viewed_at": "2026-08-23T14:18:51.789554+00:00",
+    "last_used_at": "2026-08-23T18:47:09.691569+00:00",
+    "last_viewed_at": "2026-08-23T18:47:09.689500+00:00",
     "patch_count": 2,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "ci-cd-automation": {
     "archived_at": null,
@@ -485,12 +485,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-08-23T04:00:46.528547+00:00",
+    "last_used_at": "2026-08-24T04:00:28.617931+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 62,
+    "use_count": 63,
     "view_count": 20
   },
   "computer-use": {
@@ -1667,14 +1667,14 @@
     "archived_at": null,
     "created_at": "2026-05-31T21:25:40.337395+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-23T10:48:56.268739+00:00",
-    "last_used_at": "2026-08-23T10:49:21.482701+00:00",
-    "last_viewed_at": "2026-08-23T10:49:21.479954+00:00",
-    "patch_count": 272,
+    "last_patched_at": "2026-08-23T19:29:48.953689+00:00",
+    "last_used_at": "2026-08-23T19:29:39.673287+00:00",
+    "last_viewed_at": "2026-08-23T19:29:39.670830+00:00",
+    "patch_count": 273,
     "pinned": false,
     "state": "active",
-    "use_count": 427,
-    "view_count": 427
+    "use_count": 428,
+    "view_count": 428
   },
   "odoo-bulk-audit": {
     "archived_at": null,
@@ -1849,14 +1849,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-23T10:49:40.746811+00:00",
-    "last_used_at": "2026-08-23T10:49:32.596360+00:00",
-    "last_viewed_at": "2026-08-23T10:49:32.593719+00:00",
-    "patch_count": 324,
+    "last_patched_at": "2026-08-23T18:59:39.265313+00:00",
+    "last_used_at": "2026-08-24T03:00:23.586704+00:00",
+    "last_viewed_at": "2026-08-23T19:30:27.259210+00:00",
+    "patch_count": 327,
     "pinned": false,
     "state": "active",
-    "use_count": 798,
-    "view_count": 497
+    "use_count": 801,
+    "view_count": 499
   },
   "p5js": {
     "archived_at": null,
@@ -2578,13 +2578,13 @@
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T07:35:54.056128+00:00",
-    "last_used_at": "2026-08-23T07:38:26.289641+00:00",
-    "last_viewed_at": "2026-08-23T07:38:26.287727+00:00",
+    "last_used_at": "2026-08-23T21:22:06.821571+00:00",
+    "last_viewed_at": "2026-08-23T21:22:06.819145+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 434,
-    "view_count": 434
+    "use_count": 435,
+    "view_count": 435
   },
   "samaya-excel-styling": {
     "archived_at": null,
@@ -2677,18 +2677,31 @@
     "use_count": 70,
     "view_count": 70
   },
+  "samaya-sow-submission": {
+    "archived_at": null,
+    "created_at": "2026-08-23T21:22:55.538525+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-08-23T21:37:05.592178+00:00",
+    "last_used_at": "2026-08-23T21:37:14.050372+00:00",
+    "last_viewed_at": "2026-08-23T21:37:14.046845+00:00",
+    "patch_count": 5,
+    "pinned": false,
+    "state": "active",
+    "use_count": 5,
+    "view_count": 5
+  },
   "samaya-technical-office": {
     "archived_at": null,
     "created_at": "2026-05-28T10:24:08.255073+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T08:08:40.746962+00:00",
-    "last_used_at": "2026-08-18T11:17:29.191678+00:00",
-    "last_viewed_at": "2026-08-18T11:17:29.189705+00:00",
+    "last_used_at": "2026-08-23T19:40:24.223359+00:00",
+    "last_viewed_at": "2026-08-23T19:40:24.221264+00:00",
     "patch_count": 573,
     "pinned": false,
     "state": "active",
-    "use_count": 655,
-    "view_count": 655
+    "use_count": 656,
+    "view_count": 656
   },
   "samaya:sister-companies-costing": {
     "archived_at": null,
@@ -2885,6 +2898,19 @@
     "use_count": 11,
     "view_count": 11
   },
+  "specialist-drawing-package-qc": {
+    "archived_at": null,
+    "created_at": "2026-08-23T18:52:12.498361+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-08-23T18:52:52.646239+00:00",
+    "last_used_at": "2026-08-23T18:52:48.002674+00:00",
+    "last_viewed_at": "2026-08-23T18:52:48.000289+00:00",
+    "patch_count": 2,
+    "pinned": false,
+    "state": "active",
+    "use_count": 1,
+    "view_count": 1
+  },
   "specification-compliance-sheets": {
     "archived_at": "2026-07-15T21:17:32.207054+00:00",
     "created_at": "2026-07-15T19:58:36.969107+00:00",
@@ -2993,14 +3019,27 @@
     "archived_at": null,
     "created_at": "2026-07-21T16:08:39.514649+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-21T22:38:13.955094+00:00",
-    "last_used_at": "2026-08-23T14:13:08.803805+00:00",
-    "last_viewed_at": "2026-08-23T14:13:08.800163+00:00",
-    "patch_count": 41,
+    "last_patched_at": "2026-08-23T19:45:07.764830+00:00",
+    "last_used_at": "2026-08-24T02:27:25.996877+00:00",
+    "last_viewed_at": "2026-08-24T02:27:25.994569+00:00",
+    "patch_count": 45,
     "pinned": false,
     "state": "active",
-    "use_count": 29,
-    "view_count": 29
+    "use_count": 35,
+    "view_count": 35
+  },
+  "subcontractor-sow-preparation": {
+    "archived_at": null,
+    "created_at": "2026-08-23T20:55:48.668161+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-08-24T03:55:29.492457+00:00",
+    "last_used_at": "2026-08-24T03:55:19.944044+00:00",
+    "last_viewed_at": "2026-08-24T03:55:19.941368+00:00",
+    "patch_count": 17,
+    "pinned": false,
+    "state": "active",
+    "use_count": 17,
+    "view_count": 17
   },
   "subcontractor-submittal-registers": {
     "archived_at": null,
@@ -3045,14 +3084,14 @@
     "archived_at": null,
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-23T14:36:08.837048+00:00",
-    "last_used_at": "2026-08-23T14:36:00.023423+00:00",
-    "last_viewed_at": "2026-08-23T14:36:00.020700+00:00",
-    "patch_count": 117,
+    "last_patched_at": "2026-08-23T18:16:04.360466+00:00",
+    "last_used_at": "2026-08-23T18:16:24.602589+00:00",
+    "last_viewed_at": "2026-08-23T18:16:24.600191+00:00",
+    "patch_count": 121,
     "pinned": false,
     "state": "active",
-    "use_count": 189,
-    "view_count": 189
+    "use_count": 192,
+    "view_count": 192
   },
   "supplier-prequalification": {
     "archived_at": null,

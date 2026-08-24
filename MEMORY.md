@@ -14,14 +14,16 @@ CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. K
 §
 PO approval: (1) quotation attached (2) prices match per line (3) total matches (4) price within ±20% of standard_price (5) update list_price (6) add supplier vendor name+code in seller_ids (7) post confirmation. Service POs skip 5-6.
 §
-MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
+Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG submission for Rawasin(T2-09). Specialist=electronics/lighting/program/scent/AV/install only, not replicas/glass/counter/joinery.
 §
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
-Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
+Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 §
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 §
 RFI master: 04_Docs/04_RFIs/RFI.xlsx ('Coordination' rows 566-69). Before logging a new RFI, cross-check repo rfi_register.md+05_RFIs/+05_Comms/drafts (TQ-0027..39) for prior refs.
 §
-User wants SIMPLE single-sheet Excel checklists for QA/QC pre-submission: full header (title/date), one section per submittal type, ☐/☑ checkbox + PASS/FAIL/NA dropdowns, any FAIL=do not submit. Lead with simple; detailed only if asked. openpyxl 3.1.5 lacks Checkbox form-control API — use ☐/☑ dropdown, not native checkboxes.
+Aseer DD submittals: 3.2_DD Submissions/=dated folder. QA single-sheet, FAIL=no submit. Review: formal=user, technical=Eng. Abdullah Omer. ZNA=Dogan.
+§
+Formal SOWs/docs: use 'Section' not '§' symbol. SOW naming: appointed specialists by name (e.g. AD Eng, ZNA); unappointed = generic 'Specialist'.

@@ -494,7 +494,7 @@ When any cron/script counts submittal or design-tracker rows by CG status code, 
 
 ### Recurring Pattern: Resubmitting Without Closing CRS Comments
 
-**Pre-submission compliance audit — check a Rev against its OWN rejection before submitting.** When the user asks "does this rev comply with all the comments", do NOT read the cover letter or the CRS. Audit the revised documents against the verbatim Code C/D rejection, comment by comment:
+### Pre-submission compliance audit — check a Rev against its OWN rejection before submitting. When the user asks "does this rev comply with all the comments", do NOT read the cover letter or the CRS. Audit the revised documents against the verbatim Code C/D rejection, comment by comment:
 
 1. **Get the rejection verbatim.** The resubmission cover PDF usually embeds the full Code C/D comment block (CG reviewer + dates). Extract it with `pdftotext -layout` and build the comment list from it — do not rely on the CRS or a summary. If the rejection names specific files (e.g. `AV Network Architecture...pdf`), map each comment to the actual file in the rev folder.
 2. **Grep the revised docs for the named requirements**, not the whole text. Every CG demand that names a concrete item (switch model, device, port count, schedule) must appear literally in the revised document.
@@ -506,6 +506,20 @@ When any cron/script counts submittal or design-tracker rows by CG status code, 
    - The killer gap that forces C is usually a document CG explicitly asked for that is entirely absent (e.g. the control-UI/fault-monitoring doc) plus an explicitly-named item that never appears (Zyxel switch).
    - Only procedural comments (proper format, signed/stamped) are reliably closed in a Rev. Expect the C rejection to re-quote the still-open comment, not re-reason.
 6. **Timing**: CG review window ~14 working days; a partial Rev returns C with the same comments still Open — a third round. Do not submit a package with PARTIAL/NOT-COMPLIED blocks open; route back to the specialist (Rawasin) to supply the actual engineered deliverables.
+
+### QC of a specialist's first-issue package (ZNA lighting case, 2026-08)
+
+When QC'ing a specialist's newly-issued design package (lighting, AV, showcases) BEFORE submission to CG, the recurring over-flagging errors to avoid:
+
+| Trap | Correct behaviour |
+|------|-------------------|
+| **CAD zips counted as deliverables** | Drawing packages ship as PDFs + AutoCAD transmittal zips (the .dwg + xrefs + fonts + logo + Stamp.png + PlotCfg). The zips BACK the PDFs — CG reviews the PDFs only. Do not count zips as separate deliverables. |
+| **Flagging "missing" deliverables without reading the tracker** | The CG-issued `Design Phase Deliverables Tracker` (sheets per discipline, e.g. `Exhibition Lighting Deliverable`) defines exactly which drawings/docs belong at EACH gate (50%/90%/IFC). Before calling something "missing", check that discipline's 50%-gate column. Elevations may be a 90%/100% item, not 50% — flagging "no elevations" as a 50% blocker was WRONG. The 50% lighting package was ONLY the 8 floor plans (LL+HL x BF/LGF/GF/1F) + a base report (already Code B). |
+| **Flagging the stamp as missing when it is present** | A raster stamp does not appear in `pdftotext` text output. Confirm visually (open the PDF / check the DWG's Stamp.png) BEFORE flagging "no stamp". Over-flagging a present stamp undermines the QC credibility. |
+| **Conflating formal review with technical review** | Tell the specialist explicitly: THIS is the formal/document-control review only; the technical design review is separate and done by the discipline lead (e.g. Eng. Abdullah Omer for MEP/electrical). Otherwise the specialist reads the doc-control comments as a design verdict. |
+| **Reading the specialist's covering email as a CG submission** | A WeTransfer/email note ("%50 Stage 4 Draft... for all floors" + WeTransfer link to an internal lead) is a DRAFT hand-off, not a formal CG transmittal. Check the subject/recipient before treating it as the submission. |
+
+**Drawing numbering to enforce on specialists (lighting, per the tracker):** the project reference is `MOC-ASE-{Disc}-{System}-{Type}-{Floor}-DDD-{Seq}`, e.g. `MOC-ASE-EL-ELT-LL-BF-DDD-30001-00` (Electrical · Lighting · Layout · Basement). Specialists (ZNA) often issue with their OWN office numbering (`ZNA3297_LG002_*`) even though their DWG xrefs use the project codes. Also require uniform Rev + current date across every sheet of one issue (one package had LGF-HL=V2, others V0/V1, and a GF-LL sheet dated 21/01/2025). Full worked case: `references/zna-lighting-qc-case.md`.
 
 ### Recurring Pattern: Resubmitting Without Closing CRS Comments
 

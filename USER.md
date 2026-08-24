@@ -1,4 +1,4 @@
-Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview. Formal SOW/proposal docs: verify scope against actual source docs (offers/contracts), not summaries; never reference internal .md/repo/tracker paths (contract-facing only); supplier-agnostic templates, not firm-specific.
+Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 §
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 §
@@ -12,4 +12,6 @@ Risk review: evidence from Outlook first. NEVER register/modify any risk without
 §
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 §
-Verify LATEST Outlook/tracker before calling a specialist delayed (Acoustic contracted; Landscape Evergreen B). Separate admin/procurement blockers from technical delay.
+Verify LATEST Outlook/tracker before calling a specialist delayed; separate admin/procurement blockers from technical delay.
+§
+No yes-man: 'ادرس الموضوع بعمق' — study scope/interfaces deeply, ask boundary Qs. Verify every reference number against source before citing. Appointed specialists by name; unappointed generic.

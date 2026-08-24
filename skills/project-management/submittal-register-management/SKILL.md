@@ -1,7 +1,7 @@
 ---
 name: submittal-register-management
 title: Submittal Register Management
-description: Create, clean, and manage BIM submittal registers with stage-date columns (50%/90%/100%/IFC), category-staggered scheduling, and OneDrive deployment. Covers the standard 9-column template, date- vs mask-based formats, regenerative repair, and OneDrive-safe file handling for Aseer Museum and similar projects. NOTE ws.insert_rows does NOT shift merged ranges — see references/openpyxl-insert-rows-merged-ranges.md.
+description: Create, clean, and manage BIM submittal registers with stage-date columns (50%/90%/100%/IFC), category-staggered scheduling, and OneDrive deployment. Covers the standard 9-column template, date- vs mask-based formats, regenerative repair, submission package folder structure, and OneDrive-safe file handling for Aseer Museum and similar projects. NOTE ws.insert_rows does NOT shift merged ranges — see references/xlsx-insert-rows-merged-cells.md.
 trigger: user asks to create/clean/organize a submittal register, add dates, fix columns, or regenerate .xlsx from .py
 tags: [bim, submittal-register, aseer, openpyxl, excel, schedule]
 ---
