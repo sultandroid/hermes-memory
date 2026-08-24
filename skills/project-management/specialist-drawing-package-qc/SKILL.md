@@ -13,7 +13,7 @@ tags:
 
 # Specialist Drawing Package QC
 
-Use when a design specialist (ZNA lighting, NRS arch, Rawasin AV, etc.) delivers a drawing package (plans, elevations, layouts) and the user asks to "QC it" / "check this package" / "is it ready to submit" before it goes to CG.
+Use when a design specialist (ZNA lighting, NRS arch, Rawasin AV, etc.) delivers a drawing package (plans, elevations, layouts) and the user asks to "QC it" / "check this package" / "is it ready to submit" before it goes to CG. Also use when a specialist sends a **review/assessment report** (acoustic, AV coverage, etc.) and the user asks whether to submit it to CG — see `references/specialist-review-report-scope-responsibility.md` for the design-ownership check that decides whether the report is a submittable deliverable or internal QC evidence of a design gap.
 
 Pairs with `cg-submittal-review-checklist` (the full pre-submission gate). This skill covers the drawing-specific dimension that checklist's design section (B3) references but does not detail.
 

@@ -464,6 +464,7 @@ ORDER BY m.Message_TimeSent;
 ```
 
 See `references/email-thread-analysis.md` for a complete worked example.
+See `references/email-subject-not-found-onedrive-search.md` for when an email subject isn't found in Outlook — search the OneDrive submittal tree + repo by keyword before concluding it's missing (the document is often filed under a descriptive folder name, not the email subject; OneDrive EDEADLK on the found file is a cloud stub, not corruption).
 See `references/html-body-strip-pattern.md` for the HTML-body-strip-to-text pattern that preserves tables (block tags → newline, `</td>` → `|`), plus `pdftotext -layout` for PDFs and python-docx for DOCX attachment content.
 See `references/email-chain-tracing.md` for tracing forwarded email chains (FW:).
 See `references/chaser-reminder-email-pattern.md` for the chaser/reminder email class (Samaya chasing a specialist for documents/CG-comment responses) — 255-char preview truncation, recall-message noise, corrupt CG-comments attachment handling.
