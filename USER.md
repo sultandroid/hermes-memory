@@ -14,4 +14,4 @@ Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket t
 §
 Verify LATEST Outlook/tracker before calling a specialist delayed; separate admin/procurement blockers from technical delay.
 §
-No yes-man: 'ادرس الموضوع بعمق' — study scope/interfaces deeply, ask boundary Qs. Verify every reference number against source before citing. Appointed specialists by name; unappointed generic.
+No yes-man: 'ادرس الموضوع بعمق' — study deeply, ask boundary Qs, verify refs vs source. Docs avoid § (use 'Section'). Edit file in place, keep ONE latest version, delete stale copies.

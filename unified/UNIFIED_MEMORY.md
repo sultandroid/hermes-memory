@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-23 16:00:47
+Generated: 2026-08-24 09:00:48
 
 ---
 
@@ -18,7 +18,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
-Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview. Formal SOW/proposal docs: verify scope against actual source docs (offers/contracts), not summaries; never reference internal .md/repo/tracker paths (contract-facing only); supplier-agnostic templates, not firm-specific.
+Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
@@ -42,7 +42,10 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 Samaya doc style guide: github.com/sultandroid/samaya-doc-style-guide.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
+Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG submission for Rawasin(T2-09). Specialist=electronics/lighting/program/scent/AV/install only, not replicas/glass/counter/joinery.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
+Aseer DD submittals: 3.2_DD Submissions/=dated folder. QA single-sheet, FAIL=no submit. Review: formal=user, technical=Eng. Abdullah Omer. ZNA=Dogan.
+Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -56,16 +59,13 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
 - Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
-  - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
-- Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
-- Samaya profile audit, font-direction correction, and safe v4 rollback: v6, Tajawal, Amiri, use the font was in V4 in V6 not reverse, 0-byte placeholder
 
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-User wants SIMPLE single-sheet Excel checklists for QA/QC pre-submission: full header (title/date), one section per submittal type, ☐/☑ checkbox + PASS/FAIL/NA dropdowns, any FAIL=do not submit. Lead with simple; detailed only if asked. openpyxl 3.1.5 lacks Checkbox form-control API — use ☐/☑ dropdown, not native checkboxes.
+Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
@@ -86,7 +86,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Agents & Tools
 
 Odoo 167.99.224.43: SSH root works; NPM(80/81/443)+Odoo(8069)+PG; NPM /opt/odoo/npm/data; use /opt/odoo-tools/bin/python. HR tickets (مباشرة عمل, salary) = helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
-Telegram group mode (2026-08-08): stay SILENT in group, reply only when asked; DM user only for: clear technical error, decision needing confirmation, escalation. Silent guardian.
+Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -109,10 +109,9 @@ task_group: Hermes Agent configuration
 ## Contracts & Documents
 
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
-MoC object list = 295 physical artifacts, NOT AV content; only 11 need screens.
-Investigation: repo registers → Outlook SQLite → actual CG PDFs, not summaries. Email cron MUST update actual registers; verify CG codes from actual email preview. Formal SOW/proposal docs: verify scope against actual source docs (offers/contracts), not summaries; never reference internal .md/repo/tracker paths (contract-facing only); supplier-agnostic templates, not firm-specific.
+Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG submission for Rawasin(T2-09). Specialist=electronics/lighting/program/scent/AV/install only, not replicas/glass/counter/joinery.
+Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
-Verify LATEST Outlook/tracker before calling a specialist delayed (Acoustic contracted; Landscape Evergreen B). Separate admin/procurement blockers from technical delay.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -138,6 +137,7 @@ Aseer Register Log (DC Copy, 60 pages, May 28 2026) — 8 types: Material Submit
 No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 367+255). 4 sections: Project Info, Accounting Invoices by Classification (13 cats, 106,025.24 SAR post-reallocation), Factory Cost by Classification (same total + 72,143 SAR labor: 853 records/6,635 hrs), Cost Summary (Grand Total 222,653 SAR incl. 10% supervision, cost/m² 927.72 SAR/m²). File: 01_Al_Wahi_Gift_Shop_No_Show_Report.xlsx. Original accounting total before reallocations: 253,557.62 SAR.
 1. **Project Manager** — schedule, coordination, client/PMC communication, approvals, risks
 3. **Financial Manager** — BOQ, cost, commercial, claims, variations
+- RIBA tree update: always check `Aseer_RIBA_Stages4to6_Deliverable_Tree.html` in Completed Tender Package From NRS/ — update RAG statuses, counters, Rev number with each project update.
 
 ## Locations
 
