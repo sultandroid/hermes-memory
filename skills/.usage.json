@@ -978,14 +978,14 @@
     "archived_at": null,
     "created_at": "2026-07-28T16:04:51.701191+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-05T18:56:02.402863+00:00",
-    "last_used_at": "2026-08-05T18:55:50.245968+00:00",
-    "last_viewed_at": "2026-08-05T18:55:50.243358+00:00",
-    "patch_count": 1,
+    "last_patched_at": "2026-08-25T06:09:26.320208+00:00",
+    "last_used_at": "2026-08-25T06:09:20.416447+00:00",
+    "last_viewed_at": "2026-08-25T06:09:20.414350+00:00",
+    "patch_count": 4,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 3,
+    "view_count": 3
   },
   "formal-document-preservation": {
     "archived_at": null,
@@ -1824,12 +1824,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-08-25T06:00:38.100513+00:00",
+    "last_used_at": "2026-08-25T13:00:51.266249+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 380,
+    "use_count": 381,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1849,27 +1849,27 @@
     "archived_at": null,
     "created_at": "2026-07-26T14:02:06.755308+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-15T05:37:35.539225+00:00",
-    "last_used_at": "2026-08-24T06:24:02.846827+00:00",
-    "last_viewed_at": "2026-08-24T06:24:02.842376+00:00",
-    "patch_count": 13,
+    "last_patched_at": "2026-08-25T08:41:40.081001+00:00",
+    "last_used_at": "2026-08-25T08:41:23.596884+00:00",
+    "last_viewed_at": "2026-08-25T08:41:23.594221+00:00",
+    "patch_count": 17,
     "pinned": false,
     "state": "active",
-    "use_count": 25,
-    "view_count": 25
+    "use_count": 28,
+    "view_count": 28
   },
   "outlook-email": {
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-24T13:48:02.782325+00:00",
-    "last_used_at": "2026-08-25T03:14:40.604940+00:00",
-    "last_viewed_at": "2026-08-24T13:47:56.812545+00:00",
+    "last_used_at": "2026-08-25T12:45:28.622785+00:00",
+    "last_viewed_at": "2026-08-25T12:45:28.620582+00:00",
     "patch_count": 329,
     "pinned": false,
     "state": "active",
-    "use_count": 805,
-    "view_count": 502
+    "use_count": 807,
+    "view_count": 504
   },
   "p5js": {
     "archived_at": null,
@@ -2526,13 +2526,13 @@
     "created_at": "2026-07-07T11:08:29.875682+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-20T06:43:36.471267+00:00",
-    "last_used_at": "2026-08-23T11:01:55.843769+00:00",
-    "last_viewed_at": "2026-08-23T11:01:55.841072+00:00",
+    "last_used_at": "2026-08-25T11:01:58.538690+00:00",
+    "last_viewed_at": "2026-08-25T11:01:58.534475+00:00",
     "patch_count": 7,
     "pinned": false,
     "state": "active",
-    "use_count": 16,
-    "view_count": 16
+    "use_count": 17,
+    "view_count": 17
   },
   "samaya-company-profile": {
     "archived_at": null,
@@ -2629,14 +2629,14 @@
     "archived_at": null,
     "created_at": "2026-07-07T10:51:19.862973+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-24T11:07:15.449274+00:00",
-    "last_used_at": "2026-08-24T11:07:07.135533+00:00",
-    "last_viewed_at": "2026-08-24T11:07:07.133320+00:00",
-    "patch_count": 54,
+    "last_patched_at": "2026-08-25T11:09:37.837200+00:00",
+    "last_used_at": "2026-08-25T11:09:16.199129+00:00",
+    "last_viewed_at": "2026-08-25T11:09:16.196945+00:00",
+    "patch_count": 56,
     "pinned": false,
     "state": "active",
-    "use_count": 61,
-    "view_count": 61
+    "use_count": 63,
+    "view_count": 63
   },
   "samaya-factory-profile": {
     "archived_at": null,
@@ -3006,14 +3006,14 @@
     "archived_at": null,
     "created_at": "2026-06-07T23:23:52.916505+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-21T20:17:32.559831+00:00",
-    "last_used_at": "2026-08-21T20:17:15.753378+00:00",
-    "last_viewed_at": "2026-08-21T20:17:15.751479+00:00",
-    "patch_count": 62,
+    "last_patched_at": "2026-08-25T06:35:31.065633+00:00",
+    "last_used_at": "2026-08-25T06:35:13.262165+00:00",
+    "last_viewed_at": "2026-08-25T06:35:13.260020+00:00",
+    "patch_count": 65,
     "pinned": false,
     "state": "active",
-    "use_count": 57,
-    "view_count": 57
+    "use_count": 59,
+    "view_count": 59
   },
   "subcontractor-procurement": {
     "archived_at": null,

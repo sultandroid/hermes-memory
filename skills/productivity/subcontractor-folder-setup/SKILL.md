@@ -123,7 +123,23 @@ If the same discipline appears under multiple numbered folders (e.g., `12_MEP_In
 
 If Installation and Contractor are the same entity, consolidate into one folder (keep #12 as it's earlier in the sequence; delete the `a`-suffixed duplicate). Update the README register table accordingly.
 
-See reference: `references/mep-scope-split-consolidation.md` for a worked example of this exact pattern on the Aseer Museum project.
+- `references/mep-scope-split-consolidation.md` — Worked example of this exact pattern on the Aseer Museum project (MEP Install/Contractor/Designer scope split)
+- `references/subcontractor-folder-dedup-merge.md` — Worked example of §6b: full merge matrix + MD5/superset commands for deduping a drifted `24_Subcontractors/` (2026-08)
+
+### 6b. Merge duplicate discipline folders (dedup consolidation workflow)
+
+When a working-coordination folder (`24_Subcontractors/`) has drifted into several duplicate discipline folders under a conflicting numbering scheme (e.g. `01_Acoustic`, `03_Acoustic_Specialist`, `18_Acoustic_Specialist` all covering acoustics), merge them. This is destructive on OneDrive, so run a disciplined audit and get sign-off BEFORE mutating anything.
+
+**Step order (do NOT skip):**
+1. **Inventory first.** `ls -1` all top-level folders, `du -sh */` for sizes, per-folder file counts. This instantly reveals stub folders (2 files) vs populated ones (hundreds).
+2. **Establish the canonical keeper.** The folder with the full structure wins: it has `_MANAGER_DASHBOARD/` (SCOPE_REQUEST.md, SITUATION_REPORT.md, SPEC.md, Master_Submittal_Register.xlsx), a `<Discipline>_Submittal_Register/`, per-vendor prequalification subfolders, dashboards. Stub folders holding only a couple of PQ PDFs are redundant shells.
+3. **Prove duplicates with MD5, not filenames.** `md5 -q <file>` both copies; identical hash = true duplicate. Filenames that look alike can still differ. A folder whose entire content is MD5-identical to another folder's subdir (e.g. only the `08_Quotations/` images duplicated) is redundant.
+4. **Check superset/subset relationships.** `diff -rq <a> <b>` and `diff <(cd a && find . | sort) <(cd b && find . | sort)`. One folder is often a strict superset of another (e.g. `21_Landscaping_Specialist` ⊃ `03_Landscaping`). Keep the superset, delete the subset.
+5. **Distinguish genuine distinct scopes from dupes BEFORE merging.** MEP Designer (#13) vs MEP Contractor (#10) are different contractual scopes — never merge. Verify each pair is the SAME discipline.
+6. **Flag mislabeled folders — read contents, not the folder name.** A folder named `14_MEP_Contractor` may actually hold StudioZNA lighting files + an ICT/BMS scope + a CV (ZNA's design contact) — i.e. misfiled content, NOT MEP contractor scope. Do NOT merge it into the real MEP folder; surface it to the user for a re-file decision. A `09_General` folder holding a commercial/technical proposal for a different procurement + a ZD doc may not be a discipline sub at all — flag it.
+7. **Present the merge plan and get confirmation BEFORE mutating OneDrive.** OneDrive reorganizations are destructive (per environment quirks: never `rm -rf`/`mv` OneDrive files — propagates deletions). Produce a table: Cluster | Duplicate folders | Verdict (keep X, merge Y→X, delete Z). List ambiguous/mislabeled clusters explicitly as "needs your decision" and WAIT. Do not execute until the user confirms the keepers and resolves the ambiguous cases.
+
+**Deliverable shape:** a merge-plan table (Cluster / Dupes / Verdict) + a short list of decisions the user must make. In a working-coordination folder, flagging the ambiguous/mislabeled clusters is more valuable than force-merging everything.
 ### 7. Offers folder audit
 
 `09_Offers/` must contain **commercial proposals/quotations only** — NOT prequalification or qualifications docs. Prequalification material goes in `09_Prequalification/` at the same level.

@@ -155,26 +155,27 @@ WHERE mb.Record_RecordID = <EMAIL_ID>;
 
 2. Full path: `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/<PathToDataFile>`
 
-3. Decode the base64-encoded PDF (⚠️ marker is `Content-transfer-encoding: base64\r\r`, offset +35):
+3. Decode the base64-encoded PDF. **Preferred: find the base64 magic bytes directly** — more robust than hunting the `Content-transfer-encoding` marker (whose exact line ending `\r\r` vs `\r\n` varies and breaks offset math). A PDF's base64 always starts with `JVBERi0xLjM` (= `%PDF-1.3`):
 ```python
-import base64, subprocess
+import base64
 from pathlib import Path
 
 data = Path('file.olk15MsgAttachment').read_bytes()
-idx = data.find(b'Content-transfer-encoding: base64')
-b64_data = data[idx + 35:]  # skip marker + \r\r
-text = b64_data.decode('ascii', errors='replace')
-clean = text.replace('\r', '').replace('\n', '')
-pad = len(clean) % 4
-if pad:
-    clean += '=' * (4 - pad)
-pdf_data = base64.b64decode(clean)
-
-Path('/tmp/output.pdf').write_bytes(pdf_data)
-r = subprocess.run(['pdftotext', '/tmp/output.pdf', '-'],
-    capture_output=True, text=True, timeout=30)
-print(r.stdout)
+idx = data.find(b'JVBERi0xLjM')          # PDF magic, robust to header variance
+if idx < 0: raise SystemExit('PDF marker not found')
+pdf = base64.b64decode(data[idx:], validate=False)  # decode from marker to EOF
+Path('/tmp/output.pdf').write_bytes(pdf)
 ```
+Fallback (older skill method, offset +35 after the `Content-transfer-encoding: base64` marker): decode the bytes after the marker, strip `\r`/`\n`, re-pad to a multiple of 4, `base64.b64decode`. Use magic bytes to identify other types too — the largest attachment is often the key document (e.g. a contract PDF among small inline `image00X.jpg/png` letterhead blocks); `file` + `du -h` to triage before decoding.
+
+**Non-PDF attachments use the same magic-bytes approach.**
+- DOCX/XLSX/PPTX (and any ZIP) base64 starts with `UEsDB` (= `PK\x03\x04`). Find that marker and `base64.b64decode(data[idx:], validate=False)` straight to EOF — same robust pattern as the PDF marker, no header-offset math:
+```python
+idx = data.find(b'UEsDB')            # zip/docx/xlsx magic
+doc = base64.b64decode(data[idx:], validate=False)
+```
+- **MIME `filename*=` is UTF-8-percent-encoded for non-ASCII names.** Outlook stores e.g. `filename*=UTF-8''%D8%A8%D9%8A%D8%A7%D9%86...docx` plus an RFC2047-encoded `name=` in a separate MIME header. Recover the real filename with `urllib.parse.unquote(name.decode('ascii'))`. `head -c 200 | strings | grep -iE "content-type|name=|filename"` triages each block's type + original name before decoding.
+
 
 ## OCR for Image-Based PDFs (Stamped Drawings)
 
@@ -212,9 +213,20 @@ When the user asks to read/extract every attachment from recent emails:
 
 ## Pitfalls
 
-- Column `Message_Body` does NOT exist — use `Message_Preview` for text content- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
+- Column `Message_Body` does NOT exist — use `Message_Preview` for text content
+- **`Message_RecipientList` must be aliased, not used bare** — `Message_SenderList` is fine, but `Message_RecipientList` as a bare column is parsed as the SQL keyword `from` (e.g. `SELECT Message_RecipientList as from` → `syntax error near "from"`). Always alias it: `Message_RecipientList as recip`.
+- **`PathToDataFile` uses `%20` URL-encoding; the real directory has a literal space.** The Blocks table stores e.g. `Message%20Attachments/81/<uuid>.olk15MsgAttachment`, but the folder on disk is `Message Attachments` (space, no `%20`). When constructing the full path, replace `%20` with a space — do not blindly append the DB value or the file will appear "missing". `find` against the `Message Attachments` dir by the UUID prefix is the reliable locator.- Timestamps are **plain Unix epoch seconds** — use `datetime(Message_TimeReceived, 'unixepoch', 'localtime')`. Do NOT apply a Windows `10000000-11644473600` adjustment; that yields empty/zero rows. For date filtering use `Message_TimeReceived > strftime('%s','YYYY-MM-DD')` (Unix epoch works directly in comparisons).
 - `Message_Preview` is truncated (~255 chars). Full body text is NOT in the SQLite row — for long bodies, extract the `.olk15MsgAttachment` MIME (or an HTML `Email_Content.html` block) rather than relying on the preview. Search only needs subject/preview; content extraction needs the block file.
-- **`.olk15Message` body blocks are TNEF-encoded and NOT plaintext — `tnefparse` fails on them** ("Wrong TNEF signature: 0x00000dd0"). The MIME `Content-Type: application/ms-tnef` (winmail.dat) confirms it, but the TNEF magic bytes aren't found at the expected offset. The subject/headers are plaintext-readable via `strings`, but the body is a binary block. So for Outlook bodies, `Message_Preview` (≤255 chars) is the practical content source; do not expect to recover full body text from the `.olk15Message` binary in the common case. (Verified 2026-08-15.)
+- **`.olk15Message` bodies CAN be recovered via UTF-16LE — try this before giving up.** The `Mail` row's `PathToDataFile` points to a `.olk15Message` binary under `.../Data/Messages/<NN>/<uuid>.olk15Message`. The full body is stored as **UTF-16LE** embedded in the binary (Arabic and English alike). Extract by finding the UTF-16LE-encoded start phrase of the body, then decoding:
+```python
+import sys, re, html as H
+data = open(sys.argv[1], 'rb').read()
+i = data.find('مرفق'.encode('utf-16-le'))   # find body start phrase in UTF-16LE
+txt = data[i:].decode('utf-16-le', errors='ignore')
+plain = H.unescape(re.sub(r'<[^>]+>', '\n', txt))  # strip HTML, unescape entities
+print(plain)
+```
+The body is Outlook HTML with inline `style=` attributes per `<div>`; stripping tags + `html.unescape` yields clean text. The `.olk15Message` binary also holds MIME body-part headers (image content-ids, docx attachment names) and the full email-thread headers (`From:`/`Sent:`/`To:`/`Cc:`/`Subject:` blocks are plaintext-read-able near the end). This **supersedes** the older claim that full body is unrecoverable — that was true only for TNEF `.olk15Message` payloads; the UTF-16LE path recovers Outlook's HTML bodies in the common case. `Message_Preview` (~255 chars) remains the cheap source for search/scan; use the UTF-16LE decode when you need the full body or the embedded thread.
 - The `Files` table is a virtual table (`FilesVTabModule`) — cannot query directly
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
 - Some attachment PDFs are image-only (CAD plots) — `pdftotext` returns empty; use OCR
