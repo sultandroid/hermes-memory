@@ -498,12 +498,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-08-25T04:15:06.074170+00:00",
+    "last_used_at": "2026-08-26T04:11:25.719706+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 64,
+    "use_count": 65,
     "view_count": 20
   },
   "computer-use": {
@@ -1863,12 +1863,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-24T13:48:02.782325+00:00",
-    "last_used_at": "2026-08-25T12:45:28.622785+00:00",
+    "last_used_at": "2026-08-26T03:06:12.550092+00:00",
     "last_viewed_at": "2026-08-25T12:45:28.620582+00:00",
     "patch_count": 329,
     "pinned": false,
     "state": "active",
-    "use_count": 807,
+    "use_count": 808,
     "view_count": 504
   },
   "p5js": {
@@ -2500,13 +2500,13 @@
     "created_at": "2026-07-13T11:36:32.470665+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-19T05:49:16.750619+00:00",
-    "last_used_at": "2026-08-19T05:49:24.811288+00:00",
-    "last_viewed_at": "2026-08-19T05:49:24.809195+00:00",
+    "last_used_at": "2026-08-26T03:51:41.155062+00:00",
+    "last_viewed_at": "2026-08-26T03:51:41.146907+00:00",
     "patch_count": 136,
     "pinned": false,
     "state": "active",
-    "use_count": 217,
-    "view_count": 217
+    "use_count": 218,
+    "view_count": 218
   },
   "saas-subscription-assessment": {
     "archived_at": null,
