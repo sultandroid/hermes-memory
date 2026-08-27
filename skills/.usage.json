@@ -498,12 +498,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-08-26T04:11:25.719706+00:00",
+    "last_used_at": "2026-08-27T04:21:48.993259+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 65,
+    "use_count": 66,
     "view_count": 20
   },
   "computer-use": {
@@ -1863,12 +1863,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-24T13:48:02.782325+00:00",
-    "last_used_at": "2026-08-26T03:06:12.550092+00:00",
+    "last_used_at": "2026-08-27T03:09:41.432113+00:00",
     "last_viewed_at": "2026-08-25T12:45:28.620582+00:00",
     "patch_count": 329,
     "pinned": false,
     "state": "active",
-    "use_count": 808,
+    "use_count": 809,
     "view_count": 504
   },
   "p5js": {
