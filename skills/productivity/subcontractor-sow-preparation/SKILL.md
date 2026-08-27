@@ -127,5 +127,21 @@ Once the SOW is final and placed at its canonical `00_Scope_of_Work/` path, the 
 - **Close**: ask DC to confirm once submitted on Aconex with the transmittal reference number.
 - Before finalising, confirm with the user: (1) is it a Teams/email draft vs a formal cover letter for the Aconex submission, (2) distribution list (CG only vs also MoC), (3) the correct CG approver/PM name (verify from repo — do not guess), (4) bilingual EN+AR or EN-only. Flag these four as open confirmations rather than assuming.
 
+## PMBOK Compliance section — standard closing section (2026-08-27)
+The user pasted a **PMBOK Compliance** section verbatim and expects it in specialist SOWs. It is a standard closing section (after Close-out / before or as the final governance block) that ties the SOW to project-management controls. Structure is a fixed 7-row table — keep the user's exact wording, do not rephrase:
+
+| PMBOK AREA | COMPLIANCE CONTROL | EVIDENCE / OUTPUT |
+|---|---|---|
+| Integration | Coordinate works with project governance, interface requirements, approved baselines | Approved SOW, responsibility matrix, interface tracker |
+| Scope | Clear included scope, exclusions, assumptions, change control | Scope register, change log, approved variations |
+| Schedule | Plan/monitor/report design, procurement, install, testing, handover | Look-ahead schedule, progress updates, critical action log |
+| Quality | Approved PQP, ITP, inspection hold points, acceptance criteria | Inspection records, NCR log, test certificates |
+| Risk and HSE | Identify/assess/mitigate/monitor discipline-specific risks | Risk register, method statement, lifting plan, permits |
+| Procurement | Approved materials, certified equipment, specialist services per procedures | Material submittals, supplier approvals, certificates of conformity |
+| Communications and Stakeholders | Timely comms with Samaya + all interface parties | Meeting minutes, action tracker, correspondence log |
+
+Opening line (verbatim): *"This scope of work shall be managed in alignment with PMBOK project management principles and applicable project governance requirements. The following controls shall be maintained to support integration, scope, schedule, quality, risk, procurement, communication, and stakeholder management."* When appending to a bilingual (AR/EN) draft, keep the body English verbatim and give the heading a bilingual suffix (e.g. `## 12. PMBOK Compliance (الامتثال لإدارة المشروع)`). Number it as the next sequential section after Close-out.
+
 ## References
 - `references/aseer_interactive_sow.md` — worked example: 6→4 interactive scope, G12 exclusion, NRS 12-RFI classification (9 design intent + 3 client input), Rawasin submission phrasing.
+- `references/aseer_rigging_sow.md` — Rigging package specifics: canonical DOCX locations (Rev C01, MD5-identical copies), current Discussion Draft path, stale build scripts (Windows `out` path), key scope facts (sequencing gates, heavy loads, deliverables, exclusions, certification schedule, PQ status).
