@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-28 09:00:33
+Generated: 2026-08-28 16:01:02
 
 ---
 
@@ -17,7 +17,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
+Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
@@ -41,10 +41,10 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09). Specialist=elec/lighting/program/scent/AV/install only.
-Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
+Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09).
+Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
 Aseer DD submittals: 3.2_DD Submissions/=dated folder. Review: formal=user, technical=Abdullah Omer. ZNA=Dogan.
-Aseer team: QA/QC Mgr=Aftab Adeel (Code B 23-Jul ZD-0095); Construction Mgr/SOW reviewer=Mohamed Samir. Key-Personnel register=device OneDrive 04_Docs/09_Registers/13_Key_Personnel_Register/Main_stakeholders_final.xlsx. CG Doc-Control block on every submitted file: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep a doc-ref number index on repo, update per new ref.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
@@ -64,7 +64,7 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer team: QA/QC Mgr=Aftab Adeel (Code B 23-Jul ZD-0095); Construction Mgr/SOW reviewer=Mohamed Samir. Key-Personnel register=device OneDrive 04_Docs/09_Registers/13_Key_Personnel_Register/Main_stakeholders_final.xlsx. CG Doc-Control block on every submitted file: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep a doc-ref number index on repo, update per new ref.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -87,7 +87,6 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 Odoo 167.99.224.43: SSH root; NPM(80/81/443)+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets (مباشرة/salary)=helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
-Aseer risk: risks.json=SoT→risk_sync.py+build_risk.py (never edit risk_register.md). internal≠formal. kimi CLI=helper.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -105,13 +104,14 @@ task: inspect Hermes auth/config for Nous credential storage and prepare to add 
 task_group: Hermes Agent configuration
 - when the user provides a secret and asks to "add this api key to hermes agent," that indicates they want the agent to handle the credential plumbing, not just explain it.
 - Hermes has a `nous` provider in `hermes_cli/auth.py` configured as `auth_type="oauth_device_code"` for Nous Portal, so the credential path is not obviously a plain `NOUS_API_KEY` env var flow.
+- `NOUS_BASE_URL` is present as an optional provider config/env override in `hermes_cli/config.py`.
 
 ## Contracts & Documents
 
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
-Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09). Specialist=elec/lighting/program/scent/AV/install only.
+Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09).
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs. Verify git push before saying 'on repo'.
-Aseer team: QA/QC Mgr=Aftab Adeel (Code B 23-Jul ZD-0095); Construction Mgr/SOW reviewer=Mohamed Samir. Key-Personnel register=device OneDrive 04_Docs/09_Registers/13_Key_Personnel_Register/Main_stakeholders_final.xlsx. CG Doc-Control block on every submitted file: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep a doc-ref number index on repo, update per new ref.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -143,7 +143,6 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 
 OneDrive EDEADLK = copy to Micro volume first. .olk15Msg base64 after 'base64' header.
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
-Aseer team: QA/QC Mgr=Aftab Adeel (Code B 23-Jul ZD-0095); Construction Mgr/SOW reviewer=Mohamed Samir. Key-Personnel register=device OneDrive 04_Docs/09_Registers/13_Key_Personnel_Register/Main_stakeholders_final.xlsx. CG Doc-Control block on every submitted file: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep a doc-ref number index on repo, update per new ref.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -156,3 +155,4 @@ He prefers execution plus verification over explanation-only help. For printable
 - Pi config, macOS storage, and museum ELV review: ~/.pi/agent/settings.json, /System/Volumes/Data, Library/CloudStorage 25G, BMA, VESDA, technical earth
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
+rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl

@@ -153,6 +153,24 @@ def main():
             print(f'- {v}: {t:,.2f} SAR')
         print()
 
+    # --- Section 2b: Confirmed POs not yet received ---
+    RECEIPT_AR = {'pending': 'لم يُستلم', 'partial': 'استلام جزئي',
+                  'full': 'مستلم كامل', False: 'غير محدد'}
+    not_received = [p for p in factory_pos
+                    if p['state'] == 'purchase' and p.get('receipt_status') != 'full']
+    if not_received:
+        nr_total = sum(p['amount_total'] for p in not_received)
+        print(f'## 2️⃣ب أوامر الشراء المؤكدة غير المستلمة — {len(not_received)} أمر / {nr_total:,.2f} SAR')
+        print()
+        print('| الأمر | المورد | القيمة (SAR) | حالة الاستلام |')
+        print('|------|--------|:------------:|:--------------:|')
+        for p in sorted(not_received, key=lambda x: -x['amount_total']):
+            name = p['name']
+            vendor = p['partner_id'][1] if p['partner_id'] else '?'
+            rs = RECEIPT_AR.get(p.get('receipt_status'), p.get('receipt_status') or 'غير محدد')
+            print(f'| {name} | {vendor} | {p["amount_total"]:,.2f} | {rs} |')
+        print()
+
     # --- Section 3: Emails ---
     emails = fetch_raoof_emails(30)
     print('## 3️⃣ الإيميلات — آخر 30 يوم')

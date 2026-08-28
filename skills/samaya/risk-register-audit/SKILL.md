@@ -16,6 +16,20 @@ Verify all risk register entries against real evidence before updating. Every cl
 
 > **HARD RULE — `risks.json` is the PRR source of truth, NOT the markdown register.** The sync direction is **JSON → MD**: `python3 risk_sync.py` regenerates `01_Registers/risk_register.md` FROM `06_Risk_System/risks.json`. NEVER edit the `.md` register directly for PRR changes — it is a generated artifact and will be overwritten on the next sync. To update a PRR risk: edit `risks.json` (mutate the risk object, bump `revision`, set `last_updated`, append a `history[]` row), then run `risk_sync.py`, then `webapp/build_risk.py`. DDR/HSE/AV have their own JSONs/embedded HTML + their own rebuild commands. Excel snapshots: `webapp/build_snapshots.py --bump`, and the `.xlsx` files are **gitignored** (binaries stay in OneDrive) — `build_risk.py` auto-discovers the latest `src/EXP-RISK-PRR-2026-*_ACTIVE.xlsx` for the webapp download button.
 
+## GitHub risk-tracker issue lifecycle — do NOT manually close auto-synced risk issues
+
+The `aseer-museum-pm` repo has ~188 **open risk-tracker GitHub issues** (titles `Risk — <ID>`, labels `risk-tracker,risk-daily,{PRR|DDR|HSE|AV}`). These are **auto-generated and auto-synced** by `scripts/risk_issue_daily.py`, which reads the current state of every risk from `06_Risk_System/{prr,ddr,hse,av}_risks.json` and posts a dated status comment ONLY when the risk's state changes. The script **closes an issue automatically** when its underlying risk's `status` becomes `closed` or `mitigated` in the JSON.
+
+**When the user asks to "close the open issues" (or "شوف المشاكل واقفلها"):**
+1. **Distinguish the two classes.** Risk-tracker issues (188) are NOT manual work — closing them by hand is wrong and is overridden by the next cron sync. The non-risk issues (known-issue, question, commercial, discussion, bug) ARE real triage targets.
+2. **Find the real ones:** `gh issue list -R sultandroid/aseer-museum-pm --state open --limit 300 --json number,title,labels -q '.[] | select(([.labels[].name] | join(",")) | test("risk-tracker") | not) | "\(.number)\t\([.labels[].name]|join(","))\t\(.title)"'`
+3. **To see which risk issues are closable per the SoT, run the sync in dry-run:** `python3 scripts/risk_issue_daily.py --dry-run` → `Closed=N`. If N=0, ALL risk issues are genuinely still open per the JSON — there is nothing to close, and closing them manually would be a false closure.
+4. **Only a risk whose status turns `closed`/`mitigated` in `*_risks.json` becomes closable** — the daily cron (`risk_issue_daily.py`, job `204dc4f6de92`) does it. Your job is to find *evidence* that a risk's premise is now false (e.g. the "specialist not appointed" risk is void because the specialist was folded into an internal scope — Rawasin for interactives, Samaya in-house for structural) and propose the JSON status change to the user for approval (hard rule: NEVER modify a risk without prior user approval). Once approved, edit the JSON, run `risk_sync.py` + rebuild + `--bump` snapshots, and the next sync closes the issue.
+
+**Pitfall — don't waste effort re-closing resolved non-risk issues.** Prior sessions frequently close Open Questions / known-issues with evidence. Before chasing any open issue, run the filter above and check each one's `state` — many are already CLOSED. For a "what's still open?" review, the honest answer is often: all non-risk issues are closed, only the 188 risk-tracker auto-issues remain open (legitimately, per SoT).
+
+> **Risk closure candidate review** (when the user asks "شوف دلائل لقفلها" / "find evidence to close the open issues"): see `references/risk-closure-evidence-review.md` — how to distinguish the ~188 auto-synced risk-tracker issues (closable ONLY by changing the risk's JSON status, not by hand) from real triage issues, and how to gather falsifying evidence (specialist register appointments, Code B = approved rule, in-house/folded specialist decisions, closed sibling DDR risks). Strong candidates + not-yet-closable list as of 2026-08-28.
+
 ## Evidence Sources (in priority order)
 
 | Source | Path | What to Check |

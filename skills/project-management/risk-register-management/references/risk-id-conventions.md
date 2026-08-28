@@ -82,6 +82,32 @@ When adding a risk (e.g. derived from a plan obligation), edit `risks.json` then
 
 Then validate JSON on all four files, commit, `git pull --rebase && git push` (handle concurrent sub-agent commits per the SKILL.md conflict section — see `project-plan-management` §7 reference).
 
+## Closing / downgrading a risk — full pipeline (incl. GitHub issue auto-close)
+
+Closing or downgrading a risk touches **TWO separate JSON files plus derived artifacts**. They feed different consumers, so a change to only one leaves the register/webapp/issue out of sync:
+
+| File | Consumer |
+|------|----------|
+| `06_Risk_System/risks.json` | `webapp/build_risk.py` → PRR `src/index.html` (SoT for webapp) |
+| `06_Risk_System/prr_risks.json` | `webapp/build_dashboard.py` (unified dashboard) AND `scripts/risk_issue_daily.py` (GitHub issue sync) |
+
+**The order matters.** Run the GitHub issue sync LAST — it reads the JSON status and closes/updates issues.
+
+Full sequence:
+1. **Edit BOTH** `risks.json` and `prr_risks.json` — set `status: "Closed"` (or downgrade rating), set `target_close` to today, append a dated `history[]` entry (`{"date": "YYYY-MM-DD", "action": "Closed", "by": "Hermes", "note": "<evidence>", ...}`) with the factual evidence + source ref. Per AGENTS.md Rule 10 / PM decision, a submission that returned **Code B = not a real risk** — closing on that basis must keep the actions in the Action Plan and cite the submission ref + date, with NO internal rationale in evidence.
+2. **Rebuild the webapps:** `python3 webapp/build_risk.py` (PRR) + `python3 webapp/build_dashboard.py` (unified) + `python3 webapp/build_ddr.py` + `python3 webapp/build_hse.py`.
+3. **Regenerate Excel snapshots:** `python3 webapp/build_snapshots.py --bump` → new PRR/DDR/HSE `.xlsx`.
+4. **Copy snapshots to OneDrive** `REV{NN}/` subfolders (delete-old-first or move stale to `_CORRUPT_/` per register-webapp-pipeline; verify byte-exact size).
+5. **Commit + push** (`git add -f` the gitignored `.xlsx`; stash → `pull --rebase` → `stash pop` to survive the post-commit hook dirt on `risks.json`/`index.html`).
+6. **Run the GitHub issue sync LAST:** `python3 scripts/risk_issue_daily.py`. It reads `prr_risks.json` and auto-**closes** the `Risk — <ID>` issue when status = Closed/Mitigated, and posts a dated comment when only the fingerprint changed (rating downgrade). Verify with `gh issue view <N>` / `gh issue list`.
+7. Confirm the `Risk — <ID>` issue closed via `gh issue list --state open` (the open count drops).
+
+> **PITFALL — a rating downgrade is not real until `probability`×`severity` recomputes to the target band.** `build_snapshots.py`/`build_xlsx.py` derive rating from `score = probability × severity` (≥12 Critical, ≥8 High, ≥4 Medium). If you write a note claiming "downgraded High→Medium" but leave `probability`/`severity` unchanged (e.g. 3×3=9=High), the value stays High — the note becomes false. To actually downgrade, lower `probability` or `severity` so the product lands in the target band, THEN write the note. Verify the recomputed `score`/`rating` in the JSON before reporting the downgrade.
+
+> **PITFALL — the GitHub risk issues are auto-generated, not manually closed.** Do NOT `gh issue close` a `Risk — <ID>` issue by hand — it will be reopened/re-synced. Always edit the JSON status and let `risk_issue_daily.py` do the closing. Manually close only non-risk issues (Open Questions, known-issues, bugs) that are genuinely resolved.
+
+
+
 > **Status/evidence updates use the SAME SoT pipeline as adding a risk.** Changing a risk's `status` (e.g. Watch→Open), `event`, or `evidence[]` is done by editing `risks.json` then running the identical `risk_sync.py` → `build_risk.py` → `build_snapshots.py --bump` → commit → `git pull --rebase && git push` → `webapp/deploy.sh` chain. Do NOT hand-edit `risk_register.md` — `risk_sync.py` overwrites it. When you change status, also append a dated entry to `history[]` (e.g. "Status raised Watch -> Open" with the reason + date) so the change is auditable.
 
 > **PITFALL — `Target Close` is a TARGET, not the actual closure date.** The `target_close` field (rendered as "Target Close" column in `risk_register.md`) is the *planned* close date. It is NOT evidence of when a risk was actually closed. A row showing `status=Closed, target_close=2026-08-15` does NOT mean it closed 15-Aug. To find the REAL closure date: `git log --all -S'"status": "Closed"' -- 06_Risk_System/risks.json` or `git blame -L <line> 01_Registers/risk_register.md` on the row, then read the commit date. In practice Aseer's Closed risks (COM-06, CON-03, DES-06, PRC-03, SCH-02) were actually closed in late Jul despite `target_close` values as late as mid-Aug. Always verify actual closure via git history before reporting "X closed [date]".
