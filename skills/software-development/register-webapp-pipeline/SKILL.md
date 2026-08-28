@@ -46,6 +46,19 @@ All registers must follow `{REG}-{RBS}-{NN}` format:
 
 **Key rule**: Always fix BOTH the source JSON data AND the built HTML. Build scripts regenerate output from source — fixing only the HTML is temporary.
 
+**PRR has TWO source JSON files — update BOTH when changing PRR risks (recurring trap, bit me 2026-08-28).** `risks.json` (read by `webapp/build_risk.py` for the PRR master page) and `prr_risks.json` (read by `webapp/build_dashboard.py` for the unified dashboard) are SEPARATE files that both carry the PRR risks. Editing only one leaves the other stale — the master page and dashboard will disagree. When you close/downgrade a PRR risk or edit any PRR risk field:
+1. Edit `06_Risk_System/prr_risks.json` (canonical register for the dashboard + Excel snapshot).
+2. Edit `06_Risk_System/risks.json` with the SAME change (SoT for the PRR master webapp page).
+3. Rebuild BOTH: `python3 build_risk.py` (master page) AND `python3 build_dashboard.py` (unified dashboard) — plus `build_ddr.py`/`build_hse.py` if those data changed.
+4. `python3 build_snapshots.py --bump` to regenerate Excel snapshots, then copy to OneDrive (see snapshot delivery section).
+5. Commit BOTH JSON files + all rebuilt HTML + snapshot_counter.json together.
+
+**Rating downgrade — recompute score, don't just flip the label (bit me 2026-08-28).** Setting `r["rating"]="Medium"` on a risk whose `probability×severity` still equals 9 (High) leaves the risk High in the webapp/Excel because the rating is DERIVED from `score = probability × severity`. To actually downgrade: lower the probability/severity (e.g. `probability 3→2`, `score 9→6`) AND update the rating. Always derive rating from the recomputed score via the rating map `{3:Low, 4:Medium, 6:Medium, 9:High, 12:Critical}`.
+
+**Risk closure → GitHub issue auto-close.** The per-risk GitHub issues (titled `Risk — <ID>`) are synced by `risk_issue_daily.py`. After closing/mitigating risks in the JSON source, run `python3 scripts/risk_issue_daily.py` (from repo root) — it auto-closes the matching GitHub issues for any risk whose status became `closed`/`mitigated`, and posts a dated status comment on changed open risks. It is idempotent and only acts on changed fingerprints, so it's safe to run after every risk-edit commit.
+
+**Full risk-closure cascade** (repo register → webapp → snapshots → OneDrive → GitHub issues → Odoo tasks) is documented in `references/risk-closure-cascade.md` — follow it end-to-end when closing a risk, so no layer is missed.
+
 **CRITICAL — sync direction is JSON → MD, never MD → JSON.** `risks.json` is the single source of truth. `risk_sync.py` regenerates `01_Registers/risk_register.md` FROM the JSON. If you edit the markdown register directly (e.g. to add a new risk or update a cause/response_action), the next `risk_sync.py` run **overwrites your edit**. The correct workflow when adding/updating a risk:
 1. Edit `06_Risk_System/risks.json` (add the risk object with full schema: id, category, title, cause, event, consequence, probability, severity, score, rating, status, owner, target_close, created, last_reviewed, response_action, actions[], history[], diagram, action_due).
 2. Run `python3 risk_sync.py` to regenerate the markdown register.
