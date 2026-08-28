@@ -85,6 +85,17 @@ Scan for:
 
 Use Python for bulk pattern detection with `os.listdir` and regex; use `find` for shell-level detection.
 
+**Near-dup grouping pitfall:** When grouping files by "same base name" to detect `(1)`/`[N]` version chains, strip the extension FIRST, then strip the suffix. Applying `re.sub(r'\s*\(\d+\)\s*$','',f)` to the full filename (with extension) fails silently — `Draft_Bill_proforma (1).pdf` keeps its `(1)` because the regex anchors to end-of-string but `.pdf` follows. Correct:
+
+```python
+stem, ext = os.path.splitext(f)
+base = re.sub(r'\s*\(\d+\)\s*$', '', stem)   # strip (N) from stem only
+base = re.sub(r'\[\d+\]$', '', base)          # also strip [N] (browser re-save)
+groups[(base, ext.lower())].append(f)
+```
+
+Group on `(base, ext)` so `.xlsx` and `.xlsb` variants of the same name don't collide.
+
 ### Pass 3: Fix spelling
 
 Rename directories **first** — directory renames affect all child paths and avoid stale path references in subsequent operations.
@@ -219,6 +230,33 @@ dups={h:pl for h,pl in by_hash.items() if len(pl)>1}
 ```
 
 Before executing: always present the duplicate groups to the user and ask the **keep-history decision** — e.g. each submittal contains both the original and `Rev.01`. Ask whether to keep both (preserve history, safest) or collapse to the latest revision only. Never silently delete the older revision inside an organized folder.
+
+**Quarantine fallback (when the keep-history decision can't be confirmed):** If the user doesn't answer the clarify prompt (or you're mid-run and can't block), do NOT hard-delete any user file. Instead MOVE the redundant copies to a `_Duplicates_To_Review/` folder at the tree root, preserving their relative paths so they're recoverable:
+
+```python
+QUAR = os.path.join(ROOT, '_Duplicates_To_Review')
+# keep the "best" copy: prefer one already inside an organized project folder over
+# loose root/Other, prefer non-(N) name, prefer newest mtime
+def keep_score(p):
+    rel = os.path.relpath(p, ROOT)
+    loose = rel.startswith('Other') or (os.sep not in rel)
+    base = os.path.basename(p)
+    n_suffix = ('(' in base and ')' in base) or ('[' in base and ']' in base)
+    return (loose, n_suffix, -os.path.getmtime(p))
+pl_sorted = sorted(pl, key=keep_score)
+keep = pl_sorted[0]
+for p in pl_sorted[1:]:
+    dst = os.path.join(QUAR, os.path.relpath(p, ROOT))
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    if os.path.exists(dst): dst += f".dup{len(moved)}"   # avoid clobber
+    shutil.move(p, dst)
+```
+
+This removes the duplication from the active tree while nothing is lost. Report the quarantine folder path to the user and tell them to review + delete it when satisfied — it's the only remaining cleanup step. This respects the "never delete user files without explicit confirmation" rule.
+
+**Version chains (same name, DIFFERENT content):** `(1)`/`(2)`/`[N]` copies with different md5 are distinct revisions, not duplicates. Keep the newest mtime in place and quarantine the rest (same `_Duplicates_To_Review/` pattern). Applies to risk registers, trackers, quotations, WhatsApp image chains.
+
+**Cross-folder same-name files are often DIFFERENT revisions:** A file like `AV_Submittal_Register.xlsx` appearing in both `Submittals/` and `Registers/`, or `Register Log` in two register folders, is usually two distinct saves — verify by md5 before deduping. If hashes differ, leave both in place (they're separate revisions). Only dedup when hashes match.
 
 ### Pass 5c2: Inspect archives (zip/rar) BEFORE extracting
 
@@ -428,6 +466,7 @@ This preserves the original folder structure while adding navigable hierarchy.
 - `references/onedrive-root-cleanup-patterns.md` — 250+ loose files at OneDrive root, routing by project code prefix, Reports/ consolidation, Scans/ date grouping
 - `references/sister-companies-project-folders.md` — Renaming Arabic subsidiary files to English, creating per-project folders from a numbered list (متجر/كافيه format), searching Downloads for related files
 - `references/aseer-museum-02-submittals-reorg.md` — Consolidating scattered discipline registers under numbered hierarchy, one-shot batch script execution, ISO date rename, project-tools-kept-at-root decision
+- `references/downloads-quarantine-dedup.md` — 9.9 GB Downloads cleanup: quarantine-to-`_Duplicates_To_Review/` fallback when keep-history decision unconfirmed, version-chain keep-newest, cross-folder same-name = different revisions, routing rules, near-dup regex pitfall
 
 ---
 

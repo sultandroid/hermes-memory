@@ -2,8 +2,8 @@
 
 Worked example of the dedup consolidation workflow (SKILL.md §6b). The folder had
 drifted into 40+ top-level entries under conflicting numbering schemes (README
-canonical list vs actual on-disk state). Audit was completed; execution paused
-pending user sign-off on the ambiguous clusters.
+canonical list vs actual on-disk state). **EXECUTED 2026-08-27**: 8 redundant
+folders moved to `_Deprecated_Duplicates/` (see Execution section below).
 
 ## Canonical keeper detection rule
 The keeper folder for each discipline has ALL of:
@@ -57,3 +57,24 @@ count/diff or it masks real deltas.
 OneDrive moves are destructive — no `rm -rf`/`mv`. Present the table, get keeper +
 mislabeled-folder sign-off, THEN merge via safe rename and update `README.md`
 register table + status reports.
+
+## Execution (run 2026-08-27) — resolved
+Moved into `24_Subcontractors/_Deprecated_Duplicates/` (all `mv`, nothing deleted):
+`01_Acoustic`, `03_Acoustic_Specialist` (→ keep 18), `02_Landscaping`, `03_Landscaping`
+(→ keep 21), `06_Rigging` (→ keep 06_Rigging_Contractor), `19_Interactive_Design_Contractor`
+(→ keep 09), `06_AV_IT_Rawasin` (→ keep 04), and `10_Rigging` (nested redundant
+re-nest inside `06_Rigging_Contractor`, md5-identical to the folder's own
+top-level `01_Prequalification/`).
+
+Also quarantined the byte-identical `_dup` copies: AV `PQ-0133/0134_dup` + Molitor
+scope/zip `_dup`, Acoustic `PQ-0124 Rev.01_dup`.
+
+**Still KEPT (different md5 = distinct revision, not a dup):**
+- `06_Rigging_Contractor/01_Prequalification/MOC-MUS-ASE-1C0-PQ-0131_dup.pdf`
+  (3.4 MB vs 1.2 MB orig) and `PQ-0132_dup` (14 MB vs 1.2 MB) — larger scans.
+- `21_Landscaping_Specialist/01_Prequalification/MOC-MUS-ASE-1L0-PQ-0122 Rev.01_dup.pdf`
+  (15.9 MB vs 15.5 MB orig).
+- Root `SCOPE OF WORK_dup.pdf` — different content.
+
+**Still awaiting user decision:** `14_MEP_Contractor` (mislabeled grab-bag, NOT
+duplicated MEP content) — see "Flagged" above. Unchanged this session.

@@ -338,6 +338,51 @@ If no provider is set at creation time, the then-current global provider is stor
 
 **Verification:** After updating, check the job's model/provider fields in `cronjob action=list` output to confirm they're set.
 
+## "Provider timeout / fallback chain exhausted" on cron jobs
+
+When a cron job fails with:
+
+```
+RuntimeError: Connection error.
+```
+or the delivery reads `provider timeout. Fallback chain was exhausted or unavailable.`
+
+**Root cause is almost always an empty fallback chain, not a dead provider.** The primary provider (e.g. `ollama-cloud`) hit a transient network/connection timeout, and because `fallback_providers: []` there was nothing to fail over to — so the run died. The provider itself is usually fine (a retry succeeds seconds later).
+
+**Diagnose:**
+1. Confirm the primary endpoint is actually reachable now (rules out a real outage):
+   ```bash
+   curl -sS -m 10 -o /dev/null -w "%{http_code}\n" https://ollama.com
+   # and test the actual model endpoint with the key from ~/.hermes/.env
+   ```
+2. Inspect the fallback chain:
+   ```bash
+   hermes fallback list
+   # or
+   python3 -c "import yaml; c=yaml.safe_load(open('/Users/mohamedessa/.hermes/config.yaml')); print(c.get('fallback_providers'))"
+   ```
+   Empty `[]` = the failure mode. `hermes config check` shows which provider keys are set (e.g. `OPENROUTER_API_KEY` ✓) — use one of those for the fallback.
+
+**Fix — add a fallback provider** (list of `{provider, model, base_url?, api_mode?}` dicts at top level):
+```python
+python3 -c "
+import yaml
+p='/Users/mohamedessa/.hermes/config.yaml'
+c=yaml.safe_load(open(p))
+c['fallback_providers']=[{'provider':'openrouter','model':'deepseek/deepseek-chat-v3-0324'}]
+yaml.safe_dump(c, open(p,'w'), default_flow_style=False, sort_keys=False, allow_unicode=True)
+"
+```
+Prefer a provider whose key is already set (OpenRouter, Kimi, Gemini, OpenCode are common on this machine). Verify with `hermes fallback list` — it shows the primary + ordered fallback chain.
+
+**Re-run the failed job** to confirm end-to-end:
+```bash
+cronjob action=run job_id=<JOB_ID>
+```
+then read the newest file in `~/.hermes/cron/output/<JOB_ID>/` to confirm `execution_success: true` and a real response (not the error).
+
+**Prevention:** any LLM-driven cron job should have a fallback provider configured so a single transient timeout on the primary doesn't kill the run. This is separate from provider-drift pinning (above) — a job can be pinned AND still need a fallback chain.
+
 - `references/codex-gpt55-context-cap.md` — session-derived detail on the Codex OAuth 272K cap vs 1.05M on other routes.
 - `references/kimi-provider-setup.md` — Kimi/Moonshot provider setup (models, endpoint, tips).
 - `references/moa-preset-examples.md` — MoA preset YAML blocks and ready-to-run Python write scripts.
