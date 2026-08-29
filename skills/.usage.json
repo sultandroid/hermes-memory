@@ -17,13 +17,13 @@
     "created_at": "2026-07-24T08:50:56.593156+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-07-24T08:50:56.596778+00:00",
-    "last_viewed_at": "2026-07-24T08:50:56.593161+00:00",
+    "last_used_at": "2026-08-29T07:42:56.991946+00:00",
+    "last_viewed_at": "2026-08-29T07:42:56.940539+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 2,
+    "view_count": 2
   },
   "apple-notes": {
     "archived_at": null,
@@ -367,14 +367,14 @@
     "archived_at": null,
     "created_at": "2026-07-09T05:14:23.739476+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-24T07:24:56.797799+00:00",
-    "last_used_at": "2026-08-27T20:04:45.725702+00:00",
-    "last_viewed_at": "2026-08-27T20:04:45.707931+00:00",
-    "patch_count": 119,
+    "last_patched_at": "2026-08-29T12:56:39.161844+00:00",
+    "last_used_at": "2026-08-29T12:56:15.690396+00:00",
+    "last_viewed_at": "2026-08-29T12:56:15.680306+00:00",
+    "patch_count": 120,
     "pinned": false,
     "state": "active",
-    "use_count": 176,
-    "view_count": 176
+    "use_count": 177,
+    "view_count": 177
   },
   "cg-submittal-review-checklist": {
     "archived_at": null,
@@ -1174,13 +1174,13 @@
     "created_at": "2026-06-24T02:27:22.685155+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-29T05:14:13.568362+00:00",
-    "last_used_at": "2026-08-29T05:14:10.320624+00:00",
-    "last_viewed_at": "2026-08-29T05:14:10.318603+00:00",
+    "last_used_at": "2026-08-29T07:42:56.998061+00:00",
+    "last_viewed_at": "2026-08-29T07:42:56.961096+00:00",
     "patch_count": 13,
     "pinned": false,
     "state": "active",
-    "use_count": 11,
-    "view_count": 11
+    "use_count": 13,
+    "view_count": 13
   },
   "hermes-profiles": {
     "archived_at": null,
@@ -1467,6 +1467,19 @@
     "state": "active",
     "use_count": 3,
     "view_count": 3
+  },
+  "macos-font-install": {
+    "archived_at": null,
+    "created_at": "2026-08-29T07:43:51.058631+00:00",
+    "created_by": "agent",
+    "last_patched_at": null,
+    "last_used_at": null,
+    "last_viewed_at": null,
+    "patch_count": 0,
+    "pinned": false,
+    "state": "active",
+    "use_count": 0,
+    "view_count": 0
   },
   "macos-housekeeping": {
     "archived_at": null,
@@ -1837,12 +1850,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-08-29T06:00:32.424087+00:00",
+    "last_used_at": "2026-08-29T13:05:02.971241+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 388,
+    "use_count": 389,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1875,14 +1888,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-29T05:48:42.190572+00:00",
-    "last_used_at": "2026-08-29T03:02:48.886120+00:00",
-    "last_viewed_at": "2026-08-29T03:02:48.883498+00:00",
-    "patch_count": 347,
+    "last_patched_at": "2026-08-29T08:46:19.981638+00:00",
+    "last_used_at": "2026-08-29T08:46:13.942157+00:00",
+    "last_viewed_at": "2026-08-29T08:46:13.939622+00:00",
+    "patch_count": 348,
     "pinned": false,
     "state": "active",
-    "use_count": 831,
-    "view_count": 524
+    "use_count": 833,
+    "view_count": 526
   },
   "p5js": {
     "archived_at": null,
@@ -2539,13 +2552,13 @@
     "created_at": "2026-07-07T11:08:29.875682+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-20T06:43:36.471267+00:00",
-    "last_used_at": "2026-08-26T11:01:42.946032+00:00",
-    "last_viewed_at": "2026-08-26T11:01:42.942820+00:00",
+    "last_used_at": "2026-08-29T11:01:32.927821+00:00",
+    "last_viewed_at": "2026-08-29T11:01:32.923851+00:00",
     "patch_count": 7,
     "pinned": false,
     "state": "active",
-    "use_count": 18,
-    "view_count": 18
+    "use_count": 19,
+    "view_count": 19
   },
   "samaya-company-profile": {
     "archived_at": null,
@@ -2604,13 +2617,13 @@
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T07:35:54.056128+00:00",
-    "last_used_at": "2026-08-23T21:22:06.821571+00:00",
-    "last_viewed_at": "2026-08-23T21:22:06.819145+00:00",
+    "last_used_at": "2026-08-29T07:43:31.824821+00:00",
+    "last_viewed_at": "2026-08-29T07:43:31.807569+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 435,
-    "view_count": 435
+    "use_count": 436,
+    "view_count": 436
   },
   "samaya-excel-styling": {
     "archived_at": null,
@@ -2643,13 +2656,13 @@
     "created_at": "2026-07-07T10:51:19.862973+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-25T11:09:37.837200+00:00",
-    "last_used_at": "2026-08-28T11:17:01.964759+00:00",
-    "last_viewed_at": "2026-08-28T11:17:01.962258+00:00",
+    "last_used_at": "2026-08-29T11:05:07.309597+00:00",
+    "last_viewed_at": "2026-08-29T11:05:07.301522+00:00",
     "patch_count": 56,
     "pinned": false,
     "state": "active",
-    "use_count": 66,
-    "view_count": 66
+    "use_count": 67,
+    "view_count": 67
   },
   "samaya-factory-profile": {
     "archived_at": null,
