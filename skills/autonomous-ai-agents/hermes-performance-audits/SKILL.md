@@ -88,4 +88,4 @@ Keep it short:
 ## Reference
 
 - `references/hermes-speed-audit-2026-06.md` — condensed example audit findings and safe command set from a real session.
-- `references/git-rebase-conflict-recovery.md` — patterns for recovering from rebase conflicts, detached HEAD, and non-fast-forward push rejections during auto-sync cron jobs.
+- `references/git-rebase-conflict-recovery.md` — patterns for recovering from rebase conflicts, detached HEAD, and non-fast-forward push rejections during auto-sync cron jobs. Also covers the "cron reports FAILED/provider-timeout but the commit was already made locally" case — check `git log`/`git status` before redoing work, then rebase + push.

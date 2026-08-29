@@ -11,6 +11,34 @@ Patterns for recovering from git rebase conflicts, detached HEAD, and non-fast-f
 | `non-fast-forward` push | Local branch diverged from remote | `git fetch origin && git reset --hard origin/main` (nuclear — safe for auto-sync scripts) |
 | `EDITOR unset` on rebase --continue | Non-interactive environment | `GIT_EDITOR=true git rebase --continue` |
 | `Your branch and 'origin/main' have diverged` | Local commits not on remote | `git fetch origin && git reset --hard origin/main` |
+| Cron job reports `FAILED` / `provider timeout` / `idle for Ns` but the work was actually done | The LLM's final response timed out (idle limit ~600s) AFTER the git commit was made but BEFORE the push step ran. The commit exists locally, unpushed. | Check `git log -1` / `git status` first — do NOT redo the work. Then `git fetch origin && git rebase origin/main`, resolve conflicts, `git push`. |
+
+## Recovery Sequence: "work done but push timed out" (preserve local commit)
+
+When a cron job's LLM response timed out after committing but before pushing, the local commit is real work — do NOT discard it with `reset --hard`. Rebase it onto the remote instead:
+
+```bash
+# 1. Confirm the work is actually done (do NOT redo it)
+git log -1 --format='%h %ci %s'          # shows the auto-commit
+git status --short                        # clean = commit captured everything
+
+# 2. Fetch and rebase local commit onto remote
+git fetch origin
+git log HEAD..origin/main --oneline        # see what the remote added
+git rebase origin/main
+
+# 3. Resolve conflicts (usually trivial — e.g. a date-stamp field)
+#    Keep the cron job's value (today's date) over the remote's older value.
+#    Edit the conflicted file, then:
+git add <conflicted-file>
+GIT_EDITOR=true git rebase --continue
+
+# 4. Push
+git push origin main
+git log origin/main..HEAD --oneline        # empty = fully pushed
+```
+
+Key point: a `FAILED` cron status with a `provider timeout` / `idle for Ns` error does NOT mean the job's work failed. The commit may already exist locally. **Check `git log`/`git status` before re-running the job or redoing any work.**
 
 ## Recovery Sequence (for auto-sync scripts)
 

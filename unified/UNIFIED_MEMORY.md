@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-28 16:01:02
+Generated: 2026-08-29 09:00:31
 
 ---
 
@@ -45,6 +45,7 @@ Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-
 Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
 Aseer DD submittals: 3.2_DD Submissions/=dated folder. Review: formal=user, technical=Abdullah Omer. ZNA=Dogan.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
+Aseer concrete core test 28-Aug (SE-KH-CC-26-177-0001, SMITS): avg 20.7MPa=59% of 35MPa → NOT COMPLY. Evidence for PRR-SIT-02/ZD-0110.
 Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
@@ -58,7 +59,6 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - For Samaya/Aseer package governance, supply-only packages do not need SoWs; specialists/contractors do, and the desired coverage is SoW + submission plan + tracker per package [ad-hoc note].
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
-- Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
 
 ## Key People
 
@@ -85,7 +85,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 ## Agents & Tools
 
-Odoo 167.99.224.43: SSH root; NPM(80/81/443)+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets (مباشرة/salary)=helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
+Odoo 167.99.224.43: SSH root; NPM+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets=helpdesk.ticket team 10; emp 975 partner 5503.
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
