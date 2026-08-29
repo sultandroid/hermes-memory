@@ -146,6 +146,28 @@ For each document:
 - **Blank CRS template** (approved, reusable): `Technical_Office/Compliance_System/templates/CRS_TEMPLATE_BLANK.xlsx` (repo) / `04_Docs/09_Registers/CRS_Templates/CRS_TEMPLATE_BLANK.xlsx` (OneDrive). See the `compliance-sheet-filling` skill for the full fill pattern and the leftover-comments pitfall.
 - **CRS content**: one row per CG comment — `No. | Initial | Sheet | Reviewer Comment | Originator Reply | Reply By | Reply Status`. Reply wording is plain "Accepted"/"Closed" (draft — user reviews before sending to the consultant).
 - **Code B** responses do NOT need a CRS — just log the approval.
+- **Programmatic fill**: the template's exact cell map (header fields, data-row columns A/B/C/E/J/P/Q, merged ranges E:I / J:O / Q:R, row 11 start) and a ready openpyxl fill script are in `references/crs-template-fill.md`. Use it instead of hand-typing rows. **Formatting is mandatory** — widen columns, auto-calc row heights (never fixed 60px), font 11, color-code status (green=Closed/red=Open), then render-verify via soffice→pdftoppm→vision before delivering. The user bounces the file with "format not good" if you skip this.
+- **Spec-stage Code C (evidence timing)**: when CG returns a *specifications* submittal Code C demanding test reports / certificates / warranties / mock-ups, reply that these are MAR / pre-installation stage deliverables, not spec-stage. Embed the criteria into each spec section, commit to evidence at the correct later stage, and request CG agreement to staged delivery. See `references/crs-template-fill.md` for the full argument.
+
+## Step 7 — AUDIT each comment before assigning a reply (do NOT default to "Complied")
+
+**The user's #1 correction on CRS work: never mark every comment "COMPLIED/Closed" by reflex.** Before writing any reply, audit each CG comment against the governing docs and classify it into one of five positions:
+
+| Position | When to use | Evidence to cite |
+|---|---|---|
+| **Complied** | Comment is a legitimate requirement already in the spec, or a real internal-QA obligation | SoW / ER clause |
+| **Not applicable at this stage** (push back) | CG demands a deliverable that belongs to a later stage (test reports, certs, warranties, mock-ups) | SoW §6.11 (product data = IFC-package submittal, "shall not be submitted independently"); SoW §13.12 + ER §2.4.F (mock-ups per Mockups Schedule, construction phase) |
+| **Noted** (not a comment) | CG states a principle, not a technical requirement (e.g. "approval does not relieve contractor responsibility", "no variation to price/schedule") | ER §2.4 (design liability stays with Contractor; PMC review = conformance only) |
+| **Deferred** | Comment requires a specialist who is NOT yet appointed | specialist_register.md — verify actual appointment status |
+| **Open / clarify** | Comment is vague or downstream of an unresolved design (e.g. "display cases suspended until compliant") | link to the unresolved parent submittal (e.g. 1G-0009 Code C) |
+
+**Governing rules to cite (Aseer Museum):**
+- ER §2.4 — PMC review is **conformance only, not technical review**; technical review is the Contractor's Designer's job. Design liability stays with Contractor even after "approval".
+- ER §E — spec framework = AIA/CSI MasterSpec (so MasterFormat numbering is correct, not a defect).
+- SoW §6.9–6.19 — the submittal taxonomy (product data, certs, test reports, design data) and their stage.
+- SoW §13.12 — mock-ups/samples/prototypes per the Mockups Schedule.
+
+**CRITICAL — verify specialist appointment status before claiming "appointed".** When a comment says "review by the acoustics/sustainability specialist", do NOT write "reviewed by X (Code B, appointed)" from memory. Read `Technical_Office/Specialist_Management/specialist_register.md` and confirm the actual PQ code + stage. In this session the agent fabricated "TransOrient PQ-0128 Code B, appointed" when the register showed **Code U (conditional), still awaiting CG review** — a factual error in a CG-facing document. The register can also be internally inconsistent (Tier 2 row vs Tier 3 row disagreeing); when it is, flag the conflict and take the conservative reading (not appointed).
 
 ## Pitfalls
 

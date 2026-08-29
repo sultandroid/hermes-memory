@@ -253,6 +253,35 @@ open('/Users/mohamedessa/.hermes/config.yaml', 'w').write('\n'.join(new_lines))
 
 Key logic: enter skip mode on the provider name at indent-2; exit skip when the next indent-2 key appears. Works reliably for removing one or more consecutive provider blocks.
 
+### Remove a provider referenced in MULTIPLE places (fallback + top-level + moa)
+
+A provider like `openrouter` can appear in several config locations at once: `fallback_providers` (list), a top-level `openrouter:` section, and inside `moa.presets.*.reference_models` / `.aggregator`. The line-based indent approach only removes one block. For a full purge, use Python yaml load/dump and hit every location:
+
+```python
+import yaml
+p = '/Users/mohamedessa/.hermes/config.yaml'
+c = yaml.safe_load(open(p))
+# 1. fallback_providers list
+if c.get('fallback_providers'):
+    c['fallback_providers'] = [f for f in c['fallback_providers'] if f.get('provider') != 'openrouter']
+# 2. top-level section
+c.pop('openrouter', None)
+# 3. moa presets (reference_models + aggregator)
+for preset in c.get('moa', {}).get('presets', {}).values():
+    if isinstance(preset, dict):
+        refs = preset.get('reference_models', [])
+        if isinstance(refs, list):
+            preset['reference_models'] = [r for r in refs if not (isinstance(r, dict) and r.get('provider') == 'openrouter')]
+        agg = preset.get('aggregator')
+        if isinstance(agg, dict) and agg.get('provider') == 'openrouter':
+            preset['aggregator'] = {}
+yaml.safe_dump(c, open(p, 'w'), default_flow_style=False, sort_keys=False, allow_unicode=True)
+```
+
+Then verify with `grep -n openrouter ~/.hermes/config.yaml` (expect no matches) and `hermes fallback list`.
+
+**Consequence to flag:** removing the only `fallback_providers` entry leaves the chain empty — the next transient primary timeout kills the run instead of failing over. Tell the user this and offer a non-removed fallback (Kimi/Gemini) if they want the safety net kept.
+
 ### Remove a top-level config section (indent-0, e.g. `openrouter:`)
 
 Same pattern but indent threshold is 0 instead of 2:
