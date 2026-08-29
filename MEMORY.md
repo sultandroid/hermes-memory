@@ -6,7 +6,7 @@ OneDrive EDEADLK = copy to Micro volume first. .olk15Msg base64 after 'base64' h
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
 §
-Odoo 167.99.224.43: SSH root; NPM(80/81/443)+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets (مباشرة/salary)=helpdesk.ticket team 10 HR&Admin stage 1 New; emp 975, partner 5503.
+Odoo 167.99.224.43: SSH root; NPM+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets=helpdesk.ticket team 10; emp 975 partner 5503.
 §
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 §
@@ -25,3 +25,5 @@ Aseer DD submittals: 3.2_DD Submissions/=dated folder. Review: formal=user, tech
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs. Verify git push before saying 'on repo'.
 §
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
+§
+Aseer concrete core test 28-Aug (SE-KH-CC-26-177-0001, SMITS): avg 20.7MPa=59% of 35MPa → NOT COMPLY. Evidence for PRR-SIT-02/ZD-0110.
