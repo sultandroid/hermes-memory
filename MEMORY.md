@@ -12,18 +12,18 @@ CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. K
 §
 PO approval: quote attached, prices/total match, ±20% std_price, update list_price, add vendor name+code in seller_ids, post. Service POs skip last two.
 §
-Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09).
-§
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 §
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
+Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
 §
-Aseer DD submittals: 3.2_DD Submissions/=dated folder. Review: formal=user, technical=Abdullah Omer. ZNA=Dogan.
+Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
 §
-Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs. Verify git push before saying 'on repo'.
+Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
 §
-Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
 §
-Aseer concrete core test 28-Aug (SE-KH-CC-26-177-0001, SMITS): avg 20.7MPa=59% of 35MPa → NOT COMPLY. Evidence for PRR-SIT-02/ZD-0110.
+Double-check rated/status registers (specialist, PQ, submittal codes) against source before citing — can be internally inconsistent.
+§
+Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-stage, don't blindly comply. CG review = conformance-only (ER §2.4).
