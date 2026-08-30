@@ -1,10 +1,8 @@
-Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
-§
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 §
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 §
-"بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL.
+"بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 §
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 §
@@ -15,3 +13,5 @@ Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket t
 Verify LATEST Outlook/tracker before calling a specialist delayed; separate admin/procurement blockers from technical delay.
 §
 No yes-man: 'ادرس الموضوع بعمق' — study deeply, ask boundary Qs, verify refs vs source. Docs avoid § (use 'Section'). Edit file in place, keep ONE latest version, delete stale copies.
+§
+CRS/comment replies must be humanized — natural engineer voice, not template/stiff wording. Reviews comments one-by-one before finalizing.

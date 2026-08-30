@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-29 16:05:02
+Generated: 2026-08-30 09:03:46
 
 ---
 
@@ -17,9 +17,9 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
-Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
+Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
+"بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
 Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
@@ -41,12 +41,9 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09).
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev. Detail: risk-register-management/risk-id-conventions.md.
-Aseer DD submittals: 3.2_DD Submissions/=dated folder. Review: formal=user, technical=Abdullah Omer. ZNA=Dogan.
-Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
-Aseer concrete core test 28-Aug (SE-KH-CC-26-177-0001, SMITS): avg 20.7MPa=59% of 35MPa → NOT COMPLY. Evidence for PRR-SIT-02/ZD-0110.
-Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
+Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
+Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -59,14 +56,19 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - For Samaya/Aseer package governance, supply-only packages do not need SoWs; specialists/contractors do, and the desired coverage is SoW + submission plan + tracker per package [ad-hoc note].
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
+- Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
+  - learnings: Moqtana is the default for task/project queries here; Samaya XML-RPC failed with `401`, so auth verification is the first stop condition.
+- Aseer resource-plan reconstruction and large-reference HTML extraction: resource_mgmt_restyled_backup.html, file content 2.2MB exceeds 256KB, compact not tight, chars 495-19049
 
 ## Key People
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
-Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
+Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
+"بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
+CRS/comment replies must be humanized — natural engineer voice, not template/stiff wording. Reviews comments one-by-one before finalizing.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Samaya/Aseer delivery, keep output in English only, use British/plain engineer language, send CR sheets for user review before sending, and prefer Excel/CSV snapshots over PDF for data handoff [ad-hoc note].
 - In Aseer governance memory, Employer = MoC, PMC = ACE Moharram-Bakhoum, and site/construction/FLS risks route to the Construction Manager rather than the Technical Office Manager [ad-hoc note].
@@ -80,8 +82,6 @@ Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 0
 Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects (Zamzam #121, Aseer #3092, etc.). Key people: Sultan (Odoo/Outlook, sultan@samayainvest.com), Ali Abdelrahman (BIM Lead), Adel Darwish (Project Dir), Mohamed Samir (Constr Mgr), Hesham Ezzat (Doc Controller). Telegram: @SultanMacBook_Bot. Notion: MacHermes bot on Samaya inv. workspace.
 **Mohamed Essa** — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects including Zamzam #121, Aseer #3092, and related portfolio work. Also owner/operator of Moqtana Museums & Consultancy (fit-out/heritage), which runs Odoo 18 Community on DigitalOcean (167.99.224.43).
 - **Ali Abdelrahman** (BIM Lead)
-- **Adel Darwish** (Project Director, Acting from 1-May-26)
-- **Mohamed Samir** (Construction Manager)
 
 ## Agents & Tools
 
@@ -109,10 +109,10 @@ task_group: Hermes Agent configuration
 ## Contracts & Documents
 
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
-Aseer interactives 6: 04.05G4,05.02G5,08.04G8,09.03G9 smell,12.05G12x2. SOW INT-001=CG sub Rawasin(T2-09).
-Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs. Verify git push before saying 'on repo'.
-Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block on submitted files: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham. Keep doc-ref index on repo.
-Consultant docs: strip ALL internal rationale — scope only for CG approval. PROPOSE + 'sample for approval', never guess. SOWs submitted BY contractor, approved BY owner (Samaya). Corrects job titles ('Project Manager').
+Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
+Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
+Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
+Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-stage, don't blindly comply. CG review = conformance-only (ER §2.4).
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
