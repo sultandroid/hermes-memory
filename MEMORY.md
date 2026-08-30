@@ -4,7 +4,7 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
 §
-Odoo 167.99.224.43: SSH root; NPM+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets=helpdesk.ticket team 10; emp 975 partner 5503.
+Odoo 167.99.224.43 SSH root; Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets helpdesk team10. Aseer risk close: edit BOTH risks.json+prr; rebuild+bump; risk_issue_daily.py LAST closes GitHub 'Risk — <ID>'; rating=prob×sev.
 §
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 §
@@ -13,8 +13,6 @@ PO approval: quote attached, prices matched ±20% std_price, update list_price +
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
 §
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
-§
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
 §
 Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
 §
@@ -25,3 +23,5 @@ Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG D
 Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-stage, don't blindly comply. CG review = conformance-only (ER §2.4).
 §
 Aseer: AD Eng won't commit to submission dates — escalate w/ principal Nader. Fire Alarm needs Civil Defence+NRS stamps (CG verbal ≠ approved). Civil Defence = co-consultant, not supportive owner.
+§
+Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.

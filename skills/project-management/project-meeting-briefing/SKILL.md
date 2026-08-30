@@ -59,3 +59,19 @@ After the meeting/call, use the **`discussion-capture`** skill to persist the no
 
 ## Aseer-specific source map
 See `references/aseer-source-map.md` for the per-discipline tracker paths, master registers, Outlook query targets, and the recurring meeting topics (Fire Alarm stamp chain, AD excuses, FF pump VO, skylight/atrium, rigging, structure, doors/hardware).
+
+## Variation Order claims
+When a meeting surfaces a costly change the owner/consultant drove, see `references/variation-order-claim-framework.md` for the claim-construction logic: impact-originates-from-owner, the four pillars (hidden item / costly / document-priority / owner-obligation gap), the "present the problem not the solution" tactic, verbatim Aseer contract clauses, and the report structure.
+
+## PM adjudication — weighing two parties' positions
+When the user (acting as PM/TO) weighs a supplier's "we're blocked, awaiting replies" against the designer's "it was already resolved", produce a structured verdict, not a side:
+- **State the balance of the argument** — e.g. "tips toward the designer on this point, not because the consultant is technically wrong, but because the questions raised don't justify the size of the delay."
+- **Apply an explicit professional standard** (state it openly):
+  | Situation | Ruling |
+  |---|---|
+  | Missing info does NOT block 50% DD; a documented Assumption can be placed | Delay on the DESIGNER |
+  | Missing info radically changes the design → major redesign or contractual risk | Clarification justified |
+- **Check for pattern, not just the incident** — is the blocker a one-off or a recurring behavior (no date commitment, "we try our best", a stated blocker already satisfied)? Pattern tips the verdict further.
+- **List the exact evidence still needed for a final judgment** (meeting minutes cited, contract DD conditions, RFI register + response dates, baseline schedule + recovery plan) so the decision is provable, not asserted.
+- **Give an operational move** to shift the burden of proof (e.g. "direct issue of 50% DD now with documented assumptions + RFI in parallel").
+This verdict belongs in the discussion file + an action item (e.g. `AD30-18`), and is institutional memory for the next such dispute.
