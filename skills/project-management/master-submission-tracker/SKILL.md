@@ -183,6 +183,38 @@ When the user asks "what's overdue in <discipline>" or "I need a system to track
 - Cron: `design-tracker-daily-status` (job `6c19cd75b518`, daily 08:00) runs the script and relays stdout verbatim. The report is informational — the cron must NOT modify files.
 - **Scoping correction (learned):** when the user says "electrical submittals" in the AD Engineering context, they mean the **Electrical sheet of the Design Phase Deliverables Tracker** (AD's own submission plan), NOT section 4 of `submission_tracker.md`. Ask/confirm which source before answering overdue questions — the two disagree on statuses and granularity.
 
+## Multi-Authority Approval / Stamp Chains (e.g. Fire Alarm → Civil Defence + NRS)
+
+Some submissions cannot go to the consultant until **multiple external authorities** approve + stamp first. On Aseer the pattern is the **Fire Alarm**: CG verbally approved (walls OK without calculation), but the **Civil Defence** opened a long amendment loop; after Civil Defence the package still needs **NRS** (National Research / design lead) stamp → consultant submission. ~3 days are consumed just collecting 3 stamps when run sequentially.
+
+**Reusable coordination lessons (learned 2026-08-30):**
+
+- **Triage the authority relationship BEFORE promising dates.** Civil Defence here treats the contractor as a *co-consultant*, not as the *owner/client* they'd normally be supportive of — so their review loops behave like another consultant's (expect revisions, not goodwill sign-off). Note which authorities behave which way so you don't promise "easy approval."
+- **Acceleration = staggered parallel dispatch, not sequential.** Each authority reviews on a *different timeline*. Instead of waiting for A→B→C, dispatch the package to each authority as soon as *their portion* is stable (e.g. send Civil Defence the protection-strategy scope that won't change, send NRS the final layouts) so review windows overlap and the ~3-day stamp lag collapses. Applies to ANY multi-approver deliverable, not just Fire Alarm.
+- A **verbal** "done/approved" from one authority is NOT an approval to submit — the remaining stamps still gate it.
+
+## Per-Specialist Follow-up Tracker (user preference: "خليه فالريبو")
+
+When the user gives you a **verbal status dump** of a discipline's submissions ("متابعة التقديمات / حالة الكهرباء — هذا اتقدم، هذا متأخر...") they want it **recorded in the repo**, not kept in chat or memory. Convention (established 2026-08-30, AD Engineering):
+
+- File: `02_Schedule/{Specialist}/{Specialist}_{Discipline}_Tracker.md` — alongside the specialist's existing `README.md` / submission plan. Aseer example: `02_Schedule/AD_Engineering/AD_Engineering_Electrical_ICT_Tracker.md`.
+- Structure: frontmatter (`last_updated`, `owner_agent: Hermes`, `status`, `source: <date> <channel> status call`), a **status legend** (✅ submitted / ⏳ in progress / ⚠️ delayed / 🔄 rework / 🤝 awaiting third-party), then a **one-row-per-package table**: `# | Package | Status | Detail / Next Step` capturing "who holds it + what the next action is" for each row.
+- Mark **pressure points** (e.g. a submission stuck as Code C that keeps being pushed to the end of the tracker) and any **external dependency** (Civil Defence, NRS stamp, SBS site visit) so the blocker is explicit.
+- Commit with a date-stamped message, per the user's always-include-the-date rule. Update the file incrementally as the user reports new status in follow-up turns (patch same file, commit again).
+- This is a **live coordination log** — distinct from the CG `Design Phase Deliverables Tracker` (authoritative granular status) and the consolidated `submission_tracker.md` (gateway summary). Keep all three; they answer different questions.
+
+## Capturing a subcontractor's EXCUSE LIST for the pressure meeting (2026-08-30, AD Engineering)
+
+When a specialist repeatedly misses dates and offers blockers, add a **"Counter-arguments refuted"** section to their `{Specialist}_Tracker.md` (a dedicated `## {Specialist} Counter-arguments refuted — all excuses, nothing blocking` block). During the recovery call you debunk each stated blocker with the file evidence, then the section is your ammunition for the pressure meeting. Reusable refutation patterns that keep recurring with AD-type design consultants:
+
+- **"Blocked waiting on X"** → check whether X was already delivered. Aseer case: AD claimed MC/CCTV was blocked on **power** — but power had **already been submitted**. Contradictory self-blocking = the strongest single debunk in the meeting.
+- **"Need more info before I can draw"** → the **"work from the tender" directive**: the contractor (PM) instructs them to design from the contract/tender rather than stall for missing data. Cite this as the standing instruction.
+- **"The client asked us to coordinate with <authority>"** → clarify the actual coordination route. Aseer: TO coordinates Civil Defence (TO sends AD's design → CD returns comments → AD fixes), and AD is already CC'd on the email chain — so no excuse to delegate or wait.
+- **"It's a special/difficult scope"** → verify the item is actually small. Aseer: the **Fire Alarm ↔ AV interface is a single module** that belongs to the ICT team (Shihab/Rawasin data = coordination, done later), not AD electrical — they were over-complicating it. Also flag schedule/phase questions (can it slip to the next gate?).
+- **Date-realism red flag:** "We plan but no commitment to dates, we try our best" = no schedule accountability. Record the observation verbatim; it justifies scheduling a pressure meeting with the firm's principal.
+
+The section makes the recovery meeting efficient: instead of re-arguing each excuse live, hand the principals the written debunk list and ask only for dates/owners. Note overlap: these are per-vendor negotiation notes — for CG/consultant comment-handling the separate `cg-response-protocol` / `consultant-review-response` skills govern.
+
 ## Building a submission REFERENCE register from a full Aconex export (2026-08-28)
 
 When the user supplies a **full Aconex search export** (Excel, e.g. `ExportDocs-<date>.xlsx`, hundreds of rows) and wants a reference register that answers **"was X submitted? what's its CG status?"** for any document — this is a DIFFERENT ingestion path from the Outlook-driven consolidated tracker. It is an authoritative point-in-time snapshot of everything on Aconex.
@@ -221,3 +253,4 @@ When the user asks **"which specialist is late / who do I invite to the recovery
 - `references/risk-review-workflow.md` — "next risk" pattern: navigate open risks by score, search Outlook for updates, update JSON, report changes. Used when the user says "next risk" or names a risk ID during a review session.
 - `references/design-tracker-xlsx-parsing.md` — pitfalls for parsing the CG Design Phase Deliverables Tracker xlsx (corrupted sheet dimensions, trailing-space sheet names, trailing-period statuses, gitignored data file).
 - `references/design-tracker-overdue-monitoring.md` — sheet structure + parsing pitfalls (trailing-space sheet names, `Submitted.` done-status, corrupted Electrical sheet dimension, 0-1 prep floats) and the **email cross-reference workflow**: after generating the overdue report, query Outlook for new Aconex `SIC.-WTRAN-000NNN` transmittals to see which overdue items got cleared, then update `submittal_register.md` and commit.
+- `references/design-tracker-discipline-narrative.md` — when the user hands the CG `Design Phase Deliverables Tracker_*.xlsx` and asks "شوف التقديمات" / for meeting talking points, extract the **summary sheet** one-row-per-discipline `Overall % Complete` (col 37) + the per-discipline detail-sheet Code C/D/Not-started rows and synthesize a **per-discipline Arabic progress narrative** (strong / weak-stalled / never-reached-later-gates / critical-item escalations). `data_only=True` required to resolve progress-float formulas.

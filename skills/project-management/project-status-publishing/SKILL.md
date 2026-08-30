@@ -20,6 +20,7 @@ metadata:
 - User has a GitHub repo with a `00_Status/project_status.md` file that needs daily auto-updates
 - User wants a cron job that extracts project status from PROJECT_MEMORY.md and publishes it
 - User asks for the status of a counter code like `HSE-26` or `PRR-3` (see "Counter-Code Lookups" below)
+- User asks to brief management for a meeting ("what do I raise", "why isn't X done", "current status of Y"). Registers lag reality — see `references/meeting-brief-verification.md` for the re-verify rule.
 
 ## Core Pattern
 
@@ -274,3 +275,4 @@ source: PROJECT_MEMORY.md (auto-extracted YYYY-MM-DD)
 - **Odoo-to-repo comparison audit** — When the user asks to verify the repo status file against live Odoo data, use `references/odoo-repo-comparison.md` for the full workflow: query Odoo, compute metrics, check hash, find discrepancies. Covers deadline mismatches, stale source dates, modified tasks, and discipline progress computation.
 - **Existing sync script** — The `aseer-pm-status.py` script at `~/.hermes/scripts/aseer-pm-status.py` implements a bidirectional sync (PROJECT_MEMORY.md → Odoo + Odoo → repo). It uses timestamp-based direction detection, milestone text matching, and discipline progress computation. Reference it when the user asks to run the sync rather than build a new one.
 - **Counter-code disambiguation** — When a counter code resolves ambiguously (e.g. `HSE-26` could be an HSE plan, HSE risk, or HSE training entry), surface the full disambiguation set and ask the user which one — never pick the first match silently. See `references/counter-code-lookup.md`.
+- **Registers lag reality (meeting briefs)** — Before citing any register code/percentage/status in a briefing, pull the LATEST Outlook email + attachment on that doc ref; a later "disregard previous / correct version" supersedes the register. Register values can be stale/wrong (e.g. concrete core "failed 59%" became 74% after the report's design-strength typo 35→28 MPa was corrected — still non-comply, don't over-claim either direction). Also disambiguate same-name submittals by ref — e.g. `ARM-GN-SD-0001` (demolition drawings, approved) vs `ZD-0106` (cladding removal for cloud survey, approved but NO demolition, ZD-0032 doesn't block it) vs `ZD-0032` (routing plans, still under review) vs `SE-022` (waste-management site instruction, NOT a plan). See `references/meeting-brief-verification.md`.

@@ -8,10 +8,10 @@ User requires dates in every repo update commit message and status report. Alway
 §
 Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 §
-Samaya Odoo HR tickets (مباشرة عمل, salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task. Formal legalistic Arabic.
+Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 §
-Verify LATEST Outlook/tracker before calling a specialist delayed; separate admin/procurement blockers from technical delay.
+Verify LATEST Outlook/tracker before calling a specialist delayed.
 §
-No yes-man: 'ادرس الموضوع بعمق' — study deeply, ask boundary Qs, verify refs vs source. Docs avoid § (use 'Section'). Edit file in place, keep ONE latest version, delete stale copies.
+No yes-man: study deeply, verify refs vs source. Docs avoid § (use 'Section'). Edit in place, keep ONE latest version. Negotiation: present problem only, don't propose costly solution — let other party request it so cost lands on their design, not Samaya.
 §
-CRS/comment replies must be humanized — natural engineer voice, not template/stiff wording. Reviews comments one-by-one before finalizing.
+CRS/comment replies: humanized natural engineer voice; cite section numbers (L10-560) but NOT clause numbers (1.04, 2.01); review one-by-one before finalizing.

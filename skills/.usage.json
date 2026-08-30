@@ -121,13 +121,13 @@
     "created_at": "2026-06-07T09:16:51.782024+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-27T20:05:03.721658+00:00",
-    "last_used_at": "2026-08-27T20:04:51.201483+00:00",
-    "last_viewed_at": "2026-08-27T20:04:51.199538+00:00",
+    "last_used_at": "2026-08-30T10:31:50.310421+00:00",
+    "last_viewed_at": "2026-08-30T10:31:50.292708+00:00",
     "patch_count": 104,
     "pinned": false,
     "state": "active",
-    "use_count": 151,
-    "view_count": 151
+    "use_count": 152,
+    "view_count": 152
   },
   "aseer-email-routing": {
     "archived_at": null,
@@ -368,13 +368,13 @@
     "created_at": "2026-07-09T05:14:23.739476+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-29T12:56:39.161844+00:00",
-    "last_used_at": "2026-08-30T04:31:59.613255+00:00",
-    "last_viewed_at": "2026-08-30T04:31:59.562167+00:00",
+    "last_used_at": "2026-08-30T12:34:27.785294+00:00",
+    "last_viewed_at": "2026-08-30T12:34:27.780800+00:00",
     "patch_count": 120,
     "pinned": false,
     "state": "active",
-    "use_count": 178,
-    "view_count": 178
+    "use_count": 180,
+    "view_count": 180
   },
   "cg-submittal-review-checklist": {
     "archived_at": null,
@@ -536,14 +536,14 @@
     "archived_at": null,
     "created_at": "2026-07-01T12:57:26.546937+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-30T05:22:05.061706+00:00",
-    "last_used_at": "2026-08-30T05:21:58.347470+00:00",
-    "last_viewed_at": "2026-08-30T05:21:58.340759+00:00",
-    "patch_count": 46,
+    "last_patched_at": "2026-08-30T12:38:54.419383+00:00",
+    "last_used_at": "2026-08-30T12:38:48.671657+00:00",
+    "last_viewed_at": "2026-08-30T12:38:48.667682+00:00",
+    "patch_count": 52,
     "pinned": false,
     "state": "active",
-    "use_count": 58,
-    "view_count": 58
+    "use_count": 65,
+    "view_count": 65
   },
   "consultant-review-response": {
     "archived_at": null,
@@ -680,26 +680,26 @@
     "created_at": "2026-07-12T22:19:58.939782+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-08-06T00:32:20.519181+00:00",
-    "last_viewed_at": "2026-08-06T00:32:20.516638+00:00",
+    "last_used_at": "2026-08-30T11:44:53.655356+00:00",
+    "last_viewed_at": "2026-08-30T11:44:53.652665+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 6,
-    "view_count": 6
+    "use_count": 8,
+    "view_count": 8
   },
   "discussion-capture": {
     "archived_at": null,
     "created_at": "2026-08-27T20:53:47.148541+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-08-27T20:53:47.150845+00:00",
-    "last_viewed_at": "2026-08-27T20:53:47.148549+00:00",
+    "last_used_at": "2026-08-30T12:02:58.692989+00:00",
+    "last_viewed_at": "2026-08-30T12:02:58.689905+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 1,
-    "view_count": 1
+    "use_count": 3,
+    "view_count": 3
   },
   "document-analysis": {
     "archived_at": null,
@@ -1563,14 +1563,14 @@
     "archived_at": null,
     "created_at": "2026-08-06T00:33:01.531595+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-27T21:03:16.863611+00:00",
-    "last_used_at": "2026-08-27T21:02:59.717738+00:00",
-    "last_viewed_at": "2026-08-27T21:02:59.702871+00:00",
-    "patch_count": 10,
+    "last_patched_at": "2026-08-30T11:45:12.509253+00:00",
+    "last_used_at": "2026-08-30T11:45:02.626588+00:00",
+    "last_viewed_at": "2026-08-30T11:45:02.619421+00:00",
+    "patch_count": 14,
     "pinned": false,
     "state": "active",
-    "use_count": 11,
-    "view_count": 11
+    "use_count": 15,
+    "view_count": 15
   },
   "materials-register-management": {
     "archived_at": null,
@@ -1850,12 +1850,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-08-29T13:05:02.971241+00:00",
+    "last_used_at": "2026-08-30T13:08:21.940135+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 389,
+    "use_count": 391,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1875,14 +1875,14 @@
     "archived_at": null,
     "created_at": "2026-07-26T14:02:06.755308+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-25T08:41:40.081001+00:00",
-    "last_used_at": "2026-08-27T19:16:45.836616+00:00",
-    "last_viewed_at": "2026-08-27T19:16:45.832313+00:00",
-    "patch_count": 17,
+    "last_patched_at": "2026-08-30T10:53:53.993955+00:00",
+    "last_used_at": "2026-08-30T10:53:48.890152+00:00",
+    "last_viewed_at": "2026-08-30T10:53:48.887785+00:00",
+    "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 29,
-    "view_count": 29
+    "use_count": 31,
+    "view_count": 31
   },
   "outlook-email": {
     "archived_at": null,
@@ -2148,14 +2148,14 @@
     "archived_at": null,
     "created_at": "2026-07-22T09:15:31.477585+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-11T11:13:00.518254+00:00",
-    "last_used_at": "2026-08-22T12:29:46.174181+00:00",
-    "last_viewed_at": "2026-08-22T12:29:46.171436+00:00",
-    "patch_count": 12,
+    "last_patched_at": "2026-08-30T12:03:23.218965+00:00",
+    "last_used_at": "2026-08-30T12:03:17.237387+00:00",
+    "last_viewed_at": "2026-08-30T12:03:17.231232+00:00",
+    "patch_count": 13,
     "pinned": false,
     "state": "active",
-    "use_count": 15,
-    "view_count": 15
+    "use_count": 16,
+    "view_count": 16
   },
   "project-cost-reconciliation": {
     "archived_at": null,
@@ -2221,6 +2221,19 @@
     "state": "active",
     "use_count": 24,
     "view_count": 24
+  },
+  "project-meeting-briefing": {
+    "archived_at": null,
+    "created_at": "2026-08-30T12:19:28.560066+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-08-30T12:19:54.234968+00:00",
+    "last_used_at": "2026-08-30T12:19:50.252299+00:00",
+    "last_viewed_at": "2026-08-30T12:19:50.238869+00:00",
+    "patch_count": 2,
+    "pinned": false,
+    "state": "active",
+    "use_count": 1,
+    "view_count": 1
   },
   "project-plan-management": {
     "archived_at": null,
@@ -2291,14 +2304,14 @@
     "archived_at": null,
     "created_at": "2026-07-09T05:18:24.599618+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-25T04:29:15.326343+00:00",
-    "last_used_at": "2026-08-06T01:04:15.115654+00:00",
-    "last_viewed_at": "2026-08-06T01:04:15.108205+00:00",
-    "patch_count": 14,
+    "last_patched_at": "2026-08-30T11:00:45.993095+00:00",
+    "last_used_at": "2026-08-30T11:00:31.893642+00:00",
+    "last_viewed_at": "2026-08-30T11:00:31.891439+00:00",
+    "patch_count": 17,
     "pinned": false,
     "state": "active",
-    "use_count": 18,
-    "view_count": 18
+    "use_count": 20,
+    "view_count": 20
   },
   "proposal-evaluation": {
     "archived_at": null,
@@ -2603,27 +2616,27 @@
     "archived_at": null,
     "created_at": "2026-07-26T06:38:34.904211+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-18T11:57:35.472306+00:00",
-    "last_used_at": "2026-08-18T11:57:44.087611+00:00",
-    "last_viewed_at": "2026-08-18T11:57:44.085489+00:00",
-    "patch_count": 39,
+    "last_patched_at": "2026-08-30T12:28:36.661365+00:00",
+    "last_used_at": "2026-08-30T12:28:31.087181+00:00",
+    "last_viewed_at": "2026-08-30T12:28:31.085016+00:00",
+    "patch_count": 40,
     "pinned": false,
     "state": "active",
-    "use_count": 50,
-    "view_count": 50
+    "use_count": 51,
+    "view_count": 51
   },
   "samaya-docx-template": {
     "archived_at": null,
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T07:35:54.056128+00:00",
-    "last_used_at": "2026-08-29T07:43:31.824821+00:00",
-    "last_viewed_at": "2026-08-29T07:43:31.807569+00:00",
+    "last_used_at": "2026-08-30T12:28:10.771033+00:00",
+    "last_viewed_at": "2026-08-30T12:28:10.758198+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 436,
-    "view_count": 436
+    "use_count": 438,
+    "view_count": 438
   },
   "samaya-excel-styling": {
     "archived_at": null,
@@ -2655,14 +2668,14 @@
     "archived_at": null,
     "created_at": "2026-07-07T10:51:19.862973+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-25T11:09:37.837200+00:00",
-    "last_used_at": "2026-08-29T11:05:07.309597+00:00",
-    "last_viewed_at": "2026-08-29T11:05:07.301522+00:00",
-    "patch_count": 56,
+    "last_patched_at": "2026-08-30T11:09:07.590723+00:00",
+    "last_used_at": "2026-08-30T11:08:55.986005+00:00",
+    "last_viewed_at": "2026-08-30T11:08:55.983630+00:00",
+    "patch_count": 58,
     "pinned": false,
     "state": "active",
-    "use_count": 67,
-    "view_count": 67
+    "use_count": 69,
+    "view_count": 69
   },
   "samaya-factory-profile": {
     "archived_at": null,
@@ -3124,13 +3137,13 @@
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-30T05:01:18.801171+00:00",
-    "last_used_at": "2026-08-30T05:01:02.126689+00:00",
-    "last_viewed_at": "2026-08-30T05:01:02.124736+00:00",
+    "last_used_at": "2026-08-30T10:53:36.065989+00:00",
+    "last_viewed_at": "2026-08-30T10:53:36.057015+00:00",
     "patch_count": 122,
     "pinned": false,
     "state": "active",
-    "use_count": 193,
-    "view_count": 193
+    "use_count": 195,
+    "view_count": 195
   },
   "supplier-prequalification": {
     "archived_at": null,
