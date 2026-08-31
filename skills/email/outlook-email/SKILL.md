@@ -14,6 +14,20 @@ tags:
 
 Search, filter, and extract attachments from Microsoft Outlook on macOS using its local SQLite database and AppleScript automation.
 
+## Saving an attachment via AppleScript (POSIX file wrapper required)
+
+To save an email attachment to disk:
+
+```bash
+osascript -e 'tell application "Microsoft Outlook"' \
+  -e 'set m to message id <Record_RecordID>' \
+  -e 'set att to first attachment of m' \
+  -e 'set p to POSIX file "/tmp/out.pdf"' \
+  -e 'save att in p' -e 'end tell'
+```
+
+**The `POSIX file` wrapper is REQUIRED.** `save att in "/tmp/out.pdf"` (plain string path) fails with error `-2700`. Get the attachment name first via `get name of every attachment of m`, then `pdftotext -layout /tmp/out.pdf -` to read it.
+
 ## Trigger
 
 User asks to:

@@ -144,8 +144,38 @@ The user's priority is: "يهمنا الالتزام بالجدول الزمني
 - AD must take the initiative and request help / flag delays **before** the stoppage occurs, not after.
 - "We need your catch-up plan" — a clear, dated plan for recovering the outstanding deliverables.
 
-### 4. Verify each reply before sending
-"اربط الدنيا كلها مع بعضها وتخقق من كل رد قبل ما ترد" — tie everything together and verify each point against the source before responding. Cross-check the tracker, RACI, and submittal register so no item is mis-attributed and no claim is ungrounded.
+### 4. Anchor the "work start date" on the KICKOFF date, not the agreement date
+The user corrected me: use the **kickoff meeting date** as the elapsed-time anchor, not the agreement/SOW-signing date. For AD Engineering the kickoff was **25-Jun-2026** (from `24_Subcontractors/13_MEP_Designer/README.md` status history), while the agreement was finalized 15-Jul and SOW signed 08-Aug. The kickoff date makes the delay look longer and is the fairer "work started" reference. Phrase: "Your kick-off was on [date] — that's over [N] months/weeks ago." Verify the kickoff date from the subcontractor README or the "Kick-off & Next Stage Approval" email thread before quoting it.
+
+### 5. Include the "tender drawing input" standing principle
+When the counterparty claims to be blocked waiting on a specialist (ITC, BMS, ICT, etc.), invoke the agreed fallback: **"As agreed with the Consultant, where any specialist (ITC, BMS, etc.) is delayed, AD is to proceed using the tender drawing input rather than waiting."** This is the user's core rebuttal to "we're blocked" — the tender drawings are the agreed working basis, so a delayed specialist does not block AD. State it plainly: "That is the main reason AD is not blocked — the tender drawing input is there for AD to work from, as agreed."
+
+### 6. Humanize and keep it short
+The user repeatedly asked to "humanize and make it short as much as we can." Final reply style: plain engineer voice, no AI/template phrasing, no long per-item tables, short paragraphs. Use contractions ("we're", "hasn't", "that's"), drop boilerplate, keep the aggregate accountability + the tender-drawing principle + the catch-up ask. When the user says "merge no 1 & 2" or "humanize", apply immediately without re-verifying content.
+
+### 7. Verify each reply before sending
+"اربط الدنيا كلها مع بعضها وتخقق من كل رد قبل ما ترد" — tie everything together and verify each point against the source before responding. Cross-check the tracker, RACI, and submittal register so no item is mis-attributed and no claim is ungrounded. When the user drops a new source (RACI xlsx, stakeholders xlsx, deliverables tracker xlsx), read it and re-verify ownership before finalizing — the user will correct mis-attribution ("تآكد ان المطلوب هو من اد وليس من حد تاني").
+
+## CDE Metadata Import Log — a submission signal (new source)
+
+The user may drop an `ImportMetadataLog_*.xlsx` file (e.g. `ImportMetadataLog_1343734410_20260831_10-20-15.xlsx`) exported from the document-management system (CDE). This is **not** a register to file — it is a **signal that a submission was made**. Treat it as a live submission event and update the tracker + submittal register accordingly.
+
+### How to read it
+- Sheet `MetadataTemplate` holds the actual rows: `Document No | Revision | Title | Type | Status | Discipline | Floor | File | Revision Date | Created By | Related To | Result`.
+- Sheet `DocumentFieldsDataSheet` holds the allowed pick-list values (doc types, statuses, disciplines, floors) — useful for interpreting the template rows.
+- The `Related To` column links each drawing to its parent submittal ref (e.g. `MOC-MUS-ASE-1E0-1G-0008`). That is the submittal number to log in the register.
+- `Status` = `For Approval` (i.e. submitted, awaiting CG), `Type` = `Detailed Design Drawing`, `Created By` = `Samaya Investment`.
+
+### What to do
+1. Read the `MetadataTemplate` sheet with openpyxl `data_only=True`.
+2. Group the rows by `Related To` (the submittal ref) and by package (e.g. all `MOC-ASE-EL-EPW-DDD-30003-*` = AC Power & Outlets).
+3. Update the **vendor tracker** row (e.g. `02_Schedule/AD_Engineering/AD_Engineering_Electrical_ICT_Tracker.md`) — flip the package status from ⏳/In Progress to ✅ **Submitted [date]**, listing the drawing count + range + linked submittal ref.
+4. Add/update the **submittal register** row for the parent ref (e.g. `MOC-MUS-ASE-1E0-1G-0008`) with status **Submitted**, the drawing count, and the date.
+5. Bump `last_updated` in the tracker frontmatter and commit with a dated message.
+
+### Pitfall
+- A metadata log row with `Result` = `Field [Title] is required` (or similar) is a **failed/placeholder row** (e.g. the parent submittal row with an empty Title) — do NOT log it as a delivered drawing. Only the rows with a real `Document No` + `Title` + `Result` = `Okay` count as delivered.
+- The metadata log confirms **submission**, not approval. Status stays `For Approval` / `Submitted` until a CG response arrives — do not mark it approved.
 
 ## OneDrive Placeholder Workaround
 

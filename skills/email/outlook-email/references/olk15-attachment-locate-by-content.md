@@ -62,3 +62,23 @@ tesseract /tmp/pg-N.jpg - 2>/dev/null
 - `save` returns -2700 for that attachment (esp. large/multi-part PDFs).
 - The email came from a sender whose attachments repeatedly fail extraction.
 - You only need ONE specific document and want to skip the per-message AppleScript loop.
+
+## IMPORTANT — try the correct AppleScript form FIRST (2026-08-31)
+A `-2700` error is often NOT a real Outlook limitation — it is a **syntax bug** in the
+AppleScript. The naive form (string path + separate `tell` blocks) fails with -2700, but the
+**single-`tell` + `POSIX file`** form works reliably:
+
+```applescript
+osascript -e 'tell application "Microsoft Outlook"' \
+  -e 'set m to message id 52279' \
+  -e 'set att to first attachment of m' \
+  -e 'set p to POSIX file "/tmp/out.pdf"' \
+  -e 'save att in p' \
+  -e 'end tell'
+```
+
+Two fixes: (1) wrap the destination in `POSIX file` (not a bare string), and (2) keep the
+whole operation inside ONE `tell application "Microsoft Outlook" ... end tell` — the `att`
+object reference does not survive across separate `tell` blocks. Read the attachment name
+first (`get name of every attachment of m`) to pick the right extension. Only fall back to
+binary parsing if this correct form still errors. See `references/applescript-save-attachment.md`.

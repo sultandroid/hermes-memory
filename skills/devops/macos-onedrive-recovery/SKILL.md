@@ -100,6 +100,7 @@ end tell
 |---|---|---|---|
 | **Transient EDEADLK** | Real bytes, just briefly locked | `cp` fails with `Resource deadlock avoided`, retries succeed within 15-60 s | `sleep 30; retry` |
 | **Stale stub** (Files-on-Demand not hydrated) | Real-looking size, fake content | `unzip -l` says "End-of-central-directory signature not found"; `openpyxl` raises `BadZipFile`; `textutil` errors; `cat` shows PDF binary header | Read from the working copy on the Micro volume (or the user's external backup drive), edit there, write back when OneDrive lock clears |
+| **Dataless placeholder** (Files-on-Demand not yet downloaded) | `ls -lO` shows `compressed,dataless`; real size but no local bytes | `file`/`cat`/`cp`/`openpyxl` fail with `Resource deadlock avoided`; `brctl download` errors "outside of any CloudDocs app library" | **`open "$SRC"` + sleep 30 → hydrates the file**; then `ls -lO` drops `dataless` and normal reads work. Fastest path — do this before reboot/Micro fallback |
 | **Write-block** (File Provider TCC) | Fully local, readable | ALL write methods fail with `Operation not permitted`: `cp`, `mv`, `ditto`, `cat >`, `mkdir`, Python `open('wb')`, AppleScript Finder `duplicate`/`move`. Creating new files or dirs also blocked. | Stage files to non-OneDrive volume (MICro, /tmp/), open both Finder windows, tell user to drag manually. Only Finder and OneDrive app can write. |
 | **Persistent EDEADLK** (kernel-level File Provider lock) | Real bytes, locked at kernel level | `cp`, `dd`, `rsync`, `ditto`, `strings`, `cat`, `file`, Python `open()`, `os.read()` ALL fail with `Resource deadlock avoided`. Even after `kill -9` of all OneDrive processes (`OneDrive`, `OneDrive Sync Service`, `OneDrive Finder Extension`) and `launchctl bootout` of the sync service. `lsof` shows no process holding the file. `brctl status` says "Path is outside of any CloudDocs app library". | **Only reboot clears this lock.** The lock is held by the macOS File Provider kernel extension, not a user-space process. No amount of process killing (`kill -9`, `killall -9 OneDrive*`), launchctl unloading, or brctl eviction will release it. After reboot, read files before OneDrive re-establishes its sync session. Alternative: use the OneDrive/SharePoint web UI in browser to download files, or ask the user to copy files manually via Finder to a non-OneDrive volume (Micro, Desktop, /tmp/). |
 
@@ -126,6 +127,29 @@ When a `.py` file on OneDrive is a stale stub (null bytes), **importing it as a 
 head -c 200 /path/to/onedrive/template.py | xxd | head -3
 # All 0000 0000 0000 0000 = stale stub
 ```
+
+### Dataless placeholder (files-on-demand) — hydrate with `open`
+
+A **dataless placeholder** is a files-on-demand stub that has NOT been downloaded to disk yet. It differs from a stale stub: the content is simply not local, and OneDrive will fetch it on demand. `ls -lO` shows the `dataless` flag:
+
+```bash
+ls -lO "$SRC"   # → -rw-r--r--@ ... compressed,dataless 14081 Jun 10 17:19 file.xlsx
+```
+
+`file`, `cat`, `cp`, `openpyxl` all fail with `Resource deadlock avoided` because the bytes aren't on disk. **The fix is to trigger hydration, not to fight the lock:**
+
+```bash
+open "$SRC"      # opens the file → OneDrive downloads it
+sleep 30         # wait for the download
+ls -lO "$SRC"    # dataless flag should now be gone
+cat "$SRC" > /tmp/copy.xlsx   # now works
+```
+
+Key points:
+- `brctl download "$SRC"` does **NOT** work for OneDrive — it errors `Path is outside of any CloudDocs app library, will never sync` (that's iCloud's tool, not OneDrive's).
+- Quitting/relaunching OneDrive does **not** hydrate the file; you must `open` the specific file to trigger its download.
+- After hydration, `ls -lO` drops the `dataless` flag and normal `cat`/`cp`/`openpyxl` reads succeed.
+- This is the **fastest path** for a dataless placeholder — try `open` + wait before any reboot or Micro-volume fallback.
 
 **If the template file is essential** (e.g., SamayaDoc class for branded DOCX generation):
 1. Force OneDrive to sync: `open` the folder in Finder and click the file

@@ -98,6 +98,32 @@ Each DCR entry needs a standalone **Backup Report** from the designer containing
 | System change | New material introduced (Acorian), new fixing method | "Clarify why new material when it was not in original design" |
 | Procedural | Numbering system changed between submissions | "Standardize numbering system for all showcases across future submissions" |
 
+## CG Designer "Recommendations" vs Change Instructions (ID Report pattern)
+
+A recurring Aseer interaction: the **CG designer (Mansour Alrezeni)** sends an "ID Report" (or similar) with finish/design "recommendations", and **NRS (Jim Richards)** responds that these are **opinions for confirmation, NOT change requests**. This is a distinct class from a formal DCR — do not conflate them.
+
+### The tell-tale framing
+- The report itself says: **"No action is required unless the proposed recommendations are reviewed and agreed upon."** — this is the key signal it is advisory, not instructional.
+- Mansour's own words in the meeting: **"I'm not instructing — just observing and raising points to enhance the treatment."** / "just raising my point of view for comments, for us to reply — yes this is how it is, or maybe you are right, we shall change it. Just opinions."
+- Jim (NRS) confirms: "So that's what we need" — i.e. a reply, not a redesign.
+
+### How to handle it (the correct response)
+1. **Classify each recommendation** as one of: (a) already per Stage 3 design intent → reply "this is how it is, here's why"; (b) a genuine improvement worth adopting → treat as a **variation** (DCR) with cost/impact; (c) a misunderstanding of the design intent → explain the intent.
+2. **The designer (NRS) owns the design intent.** When Jim says "I'm the designer — we applied what was put forward in Stage 2 and developed in Stage 3", the correct posture is to **defer to NRS on intent** and route any actual change through the DCR process, not to treat Mansour's note as a directive.
+3. **"Unify the detail" requests are usually variations.** When CG asks to make a detail "seamless/unified" across spaces that were intentionally designed differently (e.g. three distinct AV-screen treatments: floor-mounted box / recessed-in-wall / TV-in-making-space), unifying = a **variation from Stage 3**, not a free refinement. Flag the cost/scope before agreeing.
+4. **Bimetallic / material-contact concerns are real technical flags, not just aesthetics.** When CG raises "different metals next to each other" (e.g. stainless steel lift surrounds + patinated brass), check the **galvanic scale** — it may be a genuine degradation risk, OR purely visual. Distinguish before deciding. If it forces a change (e.g. full lift-opening refurb), surface the **huge cost + the Stage 2 MoC instruction to leave it as-is** as the reason to hold.
+5. **Record the debate, not just the outcome.** Capture the recommendation + NRS's intent-defense + the resolution in the discussion file, and add an action item (e.g. "confirm no change required" or "raise DCR"). The next agent must be able to see WHY a recommendation was accepted or declined.
+
+### Recurring Aseer ID-Report recommendation themes (for pattern recognition)
+- Decorative columns on terrace/shading device → reduce for circulation (needs structural input: reducing columns increases reactions + uplift on slab).
+- AV screen flush with partition wall (vs set-back behind an aperture = "moving image" intent).
+- Curtains "outdated" → cancel or propose alternative.
+- Lift metal (bimetallic contact).
+- Temporary Gallery ceiling: exposed beam blocks services → lower ceiling + blend inclined wall (2 options).
+- Doors painted to match wall finish.
+- Patinated brass (all applications except inside showcases — provide solution for showcase interior).
+- Fabric colour variation (dark blue vs grey-blue) → confirm acceptable.
+
 ## NRS's Incorrect Position (Documented)
 
 When NRS (Nissen Richards Studio) says:

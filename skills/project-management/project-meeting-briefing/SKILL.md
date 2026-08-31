@@ -43,11 +43,31 @@ Project docs often have near-identical names for different items. Before answeri
 - **Give the exact defense line** the user can say verbatim in the meeting, with the doc refs to back it.
 - **Flag what NOT to claim** (e.g. "we have an approved demolition plan" when the routing plan is still under review) — a wrong claim in a meeting is worse than no claim.
 
+## Live / incremental meeting capture (voice-transcribed notes)
+When the user is **in a live meeting** (e.g. design tracking with CG + PMC) and feeds points as a stream of voice-transcribed messages, capture incrementally rather than waiting for the end. Full step-by-step workflow in `references/live-meeting-notes.md`:
+- **One discussion file per meeting**, created on the first batch, then **appended** on each subsequent batch — do NOT create a new file per message.
+- **Number the sections** (`## 1.`, `## 2.`, …) so later batches append cleanly after the last section.
+- **Append new action rows** (DT-1, DT-2, …) to the same `## Actions` table in the discussion file AND to the matching section in `00_Status/action_items.md` — keep the two in sync.
+- **Commit per batch** (not once at the end) so each increment is a recoverable checkpoint. Use a descriptive message naming the meeting + the new topics.
+- **Interpret, don't transcribe.** Voice-to-text output is messy (fragments, wrong words, dropped names). Reconstruct the intent in clean engineering language. When a term is genuinely ambiguous (e.g. "4 vP samples"), ask the user to clarify rather than guessing — flag it explicitly in your reply.
+- **Update related discussion files too.** If the new meeting adds facts to an earlier discussion (e.g. structural core-test results update the structural-cloud-survey discussion), append an "Update — <meeting>" section to that file and cross-link.
+- **Update the INDEX.md** row for the meeting as it grows (or add the row on first batch).
+
+## End-of-meeting "remind me of all requests" deliverable
+The user often asks at the end of a live meeting: **"ابقي فكرني فالاخر باي حاجه بيطلبوها"** (remind me at the end of everything they requested). This is a distinct deliverable from the discussion file:
+- **Maintain a running list of the other party's requests/commitments** as you capture each batch — don't reconstruct it from memory at the end.
+- **Present it grouped by urgency**: due-soon (with the nearest deadline called out) vs open/TBC.
+- **Call out the 2–3 nearest-deadline items** explicitly (e.g. "quantities due today/tomorrow", "50% back to 10-Sep before next review").
+- Offer a follow-up (cron reminder or a follow-up email to CG/PMC listing the commitments) — the user values both.
+- The discussion file is the *record*; the reminder list is the *action summary* — produce both.
+
 ## Capture the discussion back to the repo (mandatory)
 After the meeting/call, use the **`discussion-capture`** skill to persist the notes, decisions, and actions:
 - `09_Agent_Workspace/discussions/YYYY-MM-DD_<slug>.md` + INDEX row + `action_items.md` rows.
 - Live per-discipline tracker updates go in `02_Schedule/<Discipline>/`.
 - Commit with the date in the message (project convention).
+
+**Pitfall — never add a cross-link to a MOM file that does not exist yet.** When you add a `Related Context` cross-link in a tracker (e.g. `design_phase_deliverables_tracker.md` → `04_Docs/08_Meeting_Minutes/08.2_Workshops/2026-08-26_Showcase_Coordination_MOM.md`), you MUST create that file in the same commit. A dangling link (referenced but never written) is worse than no link — it sends the next agent on a long search for "the notes" that were never captured. If the meeting notes are genuinely unavailable (locked Read AI recap, no transcript), write a stub file stating the meeting happened + what is known (from the tracker/email preview) and mark the gap, rather than leaving a broken pointer. Verify the target file exists before committing any cross-link.
 
 ## Pitfalls
 - **Never cite a stale summary as current.** Read the tracker + register first.
