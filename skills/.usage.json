@@ -394,13 +394,13 @@
     "created_at": "2026-07-31T09:56:09.481944+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-31T10:04:25.567680+00:00",
-    "last_used_at": "2026-08-06T07:00:41.225522+00:00",
-    "last_viewed_at": "2026-08-06T07:00:41.221475+00:00",
+    "last_used_at": "2026-08-31T14:29:01.698982+00:00",
+    "last_viewed_at": "2026-08-31T14:29:01.689473+00:00",
     "patch_count": 1,
     "pinned": false,
     "state": "active",
-    "use_count": 2,
-    "view_count": 2
+    "use_count": 3,
+    "view_count": 3
   },
   "claude-code": {
     "archived_at": null,
@@ -693,13 +693,13 @@
     "created_at": "2026-08-27T20:53:47.148541+00:00",
     "created_by": null,
     "last_patched_at": null,
-    "last_used_at": "2026-08-31T10:27:05.522760+00:00",
-    "last_viewed_at": "2026-08-31T10:27:05.520165+00:00",
+    "last_used_at": "2026-08-31T14:31:18.493689+00:00",
+    "last_viewed_at": "2026-08-31T14:31:18.490459+00:00",
     "patch_count": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 14,
-    "view_count": 14
+    "use_count": 16,
+    "view_count": 16
   },
   "document-analysis": {
     "archived_at": null,
@@ -926,14 +926,14 @@
     "archived_at": null,
     "created_at": "2026-07-21T06:15:06.685858+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-23T08:09:55.126530+00:00",
-    "last_used_at": "2026-08-23T08:09:24.873652+00:00",
-    "last_viewed_at": "2026-08-23T08:09:24.869887+00:00",
-    "patch_count": 22,
+    "last_patched_at": "2026-08-31T14:29:11.833805+00:00",
+    "last_used_at": "2026-08-31T14:28:37.220406+00:00",
+    "last_viewed_at": "2026-08-31T14:28:37.199160+00:00",
+    "patch_count": 24,
     "pinned": false,
     "state": "active",
-    "use_count": 25,
-    "view_count": 25
+    "use_count": 26,
+    "view_count": 26
   },
   "factory-operations": {
     "archived_at": null,
@@ -1044,13 +1044,13 @@
     "created_at": "2026-07-08T15:58:08.212641+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T22:36:07.346239+00:00",
-    "last_used_at": "2026-08-28T12:27:54.024024+00:00",
-    "last_viewed_at": "2026-08-28T12:27:54.021671+00:00",
+    "last_used_at": "2026-08-31T14:31:58.990833+00:00",
+    "last_viewed_at": "2026-08-31T14:31:58.988665+00:00",
     "patch_count": 6,
     "pinned": false,
     "state": "active",
-    "use_count": 276,
-    "view_count": 33
+    "use_count": 278,
+    "view_count": 35
   },
   "github-private-repo-discovery": {
     "archived_at": null,
@@ -1563,14 +1563,14 @@
     "archived_at": null,
     "created_at": "2026-08-06T00:33:01.531595+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-30T11:45:12.509253+00:00",
-    "last_used_at": "2026-08-30T11:45:02.626588+00:00",
-    "last_viewed_at": "2026-08-30T11:45:02.619421+00:00",
-    "patch_count": 14,
+    "last_patched_at": "2026-08-31T14:32:12.945547+00:00",
+    "last_used_at": "2026-08-31T14:31:39.459656+00:00",
+    "last_viewed_at": "2026-08-31T14:31:39.457350+00:00",
+    "patch_count": 16,
     "pinned": false,
     "state": "active",
-    "use_count": 15,
-    "view_count": 15
+    "use_count": 16,
+    "view_count": 16
   },
   "materials-register-management": {
     "archived_at": null,

@@ -159,6 +159,25 @@ mv .git/hooks/post-commit.bak .git/hooks/post-commit
 
 If a rebase was already interrupted: `git rebase --abort; rm -rf .git/rebase-merge` before retrying. Check whether the hook is still present after recovery: `ls -la .git/hooks/post-commit`.
 
+### Rebase conflict resolution (push rejected — remote has new work)
+
+When `git push` is rejected with "fetch first", the safe sequence (stash unrelated local edits first so `pull --rebase` doesn't refuse on unstaged changes):
+
+```bash
+git stash push -m "pre-push <date>"
+git pull --rebase origin main
+# resolve conflicts, then:
+git add <conflicted files>
+GIT_EDITOR=true git rebase --continue   # avoids "Terminal is dumb, but EDITOR unset" hang
+git stash pop
+git push origin main
+```
+
+Conflict resolution rules that recur in this repo:
+- **Register rows:** keep the more complete/later version (e.g. a Code B row with full CRS detail beats a shorter one).
+- **Sequence-number collision:** if the remote already assigned the next number (e.g. MOM-19) to a different item, renumber YOUR item to the next free number (MOM-20) and update the reference in your own discussion file.
+- **Leftover markers:** after `rebase --continue`, grep for `<<<<<<<|=======|>>>>>>>` and clean any stragglers — a rebase can leave a trailing `>>>>>>>` even after it reports "Successfully rebased". Commit the cleanup separately.
+
 ### 7. Daily Reports (04- Daily Report subfolder)
 
 The `04- Daily Report/` subfolder contains daily site reports in Arabic/English PDF format. These are **not registered in any repo register** — no daily report register exists.
@@ -239,6 +258,13 @@ OneDrive cloud-only files (0 blocks on disk) return "Resource deadlock avoided" 
    - `Message_Preview` contains the first ~250 chars of the email body — enough to see CG response codes ("B - Approved with Comments", "C - Revise and Resubmit")
    - Filter for `@cg.com.sa` senders to see CG responses
    - See `references/outlook-sqlite-data-discovery.md` for common query patterns
+
+   **When the cron flags a new file but the file itself is deadlocked, read the EMAIL BODY instead of the file.** The same document was emailed, and the email body carries the CG Code + summary — enough to update the register without touching OneDrive. Use AppleScript to get the full body (preview is truncated):
+   ```bash
+   osascript -e 'tell application "Microsoft Outlook" to set m to message id <Record_RecordID>' \
+             -e 'tell application "Microsoft Outlook" to return plain text content of m'
+   ```
+   The body shows the classification line (e.g. `Classification-ASE-External-DS-ELC-0112`), the CG code (`C - Revise and Resubmit` / `B - Approved with Comment`), and the doc title. This is the fastest path when `cp`/`openpyxl`/`pdftotext` all fail with "Resource deadlock avoided" or "not a PDF file" on a cloud stub. Verified 2026-08-31: ZD-0112 Rev.01 (Code C → resubmitted) and 1C0-1G-0001 Rev.02 (Code B) both read from email bodies, register updated without hydrating the files.
 
 3. **Adel snapshot file listings** — the `99_Archive/adel_snapshots/file_list.txt` contains a full crawl of Adel's OneDrive folder structure. Search for doc refs:
    ```bash

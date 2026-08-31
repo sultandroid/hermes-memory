@@ -248,6 +248,37 @@ When the user asks **"which specialist is late / who do I invite to the recovery
 
 **Practical rule:** separate "not started because nobody is appointed / no contract" from "started but slow". The former needs Executive decisions (appointment, contract expedite, PO signature, CG PQ chase) escalated to the PM — it is often the LARGEST-volume work (ICT can be 40+ drawings), so a technical meeting alone will never recover it. Lead the escalation to the PM (e.g. "Eng. Waris") naming each blocker and its decision, before the recovery plan commits to dates that cannot be met.
 
+## Detecting "Not started" items that actually started (Aconex cross-reference)
+
+When the user says **"detect from the N 'not started' tasks what already started"** (or "شوف مين بدأ من اللي لسه Not started"), do NOT trust the tracker's `Not started` label — cross-reference it against a **fresh Aconex export** (`ExportDocs-<date>.xlsx`). The tracker lags reality; Aconex is the point-in-time truth of what was actually submitted.
+
+**Procedure (verified 2026-08-31):**
+1. Parse the Aconex export (see "Building a submission REFERENCE register" above for the layout — header row 11, data from row 12, `Document No` col 2, `Status` col 8, `Review Status` col 9, `Title` col 5).
+2. Build a `{normalized_docno: (status, revstatus, title)}` map, uppercasing doc numbers.
+3. Extract every `Not started` / `Not Started` row from `design_phase_deliverables_tracker.md` and pull its `MOC-...` doc numbers via regex `MOC-[A-Z0-9\-\.]+`.
+4. For each not-started doc number, check membership in the Aconex map. **Found = actually started/submitted** (report its real status); **not found = genuinely still not started**.
+
+**Key gotchas that make naive matching return 0 false-negatives:**
+- **Doc-number scheme drift.** The tracker's `Not started` rows use the *planned* numbering (`MOC-ASE-EL-EEM-DDD-30001-00`, `...-EPW-CALC-...`, `...-ETC-...`), but Aconex stores the *actual submitted* numbers with a different suffix scheme (e.g. `MOC-ASE-EL-EER-DDD-30001-00` → `-01`, `-02`… per floor; `EPW-DDD-30002-00` → `-01`…`-09`). Exact-string match therefore misses them. **Fall back to title-keyword matching** (EMERGENCY/GENERATOR/ATS/UPS, LOAD ESTIMATION/CABLE SIZING/SLD/MDB, EXIT LIGHTING/CBS, STRUCTURED CABLING/TELECOM, MASTER CLOCK/SMART TV) to confirm whether the *subject matter* exists in Aconex at all.
+- **Assessment (ZD) vs design (DDD) confusion.** Aconex will show `ZD-0074 Master Clock Assessment = B`, `ZD-0088 ATS = B`, `ZD-0092 UPS = B`, `ZD-0105 Generator = B` — these are **Stage-1 assessments**, NOT the `DDD` design drawings that are still `Not started`. Don't report "started" just because a same-topic ZD assessment is approved; the design deliverable is a different doc class.
+- **AC Power (12 drawings) submitted 31-Aug** shows in Aconex as `For Review`/`Pending` — but the tracker already had it `In Progress 90%`, not `Not started`, so no conflict. Only flag items whose tracker status is genuinely `Not started`.
+
+**Result framing:** report a per-group table (Emergency/Standby, LV Power, Emergency/Exit Lighting, Telecom/Cabling, Smart TV/Master Clock) with "found in Aconex? yes/no", and state the bottom line plainly (e.g. "0 of 38 actually started — all still genuinely not started; the ZD items are assessments, not the DDD design").
+
+## Pushing to the shared repo — rebase + ID-collision resolution
+
+`aseer-museum-pm` is a **multi-agent shared repo** (cron jobs + other labors push concurrently). A `git push` will frequently be rejected with `fetch first` because the remote gained commits since your last pull. The safe recovery sequence (verified 2026-08-31):
+
+1. `git stash push -m "pre-push <date>"` — the repo often has unrelated dirty files (`.sync_state.json`, webapp HTML, `compliance_matrix.md`) that are NOT yours; stash them so the rebase can run.
+2. `git pull --rebase origin main` — replays your commits on top of the remote's.
+3. **Resolve conflicts by keeping the remote's NEWER register row, then renumber your colliding ID.** The recurring collision is **MOM numbering**: another agent already added `MOM-19` (e.g. a weekly progress meeting) while you also wrote `MOM-19` for a different meeting. Resolution: keep BOTH rows, renumber yours to the next free ID (`MOM-20`), and update the back-reference in your discussion file (`meeting_minutes_register.md — MOM-20`). Same pattern applies to any sequential register ID (MOM, ZD, PQ, DT, ADI).
+4. For register-row conflicts (e.g. `submittal_register.md` same doc number), keep the **remote's version** — it's usually the more complete/later one (more CRS comments, later Aconex ref).
+5. `GIT_EDITOR=true git rebase --continue` — the rebase will try to open an editor for the commit message; `GIT_EDITOR=true` (or `-c core.editor=true`) suppresses it in a dumb terminal.
+6. After the rebase completes, **grep for leftover conflict markers** (`<<<<<<<`, `=======`, `>>>>>>>`) across the touched files — a rebase can "succeed" while leaving a stray marker at the tail of a file. Remove them, `git add`, commit.
+7. `git stash pop` to restore the unrelated dirty files, then `git push origin main`.
+
+**Key rule:** never `git push --force` to this shared repo — always rebase onto the remote. And never commit the unrelated dirty files (`.sync_state.json`, webapp HTML) that belong to other agents/cron jobs; leave them unstaged.
+
 ## Related Workflows
 
 - `references/risk-review-workflow.md` — "next risk" pattern: navigate open risks by score, search Outlook for updates, update JSON, report changes. Used when the user says "next risk" or names a risk ID during a review session.

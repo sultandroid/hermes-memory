@@ -25,3 +25,5 @@ Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-s
 Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
 §
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
+§
+User wants project reminders/action items as GitHub Issues (gh), not just Telegram.
