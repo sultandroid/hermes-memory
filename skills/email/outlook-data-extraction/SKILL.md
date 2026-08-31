@@ -230,6 +230,18 @@ plain = H.unescape(re.sub(r'<[^>]+>', '\n', txt))  # strip HTML, unescape entiti
 print(plain)
 ```
 The body is Outlook HTML with inline `style=` attributes per `<div>`; stripping tags + `html.unescape` yields clean text. The `.olk15Message` binary also holds MIME body-part headers (image content-ids, docx attachment names) and the full email-thread headers (`From:`/`Sent:`/`To:`/`Cc:`/`Subject:` blocks are plaintext-read-able near the end). This **supersedes** the older claim that full body is unrecoverable — that was true only for TNEF `.olk15Message` payloads; the UTF-16LE path recovers Outlook's HTML bodies in the common case. `Message_Preview` (~255 chars) remains the cheap source for search/scan; use the UTF-16LE decode when you need the full body or the embedded thread.
+
+**Practical refinement (reconfirmed 2026-08):** decoding the *whole* file as UTF-16LE yields a long run of binary garbage before the real body. Do NOT try to find the start phrase in the raw bytes — instead decode the entire file, then **slice the decoded text from a recognizable body greeting** (e.g. `Dear Mr. Mohamed Sultan`, `Dear Eng.`, `السلام عليكم`). The binary header noise is all before that point. A robust extractor:
+```python
+import sys, re, html as H
+data = open(sys.argv[1], 'rb').read()
+txt = data.decode('utf-16-le', errors='ignore')          # whole-file decode
+plain = H.unescape(re.sub(r'<[^>]+>', '\n', txt))        # strip HTML
+# slice from the first greeting onward; collapse blank runs
+i = min([plain.find(g) for g in ('Dear Mr.', 'Dear Eng.', 'Dear Sir', 'السلام عليكم') if plain.find(g) >= 0] or [0])
+print('\n'.join(l.rstrip() for l in plain[i:].split('\n') if l.strip()))
+```
+**Thread reconstruction:** a single `.olk15Message` often embeds the *entire* prior thread — the newest message body first, then `From:/Sent:/To:/Cc:/Subject:` header blocks for each earlier email in reverse-chronological order, each followed by its body. So one email can yield the full escalation chain (e.g. RFI → point-by-point rejection → "rejected in its entirety" → follow-up → calmest closing note) without querying each message id. When the user asks to "check all emails" on a dispute, extract the latest message and read the embedded thread before querying individual ids.
 - The `Files` table is a virtual table (`FilesVTabModule`) — cannot query directly
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
 - Some attachment PDFs are image-only (CAD plots) — `pdftotext` returns empty; use OCR

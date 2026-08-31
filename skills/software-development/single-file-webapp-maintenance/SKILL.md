@@ -12,6 +12,16 @@ You need to modify the data embedded in a single-file web app (e.g. risk registe
 - Update fields across many records
 - Fix a data inconsistency
 
+## Extracting embedded JS data for reporting (not editing)
+
+When you only need to READ the embedded data (e.g. report dashboard stats after a deploy), don't fight regex/JSON parsing:
+
+- The data block is a **JS object literal, not JSON** — keys are unquoted (`total: 217`, `categories: { "Material": {...} }`). `json.loads()` fails with `Expecting property name enclosed in double quotes`. `ast.literal_eval()` also fails on unquoted keys.
+- **Fastest reliable path: `read_file` the HTML directly** and read the `const DATA = {...}` block by line. The block is usually compact (a few dozen lines) and self-documenting.
+- If you must parse programmatically, the block is a mix: outer keys unquoted, inner category objects quoted. A targeted regex per field (`"total":\s*(\d+)`, `"B":\s*(\d+)`) is more robust than trying to parse the whole object.
+
+**Pitfall:** KPI values in the HTML are often JS-populated placeholders (`id="kpiB">—`), so grepping the HTML for counts returns `—`. The real numbers live in the `const DATA` object (or are computed from it via `totalB = Object.values(cats).reduce(...)`). Always read the DATA block, not the rendered KPI markup.
+
 ## Core rule: never restore from git
 
 The server version of a single-file web app often has customizations NOT in the git repo — register navigation links, DOWNLOAD SNAPSHOT button, CSS tweaks, different header content, footer links. Doing `git checkout -- index.html` to "restore" the file **wipes all those customizations**.

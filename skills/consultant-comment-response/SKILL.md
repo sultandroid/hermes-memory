@@ -560,6 +560,23 @@ When drafting the Originator Reply cell, three wording traps recur:
 
 3e. **Never call a Code C document "approved."** When a reply references a related submittal, do NOT write "aligned with the approved [X] design" if that design is Code C (Revise & Resubmit) — it is NOT approved, and saying so is a factual error CG will catch (it also contradicts the very next sentence noting the Code C status). Drop "approved" and just reference the doc number: "aligned with the Showcase design (1A0-1G-0009)."
 
+## Compiling a Specialist's Delayed-Deliverables List (pressure email / meeting prep)
+
+When the user asks for "what is required from [specialist] and what is late" to draft a reply or prepare a pressure meeting, **verify the OWNER of every item before including it in the list.** The user will correct you if you misattribute scope. Two real misattributions caught in practice:
+
+| Item | Wrongly attributed to | Actually belongs to |
+|------|----------------------|---------------------|
+| **Dongguan load/log calcs** (lighting fixture load calcs) | AD Engineering (MEP) | **ZNA** (lighting designer) — it's a lighting fixture supplier's load calc, part of ZNA's DD 50% lighting package |
+| **BMS Understanding Report ZD-0107** | AD Engineering (MEP) | **GITCO** (BMS specialist) — CG's Code C comment explicitly says "GITCO must update"; BMS was assigned to GITCO from the outset |
+
+**Method to verify ownership before listing:**
+1. For each candidate item, check the submittal register's discipline column and the CG comment text — CG often names the responsible party explicitly (e.g. "GITCO must update").
+2. Check the specialist's SOW/scope file (`02_Schedule/<Specialist>/`, `00_Project_Charter/<specialist>_scope.md`) — lighting load calcs are in ZNA's scope, not AD's.
+3. Check the project discussion/coordination notes (`09_Agent_Workspace/discussions/`) — the 30-Aug AD coordination note explicitly records "only BMS assigned to GITCO from the outset; everything else is fully detailed in the contract."
+4. When in doubt, ask the user before finalizing — a wrong attribution in a formal reply to the specialist destroys credibility.
+
+**Reply framing the user prefers (AD pressure email):** focus on **schedule commitment, initiative, and a catch-up plan** — NOT on the communication method. The user's position: "the method of communication is secondary to commitment to the submission schedule." The reply should (a) accept formal/consolidated communication if the specialist asks, (b) state the purpose of close follow-up is to monitor completion, not to stall, (c) require the specialist to take initiative and flag delays BEFORE they occur, and (d) demand a dated catch-up plan for the outstanding deliverables. Propose a single coordination meeting + signed MOM to convert vague delays into binding commitments (this is the user's standing resolution strategy vs blame-shifting specialists).
+
 ## Pitfalls
 - **Appending rows to an append-only markdown register: NEVER use `patch` with `replace_all=true`.** In `00_Status/action_items.md`-style registers, table rows repeat across sections (the same "Review Stage 4 Showcase Lighting Package" line appears twice), so a `replace_all` find-and-replace duplicates the new block into EVERY occurrence — corrupting the whole file. Restore with `git checkout -- <file>` and redo. The reliable append is: `write_file` a temp file with just the new rows, then `cat tempfile >> register.md` and `rm tempfile` (the terminal `>>` heredoc is blocked by the `&` tool guard). Only `patch` when you can anchor on a genuinely unique line — and even then, prefer appending at EOF.
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks

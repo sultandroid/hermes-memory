@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-08-30 16:08:17
+Generated: 2026-08-31 09:00:53
 
 ---
 
@@ -17,7 +17,6 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
@@ -36,15 +35,16 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 2. **NEVER use `rm -rf`** on any path — OneDrive propagates deletions immediately.
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
 4. **NEVER move unknown/non-project files** from Downloads.
+7. **Entity isolation:** Samaya folders must NEVER contain Moqtana/Tqanny/Sada_Uhud/Sayyid al-Shuhada files, and vice versa. Kiswa project files belong to Tqanny not Samaya. Always verify ownership before deleting/moving.
 
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
-Aseer risk close: edit BOTH risks.json+prr_risks.json; rebuild+bump; risk_issue_daily.py LAST auto-closes GitHub 'Risk — <ID>' (never gh close by hand); rating=prob×sev.
 Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
-Aseer: AD Eng won't commit to submission dates — escalate w/ principal Nader. Fire Alarm needs Civil Defence+NRS stamps (CG verbal ≠ approved). Civil Defence = co-consultant, not supportive owner.
+Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
+Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 No yes-man: study deeply, verify refs vs source. Docs avoid § (use 'Section'). Edit in place, keep ONE latest version. Negotiation: present problem only, don't propose costly solution — let other party request it so cost lands on their design, not Samaya.
@@ -66,7 +66,6 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
-Aseer: AD Eng won't commit to submission dates — escalate w/ principal Nader. Fire Alarm needs Civil Defence+NRS stamps (CG verbal ≠ approved). Civil Defence = co-consultant, not supportive owner.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 CRS/comment replies: humanized natural engineer voice; cite section numbers (L10-560) but NOT clause numbers (1.04, 2.01); review one-by-one before finalizing.
@@ -82,10 +81,11 @@ CRS/comment replies: humanized natural engineer voice; cite section numbers (L10
 Aseer Regional Museum (Contract 0010003521, May 2026) — from SMP PL-0020 Rev 02 + CRP PL-0027 Rev C01. Employer: MoC. PMC: ACE Moharram-Bakhoum. CG: Eng. Mohammad Elbaz (Acting PM), Eng. Abdrabo Shahin (Sr Structure/Reviewer). Samaya: PD Eng. Adel Darwish (Acting), Tech Office Eng. Mohamed Sultan, BIM Eng. Waleed Salah, CRP author Eng. Mohamed Elshikh. Design Lead: NRS (AoR). 52-stakeholder register (T1 Ops 6 / T2 Specialists 20 / T3 Authorities 14 / Ext MoC 7 / Statutory 5). 7 lifecycle phases, 7 report series, 11 standing meetings. SLAs: Submittal 14d, RFI/TQ 7d, SI 10d. 5-tier escalation L1→L5 (max 27d); 8 auto-fire triggers. 6 Authorities: SCD/GDCD, SEC, MoMRAH, CITC/CST, MOI, Aseer Emirate. KPIs: CDE 100%, RFI ≤7d, satisfaction ≥4.0/5.0. NRS Joint-Authorship model. CG Submission Sequence Rule (27-Apr-26): submittals without approved materials/design/specialist refs → Code C. All 8 CG comments CLOSED on SMP Rev 02.
 Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects (Zamzam #121, Aseer #3092, etc.). Key people: Sultan (Odoo/Outlook, sultan@samayainvest.com), Ali Abdelrahman (BIM Lead), Adel Darwish (Project Dir), Mohamed Samir (Constr Mgr), Hesham Ezzat (Doc Controller). Telegram: @SultanMacBook_Bot. Notion: MacHermes bot on Samaya inv. workspace.
 **Mohamed Essa** — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects including Zamzam #121, Aseer #3092, and related portfolio work. Also owner/operator of Moqtana Museums & Consultancy (fit-out/heritage), which runs Odoo 18 Community on DigitalOcean (167.99.224.43).
+- **Ali Abdelrahman** (BIM Lead)
 
 ## Agents & Tools
 
-Odoo 167.99.224.43: SSH root; NPM+Odoo(8069)+PG; py /opt/odoo-tools/bin/python. HR tickets=helpdesk.ticket team 10; emp 975 partner 5503.
+Odoo 167.99.224.43 SSH root; Odoo(8069)+PG; py /opt/odoo-tools/bin/python.
 Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -113,7 +113,7 @@ Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo S
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
 Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-stage, don't blindly comply. CG review = conformance-only (ER §2.4).
-Aseer: AD Eng won't commit to submission dates — escalate w/ principal Nader. Fire Alarm needs Civil Defence+NRS stamps (CG verbal ≠ approved). Civil Defence = co-consultant, not supportive owner.
+Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
 - For Aseer reviews, audit Mohamed Samir submissions for copied dates/contract type, and keep PD reports concise, factual, evidence-backed, with recommended actions [ad-hoc note].
@@ -142,6 +142,7 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 ## Locations
 
 User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
+Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
 - For OneDrive file work, prefer reversible moves, local snapshots, quarantine over deletion, and verified save-back after working from scratch copies.
@@ -155,4 +156,3 @@ He prefers execution plus verification over explanation-only help. For printable
 - Hermes runtime recovery and provider setup: build_tool_label, stale session, kill 2599, OLLAMA_API_KEY, ~/.hermes/.env, oauth_device_code
   - desc: Search this first for Hermes tool crashes or provider-key setup in `cwd=/Users/mohamedessa/.hermes/hermes-agent`.
 rollout_path: /Users/mohamedessa/.codex/sessions/2026/06/25/rollout-2026-06-25T03-15-54-019efc22-1c5d-7810-a5f7-b4b5b768203f.jsonl
-task: read-only audit of /Users/mohamedessa/Library/CloudStorage/OneDrive-SAMAYAINVESTMENT/Samaya/Technical Office/Bim Unit/Aseer-Museum/Subcontractors/03_Graphics_Contractor

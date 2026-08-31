@@ -115,6 +115,38 @@ The user frequently dictates a long internal coordination call (e.g. AD Engineer
 5. **Capture the decision rule verbatim** when the user states a standing principle (e.g. "work on the tender first UNLESS the tender conflicts with the standard; if it's MORE than the standard, just design it, don't block"). These become the user's negotiation stance for the follow-up meeting.
 6. **When the user says "مفيش لسه بندور" (still searching / no names yet)** — record the item as an open action with "no names yet" rather than inventing leads. Do not fabricate vendor names or contacts; leave the row open and note the source of leads (e.g. "Mouns holds the names").
 
+## Drafting a reply to a specialist (AD Engineering pattern)
+
+When the user asks to draft a reply to a specialist (e.g. AD Engineering) after an escalation thread, follow these rules — the user corrected me on all of them:
+
+### 1. VERIFY deliverable ownership before listing anything — never trust the AD tracker markdown
+The `02_Schedule/AD_Engineering/AD_Engineering_Electrical_ICT_Tracker.md` file is titled "Electrical / ICT" but **conflates ICT items with AD items**. Do NOT use it as the source of truth for what AD is responsible for. The user will correct you ("تآكد ان المطلوب هو من اد وليس من حد تاني" / "Dongguan مالوش دا تبع ZNA وليس اد").
+
+Authoritative ownership sources, in order:
+- **Design Phase Deliverables Tracker xlsx** — the `Responsibility` column per row. `AD` = AD's scope; `ICT/AD` or `BMS/AD` = shared; `ICT` / `BMS` / `ZNA` = NOT AD.
+- **RACI matrix xlsx** (`RACI_MEP_BMS_ICT_AV_Interfaces.xlsx`) — `R` (Responsible) column per interface row. AD is R for the bulk of MEP/electrical (power, containment, emergency lighting, fire alarm coordination, smoke management); ICT/BMS are R only for their own systems.
+
+Known ownership traps (verify each, don't assume):
+- **BMS** → GITCO (BMS specialist), NOT AD. CG on ZD-0107 explicitly said "GITCO must update".
+- **Dongguan load/log calcs** → ZNA (lighting), NOT AD.
+- **Master Clock / Smart TV** → ICT team (SBS), NOT AD.
+- **ICT / CCTV / Access Control / PAVA / Telecom / Structured Cabling** → ICT, NOT AD.
+- **Fire Alarm** → ICT/AD (shared); **BMS layouts** → BMS/AD (shared).
+
+### 2. Frame the reply IN AGGREGATE, not item-by-item
+The user wants the reply to "hold them accountable in the aggregate" (امسك لهم الموضوع في المجمل), not a long per-item table. The winning structure:
+- "Your contract has now been running for over a month. In that entire period you have delivered only **four (4) drawing packages** — [name them]. Of these four: one was returned and resubmitted a second time; one was returned and has **not yet been resubmitted**; the remaining packages have **not been approved**. The rest of your scope — [list the undelivered groups] — **has not been delivered at all.**"
+- Then: "The responsibility matrix defines each party's period. ICT/BMS have not yet had their own reports approved, so you cannot claim to be blocked waiting on them."
+
+### 3. Lead with schedule commitment, initiative, and catch-up plan — NOT communication method
+The user's priority is: "يهمنا الالتزام بالجدول الزمني للتقديمات" (what matters is commitment to the submission schedule). The counterparty's complaint about communication method (too many text/voice messages, want formal emails) is **secondary** — accept it briefly, then pivot to the real ask:
+- The purpose of close follow-up is to monitor completion, not to stall.
+- AD must take the initiative and request help / flag delays **before** the stoppage occurs, not after.
+- "We need your catch-up plan" — a clear, dated plan for recovering the outstanding deliverables.
+
+### 4. Verify each reply before sending
+"اربط الدنيا كلها مع بعضها وتخقق من كل رد قبل ما ترد" — tie everything together and verify each point against the source before responding. Cross-check the tracker, RACI, and submittal register so no item is mis-attributed and no claim is ungrounded.
+
 ## OneDrive Placeholder Workaround
 
 Many project files in the local OneDrive tree are cloud-only placeholders that return "Resource deadlock avoided" on any read attempt. Valid alternatives:
