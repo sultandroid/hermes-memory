@@ -32,6 +32,7 @@ osascript -e 'tell application "Microsoft Outlook"' \
 
 User asks to:
 - Triage their inbox / review what's waiting / find action items
+- Resolve a consultant/vendor date dispute → see `references/date-dispute-ground-truth.md`
 - Find emails from a specific sender or project
 - Search for project-related emails
 - Extract attachments from Outlook
@@ -862,7 +863,28 @@ tell application "Microsoft Outlook"
 end tell
 ```
 
-**Reliable path:** Do NOT burn cycles iterating AppleScript recipient syntax (it is genuinely blocked on 16.90+). Create the draft with the subject only to open the compose window, then hand the user the full body text + To/CC addresses to paste — which already matches the user preference above (manual copy over automated drafts). Look up the confirmed recipient addresses from SQLite (`Message_SenderAddressList` for a known person, or `Message_ToRecipientAddressList`/`Message_CCRecipientAddressList` on a related email) so the user can paste them. This is the pragmatic resolution of an AppleScript-dictionary regression, not a workaround to keep hunting for.
+**Reliable path — recipient creation WORKS on 16.90+ (verified 2026-09):** The earlier "blocked" finding was wrong about recipients. A working full-draft compose recipe (recipient + HTML body + N attachments) is:
+
+```applescript
+tell application "Microsoft Outlook"
+    set theMessage to make new outgoing message with properties {subject:"<Subject>"}
+    -- recipient: MUST use the email address record form; {address:} alone and {name:,address:} both throw -2700/-2710
+    set r to make new recipient at end of recipients of theMessage with properties {email address:{name:"Name", address:"x@y.com"}}
+    -- BODY: only the `content` property works for HTML. `HTML content` is a reserved class name and throws -2740. `plain text content` DOES NOT preserve line breaks — multi-line text flattens into one block.
+    set content of theMessage to "<html><body><p>line1</p><p>line2</p></body></html>"
+    -- attachments: POSIX file wrapper required
+    repeat with n in {"A","B"}
+        make new attachment at end of attachments of theMessage with properties {file:POSIX file ("/path/" & n)}
+    end repeat
+end tell
+```
+
+Pitfalls discovered:
+- **Body line breaks**: setting `plain text content` with `linefeed`-joined text yields `linefeeds=0` — the whole body collapses. Always set `content` to an HTML string with `<p>`/`<br/>` so paragraphs render.
+- **`content` property** (not `HTML content`/`plain text content`) is the correct setter for the message body.
+- After composing, verify via SQLite (`Message_ToRecipientAddressList`, `Message_NormalizedSubject`) and count attachments via `every attachment of m`.
+- Deleting a draft from AppleScript is a soft delete — the row persists in SQLite (sits in a recycle folder). Don't be alarmed; re-running delete on the same ID is idempotent.
+- For manual-paste preference: look up confirmed addresses from SQLite (`Message_SenderAddressList`, or `Message_ToRecipientAddressList`/`Message_CCRecipientAddressList` on a related email).
 
 ## Batch Email Processing with Sub-Agents
 

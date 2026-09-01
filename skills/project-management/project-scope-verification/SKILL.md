@@ -83,6 +83,38 @@ Always cite the specific document, section, file, and line where the requirement
 
 > **No — hazmat screening is NOT explicitly required.** Contract §X only mentions hazardous material handling for packaging/storage (not building screening). MS-02 lists asbestos survey as an unchecked conditional prerequisite. No BOQ line item exists.
 
+## Existing vs New Work — Variation Determination (rehabilitation projects)
+
+Use when the user asks "is changing the EXISTING [item] to meet a new requirement on the contractor or not?" — e.g. replacing existing fire-alarm cables with fire-rated ones, upgrading existing glazing, re-routing existing services. This is a **rehabilitation/refurbishment** project (Aseer Museum = rehab of an existing building), so the existing-vs-new split is the crux.
+
+### The core rule
+
+| Work type | Who bears it |
+|-----------|-------------|
+| **New work** installed per the current spec | Contractor — in scope, no argument |
+| **Repair of existing work** that was non-compliant from the start | Contractor — contractual obligation |
+| **Upgrade of existing/legacy work** that was compliant when built, now required to meet a NEW/higher standard | **Variation** — NOT in base scope; claim against Employer (MoC) or raise as a change |
+
+### Evidence chain to prove it (in order)
+
+1. **Read the CG/consultant comment verbatim** — the wording decides who it's aimed at:
+   - *"All fire alarm cables ... shall be fire rated, **AD to highlight and mention it clearly**"* → aimed at the **designer** to note it in the design, NOT an instruction to the contractor to replace existing cable.
+   - *"The **Contractor** shall contract the building's certified vendor to perform all supply, installation, testing, commissioning"* → aimed at the **contractor** for NEW supply/install.
+   - Distinguish "shall be fire rated" (a spec requirement for new work) from "replace the existing" (a change to legacy work).
+2. **Check the ER / SOW / tender spec baseline** — was the higher standard (e.g. fire-rated cable) in the ORIGINAL Employer's Requirements / tender spec? If yes → contractor. If the ER never required it and CG/Civil Defence demanded it later → variation.
+3. **Check the BOQ** — a line item for the item = costed = in scope. No line item for upgrading existing = supports variation.
+4. **Confirm the project is a rehab** — if the building is existing and the item predates the contract, the default is that upgrading it is a change unless the ER explicitly required it.
+
+### Practical stance (user's negotiation preference)
+
+- **Do NOT accept** "change the old one on your account" without proving it's in the original scope.
+- **Ask the designer (AD) to specify exactly** which existing items need changing AND cite the contractual clause (ER/SOW/BOQ line) that requires it.
+- If no explicit clause → **raise as a Variation/change to the Employer**, not absorb it.
+- The user's standing rule: present the problem, don't propose a costly solution — let the other party request it so the cost lands on their design, not Samaya.
+
+### Pitfall: contract/ER files are often EDEADLK-locked
+The contract, ER, and SOW PDFs under OneDrive frequently return null bytes / "Resource deadlock avoided" (both the raw PDF and the extracted `.md` mirrors). Do NOT brute-force them. Use the local git clone `~/aseer-museum-pm/` (extracted, searchable markdown, EDEADLK-free) FIRST — see the EDEADLK workaround note in the Process section above. If the clone lacks the doc, fall back to the CG comment wording + BOQ, which is often sufficient to determine the split.
+
 ## Material / Product Compliance Check
 
 Use when the user asks "does this product/material comply with our project?" — evaluating a supplier's datasheet, test certificate, or product profile against project specifications.

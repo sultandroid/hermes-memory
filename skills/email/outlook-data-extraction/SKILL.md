@@ -125,6 +125,22 @@ WHERE Message_HasAttachment = 1
   AND Message_NormalizedSubject LIKE '%keyword%';
 ```
 
+### Triage unread inbox (action items / "check mails")
+Find the Inbox folder id first (`Folder_SpecialFolderType=1` is Inbox; on the Samaya account it is `114`), then pull unread, non-deleted messages newest-first:
+```sql
+SELECT Record_RecordID, Message_TimeReceived, Message_SenderList,
+       Message_SenderAddressList, Message_NormalizedSubject, Message_HasAttachment
+FROM Mail
+WHERE Record_FolderID = 114
+  AND Message_ReadFlag = 0
+  AND Message_MarkedForDelete = 0
+ORDER BY Message_TimeReceived DESC
+LIMIT 30;
+```
+- `Message_TimeReceived` is **plain Unix epoch seconds** — convert with `date -r <ts> '+%Y-%m-%d %H:%M'` in the shell (or `datetime(...,'unixepoch','localtime')` in SQL) to spot what arrived today vs. stale.
+- Filter the triage to project-relevant rows with `Message_NormalizedSubject LIKE '%door%' OR ... LIKE '%Safety%'` etc., then pull `Message_Preview` for the actionable ones. Marketing/expo noise (Big 5, LEAP, WoodShow, eXtra, Instagram) is common — bucket it separately and ignore.
+- `Message_HasAttachment=1` flags emails whose attachment you should extract (see attachment workflow below).
+
 ### List all folders
 ```sql
 SELECT Record_RecordID, Folder_Name, Folder_SpecialFolderType

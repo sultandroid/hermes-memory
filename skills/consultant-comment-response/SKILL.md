@@ -209,6 +209,10 @@ When the designer initially pushes back on a CG comment but then prepares draft 
 
 When CG returns Code C and you must produce the CRS that accompanies the Rev 01 resubmission, **copy the latest approved CRS Excel template and refill it** (preserves the exact MOC layout, merges, masthead) rather than building a fresh workbook. See `references/crs-from-template-cell-map.md` for the full verified cell map (header fields + comment data rows), the MergedCell writing rule, and the confidential design-transition note.
 
+### CRS Stale-Template Replacement (header + comments belong to a DIFFERENT document)
+
+When the CRS file's header AND comment rows carry content from a different document (e.g. header says "Interactive Design SOW" but you're responding to "Showcase DD"), you must replace the header, swap the comment rows (possibly a different count), and shift the legend/signature block manually. `ws.insert_rows()` does NOT shift merged ranges. See `references/crs-stale-template-replacement.md` for the full recipe (header field map, manual merged-cell block shift, openpyxl pitfalls: no `styles.Style()`, `MergedCell.value` read-only, `_style` is a StyleArray).
+
 ### CRS Revision Update (Existing CRS to Rev 01+)
 
 When CG returns a CRS on a submitted document and you have prepared Rev 01 of the document addressing the comments, update the CRS to Rev 01 with originator replies. See `references/crs-revision-update.md` for the full workflow with openpyxl patterns, reply templates by comment type, formal code mapping, and filing instructions.
@@ -576,6 +580,23 @@ When the user asks for "what is required from [specialist] and what is late" to 
 4. When in doubt, ask the user before finalizing — a wrong attribution in a formal reply to the specialist destroys credibility.
 
 **Reply framing the user prefers (AD pressure email):** focus on **schedule commitment, initiative, and a catch-up plan** — NOT on the communication method. The user's position: "the method of communication is secondary to commitment to the submission schedule." The reply should (a) accept formal/consolidated communication if the specialist asks, (b) state the purpose of close follow-up is to monitor completion, not to stall, (c) require the specialist to take initiative and flag delays BEFORE they occur, and (d) demand a dated catch-up plan for the outstanding deliverables. Propose a single coordination meeting + signed MOM to convert vague delays into binding commitments (this is the user's standing resolution strategy vs blame-shifting specialists).
+
+## Transmittal Emails to Reviewers: Never Assert Unverified Changes
+
+When drafting an email asking a reviewer (NRS, CG, etc.) to **review and stamp** a drawing set, do NOT claim that changes have been made unless you have verified them against the actual drawings. The user will catch you: "from where you got this comment?"
+
+**The trap:** A reviewer's comment sheet (e.g. NAMA ALAMAL Code C) says "fire hose cabinets must be relocated out of the exit stairwells" and "manual call points must be added at exits." You then write in the transmittal email "fire hose cabinets **have been relocated**... please confirm the positions read correctly" — presenting the reviewer's *required* change as a *done* fact. You have not checked the drawings to confirm the cabinets were actually moved.
+
+**Rules:**
+1. **A reviewer comment is a requirement, not a change.** "Comment 5 says relocate the cabinets" ≠ "the cabinets have been relocated." Only assert the latter after opening the DWG/PDF and confirming the new positions exist.
+2. **Before sending, verify against the drawings** — check the actual drawing (DWG/PDF) for the claimed change. If you can't verify, either (a) drop the claim, or (b) reword to ask the reviewer to check the current state: "worth a quick look to confirm coverage" instead of "has been added."
+3. **Distinguish the two framings in the email:**
+   - Verified: "Fire hose cabinets have been relocated out of the stairwells to the escape corridors (per SBC 801)."
+   - Unverified / asking reviewer to check: "Please confirm the fire hose cabinet positions and manual call point coverage read correctly on the plans."
+4. **Check revision currency too.** If the drawings are dated months before the review sheet in the same folder, flag it — the reviewer may be stamping a stale set. Confirm the drawings were actually updated post-comments before sending.
+5. **Scope-filter the package.** A submittal folder often mixes multiple disciplines (life safety drawings vs fire alarm vs suppression vs structural sample). Send the reviewer only the sheets in their scope (e.g. NRS = life safety/egress drawings), not the whole folder.
+
+This is the same "verify refs vs source" discipline as pitfalls 0b/0c/0g/0h, applied to **forward-looking transmittal emails** rather than pushback replies: a claim that a change exists must be backed by the file on disk, not by the reviewer's comment that requested it.
 
 ## Pitfalls
 - **Appending rows to an append-only markdown register: NEVER use `patch` with `replace_all=true`.** In `00_Status/action_items.md`-style registers, table rows repeat across sections (the same "Review Stage 4 Showcase Lighting Package" line appears twice), so a `replace_all` find-and-replace duplicates the new block into EVERY occurrence — corrupting the whole file. Restore with `git checkout -- <file>` and redo. The reliable append is: `write_file` a temp file with just the new rows, then `cat tempfile >> register.md` and `rm tempfile` (the terminal `>>` heredoc is blocked by the `&` tool guard). Only `patch` when you can anchor on a genuinely unique line — and even then, prefer appending at EOF.
