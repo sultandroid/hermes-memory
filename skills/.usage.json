@@ -498,12 +498,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-08-31T04:52:20.796860+00:00",
+    "last_used_at": "2026-09-01T04:10:57.154404+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 70,
+    "use_count": 71,
     "view_count": 20
   },
   "computer-use": {
@@ -1888,14 +1888,14 @@
     "archived_at": null,
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-31T10:14:10.157655+00:00",
-    "last_used_at": "2026-08-31T10:22:50.252725+00:00",
-    "last_viewed_at": "2026-08-31T10:22:50.249121+00:00",
-    "patch_count": 352,
+    "last_patched_at": "2026-09-01T03:11:44.504682+00:00",
+    "last_used_at": "2026-09-01T03:11:38.360197+00:00",
+    "last_viewed_at": "2026-09-01T03:11:38.354857+00:00",
+    "patch_count": 353,
     "pinned": false,
     "state": "active",
-    "use_count": 844,
-    "view_count": 535
+    "use_count": 846,
+    "view_count": 536
   },
   "p5js": {
     "archived_at": null,
