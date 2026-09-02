@@ -10,9 +10,9 @@ CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. K
 §
 PO approval: quote attached, prices matched ±20% std_price, update list_price + seller_ids (vendor name+code), post; service POs skip last 2.
 §
-User expects proactive search of Outlook SQLite and OneDrive for source docs rather than being asked to provide them. Corrects factual errors directly.
+Proactively search Outlook SQLite, OneDrive AND repo (registers, meetings, discussions, XRef) for evidence before concluding. Corrects errors directly.
 §
-Telegram group: silent unless asked; DM only for tech errors, decisions needing confirmation, escalation.
+Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh), not just Telegram.
 §
 Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
 §
@@ -25,5 +25,3 @@ Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-s
 Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
 §
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
-§
-User wants project reminders/action items as GitHub Issues (gh), not just Telegram.

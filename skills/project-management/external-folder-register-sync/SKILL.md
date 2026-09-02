@@ -233,6 +233,16 @@ The script outputs a list of new/changed files and a suggestion to run `hermes -
 
 OneDrive cloud-only files (0 blocks on disk) return "Resource deadlock avoided" on all read attempts. When this blocks an investigation, use the following cascade to find subcontractor/specialist data:
 
+### Standing rule: check the repo for evidence FIRST (user correction 2026-09-01)
+
+Before concluding on ANY Aseer item — a new file, a CG code, a status, a specialist — **always cross-check the repo for new evidence first**, not just when OneDrive files are deadlocked. The repo is the coordination hub and often already carries the answer (a prior agent logged it, a discussion/MOM captured it, a register row was updated). Sources to sweep before concluding:
+- `01_Registers/` — submittal, RFI, NCR, SI, prequalification, material registers (grep the doc ref, e.g. `grep -rn "ZD-0113" --include="*.md" .`)
+- `09_Agent_Workspace/discussions/` and `09_Agent_Workspace/daily_analysis_*.md` — prior agent findings, flags, action items
+- `00_CROSS_REFERENCE_MAP.json` / `.md` — cross-links between registers, risks, discussions
+- `08_Document_Index/` — submission reference register (status + date per doc)
+
+A doc may already be tracked (e.g. ZD-0113 was logged as "Pending/empty folder" in the submittal register and flagged in a 17-Aug daily analysis). When a cron flags a new file, check whether the repo already has a row for it and what status it carries — then update that row rather than treating it as brand-new. This prevents duplicate rows and surfaces prior context (e.g. a folder previously flagged as empty now has real content + an Approval/ subfolder = CG responded).
+
 ### Cascade Order
 
 1. **Repo registers first** — always check these before OneDrive:

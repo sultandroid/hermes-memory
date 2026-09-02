@@ -45,6 +45,8 @@ For any submittal returned **Code C** (Revise & Resubmit), the CRS file MUST be 
 - `.../02_CG_Responses/MOC-MUS-ASE-1E0-ZD-0102_CRS_Rev01.xlsx` (our CRS reply)
 This keeps the CG comment + our response together for the resubmission package.
 
+**Git pitfall — CRS xlsx is gitignored:** the repo's `.gitignore` has `*.xlsx`, so `git add 02_CG_Responses/CRS_*.xlsx` is silently ignored. Commit the CRS with `git add -f <path>` (matches the existing tracked CRS convention, e.g. `CRS_MOC-MUS-ASE-1E0-1G-0002_AV_PartII_Rev01.xlsx`). If `git push` is rejected (remote has new work), stash → `git pull --rebase origin main` → `git stash pop` → push.
+
 **CRITICAL — source of CG comments = the ORIGINAL DS SUBMITTAL COVER PAGE, not the vendor's Audit Response sheet.**
 The vendor's `Audit Response.xlsx` is often a **SUBSET** of the CG comments — the vendor responds only to the comments they chose to address, silently dropping the rest. Example: an AV DD resubmission had **18 CG comments** on the original DS cover page but the vendor's Audit Response captured only **4**. Filling the CRS from the Audit Response produces an incomplete CRS that omits 14 CG comments — the user will reject it.
 

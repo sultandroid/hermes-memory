@@ -883,6 +883,7 @@ Pitfalls discovered:
 - **Body line breaks**: setting `plain text content` with `linefeed`-joined text yields `linefeeds=0` — the whole body collapses. Always set `content` to an HTML string with `<p>`/`<br/>` so paragraphs render.
 - **`content` property** (not `HTML content`/`plain text content`) is the correct setter for the message body.
 - After composing, verify via SQLite (`Message_ToRecipientAddressList`, `Message_NormalizedSubject`) and count attachments via `every attachment of m`.
+- **Working compose syntax (verified 2026-09-01):** recipient must use `{email address:{name:..., address:...}}` — the bare `{address:...}` form fails. Body must be HTML via `set content of theMessage to "<html>..."` — `set HTML content of ...` fails ("A property can't go after this identifier", HTML is a reserved class name) and `set plain text content of ...` with linefeeds flattens to one block. Use `<p>`/`<br>` to preserve line breaks. Attachments need the `POSIX file` wrapper.
 - Deleting a draft from AppleScript is a soft delete — the row persists in SQLite (sits in a recycle folder). Don't be alarmed; re-running delete on the same ID is idempotent.
 - For manual-paste preference: look up confirmed addresses from SQLite (`Message_SenderAddressList`, or `Message_ToRecipientAddressList`/`Message_CCRecipientAddressList` on a related email).
 
