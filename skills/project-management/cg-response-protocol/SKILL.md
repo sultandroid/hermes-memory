@@ -12,7 +12,7 @@ tags:
 # CG Response Protocol
 
 ## References
-- `references/sow-vs-technical-submittal.md` — CG Code C on a **Scope of Work** vs a technical submittal: defer premature personnel/CV demands, accept scope/interface comments, Code C ≠ rejection of the specialist.
+- `references/sow-vs-technical-submittal.md` — CG Code C on a **Scope of Work** vs a technical submittal: defer premature personnel/CV demands, accept scope/interface comments, Code C ≠ rejection of the specialist. Also covers **forwarding the CG response to the subcontractor** (two-email split: action items to the specialist + "scope approval only, not stuff approval" clarification to CG).
 
 ## CRS Creation Workflow (MANDATORY — Follow in Order)
 

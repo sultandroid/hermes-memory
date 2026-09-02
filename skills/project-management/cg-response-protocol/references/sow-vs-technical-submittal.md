@@ -44,11 +44,31 @@ Key point: CG **noted Rawasin as responsible for Interactive Design** — it did
 Rawasin. Code C ≠ rejection (that's Code D). The SOW content itself was not rejected;
 only the missing responsibility/interface detail and the premature personnel demand.
 
+## Forwarding the CG response to the subcontractor
+
+After analysing the CG Code C, the user often wants to **forward the response to the
+specialist/subcontractor** (e.g. Rawasin) so they address the requirements, while the
+user separately balls back to CG. Two distinct emails, two distinct audiences:
+
+- **To the subcontractor (internal forward):** hand over the CG comments as action
+  items. Lead with the gating items (named specialist personnel + responsibility
+  matrix), list all comments as numbered asks, and attach the CG response. Address the
+  SOW author (e.g. Shihab Mohamed) + the subcontractor lead (e.g. Mohamad Alzeeny).
+- **To CG (separate email):** clarify the submission's scope. The user's key framing:
+  **"this submission is for scope approval only — it does NOT constitute approval of
+  any materials, products or 'stuff'."** This pre-empts CG (or the subcontractor)
+  treating the SOW approval as a materials/sample approval. Keep the two clarifications
+  in separate emails (per the user's rule: split distinct CG topics into separate emails).
+
 ## Pitfalls
 
 - **Don't read Code C as rejection of the specialist.** Code C = revise & resubmit;
   Code D = rejected. CG explicitly "noted" Rawasin's role — that's acceptance of the
   arrangement, not a rejection.
+- **Scope-approval-only framing is a deliberate shield.** When forwarding a SOW to a
+  subcontractor, state explicitly that SOW approval ≠ materials/products/samples
+  approval. Otherwise the subcontractor may treat the SOW as a green light to procure
+  or fabricate "stuff" before the material/sample submittals are approved.
 - **Don't fabricate a CV/org chart** to satisfy a premature comment. Defer it with the
   stage-sequencing argument.
 - **Separate the two comment classes** in the reply: "we will revise the SOW to address
