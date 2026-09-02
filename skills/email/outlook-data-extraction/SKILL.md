@@ -171,18 +171,22 @@ WHERE mb.Record_RecordID = <EMAIL_ID>;
 
 2. Full path: `~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/Main Profile/Data/<PathToDataFile>`
 
-3. Decode the base64-encoded PDF. **Preferred: find the base64 magic bytes directly** — more robust than hunting the `Content-transfer-encoding` marker (whose exact line ending `\r\r` vs `\r\n` varies and breaks offset math). A PDF's base64 always starts with `JVBERi0xLjM` (= `%PDF-1.3`):
+3. Decode the base64-encoded PDF. **Preferred: find the base64 magic bytes directly** — more robust than hunting the `Content-transfer-encoding` marker (whose exact line ending `\r\r` vs `\r\n` varies and breaks offset math). **Use the version-agnostic prefix `JVBERi` (= `%PDF`), NOT `JVBERi0xLjM` (= `%PDF-1.3`).** The full version string only matches PDF 1.3; this session's SOW was PDF 1.7 (`%PDF-1.7` → `JVBERi0xNy4`), so the 1.3 marker returned `-1` and the `Content-transfer-encoding` regex fallback also failed. `JVBERi` matches every PDF version:
 ```python
-import base64
+import base64, re
 from pathlib import Path
 
 data = Path('file.olk15MsgAttachment').read_bytes()
-idx = data.find(b'JVBERi0xLjM')          # PDF magic, robust to header variance
+idx = data.find(b'JVBERi')               # base64 of '%PDF' — version-agnostic
 if idx < 0: raise SystemExit('PDF marker not found')
-pdf = base64.b64decode(data[idx:], validate=False)  # decode from marker to EOF
+payload = data[idx:]
+payload = re.split(rb'--=_[A-Za-z0-9]+', payload)[0]  # strip trailing MIME boundary
+payload = re.sub(rb'\s', b'', payload)   # strip whitespace
+payload += b'=' * (-len(payload) % 4)    # re-pad to multiple of 4
+pdf = base64.b64decode(payload, validate=False)
 Path('/tmp/output.pdf').write_bytes(pdf)
 ```
-Fallback (older skill method, offset +35 after the `Content-transfer-encoding: base64` marker): decode the bytes after the marker, strip `\r`/`\n`, re-pad to a multiple of 4, `base64.b64decode`. Use magic bytes to identify other types too — the largest attachment is often the key document (e.g. a contract PDF among small inline `image00X.jpg/png` letterhead blocks); `file` + `du -h` to triage before decoding.
+The `Content-transfer-encoding: base64` regex fallback (`re.search(rb'Content-transfer-encoding:\s*base64\r?\n\r?\n', data)`) is unreliable — it returned no match on a real 7MB attachment this session. Prefer the `JVBERi` magic-bytes path above. Use magic bytes to identify other types too — the largest attachment is often the key document (e.g. a contract PDF among small inline `image00X.jpg/png` letterhead blocks); `file` + `du -h` to triage before decoding.
 
 **Non-PDF attachments use the same magic-bytes approach.**
 - DOCX/XLSX/PPTX (and any ZIP) base64 starts with `UEsDB` (= `PK\x03\x04`). Find that marker and `base64.b64decode(data[idx:], validate=False)` straight to EOF — same robust pattern as the PDF marker, no header-offset math:

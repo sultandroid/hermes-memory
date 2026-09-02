@@ -146,8 +146,12 @@ Output path:
 - The script filters out credit supplier POs from the main data and handles them via `credit_by_group` separately — this avoids double-counting.
 
 ## Excel Format
-- **Sheet 1: Summary** — Navy `#1F3864` header, total cashout, credit supplier note
-- **Sheet 2: POs Detail** — PO#, Vendor, Vendor Reference, Description, Date, Amount, State, Invoice, Notes
+- **ACTUAL generated sheet names (verified 2026-09-02 — do NOT rely on the legacy "POs Detail" layout below):** `['Summary', 'Cashout Required', 'Paid Outside Odoo', 'All POs', 'Credit Suppliers']`.
+  - **`Cashout Required`** = unpaid POs. Header is **row index 3** (0-based) = `PO # | Vendor | Amount (SAR) | Date | Receipt | Invoice | Pay State | Bills`. **Data rows start at row index 4.** Columns: PO#=0, Vendor=1, Amount=2, Bills=7.
+  - **`Paid Outside Odoo`** = chatter-paid POs (same column layout as Cashout Required).
+  - **`All POs`** = every factory PO incl. bill-paid, carries `Pay State` col (`paid`/`draft_bill`/`no_bill`) and `Bills` col with `BILL/YY/NNNN=residual/total`. This is the sheet to inspect when a known chatter-paid PO "goes missing" — check its `Pay State`/`Bills` here (see chatter sanity-check pitfall).
+- **Extract top-N unpaid from the workbook (post-processing, `execute_code` is BLOCKED under cron):** write a small `.py` and run via `terminal`: `openpyxl.load_workbook(path, data_only=True)` → sheet `Cashout Required` → rows `[4:]` → filter `re.match(r'^P0\d', str(r[0]))` → drop zero-amount → sort by `float(r[2])` desc. Sum of all rows should equal the report's Cashout Required total (sanity cross-check).
+- **Legacy / older-script sheet layout (keep for reference, NOT what the current script emits):** Sheet 1 **Summary** — Navy `#1F3864` header, total cashout, credit supplier note; Sheet 2 **POs Detail** — PO#, Vendor, Vendor Reference, Description, Date, Amount, State, Invoice, Notes
 - **PO # column** — clickable hyperlink to Odoo PO page: `{ODOO_BASE}/web#id={id}&model=purchase.order`
 - **Vendor Reference** — `partner_ref` field from Odoo. Place as the LAST column (not column C) — user preference
 - Landscape orientation: `ws.page_setup.orientation = 'landscape'`, `ws.page_setup.fitToWidth = 1`, `ws.page_setup.fitToPage = True`
@@ -212,7 +216,11 @@ This reclassified ~29 عهدة إبراهيم POs (18,551 SAR) from unpaid to pa
 
 **Adjusted cashout:** `truly_unpaid = total_unpaid_bill - chatter_evidence_paid`. Report both numbers so user can verify.
 
-**Sanity-check the chatter-paid count (observed 2026-08-30):** the hardcoded set has **4** POs {P01924, P01939, P01894, P01977}, but one cycle returned only **3 = 16,809.40 SAR** — P01977 did not appear in chatter_paid. This happens when a PO no longer matches (ref text changed, or it moved to bill_paid / left the factory scan). DON'T silently accept a lower count. If `len(chatter_paid) < len(known_set)`, compute the missing PO#s (`known_set - {p['po'] for p in chatter_paid}`) and note them in the report so the user can confirm whether the payment was reclassified to a bill or the evidence moved.
+**Sanity-check the chatter-paid count:** the hardcoded set has **4** POs {P01924, P01939, P01894, P01977}. Cycles have returned only **3 = 16,809.40 SAR**, missing a different member each time:
+- 2026-08-30: P01977 did not appear in chatter_paid.
+- 2026-09-02: **P01939 was missing** — resolution: it had moved legitimately to `bill_paid`. Its bill `BILL/2026/07/0132` showed residual `0/644` (fully paid VIA Odoo), so the payment was reclassified to bill-paid, not lost. Verified by grepping `All POs` sheet for PO# and reading its `Pay State`/`Bills` cols.
+
+DON'T silently accept a lower count. If `len(chatter_paid) < len(known_set)`, compute the missing PO#s (`known_set - {p['po'] for p in chatter_paid}`) and resolve EACH one by checking the `All POs` sheet (or a direct Odoo read) for that PO's `Pay State`/`Bills`/residual. Two outcomes: (a) it legitimately moved to bill-paid (bill residual now 0 → report as reclassified, cashout unchanged), or (b) it's genuinely not paid → flag it as a real unpaid risk. Note the resolution in the report so the user can confirm.
 
 ## Daily Cron Job
 
@@ -238,7 +246,7 @@ SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 <sc
 **Timeout notes (running manually):**
 - `new_pos_last_3_days.py` — fast, ~10s
 - `update_workshop_tracker.py` — **slowest**, can take 120-300s due to Odoo chatter reads on each PO. Set terminal timeout >= 300 when running interactively.
-- `build_cashout_report.py` — **defaults on limit.** With `limit=200`: ~10-30s. With `limit=2000` (needed for full scan of 268 Factory POs): can take 120-300s because of per-PO `account.move.read()` bill lookups. Set timeout >= 300 for full scans.
+- `build_cashout_report.py` — the hardcoded `limit` is now `2000` (verified by grep 2026-09-02; an old pitfall below still claims 200 — that's stale). Full scan of ~283 Factory POs can take 120-300s because of per-PO `account.move.read()` bill lookups. Set timeout >= 300 for full scans.
 
 ### OneDrive save failure (critical for cron — 2026-08-21)
 
@@ -296,5 +304,5 @@ Filter for Factory (project 244) or workshop vendors using the workshop vendor l
 - **`project_id` in search_read results** is a list `[id, name]` — always access via `po['project_id'][0]` for the ID. The `id` is at index 0, `name` at index 1. Never assume it's a plain int.
 - **5 factory projects, not 1** — always check all 5 IDs: {161, 244, 302, 307, 315}. Using only #244 misses ~35 POs.
 - **Workshop vendor list** — when filtering workshop POs by vendor name, use the comprehensive list in `references/workshop-vendors.md`
-- **Script limit mismatch:** `build_cashout_report.py` hard-codes `limit=200` but needs `limit=2000`. ~268 Factory POs as of Jul 2026
+- **Script limit (STALE, superseded):** older note claimed `build_cashout_report.py` hard-codes `limit=200` but needs `limit=2000`. **Verified 2026-09-02: the script now hard-codes `limit=2000`** (lines 27 & 35). Don't "fix" it — it's correct. ~283 Factory POs.
 - **Co-located files:** The output directory also contains `Factory-Tasks-Tracker-YYYY-MM.html` (separate system). Don't overwrite

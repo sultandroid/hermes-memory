@@ -24,9 +24,25 @@ with open(os.path.expanduser("~/.config/samaya/odoo.env")) as f:
         if "=" in line and not line.startswith("#"):
             k, v = line.split("=", 1)
             env[k] = v
-transport = xmlrpc.client.SafeTransport(context=ctx)
+class _TimeoutTransport(xmlrpc.client.SafeTransport):
+    """SafeTransport with a hard network timeout so a DNS/network stall
+    fails fast instead of hanging the cron job indefinitely."""
+    def __init__(self, context=None, timeout=30):
+        self._timeout = timeout
+        super().__init__(context=context)
+
+    def make_connection(self, host):
+        conn = super().make_connection(host)
+        conn.timeout = self._timeout
+        return conn
+
+transport = _TimeoutTransport(context=ctx, timeout=30)
 common = xmlrpc.client.ServerProxy(f'{env["ODOO_URL"]}/xmlrpc/2/common', transport=transport)
-uid = common.authenticate(env["ODOO_DB"], env["ODOO_USER"], env["ODOO_API_KEY"], {})
+try:
+    uid = common.authenticate(env["ODOO_DB"], env["ODOO_USER"], env["ODOO_API_KEY"], {})
+except Exception as e:
+    print(f"❌ ERROR: Cannot reach Odoo ({e})")
+    sys.exit(1)
 models = xmlrpc.client.ServerProxy(f'{env["ODOO_URL"]}/xmlrpc/2/object', transport=transport)
 DB, PW = env["ODOO_DB"], env["ODOO_API_KEY"]
 
@@ -406,7 +422,7 @@ def main():
             subprocess.run(["git", "commit", "-m", f"Update status: Odoo sync {TODAY}"], cwd=REPO_DIR, check=True)
             pushed = False
             for branch in ["main", "master"]:
-                r = subprocess.run(["git", "push", "origin", branch], cwd=REPO_DIR, capture_output=True, text=True)
+                r = subprocess.run(["git", "push", "origin", branch], cwd=REPO_DIR, capture_output=True, text=True, timeout=60)
                 if r.returncode == 0:
                     pushed = True
                     break
