@@ -28,6 +28,8 @@ osascript -e 'tell application "Microsoft Outlook"' \
 
 **The `POSIX file` wrapper is REQUIRED.** `save att in "/tmp/out.pdf"` (plain string path) fails with error `-2700`. Get the attachment name first via `get name of every attachment of m`, then `pdftotext -layout /tmp/out.pdf -` to read it.
 
+## Reading full email body & To/CC: see `references/full-body-and-metadata.md`
+
 ## Trigger
 
 User asks to:

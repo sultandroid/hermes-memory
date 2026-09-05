@@ -149,6 +149,44 @@ providers:
 
 See steps 7-9 above for the safe staging pattern (embedding .env editing and verification).
 
+## Local LM Studio / Ollama provider (localhost)
+
+When the user runs a local model server (LM Studio on port 1234, Ollama on 11434) and wants Hermes to use it:
+
+1. **Confirm the server is up and list its models** (LM Studio exposes an OpenAI-compatible endpoint):
+   ```bash
+   curl -s -m 5 http://localhost:1234/v1/models
+   # returns {"data":[{"id":"qwen/qwen3.6-35b-a3b",...}]}
+   ```
+   LM Studio model IDs are prefixed, e.g. `qwen/qwen3.6-35b-a3b` — use the exact `id` string as the model slug.
+
+2. **Add it as a custom provider.** For a FLAT provider entry (scalar fields only), `hermes config set` works cleanly — the "corrupts nested objects" pitfall applies only to nested dicts (MoA presets), not flat provider fields:
+   ```bash
+   hermes config set providers.lmstudio.base_url "http://localhost:1234/v1"
+   hermes config set providers.lmstudio.api_key "lmstudio"   # any non-empty string; local server ignores it
+   hermes config set providers.lmstudio.api_mode "chat_completions"
+   hermes config set providers.lmstudio.default_model "qwen/qwen3.6-35b-a3b"
+   ```
+   (The `patch` tool refuses to edit `config.yaml` — security policy. `hermes config set` is the sanctioned path for flat fields.)
+
+3. **Verify the provider is registered and reachable:**
+   ```bash
+   hermes config get providers.lmstudio --json
+   hermes chat -q "Reply with exactly: LM Studio connected OK" --provider lmstudio
+   ```
+
+4. **To make it the default** (so Hermes always uses the local model):
+   ```bash
+   hermes config set model.provider lmstudio
+   hermes config set model.default qwen/qwen3.6-35b-a3b
+   ```
+
+**Pitfalls:**
+- **LM Studio must be running** for the provider to work — if the app is closed, Hermes can't reach the model. Keep it open or set it to auto-start.
+- The running session's model can't be switched mid-conversation; test in a fresh CLI session (`hermes chat --provider lmstudio`) or set it as default.
+- Local models occupy RAM while loaded (a 35B Q4 ≈ 20 GB). On a 48 GB Mac that's fine; a 70B (~40 GB) will push the system into swap and slow everything down.
+- **External USB drive ≠ RAM.** The drive only solves *storage* (where the model file lives); the model must still load into unified memory to run. Point LM Studio's model storage at the external drive to keep the internal disk free, but the model will still use RAM.
+
 ## Mixture of Agents (MoA) configuration
 
 MoA runs a prompt through N **reference models** in parallel, then an **aggregator model** synthesizes their responses into a final answer.
@@ -416,3 +454,4 @@ then read the newest file in `~/.hermes/cron/output/<JOB_ID>/` to confirm `execu
 - `references/kimi-provider-setup.md` — Kimi/Moonshot provider setup (models, endpoint, tips).
 - `references/moa-preset-examples.md` — MoA preset YAML blocks and ready-to-run Python write scripts.
 - `references/nous-provider-setup.md` — Nous Portal OAuth vs API key custom provider, inference URL, model naming, and cleanup.
+- `references/lmstudio-local-provider.md` — working LM Studio localhost provider config (M4 Pro, 48 GB), exact model IDs, and the `hermes config set` commands that succeeded.
