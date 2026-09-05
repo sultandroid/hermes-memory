@@ -953,13 +953,13 @@
     "created_at": "2026-08-02T05:20:52.386649+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-09-04T16:34:11.223555+00:00",
-    "last_used_at": "2026-09-04T16:33:49.215059+00:00",
-    "last_viewed_at": "2026-09-04T16:33:49.212582+00:00",
+    "last_used_at": "2026-09-05T11:00:39.329119+00:00",
+    "last_viewed_at": "2026-09-05T11:00:39.325294+00:00",
     "patch_count": 49,
     "pinned": false,
     "state": "active",
-    "use_count": 47,
-    "view_count": 47
+    "use_count": 48,
+    "view_count": 48
   },
   "factory-violations": {
     "archived_at": null,
@@ -1863,12 +1863,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-09-04T13:01:21.900920+00:00",
+    "last_used_at": "2026-09-05T13:47:43.492568+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 401,
+    "use_count": 403,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -2578,13 +2578,13 @@
     "created_at": "2026-07-07T11:08:29.875682+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-07-20T06:43:36.471267+00:00",
-    "last_used_at": "2026-09-02T11:01:27.064535+00:00",
-    "last_viewed_at": "2026-09-02T11:01:27.058477+00:00",
+    "last_used_at": "2026-09-05T11:00:39.327144+00:00",
+    "last_viewed_at": "2026-09-05T11:00:39.322791+00:00",
     "patch_count": 7,
     "pinned": false,
     "state": "active",
-    "use_count": 21,
-    "view_count": 21
+    "use_count": 22,
+    "view_count": 22
   },
   "samaya-company-profile": {
     "archived_at": null,
@@ -2681,14 +2681,14 @@
     "archived_at": null,
     "created_at": "2026-07-07T10:51:19.862973+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-09-04T11:13:00.315783+00:00",
-    "last_used_at": "2026-09-04T11:12:57.491928+00:00",
-    "last_viewed_at": "2026-09-04T11:12:57.487154+00:00",
-    "patch_count": 63,
+    "last_patched_at": "2026-09-05T11:09:10.210896+00:00",
+    "last_used_at": "2026-09-05T11:09:01.685341+00:00",
+    "last_viewed_at": "2026-09-05T11:09:01.682339+00:00",
+    "patch_count": 64,
     "pinned": false,
     "state": "active",
-    "use_count": 74,
-    "view_count": 74
+    "use_count": 76,
+    "view_count": 76
   },
   "samaya-factory-profile": {
     "archived_at": null,

@@ -216,9 +216,10 @@ This reclassified ~29 عهدة إبراهيم POs (18,551 SAR) from unpaid to pa
 
 **Adjusted cashout:** `truly_unpaid = total_unpaid_bill - chatter_evidence_paid`. Report both numbers so user can verify.
 
-**Sanity-check the chatter-paid count:** the hardcoded set has **4** POs {P01924, P01939, P01894, P01977}. Cycles have returned only **3 = 16,809.40 SAR**, missing a different member each time:
+**Sanity-check the chatter-paid count:** the hardcoded set has **4** POs {P01924, P01939, P01894, P01977}. Cycles have returned only **3 = 16,809.40 SAR**, missing a member each time:
 - 2026-08-30: P01977 did not appear in chatter_paid.
 - 2026-09-02: **P01939 was missing** — resolution: it had moved legitimately to `bill_paid`. Its bill `BILL/2026/07/0132` showed residual `0/644` (fully paid VIA Odoo), so the payment was reclassified to bill-paid, not lost. Verified by grepping `All POs` sheet for PO# and reading its `Pay State`/`Bills` cols.
+- 2026-09-05: **P01939 was missing AGAIN** (same as 09-02) — confirms it is now STABLY bill-paid (`BILL/2026/07/0132 = 0/644`), i.e. permanently removed from the chatter-paid set. The other 3 {P01894=2122.9, P01924=14662.5, P01977=24} consistently stay chatter-paid. The 3-PO / 16,809.40 SAR chatter-paid total is the steady state.
 
 DON'T silently accept a lower count. If `len(chatter_paid) < len(known_set)`, compute the missing PO#s (`known_set - {p['po'] for p in chatter_paid}`) and resolve EACH one by checking the `All POs` sheet (or a direct Odoo read) for that PO's `Pay State`/`Bills`/residual. Two outcomes: (a) it legitimately moved to bill-paid (bill residual now 0 → report as reclassified, cashout unchanged), or (b) it's genuinely not paid → flag it as a real unpaid risk. Note the resolution in the report so the user can confirm.
 
