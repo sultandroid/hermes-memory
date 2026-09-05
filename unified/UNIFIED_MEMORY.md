@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-09-04 16:01:14
+Generated: 2026-09-05 09:00:57
 
 ---
 
@@ -19,7 +19,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
-User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
+Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
 Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 - Always inspect the real target when he gives a concrete path or live URL; if the request is read-only, do not edit unless asked.
 - Treat embedded/base64 logos and user-provided secrets as immutable sensitive inputs: preserve or use them, but never echo or recreate them casually.
@@ -46,6 +46,7 @@ Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG D
 Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
+Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 No yes-man: study deeply, verify refs vs source. Docs avoid § (use 'Section'). Edit in place, keep ONE latest version. Negotiation: present problem only, don't propose costly solution — let other party request it so cost lands on their design, not Samaya.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
@@ -58,7 +59,6 @@ Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery wor
 - For Samaya/Aseer package governance, supply-only packages do not need SoWs; specialists/contractors do, and the desired coverage is SoW + submission plan + tracker per package [ad-hoc note].
 - Aseer file organization and BIM attachment triage: _PROJECT_INDEX.md, _DUPLICATES_REVIEW, Unicode NFC normalization, Needs Review, 03_Graphics_Contractor
   - desc: Search this first for Aseer/Samaya file-routing, conservative OneDrive cleanup, graphics-folder audits, or Outlook attachment cross-reference work from `cwd=/Users/mohamedessa`.
-- Odoo read-only workflow and auth blocker: odoo_connect.py, moqtana, x_studio_project_code, 401 Invalid authentication credentials, ~/.config/samaya/odoo.env
 
 ## Key People
 

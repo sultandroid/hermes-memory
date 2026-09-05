@@ -279,8 +279,41 @@ When the user says **"detect from the N 'not started' tasks what already started
 
 **Key rule:** never `git push --force` to this shared repo — always rebase onto the remote. And never commit the unrelated dirty files (`.sync_state.json`, webapp HTML) that belong to other agents/cron jobs; leave them unstaged.
 
+## Source of truth — NORMALIZED SQLite DB (2026-09-05, supersedes the 3-markdown split)
+
+The Aseer repo previously carried **three divergent markdown systems** (Aconex reference register, submittal register, master tracker) that answered overlapping questions and disagreed. The user directed a **single normalized SQLite DB** as the one source of truth, fed from multiple inputs. This is the current architecture:
+
+```
+08_Document_Index/
+  submission.db                    ← SINGLE SOURCE OF TRUTH (normalized SQLite)
+  aconex_snapshots/                ← daily intake: drop ExportDocs-<date>.xlsx here
+    README.md                      ← intake instructions
+scripts/
+  build_submission_db.py           ← rebuild DB from newest snapshot + CG merge
+  update_dashboard.py               ← read DB via SQL → rewrite dashboard DATA
+```
+
+**Schema (normalized — no duplicated data):**
+- Lookup tables hold each value ONCE: `discipline`, `doc_type`, `status`, `vendor`.
+- `submission` fact table keyed by natural PK `UNIQUE(doc_no, revision)` — a doc resubmitted (Rev.00 → Rev.01) is two rows, never overwritten.
+- `submission` references lookups via FK (`discipline_id`, `type_id`, `status_id`, `vendor_id`).
+
+**Ingestion (multi-source, one DB):**
+1. **Aconex export** (authoritative, full coverage) — newest `ExportDocs-*.xlsx` in `aconex_snapshots/`.
+2. **CG response codes** from repo registers (`submittal_register.md`, `submission_tracker.md`) — merged to confirm/fill/correct. Only override an Aconex status if it's awaiting (`U`) OR the merge code is a definitive B/C/D.
+3. **IFC packages** — NOT present in the Aconex export; parsed from the repo registers and upserted separately.
+
+**Dashboard is 100% DB-driven** — `update_dashboard.py` runs SQL queries (JOINs across lookups) and regenerates the `DATA` object. No hardcoded JS lists. Every number and row derives from the DB.
+
+**User's explicit directive (2026-09-05):** "اربط كل سطر بمفتاح لعدم تكرار البيانات وملئ الذاكره ببيانات مكرره / خلي بياناتنا مضيفه طبقا للمعاير" — normalize, key every row, no duplicated data, standards-compliant. When the user asks "which is the source of truth", the answer is the **DB**, not any markdown file.
+
+**Daily snapshot workflow:** user drops a fresh `ExportDocs-<date>.xlsx` into `aconex_snapshots/`; the cron (`submittal-dashboard-daily-update`, 08:00) picks the newest file, rebuilds the DB, regenerates the dashboard, deploys to Surge. `.gitignore` excludes `*.xlsx` and `*.db` so the repo stays clean.
+
+See `references/normalized-submission-db.md` for the full build pattern, schema DDL, and pitfalls.
+
 ## Related Workflows
 
+- `references/normalized-submission-db.md` — full build pattern for the normalized SQLite DB (schema DDL, status mapping, multi-source ingestion, dashboard queries, and the pitfalls hit: `re.sub` `\u` escape, `%d-%b` year-1900, IFC `—` code, HSE pollution, derived-DA).
 - `references/risk-review-workflow.md` — "next risk" pattern: navigate open risks by score, search Outlook for updates, update JSON, report changes. Used when the user says "next risk" or names a risk ID during a review session.
 - `references/design-tracker-xlsx-parsing.md` — pitfalls for parsing the CG Design Phase Deliverables Tracker xlsx (corrupted sheet dimensions, trailing-space sheet names, trailing-period statuses, gitignored data file).
 - `references/design-tracker-overdue-monitoring.md` — sheet structure + parsing pitfalls (trailing-space sheet names, `Submitted.` done-status, corrupted Electrical sheet dimension, 0-1 prep floats) and the **email cross-reference workflow**: after generating the overdue report, query Outlook for new Aconex `SIC.-WTRAN-000NNN` transmittals to see which overdue items got cleared, then update `submittal_register.md` and commit.

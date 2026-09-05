@@ -4,7 +4,7 @@ Factory Manager at Samaya, also assigned to manage the Technical Office for a 50
 §
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 §
-User requires dates in every repo update commit message and status report. Always include YYYY-MM-DD when updating repo files, committing, or reporting status changes.
+Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
 §
 Risk review: evidence from Outlook first. NEVER register/modify any risk without prior user approval.
 §

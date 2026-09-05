@@ -1576,14 +1576,14 @@
     "archived_at": null,
     "created_at": "2026-08-06T00:33:01.531595+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-31T14:32:12.945547+00:00",
-    "last_used_at": "2026-08-31T14:31:39.459656+00:00",
-    "last_viewed_at": "2026-08-31T14:31:39.457350+00:00",
-    "patch_count": 16,
+    "last_patched_at": "2026-09-05T05:50:20.967586+00:00",
+    "last_used_at": "2026-09-05T05:50:02.763588+00:00",
+    "last_viewed_at": "2026-09-05T05:50:02.761056+00:00",
+    "patch_count": 20,
     "pinned": false,
     "state": "active",
-    "use_count": 16,
-    "view_count": 16
+    "use_count": 20,
+    "view_count": 20
   },
   "materials-register-management": {
     "archived_at": null,
@@ -3150,13 +3150,13 @@
     "created_at": "2026-06-28T14:24:48.471853+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-09-01T10:32:15.927126+00:00",
-    "last_used_at": "2026-09-01T10:31:57.186485+00:00",
-    "last_viewed_at": "2026-09-01T10:31:57.184303+00:00",
+    "last_used_at": "2026-09-05T05:38:10.950128+00:00",
+    "last_viewed_at": "2026-09-05T05:38:10.946489+00:00",
     "patch_count": 124,
     "pinned": false,
     "state": "active",
-    "use_count": 200,
-    "view_count": 200
+    "use_count": 202,
+    "view_count": 202
   },
   "supplier-prequalification": {
     "archived_at": null,
