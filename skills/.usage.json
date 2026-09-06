@@ -1576,14 +1576,14 @@
     "archived_at": null,
     "created_at": "2026-08-06T00:33:01.531595+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-09-05T05:50:20.967586+00:00",
-    "last_used_at": "2026-09-05T05:50:02.763588+00:00",
-    "last_viewed_at": "2026-09-05T05:50:02.761056+00:00",
-    "patch_count": 20,
+    "last_patched_at": "2026-09-06T07:26:02.960736+00:00",
+    "last_used_at": "2026-09-06T07:25:58.814048+00:00",
+    "last_viewed_at": "2026-09-06T07:25:58.811905+00:00",
+    "patch_count": 21,
     "pinned": false,
     "state": "active",
-    "use_count": 20,
-    "view_count": 20
+    "use_count": 23,
+    "view_count": 23
   },
   "materials-register-management": {
     "archived_at": null,
@@ -1863,12 +1863,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-09-06T06:15:20.534335+00:00",
+    "last_used_at": "2026-09-06T13:04:44.838975+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 404,
+    "use_count": 405,
     "view_count": 57
   },
   "outgoing-document-qa-review": {

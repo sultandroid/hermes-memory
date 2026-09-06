@@ -203,6 +203,16 @@ When the user gives you a **verbal status dump** of a discipline's submissions (
 - Commit with a date-stamped message, per the user's always-include-the-date rule. Update the file incrementally as the user reports new status in follow-up turns (patch same file, commit again).
 - This is a **live coordination log** — distinct from the CG `Design Phase Deliverables Tracker` (authoritative granular status) and the consolidated `submission_tracker.md` (gateway summary). Keep all three; they answer different questions.
 
+## Capturing an OVERDESIGN issues list from TO dictation (2026-09-06, AD Engineering)
+
+When the user flags that a specialist's design is **overdesigned** ("مكتوب فيه أشياء كثيرة / overdesign") and starts dictating specific items, they want each item **recorded in the specialist's tracker** as a pushback point — same "خليه فالريبو" convention as the follow-up tracker. Pattern:
+
+- Add a dedicated `## Overdesign Issues — TO dictation (<date>)` section to `{Specialist}_Tracker.md` with a table `# | Item | Problem / Detail | Status` (status ⚠️ Overdesign / ⚠️ Awaiting reply / etc.).
+- **Record the user's scope correction verbatim** — the user often states what the design SHOULD be while dictating the problem (e.g. "Access control should be for **external doors, service rooms, and emergency doors only** — NOT the many gallery doors"). This is the ammunition for the pushback: it turns "too many doors" into a precise, defensible scope statement.
+- **Mid-dictation corrections are first-class.** The user may interrupt to refine an item (e.g. "المفروض تكون للابواب الخارجيه والسيرفي روم وابواب الطوارق"). Apply the correction to the row immediately, then commit again — don't wait for the dictation to end.
+- **Track external follow-ups** (e.g. "sent the floor-box party a Wi-Fi offer — no reply yet") as ⚠️ Awaiting reply rows so the chase is explicit.
+- Commit with a date-stamped message per the always-include-the-date rule. This is a **live coordination log** — distinct from the CG tracker (authoritative status) and the consolidated `submission_tracker.md` (gateway summary).
+
 ## Capturing a subcontractor's EXCUSE LIST for the pressure meeting (2026-08-30, AD Engineering)
 
 When a specialist repeatedly misses dates and offers blockers, add a **"Counter-arguments refuted"** section to their `{Specialist}_Tracker.md` (a dedicated `## {Specialist} Counter-arguments refuted — all excuses, nothing blocking` block). During the recovery call you debunk each stated blocker with the file evidence, then the section is your ammunition for the pressure meeting. Reusable refutation patterns that keep recurring with AD-type design consultants:
