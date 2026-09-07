@@ -81,6 +81,18 @@ Adel Darwish's files - 01- Execution Documents/
 | PxS | Must be consistent with actual severity (>=12=Critical, 8-11=High, 4-7=Medium, <=3=Low) | Calculate from P and S |
 | Factual claims | Every claim (e.g. "IFC-0004 Rev.01 Code C") must be traceable | Cross-reference submittal register |
 
+## Submission DB schema gotcha (`submission.db`)
+
+The `submission` table has **NO `is_latest` column** — the shared AGENTS.md example `WHERE s.is_latest=1` fails with `no such column`. Real columns: `id, doc_no, revision, title, discipline_id, type_id, status_id, vendor_id, submitted_date, days_silent, source, updated_at`. Latest-revision-wins must be computed in Python (`max(revision)` per `doc_no`, then read that row's `status_id`), or you'll surface stale Code C/D rows from superseded revisions. A code-count scan (2026-09, ~689 docs) runs: F≈234 / B≈228 / C≈89 / D≈55 / U≈42 / CL≈24 / E≈14 / A≈2 / DA≈1. Practical check for a "can I close this risk?": a risk is closable only when the submission code that grounds it is B (or D/CL for specialist-appointed voids); a live Code C/D on the critical path keeps it open.
+
+## Duplicate risk pairs — watch for double-counting in a full-review pass
+
+A whole-register "study all risks" pass (2026-09) found live pairs with identical premises that inflate exposure if counted twice. Merge candidates (keep one, close the other) before scoring:
+- `PRR-STK-02` ↔ `PRR-NCR-001` — both "open NCRs create work-stoppage / certification leverage against contractor".
+- `PRR-COM-01` ↔ `PRR-COM-05` — both "EOT / time-schedule dispute unresolved" (both 4x3 = Critical).
+
+Also confirmed: a broad `find` starting one directory above the repo root (`find .. -name ...`) times out at 300s from permission noise — always start file discovery in `~/aseer-museum-pm` (`search_files`), never higher.
+
 ## Common Discrepancies Found
 
 | Issue | Frequency | Fix |

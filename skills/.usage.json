@@ -1863,12 +1863,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-09-07T06:00:42.447604+00:00",
+    "last_used_at": "2026-09-07T13:00:32.260323+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 406,
+    "use_count": 407,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -1889,13 +1889,13 @@
     "created_at": "2026-07-26T14:02:06.755308+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-09-02T19:44:14.851689+00:00",
-    "last_used_at": "2026-09-02T21:51:29.322905+00:00",
-    "last_viewed_at": "2026-09-02T21:51:29.320839+00:00",
+    "last_used_at": "2026-09-07T11:14:14.204132+00:00",
+    "last_viewed_at": "2026-09-07T11:14:14.201761+00:00",
     "patch_count": 24,
     "pinned": false,
     "state": "active",
-    "use_count": 40,
-    "view_count": 40
+    "use_count": 41,
+    "view_count": 41
   },
   "outlook-email": {
     "archived_at": null,
@@ -2525,14 +2525,14 @@
     "archived_at": null,
     "created_at": "2026-07-20T11:59:43.837936+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-28T12:29:20.074201+00:00",
-    "last_used_at": "2026-08-28T12:28:43.257655+00:00",
-    "last_viewed_at": "2026-08-28T12:28:43.255454+00:00",
-    "patch_count": 25,
+    "last_patched_at": "2026-09-07T11:25:10.705375+00:00",
+    "last_used_at": "2026-09-07T11:24:59.096639+00:00",
+    "last_viewed_at": "2026-09-07T11:24:59.093955+00:00",
+    "patch_count": 26,
     "pinned": false,
     "state": "active",
-    "use_count": 36,
-    "view_count": 36
+    "use_count": 39,
+    "view_count": 39
   },
   "risk-register-cleanup": {
     "archived_at": null,
@@ -2552,13 +2552,13 @@
     "created_at": "2026-07-13T11:36:32.470665+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-08-28T12:31:40.941795+00:00",
-    "last_used_at": "2026-08-28T12:31:25.468084+00:00",
-    "last_viewed_at": "2026-08-28T12:31:25.455811+00:00",
+    "last_used_at": "2026-09-07T11:16:42.991825+00:00",
+    "last_viewed_at": "2026-09-07T11:16:42.987525+00:00",
     "patch_count": 139,
     "pinned": false,
     "state": "active",
-    "use_count": 226,
-    "view_count": 226
+    "use_count": 227,
+    "view_count": 227
   },
   "saas-subscription-assessment": {
     "archived_at": null,
@@ -2682,13 +2682,13 @@
     "created_at": "2026-07-07T10:51:19.862973+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-09-05T11:09:10.210896+00:00",
-    "last_used_at": "2026-09-05T11:09:01.685341+00:00",
-    "last_viewed_at": "2026-09-05T11:09:01.682339+00:00",
+    "last_used_at": "2026-09-07T11:02:59.502581+00:00",
+    "last_viewed_at": "2026-09-07T11:02:59.489715+00:00",
     "patch_count": 64,
     "pinned": false,
     "state": "active",
-    "use_count": 76,
-    "view_count": 76
+    "use_count": 77,
+    "view_count": 77
   },
   "samaya-factory-profile": {
     "archived_at": null,
