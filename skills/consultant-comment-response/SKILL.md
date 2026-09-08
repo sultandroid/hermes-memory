@@ -238,6 +238,8 @@ Example: CR-07 (Rigging register) → "Noted. Separate submittal register for ri
 
 - `references/cr-sheet-workflow.md` — Complete technique with openpyxl patterns and status classification rules for creating CR Sheets from scratch
 - `references/crs-revision-update.md` — Updating an existing CRS to Rev 01+: revision fields, originator replies, formal code mapping, filing alongside source document
+- `references/oddy-test-material-resubmission-ma0007.md` — Patinated Brass MA-0007 Code C cleared by a passed Oddy test; the split-track (approve now, certs follow as Rev.02) strategy; the full brass-applications list (FI_ME_01/ME_03/GR_11/ST_03); ER §6.11 / SoW §13.29 Oddy clause anchors
+- `references/moc-hq-crs-template-cell-map.md` — **USE THE OFFICIAL MOC_HQ CRS TEMPLATE, never build a custom CRS workbook.** Public URL (samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx), verified cell map (header + comment rows), openpyxl merged-cell notes, and the material-cert compliance analysis (which certs are legit vs CG overreach: Oddy/composition/MSDS legit; fire-rated/off-gassing/2-alternatives overreach; VOC partial — metals don't emit VOC).
 
 ## Extended Workflow: MAR Compliance Sheet Resubmission
 

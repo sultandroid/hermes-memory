@@ -14,4 +14,4 @@ Verify LATEST Outlook/tracker before calling a specialist delayed.
 §
 No yes-man: study deeply, verify refs vs source. Docs avoid § (use 'Section'). Edit in place, keep ONE latest version. Negotiation: present problem only, don't propose costly solution — let other party request it so cost lands on their design, not Samaya.
 §
-CRS/comment replies: humanized natural engineer voice; cite section numbers (L10-560) but NOT clause numbers (1.04, 2.01); review one-by-one before finalizing.
+CRS/comment replies: humanized natural engineer voice; cite section numbers not clause numbers; review one-by-one. CRS sheets ALWAYS use official MOC_HQ template (samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx) — never build a custom CRS workbook.

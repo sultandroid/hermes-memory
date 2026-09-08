@@ -14,7 +14,7 @@ Proactively search Outlook SQLite, OneDrive AND repo (registers, meetings, discu
 §
 Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh), not just Telegram.
 §
-Aseer DD per-discipline w/ own CRS+reviewer (Arch=Maged Zamzam, Struct=Abdrabo Shahin). Arch CRS signed TO+NRS+PM only — no sustainability/structural sigs. DD review: formal=user, technical=Abdullah Omer.
+Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos — user rejects plain pages. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A), NOT materials.json (missed FI_GR_11). Finish samples: thickness application-dependent (0.8/1.2/2.0mm).
 §
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
 §

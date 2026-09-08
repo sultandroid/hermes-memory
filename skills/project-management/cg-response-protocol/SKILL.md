@@ -18,7 +18,7 @@ tags:
 
 When the user says "create CRS" or "make a CRS sheet":
 
-1. **Fetch the blank template immediately** from `https://samaya-factory.com/templates/crs/CRS_TEMPLATE_BLANK.xlsx` — do NOT ask which template, do NOT describe the format, do NOT ask for confirmation
+1. **Fetch the blank template immediately** from `https://samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx` (the MOC_HQ Comments Resolution Sheet — the official template the user supplies; do NOT build a custom Excel CRS from scratch) — do NOT ask which template, do NOT describe the format, do NOT ask for confirmation
 2. **Save as** `CRS_[DocRef]_Rev[XX].xlsx` in `02_CG_Responses/`
 3. **Fill header block** (rows 1-7): PROJECT NAME, CRS NUMBER, DOCUMENT No., DOCUMENT TITLE, DISCIPLINE, DATE, Rev
 4. **Fill data rows** (row 11+): No., Initial, Sheet/Ref, Code, Reviewer Comment, Originator Reply, Reply By, Status
