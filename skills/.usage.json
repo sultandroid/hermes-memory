@@ -584,6 +584,19 @@
     "use_count": 0,
     "view_count": 0
   },
+  "crs-response-workflow": {
+    "archived_at": null,
+    "created_at": "2026-09-08T13:26:02.077754+00:00",
+    "created_by": "agent",
+    "last_patched_at": "2026-09-08T13:26:21.803298+00:00",
+    "last_used_at": "2026-09-08T13:26:18.496225+00:00",
+    "last_viewed_at": "2026-09-08T13:26:18.493469+00:00",
+    "patch_count": 2,
+    "pinned": false,
+    "state": "active",
+    "use_count": 1,
+    "view_count": 1
+  },
   "cv-submittal-pack": {
     "archived_at": null,
     "created_at": "2026-06-07T19:57:35.579774+00:00",
@@ -2669,13 +2682,13 @@
     "created_at": "2026-06-27T09:18:08.303215+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-18T11:02:02.583609+00:00",
-    "last_used_at": "2026-09-08T09:09:19.986709+00:00",
-    "last_viewed_at": "2026-09-08T09:09:19.983636+00:00",
+    "last_used_at": "2026-09-08T13:25:43.282261+00:00",
+    "last_viewed_at": "2026-09-08T13:25:43.279499+00:00",
     "patch_count": 19,
     "pinned": false,
     "state": "active",
-    "use_count": 36,
-    "view_count": 36
+    "use_count": 37,
+    "view_count": 37
   },
   "samaya-factory-pos": {
     "archived_at": null,
@@ -2786,13 +2799,13 @@
     "created_at": "2026-06-25T12:28:24.490064+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-10T15:55:36.428127+00:00",
-    "last_used_at": "2026-09-08T12:33:46.245236+00:00",
-    "last_viewed_at": "2026-09-08T12:33:46.242712+00:00",
+    "last_used_at": "2026-09-08T13:25:17.443737+00:00",
+    "last_viewed_at": "2026-09-08T13:25:17.441093+00:00",
     "patch_count": 91,
     "pinned": false,
     "state": "active",
-    "use_count": 60,
-    "view_count": 60
+    "use_count": 64,
+    "view_count": 64
   },
   "schedule-materials-audit": {
     "archived_at": null,
