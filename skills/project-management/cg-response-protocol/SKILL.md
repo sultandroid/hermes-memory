@@ -9,10 +9,8 @@ tags:
   - submittal
 ---
 
-# CG Response Protocol
-
 ## References
-- `references/sow-vs-technical-submittal.md` — CG Code C on a **Scope of Work** vs a technical submittal: defer premature personnel/CV demands, accept scope/interface comments, Code C ≠ rejection of the specialist. Also covers **forwarding the CG response to the subcontractor** (two-email split: action items to the specialist + "scope approval only, not stuff approval" clarification to CG).
+- `references/warning-letter-delay-rebuttal.md` — formal CG/PMC warning letters (إنذار) about project delay: claim-by-claim rebuttal from repo evidence, delay-impact table, recurring Aseer rebuttal patterns, EOT reserved-rights framing.
 
 ## CRS Creation Workflow (MANDATORY — Follow in Order)
 When the user says "create CRS" or "make a CRS sheet":

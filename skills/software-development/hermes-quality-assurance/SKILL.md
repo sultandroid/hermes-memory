@@ -886,6 +886,18 @@ When cleaning AI fingerprints from plan documents, target these specific pattern
 
 **Rule of thumb:** If you can replace 3+ words with 1-2, do it. If the sentence uses passive voice and a named subject exists, make the subject the actor.
 
+### Humanization Pass — Arabic Documents (user correction 2026-09-09)
+
+Formal Arabic replies (CG letters) need their own humanization pass — the English rules above don't map:
+
+- **No numbered AI sub-headings** (2.2.1, 2.2.2 nested to 3 levels) — use أولاً/ثانياً/ثالثاً like Samaya's own Arabic letters.
+- **No AI transition markers**: "وهنا ملاحظة جوهرية:", "Net:", "نشهد بأننا استلمنا" — replace with natural engineer openers ("إشارة إلى خطابكم المذكور أعلاه…").
+- **No bold rhetoric embedded mid-sentence** (e.g. **تحويل عملية مسارات متوازية إلى بوابة متسلسلة**) — plain text in context.
+- **Short sentences** — split compound academic Arabic clauses; one idea per sentence.
+- **Keep every doc ref, figure, and name exactly as-is** — only phrasing changes.
+- Strongest argument phrased plainly without edge: "الفترة… استُهلكت في دورة اعتمادات مفروضة بالتوازي مع تنفيذ المقاول لنفس المسار المطلوب" — factual, reader draws the conclusion.
+- **Reply in the letter's own language**: CG warning letter arrives in Arabic → the reply is Arabic (save as `<date>_reply-draft_<ref>_AR.md`; English version becomes internal reference only).
+
 ### EV Bracket Calculation
 - When calculating earned value percentages, use **actual drawing/submittal counts from project registers** — not estimates or judgement calls.
 - Search for registers (XLSX logs, submittal trackers, drawing lists) and count actual items.
