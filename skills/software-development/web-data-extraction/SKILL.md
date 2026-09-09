@@ -280,6 +280,22 @@ After downloading files, do NOT try to read and summarize everything in your own
 
 This keeps the main session responsive while the heavy processing happens in the background.
 
+## Brave Search API (curl) — site-scoped discovery
+
+When you need to find URLs on a specific site (or general web search) and DuckDuckGo is rate-limited/captcha-prone, use the Brave Search API via curl. The user has a working key (kept in env, not in this skill).
+
+```bash
+curl -s "https://api.search.brave.com/res/v1/web/search?q=site%3Aexample.com+keyword&count=10" \
+  -H "X-Subscription-Token: $BRAVE_API_KEY" -H "Accept: application/json"
+```
+
+Parse with Python: `d.get('web',{}).get('results',[])` → each has `title`, `url`, `description`.
+
+**Pitfalls:**
+- The `site:` operator works — use it to enumerate a domain's pages (e.g. `site:eden-design.de references OR projects`).
+- Brave may index URLs that now 404 (e.g. a site's old `/references-2/` page). Always verify the returned URL actually loads before relying on it — a search hit is not proof the page is live.
+- The key is a secret — never write it into a skill, repo, or sub-agent prompt. Reference it from env.
+
 ## Project Type Detection
 
 When given a URL, determine if the target is:

@@ -15,7 +15,6 @@ tags:
 - `references/sow-vs-technical-submittal.md` — CG Code C on a **Scope of Work** vs a technical submittal: defer premature personnel/CV demands, accept scope/interface comments, Code C ≠ rejection of the specialist. Also covers **forwarding the CG response to the subcontractor** (two-email split: action items to the specialist + "scope approval only, not stuff approval" clarification to CG).
 
 ## CRS Creation Workflow (MANDATORY — Follow in Order)
-
 When the user says "create CRS" or "make a CRS sheet":
 
 1. **Fetch the blank template immediately** from `https://samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx` (the MOC_HQ Comments Resolution Sheet — the official template the user supplies; do NOT build a custom Excel CRS from scratch) — do NOT ask which template, do NOT describe the format, do NOT ask for confirmation
