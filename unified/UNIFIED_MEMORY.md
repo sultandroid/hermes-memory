@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-09-08 16:00:05
+Generated: 2026-09-09 09:13:48
 
 ---
 
@@ -17,6 +17,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
+Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
@@ -35,14 +36,13 @@ Labors (Claude Code, Kimi, Gemini): Always NAME which labor does each task. Labo
 1. **ALWAYS confirm task completion** — report what was done, what changed, and any issues. Never say "ok done".
 2. **NEVER use `rm -rf`** on any path — OneDrive propagates deletions immediately.
 3. **NEVER create new Excel files** for registers — only append rows to existing ones.
-4. **NEVER move unknown/non-project files** from Downloads.
 
 ## Active Projects
 
 Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British English, plain engineering language. 'last commit' = git log --author before assuming.
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
-Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
+Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA.
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Factory Manager at Samaya, also assigned to manage the Technical Office for a 5000 SAR/month allowance (since Jul 2025). Arabic for factory tasks.
 Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
@@ -86,8 +86,8 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Agents & Tools
 
 Odoo 167.99.224.43 SSH root; Odoo(8069)+PG; py /opt/odoo-tools/bin/python.
-Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh), not just Telegram.
-Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos — user rejects plain pages. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A), NOT materials.json (missed FI_GR_11). Finish samples: thickness application-dependent (0.8/1.2/2.0mm).
+Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh).
+Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.
@@ -108,11 +108,11 @@ task_group: Hermes Agent configuration
 
 ## Contracts & Documents
 
-Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates), not calendar dates.
+Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates).
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
 Aseer team: QA/QC=Aftab Adeel; Construction Mgr/SOW reviewer=Mohamed Samir. CG Doc-Control block: Prepared=TO Sultan, Reviewed=Mohamed Samir, Quality=Aftab, Approved=PM Waris, DC=Hesham.
 Audit CG comments vs spec text clause-by-clause; classify exists/missing/wrong-stage, don't blindly comply. CG review = conformance-only (ER §2.4).
-Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA. AD won't commit dates—escalate Nader. Reply to AD: hold accountable in aggregate.
+Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+FireAlarm&BMS shared; NOT AD: ICT/CCTV/AccessCtrl/MasterClock=ICT(SBS), BMS=GITCO, Dongguan=ZNA.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 CRS/comment replies: humanized natural engineer voice; cite section numbers not clause numbers; review one-by-one. CRS sheets ALWAYS use official MOC_HQ template (samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx) — never build a custom CRS workbook.
 - For Samaya/Aseer deliverables, never use `§` or AI-style symbols; use plain engineer English, quote CG/ER/SoW text verbatim, treat NRS as Samaya's sub-consultant, and bring real dates from repo sources [ad-hoc note].
@@ -141,7 +141,7 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 
 ## Locations
 
-Proactively search Outlook SQLite, OneDrive AND repo (registers, meetings, discussions, XRef) for evidence before concluding. Corrects errors directly.
+Proactively search Outlook SQLite, OneDrive AND repo for evidence before concluding.
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
