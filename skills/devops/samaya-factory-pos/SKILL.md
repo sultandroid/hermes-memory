@@ -31,6 +31,7 @@ Odoo 18 at `samayainv.odoo.com`.
 ```bash
 SSL_CERT_FILE=$(python3 -c "import certifi; print(certifi.where())") python3 script.py
 ```
+**Harmless quirk (observed every run, 2026-09):** if `certifi` is not installed in the default `python3`, the `$(python3 -c "import certifi...")` subshell prints `ModuleNotFoundError: No module named 'certifi'` to stderr — but the script STILL connects to Odoo and runs fine (uid=151, data fetched). Do NOT treat that traceback as a failure or abort. The SSL fix is optional; the scripts work without it. If you want a clean run, `pip install certifi` (or use a venv that has it), but it is not required.
 
 ## Fetching POs from Odoo
 **Must fetch ALL and filter in Python** — Odoo 18 crashes on `project_id` in `search_read` domains.
