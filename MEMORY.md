@@ -29,3 +29,5 @@ Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style
 Brave key: BSAKxm__iUhwo5WDVPUonPxscct-8nz.
 §
 أبو معاذ = فواز المحرج = CEO سمايا (يوقّع خطابات سمايا الرسمية).
+§
+أبو معاذ = فواز المحرج (CEO سمايا).

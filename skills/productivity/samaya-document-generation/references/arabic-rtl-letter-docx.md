@@ -60,6 +60,36 @@ generators:
   exact ordered content — don't hand-retype. `web_extract` may truncate; curl
   the page and parse locally.
 
+## Confirm the letter's STRATEGY before building (user iterates heavily)
+
+Before generating any formal reply letter, confirm the framing — the user will
+rework addressee/signature/scope repeatedly, and building first wastes a pass:
+
+- **Addressee & CC** — who is it TO (MoC vs PMC vs CG) and who is CC'd? A
+  "rights-preserving reply, not escalation" letter may go to the PMC (e.g.
+  Eng. Farouk) with CG on CC, NOT to the Ministry/PM. Ask explicitly.
+- **Signer** — who signs (CEO / GM / PM)? Real name + role. The user may refer
+  to the signer by a nickname (e.g. "أبو معاذ" = the CEO) — map it to the real
+  name before putting it in the signature block.
+- **Escalation vs rights-preserving** — is this a formal escalation, or a reply
+  that implicitly preserves all rights and answers the other party's letter
+  "as if contractual" without escalating? This changes tone and the addressee.
+- **Withdrawal window** — if the other party's letter grants a deadline (e.g.
+  PMC's 15-day window to exercise partial/full withdrawal of works), the reply
+  should acknowledge it implicitly without conceding fault.
+- **"New version" requests** — when the user says "هانعمل نسخه جديده" (make a
+  new copy), they mean a fresh build with a different addressee/scope, not an
+  edit of the current one. Rebuild the docx with the new framing.
+
+## Structural pattern: general statement in intro, detail in numbered section
+
+When a specific rebuttal (e.g. the TLC landscaping-contract point) is raised in
+the intro, the user prefers: a **one-line general statement** in the intro
+("خطاب الاستشاري تضمن معلومات غير دقيقة لا تتفق مع سجل التقديمات، وسيرد الرد
+بالتفصيل في البند خامساً") and the **full detail moved into the relevant
+numbered section** (e.g. خامساً (5) التعاقد مع المتخصصين). Do not leave a long
+detailed paragraph in the intro — it reads as "دخيل" (intrusive).
+
 ## Fact-checking letter references (before finalising)
 
 Verify every letter/submittal reference against the authoritative registers —
