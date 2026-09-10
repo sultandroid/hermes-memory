@@ -1602,14 +1602,14 @@
     "archived_at": null,
     "created_at": "2026-08-06T00:33:01.531595+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-09-06T07:26:02.960736+00:00",
-    "last_used_at": "2026-09-06T07:25:58.814048+00:00",
-    "last_viewed_at": "2026-09-06T07:25:58.811905+00:00",
-    "patch_count": 21,
+    "last_patched_at": "2026-09-10T05:01:35.187942+00:00",
+    "last_used_at": "2026-09-10T05:01:25.818902+00:00",
+    "last_viewed_at": "2026-09-10T05:01:25.816853+00:00",
+    "patch_count": 23,
     "pinned": false,
     "state": "active",
-    "use_count": 23,
-    "view_count": 23
+    "use_count": 25,
+    "view_count": 25
   },
   "material-submittal-resubmission": {
     "archived_at": null,
@@ -1902,12 +1902,12 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-09-09T13:00:57.289382+00:00",
+    "last_used_at": "2026-09-10T06:00:22.499369+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "pinned": false,
     "state": "active",
-    "use_count": 411,
+    "use_count": 412,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -2668,27 +2668,27 @@
     "archived_at": null,
     "created_at": "2026-07-26T06:38:34.904211+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-08-30T14:01:36.037959+00:00",
-    "last_used_at": "2026-08-30T14:01:30.188679+00:00",
-    "last_viewed_at": "2026-08-30T14:01:30.182387+00:00",
-    "patch_count": 42,
+    "last_patched_at": "2026-09-10T05:11:01.011715+00:00",
+    "last_used_at": "2026-09-10T05:10:30.865233+00:00",
+    "last_viewed_at": "2026-09-10T05:10:30.849909+00:00",
+    "patch_count": 44,
     "pinned": false,
     "state": "active",
-    "use_count": 53,
-    "view_count": 53
+    "use_count": 54,
+    "view_count": 54
   },
   "samaya-docx-template": {
     "archived_at": null,
     "created_at": "2026-06-07T22:53:00.913478+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-25T07:35:54.056128+00:00",
-    "last_used_at": "2026-09-09T20:59:49.496424+00:00",
-    "last_viewed_at": "2026-09-09T20:59:49.486225+00:00",
+    "last_used_at": "2026-09-10T05:10:14.412187+00:00",
+    "last_viewed_at": "2026-09-10T05:10:14.408964+00:00",
     "patch_count": 305,
     "pinned": false,
     "state": "active",
-    "use_count": 446,
-    "view_count": 446
+    "use_count": 448,
+    "view_count": 448
   },
   "samaya-excel-styling": {
     "archived_at": null,

@@ -205,6 +205,7 @@ When the user says "read all msg", "read the conversation", or similar, consolid
 ## Reference files
 
 - `references/bilingual-ar-dominant-docx.md` — Post-process SamayaDoc output for **bilingual (Arabic-dominant) documents**: RTL (`w:bidi` + `w:rtl`), IBM Plex Sans Arabic complex-script font on runs/cells, verify-via-XML-check, layout rule (Arabic leading, English after). Use when the user says "اعمله عربي انجليزي وخلي العربي هو السائد" or on any Arabic-first report.
+- `references/arabic-rtl-letter-docx.md` — **Arabic-ONLY formal letter** (خطاب رسمي) → DOCX. SamayaDoc is LTR-only; build directly with RTL helpers (set_rtl_par / style_run / cell_rtl_par / make_table). Full letter structure (letterhead → reference → addressee → subject → sections → signature → attachments), path-depth + WD_LINE_SPACING pitfalls, and PDF/browser-vision RTL verification. Use when the user says "رتب الخطاب واعمله ملف ورد" or on any Arabic-only letter.
 - `references/subcontractor-sow-raci-docx.md` — Full 9-section subcontractor SOW + filled RACI matrix DOCX generation pattern.
 - `references/assessment-report-tracking.md` — How to find who does assessment work and track their report status across Outlook SQLite, Adel snapshots, and repo registers.
 - `references/nrs-comments-investigation.md` — How to find NRS (Nissen Richards Studio) review comments.

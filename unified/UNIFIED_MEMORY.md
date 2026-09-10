@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-09-09 16:00:52
+Generated: 2026-09-10 09:00:18
 
 ---
 
@@ -85,7 +85,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 ## Agents & Tools
 
-Odoo 167.99.224.43 SSH root; Odoo(8069)+PG; py /opt/odoo-tools/bin/python.
+Odoo 167.99.224.43 SSH root. NO model/tokens footer after replies (revoked 10-Sep).
 Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh).
 Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
@@ -141,7 +141,7 @@ No Show Report format — created for 01 Al Wahi Gift Shop (240 m², Makkah, JN 
 
 ## Locations
 
-Proactively search Outlook SQLite, OneDrive AND repo for evidence before concluding.
+Proactively search Outlook SQLite + OneDrive + repo for evidence before concluding.
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 He prefers execution plus verification over explanation-only help. For printable HTML, he repeatedly cares about the rendered PDF/output, page numbering, overflow, and whether the live/synced file was actually updated safely. For file operations, he expects conservative handling around OneDrive and explicit completion details. For audits, he usually wants defects first, not redesign suggestions he did not ask for.
