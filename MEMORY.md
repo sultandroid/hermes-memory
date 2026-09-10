@@ -14,7 +14,7 @@ Proactively search Outlook SQLite + OneDrive + repo for evidence before concludi
 §
 Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh).
 §
-Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
+Material pages (SAM-FIN-*) use Kimi cover. CRS replies: ALWAYS humanize, bullets. Patinated brass=Eden-Design GmbH; Glasbau Hahn=showcase fabricator only. User edits CRS sheet himself — don't touch.
 §
 Formal SOWs/docs: use 'Section' not '§'. Name ONLY CONTRACTED specialists (AD Eng, ZNA); uncontracted = generic 'Specialist'. No internal refs in CG-facing docs.
 §
@@ -27,3 +27,5 @@ Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+Fi
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 §
 Brave key: BSAKxm__iUhwo5WDVPUonPxscct-8nz.
+§
+أبو معاذ = فواز المحرج = CEO سمايا (يوقّع خطابات سمايا الرسمية).

@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-09-10 09:00:18
+Generated: 2026-09-10 16:00:08
 
 ---
 
@@ -17,7 +17,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 ## Critical Rules
 
 NEVER delete user files without explicit confirmation. If user says remove, verify first.
-Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
+Material pages (SAM-FIN-*) use Kimi cover. CRS replies: ALWAYS humanize, bullets. Patinated brass=Eden-Design GmbH; Glasbau Hahn=showcase fabricator only. User edits CRS sheet himself — don't touch.
 Code B docs → 00_Contracts/ read-only. Drafts → 03_Plans/. Always git push. Registers sync with doc changes.
 "بسط اللغه مش فاهم" = strip all technical detail, plain simple Arabic answer. No code/SQL. Always humanize formal replies (دايما اعمل humanize): natural engineer language, no AI fingerprints/template phrasing.
 Submittal dashboard daily report: always include link aseer-submittals.surge.sh.
@@ -87,7 +87,7 @@ Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA
 
 Odoo 167.99.224.43 SSH root. NO model/tokens footer after replies (revoked 10-Sep).
 Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh).
-Material sample pages (SAM-FIN-*) MUST use Kimi cover w/ project logos. Verify Applications vs approved Finishes Schedule PDF (6930 Rev A). CRS replies: ALWAYS humanize, bullet points not paragraphs. Patinated brass material = Eden-Design GmbH (EDEN BRONZE, Iserlohn DE); Glasbau Hahn = showcase fabricator only. User edits CRS sheet himself — don't touch the file.
+Material pages (SAM-FIN-*) use Kimi cover. CRS replies: ALWAYS humanize, bullets. Patinated brass=Eden-Design GmbH; Glasbau Hahn=showcase fabricator only. User edits CRS sheet himself — don't touch.
 Samaya Odoo HR tickets (مباشرة عمل/salary/خصم) in helpdesk.ticket team 10 'HR And Administration', NOT project.task.
 Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
 - For local Odoo "tasks by projects" requests, the durable default is Moqtana via `~/.claude/skills/software-development/odoo/scripts/odoo_connect.py`; Samaya is the purchasing/invoicing side.

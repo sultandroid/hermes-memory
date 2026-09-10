@@ -18,8 +18,11 @@ Class of work: drafting formal replies to consultant (CG) / PMC / Ministry warni
 |---|---|---|
 | **A — Reply to consultant (soft)** | Acknowledge + corrective plan + reserved rights | Warning procedurally valid |
 | **B — Escalate to Ministry/Owner** | Address the Employer-side PM; challenge consultant's authority + facts; request owner intervention | Warning procedurally defective |
+| **C — De-escalate to PMC (non-escalatory)** | Address the PMC (not the Ministry); CEO-signed; implicitly preserve ALL rights + reply to the warning as if contractual; acknowledge the 15-day partial/total-withdrawal window | PM wants to keep it internal, avoid Ministry escalation, but still reserve rights and rebut |
 
 Level B (the LT-0010 pattern — stronger): procedural challenge first (no contract article cited, no reference programme, issued same-day without right of reply, representative authority per Art. 3/Sec. 3 + Art. 18 + Art. 1(f)), then factual chronology table, then quantified counters (e.g. design weight in price schedule vs claimed progress %), then numbered asks to the Ministry, then full reservation of rights. CEO-signed for weight.
+
+Level C (the LT-08.02 re-target pattern): the SAME rebuttal content but re-addressed — recipient = PMC (Mohamed Farouk), CC = CG (Mansour Alrezeni), NO Ministry/owner addressee. The escalation posture is dropped but the letter still: (a) preserves all rights implicitly, (b) replies to the warning as if it were a contractual letter, (c) acknowledges the 15-day window in which PMC may exercise partial/total withdrawal. This is "not an escalation, but a full rights-preserving rebuttal." Confirm the recipient/CC and signatory with the PM BEFORE drafting — the PM decides who it goes to and who signs (e.g. CEO Abu Maaz = Fawaz Al-Moharraj).
 
 ## 2. Verify EVERY claim — three-source rule (CRITICAL)
 
@@ -38,6 +41,8 @@ Never write a date, code, or doc number into the letter without checking ALL ava
 - Remove details irrelevant to the recipient (internal cost studies, pricing mechanics) — the Ministry cares about contract facts.
 - Rebut misleading claims by reframing single incidents as a **pattern of conduct** (e.g. "وهذا النمط في التعامل — إعادة التقديمات النشطة للتعديل بتوسيع نطاقها، في الوقت الذي يُتَّهم فيه المقاول بالتأخر في التعاقد...").
 - Scope-expansion rebuttal formula: "no contractual reason the designer must be the supplier — and the condition was imposed during the design stage, a gratuitous expansion at the wrong time."
+- **PITFALL — paragraph placement:** a detailed single-subject rebuttal (e.g. the TLC landscape-specialist chain) does NOT belong in the "أولاً: ملاحظات تمهيدية" (preliminary notes) section — it reads as an intruder there. Keep "أولاً" to a ONE-LINE general statement ("خطاب الاستشاري تضمن معلومات غير دقيقة لا تتفق مع سجل التقديمات، وسيرد الرد بالتفصيل في البند خامساً") and move the full evidence chain to the matching numbered section (e.g. "خامساً (5) التعاقد مع المتخصصين"). The PM flagged this exact misplacement.
+- **PITFALL — programme revision number/date:** verify the ACTUAL approved programme revision before citing it. PM corrected: there is NO "Rev.05" as the only revision — the approved baseline is Rev.05 approved 13/07/2026 (start date 01/12/2025). Do not assume the revision number or its approval date; check the programme register / submission DB. Also confirm which revision the "start date" claim refers to (the first approved full-project baseline).
 
 ## 4. Evidence-chain narrative (the winning pattern)
 
@@ -65,3 +70,4 @@ Key moves: "the consultant was personally invited" kills denial of knowledge; "o
 
 ## References
 - `references/cg-warning-reply-letter-pattern.md` — condensed session detail: verification recipes, OCR contract pitfalls, evidence-chain examples.
+- `references/arabic-rtl-docx-generation.md` — reusable python-docx pattern for producing the RTL Arabic Word version of these letters (helpers, structure, pitfalls, verification).

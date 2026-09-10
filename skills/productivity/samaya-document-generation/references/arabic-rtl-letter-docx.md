@@ -59,3 +59,40 @@ generators:
   page) to DOCX, parse the HTML with a regex walker (h2/p/table) to extract the
   exact ordered content — don't hand-retype. `web_extract` may truncate; curl
   the page and parse locally.
+
+## Fact-checking letter references (before finalising)
+
+Verify every letter/submittal reference against the authoritative registers —
+the user will ask "هل هذا صحيح؟" (is this correct?) on each one:
+
+- **Letter numbers/dates** → `05_Comms/correspondence_register.md` +
+  `01_Registers/letters_register.md`.
+- **Submittal codes (A/B/C/D)** → `08_Document_Index/submission.db` (single
+  source of truth, latest-revision-wins). If a ref is not in the DB, say "not
+  in current register" — do NOT state a code.
+- **Date-ambiguity trap**: a register may show the date an email was *found*
+  (e.g. LT-0027 listed 05-Jul in correspondence_register) vs the letter's
+  actual issue date (03-Aug per letters_register / backfill analysis). Always
+  cross-check the letters register / backfill analysis before trusting a date.
+- **Cross-source confirmation**: a fact is "correct" only when two independent
+  sources agree (e.g. a letter's own reply text + a backfill analysis). Report
+  the confirming sources in a small table when the user asks to verify.
+
+## Contractual note (Aseer LT-08.02 context)
+
+The "consultant/PMC reviews only for contractual conformance, not technical
+review" clause lives in **SoW §6.6** and **ER §2.4** (also summarized in
+`99_Archive/01_Integration_Management/DMP_Design_Management_Plan/02_Contractual_Framework.md`
+§2.2.A). Exact wording: *"Reviews at all stages by PMC are only for contractual
+conformance with ERs. These reviews do not constitute any form of technical
+review. Technical review shall be undertaken by Contractor's nominated
+designer."*
+
+**Double-edged — cite with care:**
+- **For Samaya:** it weakens CG's authority to impose technical-review comments
+  / rejections beyond conformance (supports the LT-08.02 argument that CG
+  exceeded its role).
+- **Against Samaya:** ER §2.4.B places ALL design liability on the Contractor
+  (single point of responsibility). Do NOT cite it as an excuse for delay — it
+  will rebound and confirm the Contractor owns design errors.
+
