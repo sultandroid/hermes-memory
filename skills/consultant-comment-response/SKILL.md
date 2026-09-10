@@ -237,6 +237,7 @@ When a CG comment is straightforward and accepted without debate:
 Example: CR-07 (Rigging register) → "Noted. Separate submittal register for rigging works to be prepared."
 
 - `references/cr-sheet-workflow.md` — Complete technique with openpyxl patterns and status classification rules for creating CR Sheets from scratch
+- `references/cg-warning-letter-reply.md` — Full warning-letter reply workflow: two-letter chain verification, contract-article map (reversed-OCR search method), Outlook-as-authoritative-date-source for direct letters, Aconex last-update timestamps, claim-by-claim evidence table, PM paragraph-review protocol, RTL styling pointers
 - `references/crs-revision-update.md` — Updating an existing CRS to Rev 01+: revision fields, originator replies, formal code mapping, filing alongside source document
 - `references/oddy-test-material-resubmission-ma0007.md` — Patinated Brass MA-0007 Code C cleared by a passed Oddy test; the split-track (approve now, certs follow as Rev.02) strategy; the full brass-applications list (FI_ME_01/ME_03/GR_11/ST_03); ER §6.11 / SoW §13.29 Oddy clause anchors
 - `references/moc-hq-crs-template-cell-map.md` — **USE THE OFFICIAL MOC_HQ CRS TEMPLATE, never build a custom CRS workbook.** Public URL (samaya-factory.com/assets/templates/CRS_Template_MOC_HQ.xlsx), verified cell map (header + comment rows), openpyxl merged-cell notes, and the material-cert compliance analysis (which certs are legit vs CG overreach: Oddy/composition/MSDS legit; fire-rated/off-gassing/2-alternatives overreach; VOC partial — metals don't emit VOC).
@@ -604,8 +605,27 @@ When drafting an email asking a reviewer (NRS, CG, etc.) to **review and stamp**
 
 This is the same "verify refs vs source" discipline as pitfalls 0b/0c/0g/0h, applied to **forward-looking transmittal emails** rather than pushback replies: a claim that a change exists must be backed by the file on disk, not by the reviewer's comment that requested it.
 
-## Pitfalls
-- **Appending rows to an append-only markdown register: NEVER use `patch` with `replace_all=true`.** In `00_Status/action_items.md`-style registers, table rows repeat across sections (the same "Review Stage 4 Showcase Lighting Package" line appears twice), so a `replace_all` find-and-replace duplicates the new block into EVERY occurrence — corrupting the whole file. Restore with `git checkout -- <file>` and redo. The reliable append is: `write_file` a temp file with just the new rows, then `cat tempfile >> register.md` and `rm tempfile` (the terminal `>>` heredoc is blocked by the `&` tool guard). Only `patch` when you can anchor on a genuinely unique line — and even then, prefer appending at EOF.
+## CG Warning Letter Reply (إنذار) — escalation strategy
+
+When CG/PMC issues a warning letter (e.g. LT-08.02 + PMC LT-0010, 09-Sep-2026), the reply is NOT a CR Sheet — it's a strategic escalation document addressed to the **Ministry/Owner** (cc PMC/CG/Authority), requesting government intervention. Full workflow in `references/cg-warning-letter-reply.md`.
+
+Key rules (learned LT-08.02/LT-0010):
+- **Posture:** commitment + cooperation + reserved rights. Never defensive/aggressive.
+- **No monetary values in the letter** — fact only ("records kept, shown upon request"); value stays in the internal EOT/VO file.
+- **Rebut claim-by-claim** with dated evidence (letter/submittal/transmittal refs) — verify every citation in the submission DB before sending.
+- **Direct letters (LT-xxx to Ministry) never appear in Aconex** — their send date is proven only via Outlook SQLite (`Mail` table, `Message_TimeSent` = unix epoch). Registers can disagree (letters register 13-Aug vs risk register 11-Aug for LT-0007): the ORIGINAL Outlook email timestamp wins (11-Aug 09:39).
+- **Aconex `last update` column = when the CG code response was logged**, not the snapshot date. Sequence claims ("rejected the day before the warning") must use this timestamp (ZD-0120: submitted 01-Sep, Code C logged 05-Sep — warning was 02-Sep, i.e. BEFORE the rejection).
+- **Contract.md OCR is REVERSED Arabic** — plain find() fails. Verify articles via the adjacent English clause + OCR-tolerant patterns (املادة/صالحات). Two articles share "18" — cite by title (Partial Withdrawal vs Waiver of Rights).
+- **Hijri month: compute it, never copy from a received draft** (draft had 03/1448; Sept 2026 = Rabi' al-Akhir 04/1448). Contract number digit-count matters too (0010003521 = 11 digits; draft had 9).
+- **PM reviews paragraph-by-paragraph** — present sub-claim verdicts + evidence + proposed fix, WAIT for approval before merging. Additions to received drafts go in labeled green blocks, never silent rewrites.
+- **No blank fields in the published letter** — fill dates; REMOVE `[placeholder]` lines entirely until the value arrives. Verify addressee identity against records before sending.
+- **SI-007 sequence-gate irony** is the strongest argument type: when CG mandates a sequence the contractor had already funded and scheduled (and CG's own comment sheet requested it), state that the SI "converted a parallel-track plan into a serial gate."
+- **NCR ≠ delay mechanism:** NCRs address non-conforming EXECUTED works (ISO 9000:2015 3.6.9); delayed works have their own track (schedules, letters, recovery plan) — never mix. Challenge only clearly-misclassified NCRs; a valid NCR (e.g., waste violation) is not challenged.
+- **"No stage penalties"** must be verified against the contract (Annex 4 milestones) before asserting.
+- **Letter in Arabic** if CG letter is Arabic; natural engineer language, no AI fingerprints (same rules as CR sheets); CEO-signed; formal, not a spreadsheet.
+- **Repo workflow:** reply MD in `03_Plans/08_Risk/` (AR for submission + EN internal), delay impact annex, discussion file, letters-register row, action items CW-*, GitHub issue, Surge live preview with 30-min cron, cross-link per AGENTS.md Rule 12. RTL styling rules (right-align never justify, IBM Plex Sans Arabic, section-boundary pagination, no cut tables) live in the samaya-docx-template skill's HTML print reference.
+
+## Pitfalls (letter drafting) In `00_Status/action_items.md`-style registers, table rows repeat across sections (the same "Review Stage 4 Showcase Lighting Package" line appears twice), so a `replace_all` find-and-replace duplicates the new block into EVERY occurrence — corrupting the whole file. Restore with `git checkout -- <file>` and redo. The reliable append is: `write_file` a temp file with just the new rows, then `cat tempfile >> register.md` and `rm tempfile` (the terminal `>>` heredoc is blocked by the `&` tool guard). Only `patch` when you can anchor on a genuinely unique line — and even then, prefer appending at EOF.
 - PDFs can be very large (>100k lines); use `pdftotext -layout` and read in chunks
 - Comments may have inline status markers like "OK", "OK - comply with Ad.", "OK - Update in DL" — these need careful parsing
 - The RACI matrix defines who is responsible for what; always consult it before assigning actions
@@ -616,6 +636,9 @@ This is the same "verify refs vs source" discipline as pitfalls 0b/0c/0g/0h, app
 - **Name the floor** in the subject line — CG often reviews one floor at a time. Check drawing number prefixes (BF, LG, GF) to confirm which floor the CRS covers.
 
 ## User Preferences (Mohamed Sultan Abbas)
+- **No model/tokens/session footer** after replies — user revoked this standing request on 10-Sep after finding it repetitive. Never append it again.
+- **Paragraph-by-paragraph draft review** — never review a received draft as one document; the PM wants each paragraph discussed and approved individually before edits are merged.
+- **Received drafts are 1:1 sacred** — convert verbatim; additions in labeled blocks ("إضافة مقترحة:"), never silent rewrites of the received text.
 - Formal, professional tone in both internal and external communications
 - Arabic/English bilingual headers in submittal documents (preserve original formatting)
 - Prefers detailed action tables with clear party assignments

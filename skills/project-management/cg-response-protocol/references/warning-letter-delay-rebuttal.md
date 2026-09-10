@@ -5,6 +5,70 @@ Museum MOC-MUS-ASE-LT-08.02, 02-Sep-2026, 15-day corrective-action ultimatum, si
 Acting CG PM Eng. Mansour Alrezeni). Distinct from a Code C submittal response: this is
 a **contractual-position letter**, not a technical comment reply.
 
+## Ministry-level escalation letters (LT-0010 class, CEO-signed)
+
+When the reply targets the Ministry/owner (not just CG) and is CEO-signed, the posture
+shifts from "rebuttal to CG" to "objection + fact-correction + request for intervention":
+
+- **No monetary values in the letter** (PM directive 09-Sep-2026). State facts only:
+  "كشوفات وإثباتات محاسبية محفوظة لدينا وتُعرض عند الطلب". Values stay internal for
+  the EOT/VO file. Attachments list must NOT include lease invoices.
+- Frame as objection + fact-correction: "هذا الرد يعترض على هذا الادعاء لعدم دقته" —
+  not defense; and open with the cooperation/commitment posture (PM directives: show
+  Samaya's commitment, expose that CG letter omits the occupancy reality, reserve
+  rights against the penalties path).
+- Procedural-first challenge order: (1) no contract article cited as the warning's
+  basis, (2) same-day issuance without right to reply, (3) "ممثل الجهة" appointment +
+  scope unverified (Art. 3; warning powers reserved to the Employer). When raising #3,
+  acknowledge partial notice with "بخلاف إخطار تغيير مدير المشروع بتاريخ 20-07-2026"
+  (LT-0003 exists — CG will find it) so CG can't open that door.
+- Progress % rebuttal: compare claimed % against the DESIGN WEIGHT in the priced
+  payment schedule. Example: 7.37% claimed > 4.81% design weight (SAR 3,133,611) =
+  progress beyond design stage, not behind. Also demand the measurement basis —
+  if the cost-loaded program was never reviewed (CP-0009 unreviewed since 28-Jan),
+  the weighted figure has no agreed methodology.
+- NCR ≠ delay mixup (PM directive): NCRs address executed non-conforming works
+  (ISO 9000:2015 3.6.9, ISO 9001 8.7); delayed works have their own track (schedules,
+  letters, recovery plan). Only challenge clearly-procedural NCRs (NCR-CG-001);
+  never dispute genuinely non-conforming ones (waste NCR NC-1KH-0021) — disputing a
+  real one weakens the entire letter.
+- Never assert "no milestone dates in contract" without checking Annex 4 / pricing
+  schedule for milestones first — one milestone table kills that sentence.
+- **Pre-send verification checklist:** (1) Planning returns actual-vs-shifted-baseline
+  number — never submit with that blank (WR-18 float −177 does NOT auto-support
+  "matching shifted program"); (2) letter refs not in Aconex DB (bank-only:
+  SP-0007/SP-0008/CP-0009 class) need transmittal IDs or "عبر الوسيلة المتاحة"
+  phrasing — run the Aconex backfill script on the bank before citing; (3) specialist
+  count verified against submission DB service PQs at Code B (09-Sep: 35 service PQs
+  Code B across 135 PQs — "أكثر من 14 جهة" claim safe and conservative; count
+  disciplines: design office, showcases, graphic, acoustic, setwork, testing labs,
+  AV, ICT security, life safety, landscaping, BMS, audio); (4) every contract article
+  citation verified against `00_Contracts/` (READ-ONLY — cite by reference, never
+  copy text); (5) claim "مباشرة للأعمال" only with work-performed evidence — otherwise
+  "معتمدة (كود B بتاريخ ...)"; (6) multi-phase gates stated per phase (scan: no-gate
+  architectural phase vs dismantling-gated structural phase).
+- Evidence hierarchy that worked for the LT-0010 escalation: weekly reports WR-01→11
+  (site occupation) · priced payment schedule (design weight) · CG's own RFIs to the
+  Ministry ("تُقدَّم من العميل" fields = self-contradiction) · CG's own comment sheet
+  as the origin of the demand (DMP C-3a) · contractor-funded-but-CG-declined proposal
+  (ZD-0031 SAR 236k) · latent-condition test results (20.7/35 MPa) = Employer risk ·
+  advance-payment bond delivered but unpaid (specialists kept on Samaya's funds).
+- Out-of-scope initiatives paragraph: list what Samaya did beyond contract, and
+  separate the waivers precisely — waived the COST (compensation) but NOT the TIME
+  (EOT entitlement stays). This cost/time split is deliberate and must survive every
+  edit.
+- Electricity-source precision (PM directive): state the approval covered the
+  ASSESSMENT phase only — never blur it into execution-phase use, to prevent CG from
+  later alleging unauthorized use. Added items (cameras, generator) demanded outside
+  the approved submission = Art. 14 change with cost impact, priced on site-power
+  basis from the start.
+- Received-draft review workflow: when a drafted escalation letter arrives (DOCX from
+  user), extract via python-docx (paragraphs AND tables — timeline tables carry the
+  evidence), archive to `03_Plans/08_Risk/<date>_reply_<ref>_received_draft.docx`,
+  then write two repo files: (a) overall point-by-point review (verdict table +
+  risks), (b) paragraph-by-paragraph fact-check (sub-claim / verdict / repo evidence /
+  risk columns), and open a GitHub Issue as the send-readiness checklist.
+
 ## Workflow
 
 1. **Extract the PDF text first** (pypdf handles the bilingual CG layout; the Arabic
@@ -167,3 +231,46 @@ bank before claiming "earliest possible".
   existing discussions (`2026-08-31_ad-delay-impact-analysis.md`), registers, and the
   EOT file so the rebuttal inherits all prior evidence, per AGENTS Rule 12
   (cross-link everything).
+- **Organized thread setup for reply drafting (PM directive 09-Sep-2026: "تحط الخطاب
+  بصيغه MD علي الريبو وتفتح نقاش علي الريبو بتنظيم ممنهج")** — before anything else,
+  create the discussion file under `09_Agent_Workspace/discussions/<date>_<topic>.md`
+  containing: letter summary, PM directives table, draft status, evidence/argument
+  chain table, open items, cross-links — then add the INDEX row, letters-register
+  entry (LT-08.02 with due date), action items (CW-x IDs with owners/dates), and a
+  GitHub Issue as the tracked send-readiness checklist. Registers + INDEX + issue all
+  in the same commit; the reply drafts live in `03_Plans/08_Risk/`.
+- **Model/token/session footer after every reply (user standing request, also in
+  memory):** end each reply with model name + tokens consumed + session duration.
+  Exact per-turn token counts aren't exposed via env — give a session estimate and
+  offer the gateway plugin for exact tracking.
+
+## Received-draft corrections workflow (user correction 2026-09-09)
+
+When the user supplies their OWN draft letter (DOCX) for review, **do NOT rewrite or
+restructure it** — preserve its text 1:1 and only ADD or FIX on top. The user will
+reject a full rewrite ("you didn't follow the style guide", "لا تغيره نهائياً").
+
+Two-phase approach:
+- **Phase 1 — overall review** (point-by-point, verdict table + risks) saved to
+  `09_Agent_Workspace/discussions/<date>_<ref>-reply-review.md`.
+- **Phase 2 — paragraph-by-paragraph fact-check** (sub-claim / verdict / repo evidence /
+  risk), saved as `<date>_lt0010-paragraph-factcheck.md`. The user will drive this
+  **one paragraph per exchange** ("فقرة فقرة نتكلم عليها") — present one paragraph, wait
+  for their direction, then move to the next. Do NOT dump the full evaluation at once.
+
+**Print-ready page (user request: "الخطاب بالاستيل المعتمد للمشروع … قابل للطباعه"):**
+build HTML following the official Samaya A4 template design system (extract `<style>`
+from Stakeholder Plan Rev04 in repo `~/aseer-museum-pm/03_Plans/02_Stakeholder/`).
+Key: Montserrat headings + IBM Plex Sans Arabic body (Google Fonts CDN — the fonts link
+is REQUIRED, the page won't render Arabic properly without it), A4 210x297mm
+`@page` margin 0, 5-logo strip (MoC/PMC/CG/NRS/Contractor), `page-header` +
+`pg-footer` patterns. Publish to Surge, print via Ctrl+P → A4.
+
+**PDF on Surge:** Surge blocks PDFs (404 with `surge-cache: HIT` even after
+re-publish). Workaround: serve the HTML page (printable via browser Ctrl+P). Don't
+burn cycles retrying PDF uploads — the styled HTML achieves the same print result.
+
+**Style-guide check before building HTML:** load `skill_view(name='samaya-docx-template')`
+first — it defines the Samaya brand design system (fonts, colors, logo treatment).
+Extracting the design system from an existing Samaya HTML in the repo is the correct
+source — hand-rolled CSS will be rejected.

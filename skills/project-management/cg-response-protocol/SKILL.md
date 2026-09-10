@@ -11,6 +11,7 @@ tags:
 
 ## References
 - `references/warning-letter-delay-rebuttal.md` — formal CG/PMC warning letters (إنذار) about project delay: claim-by-claim rebuttal from repo evidence, delay-impact table, recurring Aseer rebuttal patterns, EOT reserved-rights framing.
+- `references/warning-letter-arabic-reply.md` — LT-08.02 addendum: Arabic-first reply, humanization pass, PM dictation integration, repo thread setup. **Rule: Arabic CG letter → Arabic reply primary; EN = internal annex.**
 
 ## CRS Creation Workflow (MANDATORY — Follow in Order)
 When the user says "create CRS" or "make a CRS sheet":

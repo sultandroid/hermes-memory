@@ -4,13 +4,13 @@ Eng. Mohamed Sultan, Tech Office Mgr at Samaya/Aseer. Prefers concise British En
 §
 Contract: lump-sum D&B. VO Art.14(5)(e). Scope creep flag to Adel. Sub pay: deliverable-based (approval gates).
 §
-Odoo 167.99.224.43 SSH root; Odoo(8069)+PG; py /opt/odoo-tools/bin/python.
+Odoo 167.99.224.43 SSH root. NO model/tokens footer after replies (revoked 10-Sep).
 §
 CONFIDENTIAL: Samaya considering replacing AD Engineering (MEP) with SG Group. Keep internal.
 §
 PO approval: quote attached, prices matched ±20% std_price, update list_price + seller_ids (vendor name+code), post; service POs skip last 2.
 §
-Proactively search Outlook SQLite, OneDrive AND repo for evidence before concluding.
+Proactively search Outlook SQLite + OneDrive + repo for evidence before concluding.
 §
 Telegram: silent unless asked; DM only for tech errors/decisions/escalation. Reminders/action items as GitHub Issues (gh).
 §
@@ -26,4 +26,4 @@ Aseer MEP: AD Eng=electrical(power/earthing/containment/emergency/LV/BOQ/IFC)+Fi
 §
 Samaya DOCX template: OneDrive copy=null-bytes; use repo _Style-Guides/Doc Style Guide/. Formal reports AR-dominant + IBM Plex Sans Arabic + RTL.
 §
-Brave Search API key: BSAKxm__iUhwo5WDVPUonPxscct-8nz (curl web search).
+Brave key: BSAKxm__iUhwo5WDVPUonPxscct-8nz.

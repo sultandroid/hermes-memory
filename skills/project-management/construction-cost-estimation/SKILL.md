@@ -609,6 +609,10 @@ Variables: wood type, dimensions, hand carving vs CNC, countertop material
 
 Do NOT use inline python3 << PYEOF heredocs for bulk Excel extraction — escape sequences, f-string newlines, and mixed quotes cause hard-to-debug syntax errors. Write the script to a .py file first, or delegate.
 
+## Signage / Channel-Letter BOQ Pricing
+
+For illuminated signage proposals (e.g. EXPO 2030 land-art logo, airport-road signage), price per letter from face area + perimeter, or per light box. See `references/signage-channel-letter-pricing.md` for the per-letter cost build-up (steel body, polycarbonate face, LED modules, brackets, wiring), typical SAR rates, the light-box variant, and the pitfall that two different BOQ files (channel-letters vs light-box) may exist for the same proposal — confirm which design the client approved before pricing.
+
 ## Cost Reclassification (Capitalization → Execution Categories)
 
 When reviewing MR Yosry-style capitalization registers (IAS 16 asset categories), reclassify into execution categories: On-Site Work, Off-Site Manufacturing, AV & IT Equipment, Furniture, Tools & Consumables, Indirect Costs. See `references/capitalization-to-execution-cost-classification.md` for full methodology, on-site install rates per category, overhead allocation, and flags to watch.
