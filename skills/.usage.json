@@ -511,12 +511,12 @@
     "created_at": "2026-07-12T21:57:18.185304+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T05:01:06.733316+00:00",
-    "last_used_at": "2026-09-10T04:07:52.433747+00:00",
+    "last_used_at": "2026-09-11T04:08:03.627701+00:00",
     "last_viewed_at": "2026-07-28T15:34:09.070347+00:00",
     "patch_count": 18,
     "pinned": false,
     "state": "active",
-    "use_count": 80,
+    "use_count": 81,
     "view_count": 20
   },
   "computer-use": {
@@ -1160,14 +1160,14 @@
     "archived_at": null,
     "created_at": "2026-07-01T20:36:18.892802+00:00",
     "created_by": "agent",
-    "last_patched_at": "2026-07-24T18:23:37.172948+00:00",
-    "last_used_at": "2026-08-29T05:13:33.113995+00:00",
-    "last_viewed_at": "2026-08-29T05:13:33.109142+00:00",
-    "patch_count": 6,
+    "last_patched_at": "2026-09-11T03:55:34.638786+00:00",
+    "last_used_at": "2026-09-11T03:55:18.204313+00:00",
+    "last_viewed_at": "2026-09-11T03:55:18.201784+00:00",
+    "patch_count": 9,
     "pinned": false,
     "state": "active",
-    "use_count": 12,
-    "view_count": 12
+    "use_count": 14,
+    "view_count": 14
   },
   "hermes-desktop-plugins": {
     "archived_at": null,
@@ -1941,12 +1941,12 @@
     "created_at": "2026-06-09T09:17:45.711065+00:00",
     "created_by": "agent",
     "last_patched_at": "2026-09-04T18:07:11.700258+00:00",
-    "last_used_at": "2026-09-10T03:06:31.045374+00:00",
+    "last_used_at": "2026-09-11T03:08:24.840350+00:00",
     "last_viewed_at": "2026-09-04T18:06:44.646733+00:00",
     "patch_count": 359,
     "pinned": false,
     "state": "active",
-    "use_count": 869,
+    "use_count": 870,
     "view_count": 550
   },
   "p5js": {

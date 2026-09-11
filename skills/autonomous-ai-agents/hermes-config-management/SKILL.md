@@ -40,6 +40,21 @@ Set `provider: ""` and `model: ""` to disable the feature. No error, no titles g
 ### 3. Security-restricted file access
 The agent cannot write to `~/.hermes/config.yaml` via `patch` or `write_file` — it's security-restricted. Use `hermes config set` as a workaround, but be aware of the append behavior (Issue #1).
 
+### 4. `hermes config set model.default` updates IN PLACE (verified, not append)
+Unlike the nested-key case in Issue #1, setting a **top-level leaf inside an existing block** (`model.default`) updates the existing line in place — no duplicate block. Same applies to `model.provider`.
+
+```bash
+cp ~/.hermes/config.yaml ~/.hermes/config.yaml.bak
+hermes config set model.default deepseek-v4.1-flash
+grep -cn '^model:' ~/.hermes/config.yaml     # must print 1 — no duplicate block
+grep -n 'default:' ~/.hermes/config.yaml     # confirm new value landed near line 5
+```
+
+Notes:
+- Changing `model.default` does NOT touch `model.provider` — set that separately when the provider changes too.
+- The new default applies to **new** sessions; the running session keeps the model it started with. Say so when reporting.
+- `model.default` and `moa.presets.default` are different keys — `grep -n 'default:'` will show both; check the line under the `model:` block.
+
 ## Workflow for Config Fixes
 
 1. **Detect** — find all occurrences of the problematic key:
@@ -119,3 +134,4 @@ If a step requires user input (token, push approval, etc.), surface it via `clar
 ## References
 - `references/title-generation-fix.md` — specific error and solution for the "model not found" issue
 - `references/gateway-polling-conflict-recovery.md` — full recovery transcript, renamed-unit systemd template, and the conflict-loop log pattern
+- `references/hermes-update-procedure.md` — verified `hermes update` flow: check → background-run (no nohup) → what the update touches → post-update verification greps
