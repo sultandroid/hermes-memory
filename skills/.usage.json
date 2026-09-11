@@ -1902,12 +1902,14 @@
     "created_at": "2026-06-02T22:15:46.065249+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
-    "last_used_at": "2026-09-10T13:00:10.350628+00:00",
+    "last_reused_patch_generation": 0,
+    "last_used_at": "2026-09-11T13:25:57.759849+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
+    "patch_generation": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 413,
+    "use_count": 415,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
