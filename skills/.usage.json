@@ -2031,13 +2031,13 @@
     "created_by": null,
     "last_patched_at": "2026-07-08T15:58:28.614576+00:00",
     "last_reused_patch_generation": 0,
-    "last_used_at": "2026-09-11T13:25:57.759849+00:00",
+    "last_used_at": "2026-09-12T06:13:52.548387+00:00",
     "last_viewed_at": "2026-07-17T06:02:07.275102+00:00",
     "patch_count": 25,
     "patch_generation": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 415,
+    "use_count": 416,
     "view_count": 57
   },
   "outgoing-document-qa-review": {
@@ -3511,13 +3511,15 @@
     "created_at": "2026-06-18T11:14:39.454378+00:00",
     "created_by": null,
     "last_patched_at": "2026-07-20T09:13:31.887747+00:00",
-    "last_used_at": "2026-09-04T05:25:35.623821+00:00",
-    "last_viewed_at": "2026-09-04T05:25:35.621135+00:00",
+    "last_reused_patch_generation": 0,
+    "last_used_at": "2026-09-12T05:28:34.513542+00:00",
+    "last_viewed_at": "2026-09-12T05:28:34.510710+00:00",
     "patch_count": 55,
+    "patch_generation": 0,
     "pinned": false,
     "state": "active",
-    "use_count": 84,
-    "view_count": 84
+    "use_count": 85,
+    "view_count": 85
   },
   "weekly-review-planning": {
     "archived_at": null,
