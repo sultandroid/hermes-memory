@@ -1,57 +1,97 @@
-# Cron Job Provider Drift — Diagnosis & Fix
+# Cron Job Provider/Model Drift — Diagnosis & Fix
 
 ## Symptom
 
-A cron job that was created under provider X fails after the user switches to provider Y:
+A cron job fails at runtime with:
 
 ```
-RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (provider 'ollama-cloud' -> 'opencode-go'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=8933383a0d68 provider=<provider> model=<model>` (or pin the original values to keep them).
+RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (provider 'X' -> 'Y'; model 'A' -> 'B'), and this job is unpinned. No inference call was made.
 ```
 
-## Root Cause
+Hundreds of consecutive failures can appear, across many jobs at once, immediately after a
+`model.default` / `model.provider` change.
 
-When a cron job is created without an explicit `provider`/`model`, Hermes stores the then-current global provider implicitly. If the user later changes the global provider (e.g. via `hermes model` or config edit), the pinned job has a mismatch. Hermes blocks execution to prevent unintended spend on a different provider than the job was designed for.
+## Root cause — and why the old remedy is wrong
 
-## Fix Options
+When a job is created without an explicit `provider`/`model`, Hermes stores the then-current
+global values as a **creation snapshot**. An old build shipped a fail-closed guard: any unpinned
+job whose snapshot no longer matched the live global default raised this error instead of running,
+to avoid spending on an unintended provider.
 
-### Option A: Re-pin to the original provider (preserve original intent)
+That guard was reversed. On a current build the **snapshot is the job's effective pin** — an
+unpinned job keeps running on the model/provider it was created with and logs one INFO line per
+differing axis. A global model switch no longer stops any job.
+
+**Therefore: seeing this RuntimeError means the process executing the job is running pre-fix code.**
+It is a stale-build symptom, not a configuration fault. Do not start by editing job pins.
+
+## Diagnose the fleet (execution ledger)
 
 ```bash
-cronjob action=update job_id=<ID> provider=<ORIGINAL_PROVIDER>
+cd ~/.hermes
+sqlite3 cron/executions.db "select status, count(*) from executions group by status;"
+# failures grouped by kind — one dominant repeated error is the tell
+sqlite3 cron/executions.db "select substr(coalesce(error,''),1,110) e, count(*) from executions where status='failed' group by 1 order by 2 desc;"
+# blast radius + window
+sqlite3 cron/executions.db "select count(distinct job_id) from executions where error like '%drifted%';"
+sqlite3 cron/executions.db "select min(claimed_at), max(claimed_at) from executions where error like '%drifted%';"
+sqlite3 cron/executions.db ".schema executions"   # columns: id, job_id, status, claimed_at, error
 ```
 
-Example:
+Compare the drift window start against the date the global model was changed — they should match.
+
+Also list which jobs are unpinned (`model: null, provider: null`) and their stored snapshots:
+
 ```bash
-cronjob action=update job_id=8933383a0d68 provider=ollama-cloud
+python3 -c "
+import json
+jobs=json.load(open('/Users/mohamedessa/.hermes/cron/jobs.json'))
+jobs=jobs if isinstance(jobs,list) else jobs.get('jobs',jobs)
+for j in (jobs.values() if isinstance(jobs,dict) else jobs):
+    print(j.get('job_id'), '|', (j.get('model_snapshot'), j.get('provider_snapshot')), '| pin=', j.get('model'))
+"
 ```
 
-Then verify:
+Cost note: the failure raises before any inference call, so no spend occurred — say so plainly.
+
+## Fix — update and restart, then verify with one job
+
+1. **Update Hermes** (`hermes update`) to pull the snapshot-as-pin behaviour.
+2. **Restart the gateway from outside its process tree.** A gateway process that survived the
+   update keeps the old modules in memory, so the fix is not live until the PID changes. See
+   *Stale gateway after `hermes update`* in `hermes-config-management`.
+3. **Re-run one affected job and confirm it executes:**
+
 ```bash
-cronjob action=list  # check provider field is set
+cronjob action=run job_id=<JOB_ID>
 ```
-
-### Option B: Pin to the new current provider (follow the user's latest choice)
 
 ```bash
-cronjob action=update job_id=<ID> provider=<NEW_PROVIDER>
+sqlite3 ~/.hermes/cron/executions.db "select status, substr(coalesce(error,'OK'),1,80) from executions order by rowid desc limit 3;"
 ```
+
+`running`/`completed` with a real API call count = fixed. A sub-second `failed` with `API calls: 0`
+means the old code is still loaded — the restart did not take.
+
+## When re-pinning IS the right move
+
+Only when the user explicitly wants a job moved off its creation snapshot (typically because the
+snapshot names a provider they no longer use):
+
+```bash
+cronjob action=update job_id=<JOB_ID> provider=<PROVIDER> model=<MODEL>
+```
+
+Bulk-pinning every affected job as the blanket response is the pre-fix remedy and is wrong: it
+rewrites job intent the user did not ask to change and buries the real cause.
 
 ## Prevention
 
-Always pin a provider explicitly when creating cron jobs that use an LLM:
+Pin provider + model explicitly at creation for any job that must never follow a global switch:
 
 ```bash
-cronjob action=create schedule="..." prompt="..." provider=ollama-cloud model=deepseek-v4-flash
+cronjob action=create schedule="..." prompt="..." provider=<PROVIDER> model=<MODEL>
 ```
 
-This makes the job robust to future provider switches.
-
-## Affected Jobs
-
-List all current cron jobs and check which ones have `provider: null` (unpinned — at risk):
-
-```bash
-cronjob action=list
-```
-
-Jobs with `model: null, provider: null` are unpinned and will drift if the global provider changes.
+Leaving both unset is safe on a current build (the snapshot pins it) — but the snapshot is frozen
+at creation, so an unpinned job will never pick up a model upgrade on its own. Choose deliberately.

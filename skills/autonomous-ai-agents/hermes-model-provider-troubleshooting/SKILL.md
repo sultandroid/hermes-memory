@@ -381,29 +381,45 @@ When a cron job fails at runtime with:
 RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (provider 'X' -> 'Y'), and this job is unpinned.
 ```
 
-This means the cron job was created when the global provider was X, but the user later changed to Y. Unpinned jobs get blocked to prevent unintended spend on the wrong provider.
+**Check the build before treating this as a config problem — the fail-closed behaviour is legacy.**
 
-**Fix:** Re-pin the job to the desired provider:
+Current Hermes treats the creation snapshot as the unpinned axis's *effective pin*: an unpinned job keeps running on the model/provider it was created with, and logs one INFO line per differing axis. It does **not** fail closed. So this RuntimeError means the process executing the job is running **pre-fix code** (corrected upstream by `fix(cron): unpinned jobs run on their creation-snapshot model instead of failing closed`).
 
-```bash
-cronjob action=update job_id=<JOB_ID> provider=<ORIGINAL_PROVIDER>
-```
-
-Or pin to the new current provider if the user wants it to follow the new default:
+Diagnose the whole fleet from the execution ledger:
 
 ```bash
-cronjob action=update job_id=<JOB_ID> provider=<CURRENT_PROVIDER>
+sqlite3 ~/.hermes/cron/executions.db "select substr(coalesce(error,''),1,110) e, count(*) from executions where status='failed' group by 1 order by 2 desc;"
+sqlite3 ~/.hermes/cron/executions.db "select count(distinct job_id) from executions where error like '%drifted%';"
+sqlite3 ~/.hermes/cron/executions.db "select min(claimed_at), max(claimed_at) from executions where error like '%drifted%';"
 ```
 
-**Prevention:** When creating cron jobs that use an LLM, always pin a provider explicitly to avoid future drift:
+The failure is cheap and loud — it raises before any inference call, so no spend occurred.
+
+**Fix order (do NOT bulk re-pin):**
+
+1. Confirm the running gateway is on current code — a long-lived gateway process keeps old modules loaded after `hermes update`. See *Stale gateway after `hermes update`* in `hermes-config-management`.
+2. Update, then restart the gateway from outside its process tree.
+3. Re-run ONE affected job to prove the fix end-to-end:
+   ```bash
+   cronjob action=run job_id=<JOB_ID>
+   ```
+   then confirm it shows `running`/`completed` in `executions.db` instead of the drift error.
+
+Bulk re-pinning every affected job is the *pre-fix* remedy: it rewrites job intent the user may not want changed, and it hides the real problem (stale code) behind 8 config edits.
+
+**Re-pin only when the user explicitly wants a job moved off its creation snapshot:**
+
+```bash
+cronjob action=update job_id=<JOB_ID> provider=<PROVIDER> model=<MODEL>
+```
+
+**Prevention:** still pin provider+model explicitly at creation for any job that must never follow a global switch:
 
 ```bash
 cronjob action=create schedule="..." prompt="..." provider=<PROVIDER> model=<MODEL>
 ```
 
-If no provider is set at creation time, the then-current global provider is stored implicitly. Changing the global provider later breaks unpinned jobs silently.
-
-**Verification:** After updating, check the job's model/provider fields in `cronjob action=list` output to confirm they're set.
+A job created with no explicit pin stores the then-current global values as its snapshot. On a current build that snapshot keeps the job running; on a pre-fix build it produces the error above after any global model/provider change.
 
 ## "Provider timeout / fallback chain exhausted" on cron jobs
 

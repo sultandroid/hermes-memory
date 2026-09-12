@@ -131,6 +131,69 @@ WARNING hermes_plugins.telegram_platform.adapter: [Telegram] Connecting to Teleg
 
 If a step requires user input (token, push approval, etc.), surface it via `clarify` and stop. Do not retry blindly.
 
+## Stale gateway after `hermes update` (macOS / launchd)
+
+`hermes update` swaps code on disk and cycles the service, but a gateway process that survives the
+cycle keeps the **old modules loaded in memory**. A long-lived gateway can serve month-old
+behaviour while `hermes --version` reports the new build — every cron job and gateway feature then
+runs on stale code. This is the failure mode behind "we just updated, why is the old bug still
+here?".
+
+**Recognition:** `hermes --version` shows the new SHA, but behaviour matches a pre-fix bug.
+
+```bash
+hermes --version
+pgrep -af 'hermes_cli.main gateway run'      # PID(s)
+ps -p <pid> -o pid,lstart,etime                # <-- the tell: days/weeks of uptime
+launchctl list ai.hermes.gateway               # macOS: PID, LastExitStatus
+```
+
+A gateway up for longer than the update timestamp did not pick up the update. Check the update log
+for what the cycle actually did:
+
+```bash
+grep -iE 'restart|gateway|drain' ~/.hermes/logs/update.log | tail -20
+```
+
+(`⚠ Gateway drain timed out ... forcing launchd restart` means the update forced the cycle itself.)
+
+**Fix:** restart the gateway from **outside** its own process tree. An in-agent
+`hermes gateway restart` or any command whose body contains `hermes gateway` / `hermes-gateway` is
+rejected by the restart policy, and a plain `kill` takes the invoking command down with it.
+
+- From an outside shell (user's terminal): `hermes gateway restart`.
+- From inside the agent on macOS: load a **one-shot LaunchAgent** whose parent is `launchd`, not the
+gateway, so it survives the gateway's death:
+
+```bash
+cat > /tmp/hermes_gw_restart.sh <<'EOF'
+#!/bin/bash
+sleep 3
+launchctl kickstart -k "gui/$(id -u)/ai.hermes.gateway"
+EOF
+chmod +x /tmp/hermes_gw_restart.sh
+cat > ~/Library/LaunchAgents/ai.hermes.restart-once.plist <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>ai.hermes.restart-once</string>
+  <key>ProgramArguments</key><array><string>/bin/bash</string><string>/tmp/hermes_gw_restart.sh</string></array>
+  <key>RunAtLoad</key><true/>
+</dict></plist>
+EOF
+launchctl load ~/Library/LaunchAgents/ai.hermes.restart-once.plist
+```
+
+The target unit `ai.hermes.gateway` has `KeepAlive=true`, so it respawns automatically. The current
+chat session survives the cycle; in-flight agent runs are lost. Tell the user the session will blink.
+
+**Verify:** a NEW gateway PID with a fresh `lstart`, `inbound message:` / `response ready:` lines in
+`~/.hermes/logs/gateway.log`, and a previously failing cron job completing (see the cron-drift
+reference in `hermes-model-provider-troubleshooting`).
+
+On Linux the equivalent unit is the systemd `hermes-gateway*` service — see the renamed-unit recipe
+below, which works for both the stuck-polling deadlock and this stale-code case.
+
 ## References
 - `references/title-generation-fix.md` — specific error and solution for the "model not found" issue
 - `references/gateway-polling-conflict-recovery.md` — full recovery transcript, renamed-unit systemd template, and the conflict-loop log pattern
