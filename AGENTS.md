@@ -26,6 +26,7 @@ Read in this order. Skip nothing.
 5. **`PROJECTS.md`** — project index; find which project the user is asking about, then `cd` into its repo
 6. **`CONTACTS.md`** — if the request mentions a person, look them up here first
 7. **`ODOO.md`** — only if the request involves Odoo (projects, POs, tasks, timesheets)
+8. **`SURGE.md`** — only if the request involves publishing/reviewing an HTML page on surge.sh (credentials for all projects live there)
 
 After reading, **state a one-line summary** of who the user is and what project is in scope before doing work. If no project is in scope, ask which project — do not assume.
 
