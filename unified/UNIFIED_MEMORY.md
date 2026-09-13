@@ -2,7 +2,7 @@
 # Auto-synced by Memory & Skills Exchange Cronjob
 # DO NOT EDIT — Regenerated every 6 hours
 
-Generated: 2026-09-13 09:00:09
+Generated: 2026-09-13 16:01:01
 
 ---
 
@@ -11,7 +11,7 @@ Generated: 2026-09-13 09:00:09
 Mohamed Essa is Director, Technical Office / BIM Unit at Samaya Investment in KSA and also operates Moqtana Museums & Consultancy. He works from macOS on Samaya/Aseer museum delivery, BIM, OneDrive-hosted project files, printable HTML, and agent-supported workflows. He gives terse, outcome-first requests and expects direct inspection of the real target, source-backed conclusions, implementation when asked, and explicit completion reporting.
 Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects (Zamzam #121, Aseer #3092, etc.). Key people: Sultan (Odoo/Outlook, sultan@samayainvest.com), Ali Abdelrahman (BIM Lead), Adel Darwish (Project Dir), Mohamed Samir (Constr Mgr), Hesham Ezzat (Doc Controller). Telegram: @SultanMacBook_Bot. Notion: MacHermes bot on Samaya inv. workspace.
 **Mohamed Essa** — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects including Zamzam #121, Aseer #3092, and related portfolio work. Also owner/operator of Moqtana Museums & Consultancy (fit-out/heritage), which runs Odoo 18 Community on DigitalOcean (167.99.224.43).
-Mohamed Essa works from macOS in agent-driven Samaya / BIM / museum-delivery workflows. Recurring work centers on Aseer Museum, RCRC proposal HTML, Hermes agent setup/debugging, OneDrive-hosted project files, and print-ready document production. He usually gives terse, outcome-first instructions and expects the agent to inspect the real file, folder, or URL directly instead of talking abstractly.
+Mohamed Essa is Director, Technical Office / BIM Unit at Samaya Investment in KSA and also operates Moqtana Museums & Consultancy. He works from macOS on Samaya/Aseer museum delivery, BIM, OneDrive-hosted project files, printable HTML, and agent-supported workflows. He gives terse, outcome-first requests and expects direct inspection of the real target, source-backed conclusions, implementation when asked, and explicit completion reporting.
 Mohamed Essa — Director, Technical Office / BIM Unit at Samaya Investment (KSA). Manages museum construction projects (Zamzam #121, Aseer #3092, etc.). Key people: Sultan (Odoo/Outlook, sultan@samayainvest.com), Ali Abdelrahman (BIM Lead), Adel Darwish (Project Dir), Mohamed Samir (Constr Mgr), Hesham Ezzat (Doc Controller). Telegram: @SultanMacBook_Bot. Notion: MacHermes bot on Samaya inv. workspace.
 
 ## Critical Rules
