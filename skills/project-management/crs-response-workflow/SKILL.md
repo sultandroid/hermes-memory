@@ -37,6 +37,32 @@ Template structure:
 | **PARTIAL** | Partly met (e.g. one of two alternatives ready) |
 | **OBJECTION** | Technical pushback — requirement is overreach (see below) |
 
+## Reply delivery format
+
+The user works through CRS/SOW comments **one at a time** and asks for the reply **copy-paste ready**: plain flowing humanized prose, no headings or bullets inside the reply body, no "we confirm compliance" boilerplate. Give the finished paragraph, then a separate short note on what the document already covers vs what still needs adding. If asked to "summarize and humanize", tighten the same paragraph — do not re-add structure. Do not write into the docx, register or CRS sheet until the user says so (they edit the CRS sheet themselves).
+
+**Keep it SHORT.** The reply must read like an engineer wrote it, not a report: state position, evidence and status, then stop. No recap of what CG said, no restating the clause, no padding. A straightforward comment is a few sentences. If the user says "dont talk too much" or "like an engineer reply", tighten the same content — do not add a summary section in its place.
+
+**Every reply carries a status label — mandatory, no exceptions.** The user asks for it on every comment if it is missing. Put it at the top of the reply block and repeat it as a closing italic line:
+
+```
+**Comment <n> — <Label> · <Open|Closed>**
+<reply prose>
+
+*Status: <Label> — <one clause of why>. <Open|Closed>.*
+```
+
+Label vocabulary and how to choose it:
+
+| Label · State | Use when |
+|---|---|
+| **Noted · Open** | Accepted, but the action sits in a separate submittal (e.g. staff appointment, prequalification). The deliverable is still owed, so it cannot read Closed. |
+| **Complied · Closed** | The document already does what CG asked, **or** the revision that answers it lands with this issue. |
+| **Partially Complied · Open** | Part inside the SOW, the rest follows separately. |
+| **Objection · Open** | Technical pushback (see "When to push back"). |
+
+**Never label a comment Complied · Closed while the document edit it relies on is still pending.** Check the current Rev before writing the label; if the matrix/text has not actually been rebuilt, say so in the status note and use Open. Claiming closure on an unapplied edit is the fastest route to another Code C.
+
 ## Reply writing — ALWAYS humanize
 The user's standing rule for CRS replies: **humanize every reply** — natural engineer voice, no AI/template phrasing, no inflated counts. Concretely:
 - **Don't inflate counts.** Saying "all four (4) applications" is misleading when one schedule item (e.g. FI_ME_01) alone covers 6 elements (walls, doors, reveals, setworks, AV units, reception desk). Say "all patinated brass applications" and enumerate them fully — this shows CG full coverage, not a small number.
@@ -74,11 +100,29 @@ Frame objections as: "requirement X is overreach because [technical reason]; we 
 7. Assemble the resubmission package: CRS + test reports (e.g. Oddy) + datasheets + schedule extract.
 8. Update the risk register if a risk (e.g. PRR-PRC-05) is affected by the outcome.
 
+## Scope-only rule for SOW / scope submittals
+When the submittal under Code C **is a Scope of Work** (or any scope-definition document) and CG's comments are governance/contractual, the standing position is:
+- **The document defines scope and is submitted for scope approval only.** Say it plainly in the reply.
+- **Prequalification, CVs, qualifications, org structure and specialist appointments are separate submittals issued AFTER SOW approval.** Never bundle them into the SOW, and do not add a cross-reference section inside the document unless the user asks for one. The correct phrasing is "will be submitted separately, following approval of this Scope of Work, for review and approval."
+- **Never name a candidate specialist in a CG-facing SOW.** Write roles generically ("the Interactive Design Specialist") or by contracted discipline only (AD Engineering, Setworks/Joinery, Graphit, Replica Specialist, ITCA). A candidate still sitting at Code C on prequalification (e.g. MizarLabs, PQ-0105) must not appear anywhere in the document — naming an unapproved party invites a second Code C.
+- **Do not add text to the SOW just to "answer" a governance comment.** The CRS reply carries that answer. Only add document content the comment's subject matter genuinely requires (e.g. a responsibility matrix, a local-execution/support section, an exclusions bullet). If the user says "we didn't add this" about a cross-reference, remove it — do not argue.
+- **A responsibility matrix may be cut down to the parties the contract actually has.** Drop speculative "Specialist / Supplier (named)" columns and rows for responses that belong to CG/Client; fold supporting parties into the activity text instead of giving each its own column. Confirm the final column/row shape with the user before telling them what to type.
+
+## When the user returns their edited revision — audit it, don't assume
+Users apply edit guides by hand and re-send the docx. Read it and report three things, in this order:
+1. **Errors first** (what CG will catch): a question/answer table shifted by one row, intro counts that contradict the status column, stale issue dates, a field left holding a revision number instead of a document number, R and A jammed into one cell, a trailing empty table column.
+2. **What is present** — matched against the edit guide.
+3. **What is still missing** — each item named to its doc section.
+Never claim a CRS comment is Closed from what you *told* the user to edit; verify against the file they sent.
+
 ## Pitfalls
 - **Don't invent applications** not in the approved schedule. Use exact formal names (Wall Cladding, Main Gallery Doors, Door Reveals, Setworks — Display Units/Frames/AV Units, Reception Desk, Floorbox Trim, Reception Feature Wall, Wayfinding Signage).
 - **Don't fabricate test results** — only mark COMPLIED when the evidence actually exists (e.g. Oddy report T2607222 in hand).
-- **OneDrive deadlock** — reading/writing OneDrive files can hit "Resource deadlock avoided". Quit OneDrive, wait ~30s, retry, or stage to /tmp first.
+- **A CRS reply must be true against the CURRENT revision.** Before claiming a comment is closed, read the latest docx and confirm the edit the reply describes is actually in it. Replies written ahead of the document are how a resubmission goes back out Code C.
+- **Never copy a CRS workbook from another submittal without re-checking every header cell.** A mis-saved copy (e.g. one carrying a different document title and an empty reply column) is worse than no CRS — the header is what CG reads first. Verify Project / CRS number / Doc No / Document Title / Discipline against the submittal before use.
+- **OneDrive deadlock** — reading/writing OneDrive files can hit "Resource deadlock avoided". Distinguish *dataless placeholder* from *persistent lock*: a file showing `compressed,dataless` in `ls -lO` is simply not downloaded yet — `open "$FILE"`, wait ~30 s, then read it, and the flag clears. Do not quit/relaunch OneDrive or `brctl download` (it refuses OneDrive paths). Only a kernel-level lock needs a reboot; see the `macos-onedrive-recovery` skill for the decision table.
 - **The CRS "Reply Status" column is CG's to fill** — don't present our provisional status as final.
+- **A submittal returned Code C can carry comments outside its own discipline** (a Scope of Work returned Code C under an `ELC` classification, or a comment on an architectural submittal). Answer the comment on its merits; do not assume a classification mismatch means the comment is out of scope.
 
 ## Worked example
 See `references/ma0007-patinated-brass-example.md` for the full MA-0007 patinated brass resubmission: the 10 CG requirements with compliance statuses, approved applications, evidence files, email thread, and resubmission framing.
