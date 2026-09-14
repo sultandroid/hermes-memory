@@ -218,3 +218,4 @@ sultandroid/aseer-museum-pm#284
 sultandroid/aseer-museum-pm#285
 sultandroid/aseer-museum-pm#286
 sultandroid/aseer-museum-pm#287
+sultandroid/aseer-museum-pm#288

@@ -39,6 +39,47 @@ The style guide also includes an `_A4-print-template.html` reference file — re
 
 **Do NOT rely on the design system documented in this skill's reference files alone** — those references may lag behind the authoritative style guide. Always verify against the actual style guide first.
 
+## ⚠️ Editing an ALREADY-PUBLISHED document: prove local == live FIRST
+
+The user asks for changes to a document that is both a local HTML file and a published build (Surge domain, samaya-factory.com path, or a PDF they printed from either). **Verify the local file and the published build are the same document before touching either.** A published build can be an orphan with no matching local source — editing the local file then produces a document nobody sees, and reporting "done" is wrong.
+
+Pre-flight, every time, before any edit:
+
+```bash
+# 1. Fetch every page of the domain and compare against its local source, by bytes AND md5
+for u in <page1>.html <page2>.html; do
+  printf "%s " "$u"
+  curl -sL -o "/tmp/live_$u" -w "%{http_code} " "https://<domain>.surge.sh/$u"
+  wc -c < "/tmp/live_$u"
+done
+```
+
+Compare live size against the local source size. **A large size gap is the signal** — a published doc with inlined base64 fonts/logo runs ~2x the local file that references them, and a reworked build (more sections, more table rows) is simply bigger. A gap you cannot attribute to inlining means the local file is a DIFFERENT, older build.
+
+When sizes disagree, diff the body text before concluding:
+
+```python
+import re, difflib
+def bodytext(s):
+    b = re.search(r'<body[^>]*>(.*)</body>', s, re.S).group(1)
+    b = re.sub(r'<(style|script).*?</\1>', '', b, flags=re.S)
+    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', b)).strip()
+for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(
+        None, bodytext(local), bodytext(live)).get_opcodes():
+    if tag != 'equal':
+        print(tag, '| LOCAL:', repr(bodytext(local)[i1:i2][:160]), '|| LIVE:', repr(bodytext(live)[j1:j2][:160]))
+```
+
+### If the live build is ahead and has NO local source
+
+The published build is then the master. **Do not edit anything, and do not "sync" by overwriting** — report the divergence to the user (table: file / bytes / what differs), state plainly that the on-disk copy is not what is live, and ask which build is master before writing a character. Then either pull the live HTML back as the canonical source (keep the stale file as `.bak-<reason>`), or have the user drop the real source file. Overwriting on your own initiative destroys whoever's build is live.
+
+### Never hand back a PDF
+
+The user prints the deliverable himself. "I want all the changes on the live file, I'll print it myself" — deliver **source edits to the HTML**, never a rendered PDF. If the user sends a PDF, treat it as *evidence of a build you do not have*, not as the thing to edit: read it, identify which build it matches, and say so.
+
+See `references/published-doc-source-sync.md` for the divergence signals table and the recovery options.
+
 ## Design System
 
 ### For Type A (Fence/Perimeter) — Factory Brand
@@ -770,6 +811,10 @@ When doc cards overflow page 16 or payment/terms overflow page 17:
 - **`web-deployment`** — For deploying to Surge.sh or other hosting
 
 ## Pitfalls
+- **Never edit a published document without first proving local == live.** The local HTML can be an older build than what the domain serves (the published build was assembled on another host or from an ephemeral `/tmp` staging dir and never written back). Editing the local file then changes nothing the user can see. Fetch the live page, compare bytes/md5 against the local source, and decide the master before editing — see the published-document section above.
+- **The repo's own deploy manifest goes stale.** `SURGE_DEPLOY.md` / `publish_surge.sh` list the pages, their byte sizes and the source→webpage mapping; a size quoted there that no longer matches the live file means the manifest (not the deploy) is out of date. Check the live bytes, not the manifest's numbers, and update the manifest when you learn the truth.
+- **A Surge account hosts several independently-deployed domains that are NOT mirrors of each other.** Preview and production domains can serve different builds of the same path, and a path can 404 on one and 200 on the other. Probe every domain you might hand out before concluding a page exists (`bma-scope.html` returned 404 on preview and 200 on prod in the same session). Never assume "preview == prod".
+- **Do not assume an EN twin tracks the AR twin.** Bilingual documents are edited one language at a time in practice; check each language's file against its own live page, and expect one to be a revision ahead of the other.
 - **CSS @import ordering** — `@import url(...)` MUST be the very first line after `<style>`, before any other rule (`@page`, body, @media, etc.). If any CSS rule precedes `@import`, browsers silently ignore it and fonts never load. No console error to hint at this.
 - **Style guide validation** — Before building ANY HTML proposal, check `OneDrive/Samaya/Technical Office/_Style-Guides/` for the authoritative style guide. The exhibition/PMBOK design system uses Navy/Sky/Green palette and Montserrat/Inter/IBM Plex fonts — NOT the old bronze/gold/Playfair/Tajawal system that some reference files may still document.
 - **Do NOT rewrite entire HTML files** — use patch() for targeted edits
@@ -788,6 +833,7 @@ When doc cards overflow page 16 or payment/terms overflow page 17:
 - `references/tender-proposal-checklist.md` (from `samaya-doc-engine` skill) — Build pipeline checklist for tender proposals
 - `references/pdf-study-and-logos.md` — Studying project PDFs and downloading/embedding client logos for tender proposals.
 - `references/pdf-extraction-pipeline.md` — Extracting text from project PDFs via PyMuPDF for scope analysis and technical content gathering.
+- `references/published-doc-source-sync.md` — Proving a local HTML file matches the published build before editing: fetch/compare recipe, divergence signals, and what to do when the live build has no local source.
 - `references/supplier-data-classification.md` — Converting raw supplier pricing Excel data into Samaya-branded HTML proposals: Excel structure, Arabic keyword classification rules, store inventory patterns, framework vs complete proposal logic, and the PROPOSAL_STUDY_REPORT.md format for multi-store tender programs.
 - `references/supply-tender-pricing.md` — Costing model for supply/manufacturing tenders (non-construction): 4 direct-cost categories (materials, hardware, labor, logistics) + OH&P loading, Etimad PDF extraction tips, and 3-sheet Excel template.
 - **Do NOT reference Samaya-authored documents** — If Samaya wrote the SOW, ER, or technical specs, do not cite them in the proposal as if they're external requirements (`"Per ER §2.1"`, `"per SOW"`). Remove the reference or rephrase as `"Excluded — client scope"`.

@@ -40,7 +40,7 @@ hermes-memory/email_intel/
 The backfill importer writes only `From / Subject / Date / Project / Source` — **no email body, no attachments**. Median file ~350 bytes. The Email Intel system is a **metadata index**, not a content reader. Its "issues" are **keyword flags on subject lines only**, not real understanding.
 
 To actually READ content, pull from Outlook SQLite:
-- `Message_Preview` — first ~255 chars of body (enough for CG codes, submittal intent).
+- `Message_Preview` — a capped slice of the body (enough for CG codes, submittal intent). The cap varies by DB and over time — measure it before assuming, see pitfalls.
 - Full body → AppleScript `plain text content of msg` (see `outlook-email` skill).
 - Attachments → AppleScript extraction (see `outlook-email` skill).
 
@@ -71,7 +71,7 @@ When the user asks to "continue" a backfill of old emails into the registers (da
 - **Preview cap means you extract signal, not full content.** See pitfall below — every batch-36→39 register entry was built from ≤255-char previews. Subjects + preview + sender are enough for doc refs, CG codes, and the directive. Do not over-claim "read full bodies."
 
 ### Pitfalls (batch loop)
-- **`Message_Preview` is a 255-char hard ceiling — you are NOT reading full bodies.** Prior sessions claimed "read the actual email bodies" but every extractable field is capped at 255 chars in `Outlook.sqlite`. The true full body lives in the TNEF-encoded `.olk15Message` binaries (`winmail.dat`), which `tnefparse` fails on ("Wrong TNEF signature"); the plaintext headers are there but the body block is binary. Treat previews as the content source and be honest that attachment text / long bodies are not read. This is a real accuracy boundary of the batch loop, not a gap that retrying will close.
+- **Verify the `Message_Preview` cap on the DB you are querying — do NOT assume 255 chars.** The active `Data/Outlook.sqlite` returned 300–400-char previews (whole short bodies, including the quoted earlier message in the thread) on a later check, where an earlier measurement showed a hard 255 cap. Run `SELECT length(Message_Preview) FROM Mail WHERE Record_RecordID=<ID>;` first. Either way you are not reading the full body of long or forwarded mail. The true full body lives in the TNEF-encoded `.olk15Message` binaries (`winmail.dat`), which `tnefparse` fails on ("Wrong TNEF signature"); the plaintext headers are there but the body block is binary. Treat previews as the content source and be honest that attachment text / long bodies are not read. This is a real accuracy boundary of the batch loop, not a gap that retrying will close.
 - **`git pull --rebase` before push — the pre-commit hook + sibling agents move `origin/main`.** Pushing a local batch stack will be rejected (non-fast-forward) because the hook auto-regenerates `index.html`/dashboard and sibling sessions commit. Sequence: `git stash push` the auto-generated dirt (`.sync_state.json`, `index.html`, `compliance_matrix.md`, `adel_snapshots/file_list.txt`) → `git pull --rebase origin main` → `git stash pop` → push. Drop the stash afterward — its contents are regenerated hook artifacts, not knowledge.
 - **Issue detector over-raises — do NOT treat issue count as a status metric.** After a big backfill, `email_intel_agent.py --issues` explodes to 300+ "reply-required" flags because it keyword-matches ANY email containing urgent/please/action/confirm. These are raw flags, not verified action items — many are already handled in the registers. Triage before reporting them as actionable; the system is a historical index until triaged.
 - **`git add -A` in `aseer-museum-pm` will sweep sibling-agent + hook-generated dirt** (`.sync_state.json`, `06_Risk_System/webapp/src/index.html`, `compliance_matrix.md`, `adel_snapshots/file_list.txt`). Only `git add` the specific register files you edited (`01_Registers/ 00_Status/` etc.), not the whole tree, to avoid committing another agent's in-flight work.
@@ -89,6 +89,37 @@ When the user asks to "continue" a backfill of old emails into the registers (da
 - Shihab Mohamed / Soliman Obiya — AV/IT / acoustic subcontractors
 - Mohamed Mustafa / Talha Yousaf — MEP / HVAC
 - Mohamed Habib — Zamzam (separate project — do NOT log in Aseer registers)
+
+## 3. Ad-hoc Inbox Triage Read ("راجع الإيميلات" / "review the emails")
+
+Distinct from the register loop: the user wants you to **review and report**, not to update registers. Default is read-only — produce a digest and END with an offer to draft replies or update the registers. Do not edit registers or send anything unless asked.
+
+### Query pattern
+1. **Resolve the target folders.** `Inbox` = `Record_RecordID=114`; Outlook rules filter project mail into per-project subfolders — `Asher Regional Museum` (note the misspelling in the folder name: this IS the Aseer folder) and `Zamzam Projects`. Always `JOIN folders` and show the folder next to each row so project mail is distinguishable from inbox mail.
+2. **Never scope on `Message_ReadFlag=0`.** It returns the whole historical backlog (tens of thousands, back years) and does not track what Outlook has actually marked read. Scope by date window instead: `Message_TimeReceived > strftime('%s','now','-2 days')`.
+3. **Exclude folders and automated senders** so the digest is human mail: folders `Sent Items`, `Deleted Items`, `Junk Email`, `Drafts`; senders `Erp-Samaya`, `Aconex Notification (Aseer Museum)`, `SharePoint Online`, `Microsoft Power Automate`, `Read Assistant`, `Read Support`, `TendersAlerts`, `SPMS`, `Canonical | Ubuntu`.
+4. **Batch the window.** Recent 2 days excluding Zamzam for an Aseer/Samaya digest, then a `BETWEEN strftime('%s','now','-4 days') AND strftime('%s','now','-2 days')` pass for the tail. Present grouped by project.
+
+### Pitfall — quoting the SQL
+Passing a long query as a direct shell argument with embedded double quotes fails: `sqlite3 "$DB" "SELECT ... char(10) ..."` → `Error: in prepare, incomplete input`. Write the query to a file and redirect:
+```sql
+.mode list
+.separator " ~~ "
+SELECT m.Record_RecordID, datetime(m.Message_TimeReceived,'unixepoch','localtime'),
+       f.Folder_Name, m.Message_SenderList, m.Message_NormalizedSubject,
+       m.Message_HasAttachment,
+       replace(substr(coalesce(m.Message_Preview,''),1,300), char(10),' ')
+FROM Mail m JOIN folders f ON m.Record_FolderID=f.Record_RecordID
+WHERE <filters> ORDER BY m.Message_TimeReceived DESC;
+```
+`sqlite3 "$DB" < /tmp/q.sql`. Use `.separator " ~~ "` so rows arrive parseable instead of one wide line.
+
+### Digest shape the user wants
+- Lead with the items needing action (overdue design gates, consultant follow-ups chasing unanswered correspondence, submittals in, rejected prequalifications), not with a chronological dump.
+- Group by project; keep Zamzam / other entities strictly separate (entity isolation).
+- Pull the factory/HR `Erp-Samaya` items that need his signature into their own block, apart from project mail.
+- State the noise boundary honestly — a raw unread count is not a status metric.
+- Close with a concrete offer: draft replies, or update the registers.
 
 ## Related
 - `outlook-email` skill — SQLite queries, AppleScript body/attachment extraction, CG code reading from previews.

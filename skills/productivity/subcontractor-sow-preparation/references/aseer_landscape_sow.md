@@ -53,6 +53,46 @@ The user flagged the 17-section Landscape SOW is **not the Samaya standard**. Th
 ## Reconciliation gotcha — RESOLVED
 The old 17-section SOW listed Revit + 3D renders + BOQ + O&M all "INCLUDED in the fixed fee". The rebuilt SOW aligns with the 130,000 split: Revit excluded (Samaya), renders = 10 PDF (TLC), BOQ included (TLC), O&M out of scope (executor). No longer contradicts the offer.
 
+## CG Code C outcome — scope expansion demanded (ZD-0120, Rev 00)
+The submitted Landscaping SOW was returned **Code C — Revise & Resubmit** by CG (Landscape Specialist **Ahmed Yehia**, with Mohammed Magdy and Mansour Alrezeni as acting CG PM). CG's nine comment groups ask to:
+- widen the scope from **design** to "design, coordination **and execution**" (softscape, hardscape, irrigation, landscape lighting);
+- **remove the exclusions the 130,000 fee was built on** — "interior planters and planting inside the building envelope" and the design of irrigation plus associated drainage;
+- add **landscape lighting** (fixtures, conduits, cabling, controls) — which sits with **ZNA (lighting designer)**;
+- add **museum signage** associated with the site development;
+- restate that all landscape works sit under TLC as the specialised subcontractor, with interfaces defined to avoid gaps/overlaps.
+
+Standing position (per the user): CG is **expanding a designer's scope without justification**. The submitted document is a designer SOW — execution belongs to a separate SOW/contract with the executing contractor (the folder holds `Landscape_Designer_SOW` and `Landscape_Supplier_SOW` as two documents for exactly this reason). Present the problem and the cost consequence; do not offer a repriced design-and-build scope.
+
+Internal defects to fix before resubmitting: `SOW-05` and `SOW-06` are duplicated verbatim in the Included Scope table, and the document footer carried the sibling ref `ZD-0119` while the cover read `ZD-0120`.
+
+**File-name vs submitted ref.** The SOW folder holds `..._REV00_MOC-MUS-ASE-1L0-ZD-0116.docx/.pdf` and `..._REV01_MOC-MUS-ASE-1L0-ZD-0116...` copies while the submittal CG actually reviewed is **ZD-0120**. Read the ref from `08_Document_Index/submission.db`, never from the file name.
+
+## STANDING SCOPE DECISIONS (user, 2026-09-14) — apply to every landscape reply
+
+1. **TLC = DESIGNER ONLY; the executing contractor is appointed later, separately.** User: *"النطاق دا للمصمم فقط، المقاول بعدين"*. Never write execution into the designer SOW and never accept wording that puts "design, coordination **and execution**" in it. Execution appears in the Exclusions table as "by others under a separate appointment".
+2. **Irrigation = SCHEMATIC ONLY by the Specialist.** User: *"المتخصص بيدينا schematic only and detail design by MEP designer"*. Detailed irrigation design + hydraulic calculations + sub-soil drainage → **AD Engineering (MEP Designer)**, working from the Specialist's schematic. Fixes the Rev01 RACI defect where AD Eng was made R on "hydraulic calcs".
+3. **Landscape lighting = Studio ZNA (Lighting Designer).** The Specialist **proposes lighting positions and zones** within the landscape layout (tree/feature uplighting, path and boundary treatment) and coordinates them; ZNA selects the fixtures and designs the conduits, cabling, connections and controls. Evidence: the project spec register assigns "Exterior Electrical and Lighting for Landscape" to **DSN-L** (`13-00-008`, `32-00-003`, from SoW Section 6.22.4.xv.f).
+4. **Museum/external signage = Graphics discipline** (`32-00-004`, SoW Section 6.22.4.xv.g) — the Specialist coordinates positions only.
+5. **No privity to CG.** Every specialist is engaged by Samaya under Main Contract 0010003521 with no privity to MoC/PMC/CG/NRS (DMP Section 6.13, SoW Section 1.4). The engagement structure of the specialist packages is the Contractor's, not the Consultant's.
+6. **T2-13 = Landscape** in the approved Stakeholder Plan Rev04; NRS = Design Lead/AoR on all design-stage deliverables including landscape.
+
+### External pavement / site development = OPTIONAL Item 01 (check before conceding anything)
+External planting, paving, signage and lighting around the building sit under **Item 01 — Ground Floor Entrance Enhancement Works** (SAR 5,630,621.37), which is **outside the base contracted scope**: BOQ Sheet 016 marks it "Enhancement works (Not included in Main Package)"; clause **18.00** makes it non-binding ("the Client reserves the absolute right to accept, reject, or proceed… does not constitute a commitment… no claims if not awarded"); revised BOQ sheet 015 heads it "EXTERNAL WORKS & WATERPROOFING OPTION". Base scope = Exhibition Fit Out only (Items 2–14, SAR 56,389,518). Source: `00_Contracts/10_Main_Contract_BOQ/SCOPE_REFERENCE.md`. Rebuttal to anticipate: clauses 1.06 + 3.13 (deemed inclusion) — answer with clause 18.00 being the later, item-specific provision carrying its own separate subtotal.
+
+### Rev01 file + defects still to fix (as of 2026-09-14)
+Rev01 (user's own file, MD5 `1f22aa044905c512e6657914944df59a`) sits at `08 Scope of work/MOC-MUS-ASE-1L0-ZD-0116 REV01.docx`. Rev01 already fixed the duplicate SOW-05/SOW-06 row and dropped the stale `ZD-0119` footer ref. Still to fix before resubmission: (a) RACI R05 "hydraulic calcs" wrongly gives AD Eng = R (see decision 2); (b) header still carries Doc Ref `ZD-0116` / date `2026-08-28` — as a CG response it must move to **`MOC-MUS-ASE-1L0-ZD-0120` Rev.01**, the ref CG rejected; (c) the interior-planter exclusion sentence is still in Scope Basis and as an Exclusions row (CG comment G5); (d) no Authority Basis section; (e) numbering runs `5 → 6.1 → 6` and needs sequential renumbering; (f) the firm's name must not appear anywhere while the appointment is unconcluded — write "the Landscaping Specialist" (check coordination/attendee lists and meeting-cadence bullets, where a name hides most easily).
+
+### Planter-box waterproofing + landscape drainage = DESIGNER'S SCOPE (user, 2026-09-14)
+User correction: *"عزل البلانتر بوكسس مش الخرسنات يعني دا معماري تبع اللاند سكيب ونفس الموضوع للصرف"*. Distinguish TWO different waterproofing families — do not confuse them:
+- **Planter-box waterproofing/lining = architectural, LANDSCAPE scope.** Waterproof membrane + protective lining + drainage layer + geotextile + root barrier INSIDE the planter boxes (terrace `CA.02_SW_01/02`, Stramp, Al Bahar). Belongs to the Landscaping Specialist. Backed by the spec register: `13-00-006` Landscape and Horticulture Special Construction (Landscape/DSN-L) and `32-00-001` Hard Landscaping Specification (Landscape/DSN-L).
+- **Structural weatherproofing = NOT landscape.** `07-00-001` Terrace Sunshade Weatherproofing, `07-00-002` Exterior "Stramp" Weatherproofing, `07-00-003` Roof Waterproofing are DSN-S (Structural) from SoW Section 8.2 / 6.22.4.xvi–xvii. Never cite these when the user says "عزل البلانتر بوكسس".
+- **Landscape drainage likewise = LANDSCAPE scope**, per spec `13-00-009` "Drainage and Watering for Landscape" (Landscape/DSN-L, SoW Section 6.22.4.xv.e) and deliverable `E-EX-05` Drainage and Watering Schedule. ZD-0120 wrongly moves this to AD Engineering — the spec register contradicts the SOW.
+- **Delivery split (user, 2026-09-14):** *"خلي التصميم علي مصمم اللاند سكيب والتنفيذ علي المنفذ"* — DESIGN on the landscape designer (TLC / "the Landscaping Specialist"); EXECUTION on the executing contractor (the separate later appointment). Both planter waterproofing and landscape drainage therefore: **designed by the Specialist, executed by the Landscape Contractor**, written in the Exclusions table as "execution by others under a separate appointment", never as an exclusion of the design itself.
+- The ZD-0120 gap this exposes: no planter waterproofing/lining line at all in Included Scope, and the drainage exclusion hands the Specialist's own design deliverable to AD Eng. Both are Resubmission fixes.
+
+### CRS for ZD-0120
+Lives beside the submittal at `24_Subcontractors/21_Landscaping_Specialist/08 Scope of work/MOC-MUS-ASE-1L0-ZD-0120ـCRS.xlsx` — note the **Arabic tatweel `ـ`** before `CRS`. Verdicts agreed with the user: **G1** (design+execution, landscape lighting) and **G8** (signage) = Not applicable; **G2/G3** (softscape/hardscape) = Partially Complied; **G4** (irrigation) = Partially Complied; **G6** (lighting) = Partially Complied; **G7** (responsibility) = Partially Complied; **G9** (kick-off / Site Development Plan) = Noted, with CG asked to issue the plan. **G5** (planter boxes / interior planters) still open pending the user's decision.
+
 ## Submission status (2026-08-28)
 SOW built Rev.00 ref `MOC-MUS-ASE-1L0-ZD-0116`, status **For Review** (added to submission reference register). Not yet submitted to CG. Earlier: only a "Landscape & Irrigation Design Package" was submitted 08-Aug (design package, not the SOW); CG sent "Second Reminder – Outstanding Landscape Specialist Submissions" (20-Aug).
 

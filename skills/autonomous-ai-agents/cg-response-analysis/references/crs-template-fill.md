@@ -1,5 +1,54 @@
 # CRS Template Structure & Programmatic Fill (openpyxl)
 
+## TWO templates exist — pick by project
+
+| Template | Used for | Where |
+|---|---|---|
+| **MOC_HQ DESIGN & BUILD (FIT-OUT)** — *the user's own template, PREFERRED for Aseer ZD/SOW submittals* | any CG-facing CRS on Aseer | user copies/strips one of their own; pattern documented in "User's MOC_HQ template" below |
+| `CRS_TEMPLATE_BLANK.xlsx` (compliance-system blank) | legacy/other | `Technical_Office/Compliance_System/templates/CRS_TEMPLATE_BLANK.xlsx` |
+
+**Ask/check which template the user has placed before building.** The user often creates the file themselves (`<docref>ـCRS.xlsx`, note the **Arabic tatweel `ـ` before CRS**) in the submittal's own folder and asks you to fill only the header + reviewer comments, leaving replies blank for one-by-one discussion. That is the working pattern — do NOT build replies unasked.
+
+## User's MOC_HQ template layout (verified 2026-09-14)
+
+Sheet name `CRS`. Header block = rows 2–7. Comment table header = row 10. **Data starts row 11.**
+
+| Row | Labels (Arial 11 **bold**, fill `FFCC9900`) | Values (Arial 11 regular, centered, wrap) |
+|---|---|---|
+| 2–3 | `A2` MOC_HQ DESIGN & BUILD (FIT-OUT) · `A3` COMMENTS RESOLUTION SHEET (CRS) — Arial 13 bold | — |
+| 4 | `A4` PROJECT NAME | **`D4`** |
+| 5 | `A5` CRS NUMBER · `G5` Rev. · `I5` DATE | **`D5`**, **`H5`**, **`K5`** |
+| 6 | `A6` DOCUMENT No. · `G6` Rev. · `I6` DISCIPLINE | **`D6`**, **`H6`**, **`K6`** |
+| 7 | `A7` DOCUMENT TITLE · `I7` DOCUMENT TYPE | **`D7`**, **`K7`** |
+
+Merges to respect: `A4:C4`/`D4:H4`, `A5:C5`/`D5:F5`/`G5`/`K5:Q5`, `A6:C6`/`D6:F6`/`G6`/`K6:Q6`, `A7:C7`/`D7:H7`/`I7:J7`/`K7:Q7`. Values go to the **top-left anchor** of each merged value range. `I4` = PROGRAMME No. (left blank on Aseer).
+
+- **DISCIPLINE (`K6`)** has no "Landscape" option — the template dropdown list is `Structural/Civil · Mechanical · Electrical · General`. For a Landscape/SOW submittal use **`General`**. Confirm with the user if in doubt.
+- **DATA TABLES block** sits off to the right at `T4`+: `T6..T26` = programme no. list, `U6:U9` = A/B/C/D/F codes, `V6:V9` = disciplines. These feed data validations — **never overwrite** them.
+
+Comment table header (row 10): `A10` No. · `B10` Initial · `C10` Sheet · `D10:H10` Reviewer Comment · `I10:N10` Originator Reply · `O10` Reply By · `P10:R10` Reply Status by Reviewer.
+
+Per data row merges: **`D:H`** (comment) · **`I:N`** (reply) · **`P:Q`** (status). Column `R` and beyond stay empty.
+
+Legend / sign-off block = rows **20–28** (Review Status Code A/B/C/D/F, then Supervision Consultant (SC) / PMCM / MOC / Originator sign-off tables, then the footnote row 28 "*Approval status from the Reviewer shall be deemed as permission to proceed…*"). Leave untouched.
+
+### User's body formatting (copy these — they manually re-tuned them)
+
+| Element | Value |
+|---|---|
+| Comment/reply body font | **Calibri 16** (not 10/12) |
+| Row heights | **manual, generous** (e.g. 159–250 for 3–4-line comments) — never a tight auto-fit; the user raises them |
+| No./Initial/Sheet | Calibri 16, centered |
+| Comment cell | `left` / `top`, wrap on |
+| Status cell (P) | pre-filled pale red fill on blank rows — colour it `E7F3E8`/`3F6B46` green for Closed, `FCE8E6`/`9C3D36` red for Open |
+| Column widths | A 10 · B 12 · C 8 · **D 18** · N 35 · O 22 · P 12 (comment/reply share the merged D:H / I:N spans) |
+
+**Filling pitfall:** writing to a non-anchor cell of a merged range raises `AttributeError: 'MergedCell' object attribute 'value' is read-only`. Write only to the anchor.
+
+---
+
+# CRS_TEMPLATE_BLANK.xlsx (legacy blank) — fill map
+
 Reverse-engineered from `Technical_Office/Compliance_System/templates/CRS_TEMPLATE_BLANK.xlsx` (sheet `CRS`). Use this to build a Comment Resolution Sheet for any Code C submittal without hand-typing rows.
 
 ## Template layout (verified 2026-08-29)
@@ -188,3 +237,36 @@ The user's core correction this session: **do not mark every CG comment "COMPLIE
 - **ZD-0026 (NRS Methodology, Code B)** — Comment 2: NRS owns architectural design, Samaya TO is central coordinator (acoustics included); Comment 3: review chain Supplier/TO → Samaya → NRS → CG (no specialist in the chain). Use this to rebut "specialist must review the architectural spec" — the lead designer sets requirements, specialists deliver against them, not the reverse.
 
 **Oddy test scope (recurring correction):** Oddy is a conservation test for materials **inside/near display voids** (in contact with artifacts), NOT all materials. CG's own wording ("materials used inside display voids") is correctly scoped. ER §6.11 ("non-deleterious to museum-grade objects") is the governing principle; SoW §8.1 ("all materials") is overly broad and must be read in context.
+
+## User-supplied CRS workbook — fill header + comments ONLY, replies come later
+
+The user often builds the CRS workbook themselves from the MOC_HQ template and drops it in the submittal's own folder (`24_Subcontractors/<NN>_<Specialist>/08 Scope of work/<DOC-REF>ـCRS.xlsx` — note the Arabic tatweel `ـ` before `CRS`, so quote or glob the path). Their instruction is: **fill the header and the reviewer comments first, then discuss the replies one by one** — write no reply, Reply By or status value in that pass.
+
+Column map of the user's workbook (DIFFERENT from `CRS_TEMPLATE_BLANK` — do not reuse that cell map):
+- Row 10 headers: A `No.` · B `Initial` · C `Sheet` · D `Reviewer Comment` (merged D:H) · I `Originator Reply` (merged I:N) · O `Reply By` · P `Reply Status by Reviewer` (pre-filled red, CG owns it).
+- Header values: D4 project · D5 CRS number · H5 CRS rev · K5 date · D6 document no. · H6 document rev · K6 discipline · D7 title · K7 document type.
+- **Discipline must come from the embedded dropdown list** (`Structural/Civil`, `Mechanical`, `Electrical`, `General`) — there is no `Landscape`/`Architectural` option; use `General` for a specialist SOW and tell the user you did.
+- Comment id = `G<n>` for CG's un-numbered general comment list. `Sheet` = the page of the CG response PDF the comment sits on, read from the `pdftotext -layout` page breaks — never guessed.
+- Row heights: leave the user's tuned heights on the short rows; auto-calc only the long comment rows (`max(30, est_lines(text, 68) * 14 + 6)` — their comment column wraps at roughly 68 characters across D:H).
+
+Run the fill as a **script file**: `write_file` it to `/tmp/<name>.py`, then `python3 /tmp/<name>.py`. Pasting a long inline heredoc into the terminal can trip the terminal's gateway-kill guard and never execute.
+
+Verify before handing back: `soffice --headless --convert-to pdf` + `pdftoppm` + vision for **layout only**; read header values back from `ws['D4'].value` etc., because the render's OCR garbles them.
+
+**Set DOCUMENT No. from `08_Document_Index/submission.db`, never from the file name.** SOW folders carry several revisions whose *file names* still hold an earlier doc ref (a `..._REV01_MOC-MUS-ASE-1L0-ZD-0116` file can belong to the submittal actually submitted and returned Code C under a different number). The DB is the only authority for the ref that CG reviewed.
+
+## Filling the Originator Reply column — three defects to check every time
+
+Once the replies are agreed comment-by-comment, they go into column I of the user's workbook. These three defects recur because of how the replies are drafted (individually, then pasted):
+
+1. **A reply pasted against the wrong comment.** Drafting nine replies in one discussion makes an off-by-one paste easy — a planter-box comment carrying the irrigation reply verbatim is the shape it takes. Never trust that reply *n* belongs to row 10+*n*; read each row's Reviewer Comment and its reply together and confirm the reply answers *that* comment.
+2. **Dangling separators from the label prefix.** The reply begins `Partially Complied : …` / `Not applicable ,…` — a space before the colon, or a comma standing in for a colon. Normalise with `re.sub(r'\s+:', ':', v)` then `re.sub(r':\s{2,}', ': ', v)`. An **Arabic comma `،`** is a separate failure and is easy to miss by eye — check for `،` explicitly, not just ASCII punctuation.
+3. **Double hyphens used as dashes**, sometimes with the space on the wrong side (`design -- tree`, `treatment --and`). The user's documents use the em dash `—`; convert `\s*-{1,2}\s+` / `\s*--\s*` to ` — ` but guard against mangling date ranges and negative numbers (`(?<!\d)\s+-\s+`).
+
+Also strip any stray full stop at the end: replies are prose, and a missing terminal period on only one row is visible.
+
+**Reply By**: write it in title case exactly as the user wants it (`Technical Office`), and set the column wide enough — the column is narrow by default and the first letter clips at the cell edge in the render. Widen `O` (≈30) and drop the font to 11 rather than leaving the 16pt body size in that column.
+
+**Row heights follow the replies, not the comments.** The user tunes heights to the comment text; once replies are pasted the reply column is often taller than the comment. Recompute each row as `max(est_lines(comment, 68), est_lines(reply, 78)) × line_height + 8` at the body font size, and only ever *raise* a height the user already set — never shrink their tuning.
+
+**Every pass ends with a render check.** `soffice --headless --convert-to pdf` → `pdftoppm -png` → vision, asking about layout only: clipped text, column width, wasted space. The render is also the only way to catch a value that landed in a merged range's non-anchor cell.

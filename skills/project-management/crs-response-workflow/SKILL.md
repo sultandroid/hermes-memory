@@ -39,7 +39,14 @@ Template structure:
 
 ## Reply delivery format
 
-The user works through CRS/SOW comments **one at a time** and asks for the reply **copy-paste ready**: plain flowing humanized prose, no headings or bullets inside the reply body, no "we confirm compliance" boilerplate. Give the finished paragraph, then a separate short note on what the document already covers vs what still needs adding. If asked to "summarize and humanize", tighten the same paragraph — do not re-add structure. Do not write into the docx, register or CRS sheet until the user says so (they edit the CRS sheet themselves).
+The user works through CRS/SOW comments **one at a time** and asks for the reply **copy-paste ready**: plain flowing humanized prose, no headings or bullets inside the reply body, no "we confirm compliance" boilerplate.
+
+**Every per-comment answer is THREE parts — never deliver the reply alone:**
+1. **The reply** — finished, humanized prose, ready to paste into the CRS reply cell.
+2. **The status label + state** — `**C<n> — <Label> · <Open|Closed>**` at the top and repeated as the closing italic line (see the label table below).
+3. **The document-edit note** — name the section(s) that must change and the change, or state "No change needed" explicitly. A missing edit note is the same failure as a missing status label: the user asks for it on every comment until they get it, so state it even when the answer is that nothing changes. If asked to "summarize and humanize", tighten the same paragraph — do not re-add structure. Do not write into the docx or the register until the user says so.
+
+**Two phases on the CRS sheet, and the split matters.** When the user hands you their own CRS workbook, FILL the header and the verbatim CG comment text — that is what "fill the comment 1st and the project info" means. Then STOP: no Originator Reply, no Reply By, no status, until each comment has been discussed and agreed one by one. Never pre-write replies ahead of the discussion, and never batch all nine replies into one pass.
 
 **Keep it SHORT.** The reply must read like an engineer wrote it, not a report: state position, evidence and status, then stop. No recap of what CG said, no restating the clause, no padding. A straightforward comment is a few sentences. If the user says "dont talk too much" or "like an engineer reply", tighten the same content — do not add a summary section in its place.
 
@@ -59,7 +66,10 @@ Label vocabulary and how to choose it:
 | **Noted · Open** | Accepted, but the action sits in a separate submittal (e.g. staff appointment, prequalification). The deliverable is still owed, so it cannot read Closed. |
 | **Complied · Closed** | The document already does what CG asked, **or** the revision that answers it lands with this issue. |
 | **Partially Complied · Open** | Part inside the SOW, the rest follows separately. |
+| **Not applicable · Open** | The request is outside the document's nature — execution demanded of a design-scope document, or a package allocated to another discipline. Nothing is owed and nothing changes. |
 | **Objection · Open** | Technical pushback (see "When to push back"). |
+
+**`Noted` vs `Not applicable` — pick correctly, they are not interchangeable.** `Noted` = the specialist genuinely owes the deliverable and it moves to another submittal, so the reply carries a commitment. `Not applicable` = the demand itself is wrong (wrong document type, wrong discipline), so the reply carries only a position. Choosing `Noted` when the request is structurally outside the document softens a strong position into a promise; choosing `Not applicable` on a genuinely-owed item looks evasive. When the user asks "noted or not applicable?" they are asking which of these two the comment really is — answer with the reason, not just the word.
 
 **Never label a comment Complied · Closed while the document edit it relies on is still pending.** Check the current Rev before writing the label; if the matrix/text has not actually been rebuilt, say so in the status note and use Open. Claiming closure on an unapplied edit is the fastest route to another Code C.
 
@@ -108,12 +118,30 @@ When the submittal under Code C **is a Scope of Work** (or any scope-definition 
 - **Do not add text to the SOW just to "answer" a governance comment.** The CRS reply carries that answer. Only add document content the comment's subject matter genuinely requires (e.g. a responsibility matrix, a local-execution/support section, an exclusions bullet). If the user says "we didn't add this" about a cross-reference, remove it — do not argue.
 - **A responsibility matrix may be cut down to the parties the contract actually has.** Drop speculative "Specialist / Supplier (named)" columns and rows for responses that belong to CG/Client; fold supporting parties into the activity text instead of giving each its own column. Confirm the final column/row shape with the user before telling them what to type.
 
+### CG expanding a design-only SOW into design + execution
+When CG returns a **specialist design SOW** Code C demanding the scope cover "design, coordination **and execution**", removal of the exclusions the price was built on (e.g. "interior planters and planting inside the building envelope", "design of irrigation and associated drainage works"), and the addition of a package held by another designer (e.g. landscape lighting owned by the lighting designer):
+- The submitted document is a **designer SOW**; execution sits in a separate SOW/contract with the executing contractor (the folder holds both). Say that plainly in the reply.
+- Widening a design scope into an execution one is not an editorial edit: it changes price, the qualification basis (a design-only PQ does not qualify for design-and-build), insurances and programme. The offer in hand is priced design-only.
+- State the problem and the consequence, and let CG / the client issue the instruction that carries the cost — do not volunteer a repriced design-and-build solution inside the CRS.
+- **When the submitted document already holds the correct position, the reply asserts it — it is not a promise to amend.** If the document is design-only by design and CG demands execution, write the position as fact ("the Specialist is engaged as designer, so the scope covers design and coordination only; execution is a separate appointment") and give a **"No change to the scope required"** edit note. Phrasing it as "the execution scope will be defined in the corresponding execution document" reads to the user as an undertaking to edit a document that is already right — they will pull you up on it.
+- **Grep the coordination/attendee lists for the specialist's name, not just the title and headings.** A candidate firm's name hides in innocuous places — a coordination-flowchart attendee list, a meeting-cadence bullet — and every occurrence breaks the "no named candidate in a CG-facing document" rule.
+- Cross-discipline overlaps CG asserts (lighting, MEP supply points) are settled internally **with the user first**; CG does not arbitrate them.
+- Fix internal defects before resubmitting: duplicated scope rows (the same scope item repeated verbatim under two refs), and stale internal cross-references (a footer doc ref that no longer matches the cover). CG re-issues Code C for these.
+
 ## When the user returns their edited revision — audit it, don't assume
 Users apply edit guides by hand and re-send the docx. Read it and report three things, in this order:
-1. **Errors first** (what CG will catch): a question/answer table shifted by one row, intro counts that contradict the status column, stale issue dates, a field left holding a revision number instead of a document number, R and A jammed into one cell, a trailing empty table column.
+1. **Errors first** (what CG will catch): a question/answer table shifted by one row, intro counts that contradict the status column, stale issue dates, a field left holding a revision number instead of a document number, R and A jammed into one cell, a trailing empty table column, an unreplaced `[__]` placeholder in a section the reply calls Complied.
 2. **What is present** — matched against the edit guide.
 3. **What is still missing** — each item named to its doc section.
 Never claim a CRS comment is Closed from what you *told* the user to edit; verify against the file they sent.
+
+**Re-read the file after the user says they fixed it — do not assume the defects are gone, and do not assume they are still there.** Re-read every cell you flagged and report which were actually applied, then hunt for *new* ones the edit introduced. Hand-editing re-introduces the label-prefix punctuation defect, so always re-check the reply prefixes.
+
+**Audit the document as well as the CRS when both are in play.** The reply text and the document must agree on the same fact. If a reply says an exclusion "has been removed", open the docx and confirm it is gone from **both** the Scope Basis prose and the Exclusions table before letting that reply stand — a reply claiming a change the document does not carry is the fastest route to another Code C.
+
+**Report findings as: blockers first (numbered, one line each), then what is correct, then the items that are the user's decision rather than yours.** Separating "must fix" from "your call" is what the user acts on; mixing them makes the report unusable. Name which artefact each finding sits in, and back every layout claim with a render rather than an assertion.
+
+**Read tables with a table-aware dump, not a paragraph dump.** Flattening the docx to paragraph text loses a table's body — a matrix or comment table whose data rows were deleted still prints its header line, so it reads as present when it is empty. Dump `<w:tbl>`/`<w:tr>`/`<w:tc>` and count rows before reporting a table as intact (`samaya-sow-submission` carries `scripts/dump_docx_tables.py`). A structural edit in Word — even deleting a trailing empty column — can take the whole row set with it.
 
 ## Pitfalls
 - **Don't invent applications** not in the approved schedule. Use exact formal names (Wall Cladding, Main Gallery Doors, Door Reveals, Setworks — Display Units/Frames/AV Units, Reception Desk, Floorbox Trim, Reception Feature Wall, Wayfinding Signage).
