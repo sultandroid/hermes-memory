@@ -67,20 +67,33 @@
       "verified_http": 200
     },
     "rcrc-hse-methodology.surge.sh": {
-      "bytes": 234202,
-      "deployed_at": "2026-09-14T03:11:27+03:00",
-      "hub_commit": "14e283e",
+      "bytes": 331604,
+      "deployed_at": "2026-09-14T03:43:21+03:00",
+      "hub_commit": "51f500e",
       "owner_repo": "sultandroid/RCRC-Exhibition-Proposal",
       "project": "RCRC-Exhibition-Proposal",
-      "repo_commit": "8f3fa21",
-      "repo_file": "RCRC_HSE_Methodology_AR.html",
-      "sha256": "058212870338f5673dd79cc2f607e374d3c1cfaa91ffad302c01d983423d1476",
-      "snapshot": "1789344682866-rcrc-hse-methodology.surge.sh",
+      "repo_commit": "6c41de2",
+      "repo_file": "rcrc-hse-methodology.html",
+      "sha256": "61a431b5a42442a3cf7fdf85bf24c062025efbc291b8284aa01ba4df30b70c7b",
+      "snapshot": "1789346593596-rcrc-hse-methodology.surge.sh",
       "stage_dir": "_PUBLISH/rcrc-hse-methodology",
+      "verified_http": 200
+    },
+    "rcrc-quality-methodology.surge.sh": {
+      "bytes": 310558,
+      "deployed_at": "2026-09-14T03:43:05+03:00",
+      "hub_commit": "51f500e",
+      "owner_repo": "sultandroid/RCRC-Exhibition-Proposal",
+      "project": "RCRC-Exhibition-Proposal",
+      "repo_commit": "6c41de2",
+      "repo_file": "rcrc-quality-methodology.html",
+      "sha256": "6b785aacf464dfa14eb6cdbc7c545bd98e252ed0dfac74bc19104e61c2826161",
+      "snapshot": "1789346576380-rcrc-quality-methodology.surge.sh",
+      "stage_dir": "_PUBLISH/rcrc-quality-methodology",
       "verified_http": 200
     }
   },
   "note": "Version ledger for surge.sh publishes. One entry per domain. Written by scripts/surge_deploy.sh — do not hand-edit hashes. sha256 is of the exact bytes served at the domain root.",
   "schema": "surge-deployments/1",
-  "updated_at": "2026-09-14T03:15:03+03:00"
+  "updated_at": "2026-09-14T03:43:21+03:00"
 }
