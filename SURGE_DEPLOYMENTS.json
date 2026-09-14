@@ -1,0 +1,86 @@
+{
+  "domains": {
+    "rcrc-company-profile.surge.sh": {
+      "baselined_at": "2026-09-14T03:15:01+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "3746dafd49ca06fce0f7e987e8afcb0155ac3e5ba8e1cdc8df84899172bdf7b3",
+      "stage_dir": "_PUBLISH/rcrc-company-profile",
+      "verified_http": 200
+    },
+    "rcrc-content-methodology.surge.sh": {
+      "baselined_at": "2026-09-14T03:14:56+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "4744415f7f329783425e2889d09dd153b5bcefb845b4e003d8e51acedeb42810",
+      "stage_dir": "_PUBLISH/rcrc-content-methodology",
+      "verified_http": 200
+    },
+    "rcrc-design-lead-scope.surge.sh": {
+      "baselined_at": "2026-09-14T03:15:00+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "ece9e834f0f820cd522b4c10c16aa6afc0c5feeb0037ffb3d63135b4ac4a012f",
+      "stage_dir": "_PUBLISH/rcrc-design-lead-scope",
+      "verified_http": 200
+    },
+    "rcrc-design-management-plan.surge.sh": {
+      "baselined_at": "2026-09-14T03:14:58+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "751b8e41cbdec9d34a197e97b0c12f65833f76c4dd8b8a47d22c4d62410407af",
+      "stage_dir": "_PUBLISH/rcrc-design-management-plan",
+      "verified_http": 200
+    },
+    "rcrc-execution-methodology.surge.sh": {
+      "baselined_at": "2026-09-14T03:14:54+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "42ad111dbc8722e9618c4cb6fe1496ed92c2e89dd8ba124208bdc13d5f6b6370",
+      "stage_dir": "_PUBLISH/rcrc-execution-methodology",
+      "verified_http": 200
+    },
+    "rcrc-exhibition-proposal.surge.sh": {
+      "baselined_at": "2026-09-14T03:15:03+03:00",
+      "origin": "baseline-observed",
+      "owner_repo": "",
+      "project": "(unmapped)",
+      "repo_commit": "",
+      "repo_file": null,
+      "sha256": "ed5ad32bcc2ad7b20be4be29321d99f32cf6cb16bfa585a0eb769c73a2be5834",
+      "stage_dir": "_PUBLISH/rcrc-exhibition-proposal",
+      "verified_http": 200
+    },
+    "rcrc-hse-methodology.surge.sh": {
+      "bytes": 234202,
+      "deployed_at": "2026-09-14T03:11:27+03:00",
+      "hub_commit": "14e283e",
+      "owner_repo": "sultandroid/RCRC-Exhibition-Proposal",
+      "project": "RCRC-Exhibition-Proposal",
+      "repo_commit": "8f3fa21",
+      "repo_file": "RCRC_HSE_Methodology_AR.html",
+      "sha256": "058212870338f5673dd79cc2f607e374d3c1cfaa91ffad302c01d983423d1476",
+      "snapshot": "1789344682866-rcrc-hse-methodology.surge.sh",
+      "stage_dir": "_PUBLISH/rcrc-hse-methodology",
+      "verified_http": 200
+    }
+  },
+  "note": "Version ledger for surge.sh publishes. One entry per domain. Written by scripts/surge_deploy.sh — do not hand-edit hashes. sha256 is of the exact bytes served at the domain root.",
+  "schema": "surge-deployments/1",
+  "updated_at": "2026-09-14T03:15:03+03:00"
+}
