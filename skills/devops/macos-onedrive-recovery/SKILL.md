@@ -150,6 +150,37 @@ Key points:
 - Quitting/relaunching OneDrive does **not** hydrate the file; you must `open` the specific file to trigger its download.
 - After hydration, `ls -lO` drops the `dataless` flag and normal `cat`/`cp`/`openpyxl` reads succeed.
 - This is the **fastest path** for a dataless placeholder — try `open` + wait before any reboot or Micro-volume fallback.
+- **Per-file only.** Hydration is per-file, not per-folder: `open` on a folder does nothing, and `open` on a batch of N files hydrates an unpredictable subset. After any batch `open`, run `ls -lO <dir>/*` and proceed only with the files whose `dataless` flag is gone; re-`open` the stragglers individually. Files still showing `dataless` will keep throwing EDEADLK (`cp`, `pdftotext`, `openpyxl`) no matter how long you wait.
+- **`cp` to /tmp only works AFTER hydration.** Copying a still-dataless file fails; copying a hydrated one to `/tmp` and working from there is cleaner than repeatedly touching the OneDrive path.
+
+### Never `open` files as a side effect of research (user-visible)
+
+`open` launches visible GUI apps on the user's own Mac. Using it to hydrate a **batch** of files while you are only *reading* them for evidence floods their screen with Preview/Excel windows, and the user will object ("you're the one opening files on my computer — don't open files here").
+
+Rules:
+- When the task is **read-only evidence gathering** (confirming what was submitted, reading a register, extracting email content), do NOT `open` anything. Use read-only paths first: `sqlite3` in `file:...?mode=ro` for Outlook, `open`-free byte reads, the repo markdown mirrors, and the Micro working copy.
+- Reserve `open "$SRC"` for the case where the user has **explicitly asked for that specific file** and you genuinely need its bytes — one file, then `sleep`, then verify, then read.
+- If a batch read is blocked by dataless placeholders and you cannot hydrate quietly, say so and report what you *could* verify from non-GUI sources. Do not mass-open to force it.
+
+### Read-only byte read when `open` is not acceptable
+
+Python `open(path,'rb')` + parse-from-`BytesIO` with a short retry loop is fully headless (no GUI window). It succeeds on transiently-locked files and on files OneDrive hydrates on demand as a side effect of the read; it fails fast on a genuinely dataless placeholder. Try it before reaching for `open`:
+
+```python
+import time, io, openpyxl
+for _ in range(8):
+    try:
+        with open(path, 'rb') as f:
+            data = f.read()
+        wb = openpyxl.load_workbook(io.BytesIO(data), data_only=True)
+        break
+    except Exception as e:
+        if 'deadlock' in str(e) or 'zip' in str(e).lower():
+            time.sleep(2); continue
+        raise
+```
+
+Same pattern with `subprocess`-free PDF text extraction only after the bytes are local, or just `pdftotext` once the file is hydrated.
 
 **If the template file is essential** (e.g., SamayaDoc class for branded DOCX generation):
 1. Force OneDrive to sync: `open` the folder in Finder and click the file

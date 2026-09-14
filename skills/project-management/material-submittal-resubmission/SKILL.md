@@ -88,7 +88,21 @@ If the manufacturer has no official company-profile PDF, build one ourselves fro
 
 7. **Draft the CG reply email** — lead with the decisive evidence (Oddy PASS), commit to Rev.02 for pending certs, request Rev.01 approval.
 
+## Aseer showcase material submittals — which submittal holds what
+
+The showcase package is split across two submittals. Do not treat them as one:
+
+| Submittal | Contents | Notes |
+|---|---|---|
+| **MA-0006** — Showcases Materials | Anti-reflective glass (Guardian Clarity, FI_GL_04), Corian solid surface (FI_SS_02/03), powder-coated steel RAL 1013 / 9001 (FI_ME_02/04), showcase fabric Kvadrat Hallingdal 65 (FI_FA_04), showcase lighting, plus patinated brass samples **for reference only** | Rev.00 Code C; GBH comments reply sheet 29-Apr; Rev.01 CR sheet built from CG comments + PQ-0063 conditions. |
+| **MA-0007** — Patinated Brass | The patinated brass proper (FI_ME_01), Eden-Design material | Separated out precisely because Rev.00 brass samples were reference-only. Oddy PASS → Rev.01. |
+
+Supporting evidence bundle lives under the contractor's `09_Submittals/MA-0006_Rev01_Support/`: CG rejection PDF, GBH reply sheet, Guardian Clarity datasheet, 14 material data sheets, PQ-0063 approval, sample board PDF, MA-0007 brass support (CuZn37 spec + EDEN patination).
+
+**The "Material Sample Sheet" is a different artefact from the MA-XXXX submittals.** It is the CG-issued status matrix (Mansour Alrezeni format, one master sheet covering every discipline) that PMC chases weekly; it does not itself constitute a submission. Aseer's working copy had only `Finishing` + `Furniture` tabs populated — showcase samples are tracked through MA-0006/MA-0007, not through that sheet.
+
 ## Pitfalls
+- **Verify the material list against the approved Finishes Schedule before agreeing to it.** When the user recalls a past submission from memory and names the materials ("the aluminium, brass and stainless samples"), check each named material against the approved schedule and the submittal's own sample list first, then state plainly which are in the package and which are not. Do not affirm a material list and then hunt for evidence to support it, and do not hedge — say directly "that material is not in this submittal; the schedule shows X instead". Getting this right is the deliverable; agreement is not.
 - **ALWAYS humanize CRS replies** — natural engineer voice, no AI/template phrasing, no inflated counts. The user repeatedly corrected this. Write replies as a working engineer would, not as a form letter. E.g. don't say "four (4) applications" when one line item covers six elements — say "all patinated brass applications" and enumerate them.
 - **Propose the material as the CONTROL SAMPLE** — if the project has not yet submitted a control sample for that raw material, state the material is proposed as the control sample. This is a strong, legitimate argument that anchors the submission and pre-empts "no reference sample" pushback.
 - **Build a SAMPLE BANK / multi-source story** — when the same material arrives from multiple suppliers (e.g. anodised aluminium from the German maker via the fabricator, plus a Chinese supplier and a local KSA supplier to the same spec, plus the same finish on a different substrate like SS304), list them all as "available for reference". Multiple sources for the same material = supply security + price competition + local support, and it strengthens the reply. Don't name a supplier you're not committing to — "a Chinese supplier" / "a local (KSA) supplier" is safer than naming one before it's approved.
@@ -102,7 +116,7 @@ If the manufacturer has no official company-profile PDF, build one ourselves fro
 - **Don't invent applications/locations** not in the approved schedule. Pull formal names verbatim from the approved Finishes Schedule PDF, not from `materials.json` (which can miss entries present in the PDF).
 - **Thickness is application-dependent** — the sample is for finish/look-and-feel, not a fixed gauge. State "thickness varies by application" with the range, don't hard-code one.
 - **Unify on the Aconex number** — use `MOC-MUS-ASE-1A0-MA-XXXX` (or short `MA-XXXX`), not the internal sample code (`SAM-FIN-PB-001`). The user wants a single source of truth. Rename folder/photo/QR + regenerate QR to the new clean URL.
-- **OneDrive deadlock** — reading/writing OneDrive files can hit "Resource deadlock avoided". Quit OneDrive, wait ~30s, retry; or stage to `/tmp` first.
+- **OneDrive deadlock** — reads/writes on OneDrive can fail with "Resource deadlock avoided". Read-only evidence gathering must stay headless: never `open` a batch of files to hydrate them (it floods the user's screen with Preview/Excel), and never quit/relaunch OneDrive to clear a lock — it does not work. Use the read-only byte-read retry loop, the repo markdown mirrors, the Micro working copy, or `sqlite3` in read-only mode. Full failure-mode table in the `macos-onedrive-recovery` skill.
 - **The Oddy test is the decisive lever** — a PASS directly clears the highest-risk item that drove the Code C. Lead the resubmission with it.
 
 ## Related
