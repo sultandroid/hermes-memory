@@ -110,6 +110,24 @@ mv -n old_dir new_dir          # Shell (no-clobber)
 - For directories with files inside, rename works atomically on macOS
 - **Do NOT rename** external document IDs (e.g., `MOC-Asser-SIC-*`, `SI-CG-*`). These are the sender's reference numbers and must be preserved even if misspelled. Flag them in the register with a note.
 
+### Pass 3b: Serial-prefix reindexing (submission/tender packages)
+
+When the folder is a **submission or tender package** (a curated set of docs about to be issued),
+the job is serials + English-only names, not classification. Rules that apply every time:
+
+- `NN_English_Name.pdf`, two-digit zero-padded serial, underscore, **no project-name prefix**.
+- **Compliance matrix is always `00_`** and first.
+- The internal doc ref (`RCRC-EXH-QLT-001`, `SMP-RCRC-TP-AR-001`) stays inside the PDF, not in
+  the filename.
+- Identify each document from `pdftotext -l 1` / `pdfinfo`, not from the (often Arabic or
+  truncated) filename.
+- Renumber in place via **two-phase temp names** — direct renames collide when a target name is
+  still held by another file in the set.
+- Re-serial = renumber contiguously, order preserved, no gaps.
+- **Re-scan before reporting** — OneDrive sync can materialise a new file mid-run; pick it up.
+- Full procedure, bidi-filename handling, and text-hash duplicate detection:
+  `references/submission-package-serialization.md`
+
 ### Pass 4: Flatten nesting
 
 Remove unnecessary single-child directory chains:
@@ -416,6 +434,8 @@ When two folders with similar names exist side-by-side (e.g. `24_Subcontractors`
 - **OneDrive sync**: Bulk operations on OneDrive can trigger sync contention. Keep individual rename/move batches under 200 operations at a time. Python `os.rename` and `shutil.move` are safe on local OneDrive sync folders.
 - **`(1)` duplicates**: Check file size before deciding. 4-byte files are empty stubs (safe to delete). Files with similar size but different content are genuine — keep both.
 - **External doc IDs**: `MOC-Asser-SIC-*`, `MOC-MUS-ASE-*`, `SI-CG-*` are official document control numbers from the sender. Do NOT rename even if the project code is wrong (`Asser` vs `Aseer`). Document in register instead.
+- **macOS bidi/truncated filenames are unmatchable by shell**: names containing invisible `\u200e \u202b \u202c \u2069` marks and Finder `…` truncation will not match a `for f in *.pdf` glob or a hand-typed string. Enumerate with Python `os.listdir` and match on a surviving ASCII substring, or on text extracted from the file. Verify `any(ord(c)>127 for c in f)` is False afterwards.
+- **Byte-identical-looking PDFs can be text-identical, not byte-identical**: a macOS Quartz re-save (`AppendMode 1.1`) yields a different byte stream for the same content, so byte md5 reports DIFF on true duplicates. Compare `md5(pdftotext output)` when judging duplicate PDFs, and never delete — rename the extra to `_DUPLICATE_<Title>.pdf` and report.
 - **Version dirs**: `Version 01`, `Version 02` are semantic version labels. Keep the space. Do not convert to `Version_01`.
 - **Empty dirs**: Check for overlapping top-level dirs (`Approval and Stamping` may duplicate `02_Approved_Stamped_Packages`). Remove only if confirmed empty and redundant.
 - **Don't over-normalize vendor content**: Vendor delivery folder names with natural English (`Free Standing Wall`, `Stage 03 Appendices`) are fine. Only fix clear spelling errors.
@@ -612,6 +632,7 @@ Always verify one file before batch — print headers after cleanup on a single 
 - `references/downloads-cleanup-guide.md` — Downloads cleanup patterns, Excel version chains, register dumps, presentation format
 - `references/incoming-document-triage.md` — Receiving new project documents from Downloads: study, file, update memory, advise user. Covers PQ/MA/ZD/MS doc types, discipline mapping, `mv`-not-`cp` pitfall, register update checklist
 - `references/tender-package-organization.md` — Tender (مناقصة) package subfolder setup: copy existing project files only, never generate new documents. Numbered folder structure, what to include/exclude, OneDrive copy pitfalls
+- `references/submission-package-serialization.md` — Reindexing a submission/tender package: `NN_English_Name` convention (Compliance = 00, no project prefix), doc identification from PDF text, two-phase temp rename, re-serial, macOS bidi/truncated filename matching, text-hash duplicate detection
 - `references/xlsx-column-cleanup-pitfalls.md` — openpyxl column removal: exact-match headers not substring, recovery pattern for deleted description columns
 - `references/project-folder-standardization.md` — Template-driven 13-folder project organization, content mapping rules
 - `references/onedrive-dataless-diagnostics.md` — Full OneDrive dataless file diagnostics, recovery options, cascade corruption prevention

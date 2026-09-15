@@ -68,10 +68,14 @@ git push
 
 ## Pitfalls
 
-- **Message_NormalizedSubject** (not `subject`) is the correct column name in Outlook SQLite
-- **Message_TimeReceived** is Unix epoch — convert with `datetime(Message_TimeReceived, 'unixepoch')`
-- **Message_Preview** is truncated (~200 chars) — use for classification, not full content
+- **Column existence varies by Outlook build — `PRAGMA table_info(Mail);` before anything else.** On the Samaya profile these do NOT exist: `Message_Subject`, `Message_SenderAddressList`, `Message_ToRecipientAddressList`, `Message_SenderAddress_EmailAddress`, `Message_RecordID`, `Message_Body`. Confirmed-present: `Record_RecordID`, `Message_NormalizedSubject`, `Message_SenderList`, `Message_RecipientList`, `Message_DisplayTo`, `Message_Preview`, `Message_TimeReceived`, `Message_TimeSent`, `Message_HasAttachment`, `Message_ReadFlag`, `Message_MarkedForDelete`, `Record_FolderID`, `PathToDataFile`, `Message_MessageID`.
+- **`Message_NormalizedSubject`** (not `Message_Subject`) is the subject column
+- **`Record_RecordID`** (not `Message_RecordID`) is the id
+- **`Message_SenderList` holds the display name, not the address.** Match people by display name (`'%Jim Richards%'`); there is no address column to filter a domain by.
+- **Message_TimeReceived** is Unix epoch — convert with `datetime(Message_TimeReceived, 'unixepoch')`. `Message_TimeSent` is unreliable for recency sort (rows can carry the same placeholder sent value while differing by received time). **Sort by `Record_RecordID DESC` when you only need newest-first** — the id is monotonic and needs no date conversion.
+- **Message_Preview** is truncated (~255 chars) — use for classification, not full content
 - **Message_SenderList** may show `Erp-Samaya` (system) instead of a person's name
 - **ERP/Purchase Order emails** with "Factory Manager" in subject are operational, not profile-related — exclude unless explicitly asked
 - **OneDrive placeholders** (0 bytes) prevent attachment extraction — note in register
 - **Deduplication**: same subject with different timestamps = same thread. Keep the one with the largest `Message_Size` (most complete)
+- **Some mailbox rows are noise, not correspondence.** Microsoft Teams / SharePoint Online generated notifications, RSVP replies, and meeting-invite responses appear as ordinary `Mail` rows. When reconstructing who actually received/sent a document, read the real message body — a Teams calendar row is not evidence of transmission.

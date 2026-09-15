@@ -19,32 +19,29 @@ Use when project files are OneDrive placeholders (Resource deadlock avoided) and
 
 ### Search emails by keyword
 ```sql
-SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
-       Message_NormalizedSubject,
-       Message_SenderAddressList,
+SELECT Record_RecordID, Message_NormalizedSubject, Message_SenderList,
        substr(Message_Preview, 1, 300) as preview
 FROM Mail
 WHERE Message_NormalizedSubject LIKE '%keyword%'
-ORDER BY Message_TimeReceived DESC
+ORDER BY Record_RecordID DESC
 LIMIT 10;
 ```
 
-### Search by sender/recipient email address (precise)
-Use `Message_SenderAddressList` and `Message_ToRecipientAddressList` for exact email matching (more reliable than `Message_SenderList`/`Message_DisplayTo` which may contain display names only):
+### Search by sender/recipient
+**Run `PRAGMA table_info(Mail);` FIRST.** The column set varies by Outlook build — several names that look canonical do NOT exist on this profile, and a query using them fails with `no such column`. Confirmed-absent on the Samaya profile (2026-09): `Message_Subject`, `Message_SenderAddressList`, `Message_ToRecipientAddressList`, `Message_SenderAddress_EmailAddress`, `Message_RecordID`, `Message_Body`.
+
+Confirmed-present columns on this profile (use these): `Record_RecordID` (the id — not `Message_RecordID`), `Message_NormalizedSubject` (subject — not `Message_Subject`), `Message_SenderList`, `Message_RecipientList`, `Message_DisplayTo`, `Message_Preview`, `Message_TimeReceived`, `Message_TimeSent`, `Message_HasAttachment`, `Message_ReadFlag`, `Message_MarkedForDelete`, `Record_FolderID`, `PathToDataFile`, `Message_MessageID`.
+
 ```sql
-SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
-       Message_NormalizedSubject as Subject,
-       Message_SenderList as Sender,
-       Message_DisplayTo as Recipient,
-       Message_SenderAddressList as SenderEmail,
-       Message_ToRecipientAddressList as ToEmail,
-       substr(Message_Preview, 1, 200) as Preview
+SELECT Record_RecordID, Message_SenderList, Message_DisplayTo,
+       substr(Message_NormalizedSubject, 1, 70) AS subj
 FROM Mail
-WHERE Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
-   OR Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%'
-ORDER BY Message_TimeReceived DESC
-LIMIT 30;
+WHERE Message_NormalizedSubject LIKE '%keyword%'
+   OR Message_SenderList LIKE '%name%'
+ORDER BY Record_RecordID DESC LIMIT 30;
 ```
+
+**Sender search: `Message_SenderList` is a DISPLAY name, not an address.** To match a person, grep their display name (`'%Jim Richards%'`, `'%Alrezeni%'`) — do NOT assume an address column exists. If you need a domain filter, select `Message_SenderList` and filter in Python/`grep`, or grep `Message_Preview`.
 
 ### Search by person name (sender/recipient display name)
 ```sql
@@ -66,35 +63,32 @@ SELECT m.Record_RecordID as ID,
        m.Message_NormalizedSubject as Subject,
        m.Message_SenderList as Sender,
        m.Message_DisplayTo as Recipient,
-       m.Message_SenderAddressList as SenderEmail,
-       m.Message_ToRecipientAddressList as ToEmail,
        f.Folder_Name as Folder,
        substr(m.Message_Preview, 1, 100) as Preview
 FROM Mail m
 LEFT JOIN Folders f ON m.Record_FolderID = f.Record_RecordID
 WHERE (m.Message_NormalizedSubject LIKE '%مصنع%'
-   OR m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
-   OR m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%')
-ORDER BY m.Message_TimeReceived DESC
+   OR m.Message_SenderList LIKE '%raoof%')
+ORDER BY m.Record_RecordID DESC
 LIMIT 50;
 ```
 
 ### Classify direction (FROM/TO a person)
+`Message_SenderList` is a display name; `Message_DisplayTo` is the recipient list. Direction is therefore a name comparison, not an address one:
 ```sql
 SELECT m.Record_RecordID as ID,
-       CASE WHEN m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%' THEN 'FROM'
-            WHEN m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%' THEN 'TO'
+       CASE WHEN m.Message_SenderList LIKE '%raoof%' THEN 'FROM'
+            WHEN m.Message_DisplayTo LIKE '%raoof%' THEN 'TO'
             ELSE 'Related'
        END as Direction,
-       datetime(m.Message_TimeReceived, 'unixepoch') as Received,
        m.Message_NormalizedSubject as Subject,
        m.Message_SenderList as Sender,
        m.Message_DisplayTo as Recipient,
        substr(m.Message_Preview, 1, 100) as Preview
 FROM Mail m
-WHERE m.Message_SenderAddressList LIKE '%raoof@samayainvest.com%'
-   OR m.Message_ToRecipientAddressList LIKE '%raoof@samayainvest.com%'
-ORDER BY m.Message_TimeReceived DESC
+WHERE m.Message_SenderList LIKE '%raoof%'
+   OR m.Message_DisplayTo LIKE '%raoof%'
+ORDER BY m.Record_RecordID DESC
 LIMIT 30;
 ```
 
@@ -103,19 +97,18 @@ LIMIT 30;
 SELECT COUNT(*) as Total
 FROM Mail
 WHERE Message_NormalizedSubject LIKE '%keyword%'
-   OR Message_SenderAddressList LIKE '%person@domain.com%';
+   OR Message_SenderList LIKE '%name%';
 ```
 
-### Find CG response codes (B / C)
+### Find emails from a firm (domain filter without an address column)
+There is no sender-address column on this profile. Pull `Message_SenderList` and filter by display name in Python, or use the preview:
 ```sql
-SELECT datetime(Message_TimeReceived, 'unixepoch') as dt,
-       Message_NormalizedSubject,
-       substr(Message_Preview, 1, 60) as code
+SELECT Record_RecordID, Message_SenderList, Message_NormalizedSubject
 FROM Mail
 WHERE Message_NormalizedSubject LIKE '%doc-ref%'
-  AND Message_SenderAddressList LIKE '%@cg.com.sa%'
-ORDER BY Message_TimeReceived DESC;
+ORDER BY Record_RecordID DESC LIMIT 50;
 ```
+Then `grep -i 'cg\|alrezeni\|mabrouk'` over the result, or select `Message_Preview` for the code/status text.
 
 ### Find emails with attachments
 ```sql
@@ -129,7 +122,7 @@ WHERE Message_HasAttachment = 1
 Find the Inbox folder id first (`Folder_SpecialFolderType=1` is Inbox; on the Samaya account it is `114`), then pull unread, non-deleted messages newest-first:
 ```sql
 SELECT Record_RecordID, Message_TimeReceived, Message_SenderList,
-       Message_SenderAddressList, Message_NormalizedSubject, Message_HasAttachment
+       Message_NormalizedSubject, Message_HasAttachment
 FROM Mail
 WHERE Record_FolderID = 114
   AND Message_ReadFlag = 0
@@ -251,16 +244,22 @@ print(plain)
 ```
 The body is Outlook HTML with inline `style=` attributes per `<div>`; stripping tags + `html.unescape` yields clean text. The `.olk15Message` binary also holds MIME body-part headers (image content-ids, docx attachment names) and the full email-thread headers (`From:`/`Sent:`/`To:`/`Cc:`/`Subject:` blocks are plaintext-read-able near the end). This **supersedes** the older claim that full body is unrecoverable — that was true only for TNEF `.olk15Message` payloads; the UTF-16LE path recovers Outlook's HTML bodies in the common case. `Message_Preview` (~255 chars) remains the cheap source for search/scan; use the UTF-16LE decode when you need the full body or the embedded thread.
 
-**Practical refinement (reconfirmed 2026-08):** decoding the *whole* file as UTF-16LE yields a long run of binary garbage before the real body. Do NOT try to find the start phrase in the raw bytes — instead decode the entire file, then **slice the decoded text from a recognizable body greeting** (e.g. `Dear Mr. Mohamed Sultan`, `Dear Eng.`, `السلام عليكم`). The binary header noise is all before that point. A robust extractor:
+**Practical refinement (reconfirmed 2026-09):** decoding the *whole* file as UTF-16LE works for many messages, but some bodies come back EMPTY from a whole-file UTF-16LE decode. Do not conclude the body is unrecoverable — **fall back to a UTF-32LE decode of the same bytes**, which recovers those. Probe encodings in order and slice from a body greeting (e.g. `Dear Mr. Mohamed Sultan`, `Dear Eng.`, `Dear All`, `Dear Adel`, `Hi Jim`, `السلام عليكم`); all the binary header noise sits before it.
 ```python
-import sys, re, html as H
-data = open(sys.argv[1], 'rb').read()
-txt = data.decode('utf-16-le', errors='ignore')          # whole-file decode
-plain = H.unescape(re.sub(r'<[^>]+>', '\n', txt))        # strip HTML
-# slice from the first greeting onward; collapse blank runs
-i = min([plain.find(g) for g in ('Dear Mr.', 'Dear Eng.', 'Dear Sir', 'السلام عليكم') if plain.find(g) >= 0] or [0])
-print('\n'.join(l.rstrip() for l in plain[i:].split('\n') if l.strip()))
+import re, html as H
+b = open(path, 'rb').read()
+for enc in ('utf-16-le', 'utf-32-le', 'utf-8', 'latin-1'):
+    t = b.decode(enc, errors='ignore')
+    t = H.unescape(re.sub(r'<[^>]+>', ' ', t))        # strip HTML + unescape entities
+    i = min([t.find(g) for g in ('Dear All', 'Dear Eng.', 'Dear Mr.', 'Dear Adel')
+             if t.find(g) >= 0] or [-1])
+    if i > 0:
+        print(enc, re.sub(r'[ \t]+', ' ', t[i:i+4000])); break
 ```
+Two supporting facts: (1) the greeting you slice from is message-specific — when the search misses, list candidate greetings rather than assuming; (2) `Message_Preview` still gives the first ~255 chars, which is usually enough to identify the correct greeting to slice from.
+
+**The email's attachments are listed in plaintext near the body** (MIME headers with `application/pdf` / `com.microsoft.word.document` / names). So a body decode also tells you what was attached even when the attachment file itself is not extractable.
+
 **Thread reconstruction:** a single `.olk15Message` often embeds the *entire* prior thread — the newest message body first, then `From:/Sent:/To:/Cc:/Subject:` header blocks for each earlier email in reverse-chronological order, each followed by its body. So one email can yield the full escalation chain (e.g. RFI → point-by-point rejection → "rejected in its entirety" → follow-up → calmest closing note) without querying each message id. When the user asks to "check all emails" on a dispute, extract the latest message and read the embedded thread before querying individual ids.
 - The `Files` table is a virtual table (`FilesVTabModule`) — cannot query directly
 - `.olk15MsgAttachment` files have a binary header followed by MIME headers then base64 payload
@@ -274,3 +273,5 @@ print('\n'.join(l.rstrip() for l in plain[i:].split('\n') if l.strip()))
 ## References
 
 - `references/kimi-attachment-qc.md` — Kimi v0.23.3 QC of extracted email attachments: flags, background-run pattern for large batches, OCR of scanned Arabic review forms, 0-byte attachment pitfall
+- `references/project-email-register-workflow.md` — Outlook SQLite → categorized markdown register in a project repo: search scope, categorisation, dedupe, commit. Carries the column-name and sort-order pitfalls.
+- `references/factory-email-scope.md` — which factory/ERP mailbox traffic is in scope vs noise
