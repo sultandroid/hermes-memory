@@ -81,6 +81,32 @@ After updating registers, identify what the user personally needs to do:
 
 Present these as a short bullet list. If nothing is urgent, say so.
 
+## Before advising a reply — establish whether the matter is still OPEN
+
+When the user points at an email (or re-sends one) and asks "should I reply to this?", the first job is
+not to draft — it is to decide whether the matter is settled. Getting this wrong means reopening a
+closed submittal or replying into a dead thread.
+
+1. **Check whether the email is old.** Compare `Message_TimeSent` against today. The user often opens
+   a months-old thread and forwards it; an August request is not a September obligation. The
+   `Record_ModDate` / "opened at" timestamp the user sees is not the send date.
+2. **Find what happened after it.** Query for the outcome, not just the ask: submittal status in
+   `08_Document_Index/submission.db`, the Aconex export, later messages on the same normalized
+   subject. A request satisfied by a later submission and CG code is **closed** — say so and do not
+   reply.
+3. **A request that was fulfilled is not an open item, even if unanswered in the thread.** Replying
+   implies the deliverable is still outstanding and invites CG to re-open it. Instead surface whatever
+   conditions the approval carried — those are the live items.
+4. **When several threads are in play, name the ONE that needs the reply and who signs it.** The live
+   obligation is usually the *escalation* (formal demand, then "urgent reminder" from another, often
+   more senior or specialist sender) addressed to the Projects Director — not the original ask in the
+   same subject line.
+5. **Detect the escalation ladder and match the reply level.** Same normalised subject, sequence of
+   ask → formal demand → urgent reminder from a different sender = pre-warning sequence, the step
+   before a PMC/Ministry letter. Reply at the level it was addressed to; do not answer an email
+   addressed to the Projects Director from the Technical Office alone, and do not commit a date
+   without the PD's agreement.
+
 ## Pitfalls
 
 - **Epoch varies** — always verify with the Step 0 query from the email-pipeline-automation skill. Some Outlook DBs use Mac absolute epoch (+978307200), others use Unix epoch.
@@ -387,6 +413,9 @@ When presenting findings, use a table format with:
 - Report-by-report status with doc refs and dates
 - Clear summary: what's done, what's pending, what needs resubmission
 - Distinguish "no CG response yet" from "no response found in this source"
+
+- **Never concede a missing appointment or scope in a reply to CG — carve it out and anchor the dependency on their own outstanding item.** Saying "appointment of X is being progressed" presents a blocked scope as a mere admin step and invites "why is there no appointment?". State instead which parts of the deliverable are included now, defer the specific item to the specialist, and tie that appointment to the Employer's own open input (e.g. the unconfirmed object list / weights / location). The dependency then sits on the counterparty's side, which is the true position — and it is the same posture the user negotiates from (present the problem, let the other party own the consequence). Applies to any deliverable where a specialist is unpursued because the scope basis is not yet confirmed.
+- **Untracked sub-task files under `05_Comms/drafts/` and `05_Comms/rfis/outbox/` are new artifacts — say so.** A draft written only in chat does not exist for the project; if the user asks "where is the request for X", check the filesystem before answering.
 
 ## Extended Workflow: NCR / Formal Letter Procedural Audit
 
